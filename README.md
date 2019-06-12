@@ -1,4 +1,4 @@
-CTSB
+# CTSB
 **********
 
 CTSB (Control and Time-Series Benchmarks) is a framework for benchmarking and testing your control, time-series, and to some extent, general online algorithms in simulated and real settings.** The ``ctsb`` open-source library is available for anyone to download and use.
