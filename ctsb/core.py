@@ -4,7 +4,7 @@
 import numpy
 
 # class for online control tests
-class Problem:
+class Problem(object):
 	def __init__(self):
 		self.message = "Hello, World!"
 

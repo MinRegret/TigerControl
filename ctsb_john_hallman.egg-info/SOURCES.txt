@@ -1,6 +1,0 @@
-README.md
-setup.py
-ctsb_john_hallman.egg-info/PKG-INFO
-ctsb_john_hallman.egg-info/SOURCES.txt
-ctsb_john_hallman.egg-info/dependency_links.txt
-ctsb_john_hallman.egg-info/top_level.txt
