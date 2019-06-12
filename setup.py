@@ -4,7 +4,7 @@ import setuptools
 
 setuptools.setup(
     # Needed to silence warnings (and to be a worthwhile package)
-    name='ctsb-john-hallman',
+    name='ctsb',
     url='https://github.com/johnhallman/ctsb',
     author='John Hallman',
     author_email='johnolof@gmail.com',
