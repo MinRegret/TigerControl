@@ -8,6 +8,7 @@ class Problem(object):
 	def __init__(self):
 		self.message = "Hello, World!"
 
-	def run():
+	def run(self):
 		print(self.message)
 		return
+
