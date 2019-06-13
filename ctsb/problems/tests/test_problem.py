@@ -1,6 +1,5 @@
 # test the Random problem class
 
-#from ctsb.problems.time_series.random import Random
 from ctsb import core
 import numpy as np
 import matplotlib.pyplot as plt
@@ -16,7 +15,7 @@ class TestClass(core.Problem):
 
 	def reset(self):
 		self.T = 0
-		
+
 
 def test_random():
 	random = ctsb.Random()

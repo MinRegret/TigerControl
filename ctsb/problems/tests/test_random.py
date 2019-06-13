@@ -19,7 +19,7 @@ def test_random():
 
 	assert random.T == 1000
 	plt.plot(test_output)
-	plt.show()
+	plt.show(block=False)
 	plt.pause(5)
 	plt.close()
 	return
