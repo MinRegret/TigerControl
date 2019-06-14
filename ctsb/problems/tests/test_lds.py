@@ -1,21 +1,23 @@
-# test the Random problem class
+# test the ARMA problem class
 
 import ctsb
 import ctsb.core
 from ctsb.core import Problem
-from ctsb.problems.time_series.random import Random
+from ctsb.problems.time_series.lds import LDS
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-def test_random():
+def test_lds():
 	T = 100000
-	problem = Random()
+	n, m, d = 5, 3, 10
+	problem = LDS(n, m, d)
 	assert problem.T == 0
 
 	test_output = []
 	for t in range(T):
-		test_output.append(problem.step())
+		u = np.random.normal(size=(n,))
+		test_output.append(problem.step(u))
 
 	assert problem.T == T
 	plt.plot(test_output)
@@ -26,4 +28,4 @@ def test_random():
 
 
 if __name__=="__main__":
-	test_random()
+	test_lds()

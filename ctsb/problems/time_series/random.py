@@ -3,7 +3,6 @@ Produces randomly generated scalar values at every timestep, taken from a normal
 """
 
 import ctsb
-#from ctsb.utils import seeding
 import numpy as np
 
 class Random(ctsb.Problem):

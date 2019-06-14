@@ -23,7 +23,7 @@ ctsb.register(
 def test_make():
     problem = problems.make('Random-v0')
     assert problem.spec.id == 'Random-v0'
-    test_random()
+    #test_random()
     #assert isinstance(problem.unwrapped, cartpole.CartPoleProblem)
     return
 
@@ -81,8 +81,24 @@ if __name__ == "__main__":
 
     print("\n--- Testing registration ---\n")
 
-    print("Test make")
+    print("test_make")
     test_make()
+
+    print("test_make_with_kwargs")
+    test_make_with_kwargs()
+
+    print("test_make_deprecated")
+    test_make_deprecated()
+
+    print("test_spec")
+    test_spec()
+
+    print("test_missing_lookup")
+    test_missing_lookup()
+
+    print("test_malformed_lookup")
+    test_malformed_lookup()
+
 
     print("\n--- Tests complete ---\n")
 
