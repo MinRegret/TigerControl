@@ -3,7 +3,7 @@
 import ctsb
 import ctsb.core
 from ctsb.core import Problem
-from ctsb.problems.time_series.lds import LDS
+from ctsb.problems.simulated.lds import LDS
 import numpy as np
 import matplotlib.pyplot as plt
 

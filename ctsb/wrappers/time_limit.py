@@ -12,12 +12,13 @@ class TimeLimit(ctsb.Wrapper):
 
     def step(self, action):
         assert self._elapsed_steps is not None, "Cannot call problem.step() before calling reset()"
-        observation, reward, done, info = self.problem.step(action)
+        output = self.problem.step(action)
         self._elapsed_steps += 1
-        if self._elapsed_steps >= self._max_episode_steps:
-            info['TimeLimit.truncated'] = not done
+        done = (self._elapsed_steps >= self.problem.T)
+        if self._elapsed_steps >= self.problem.T:
+            #info['TimeLimit.truncated'] = not done
             done = True
-        return observation, reward, done, info
+        return output
 
     def reset(self, **kwargs):
         self._elapsed_steps = 0

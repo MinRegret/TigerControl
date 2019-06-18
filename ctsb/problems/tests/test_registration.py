@@ -2,7 +2,7 @@
 import ctsb
 from ctsb import error, problems
 from ctsb.problems import registration
-from ctsb.problems.time_series import random
+from ctsb.problems.simulated import random
 from test_random import test_random
 
 class ArgumentProblem(ctsb.Problem):

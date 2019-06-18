@@ -3,7 +3,7 @@
 import ctsb
 import ctsb.core
 from ctsb.core import Problem
-from ctsb.problems.time_series.rnn_output import RNN_Output
+from ctsb.problems.simulated.rnn_output import RNN_Output
 import numpy as np
 import matplotlib.pyplot as plt
 

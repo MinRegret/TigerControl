@@ -3,7 +3,7 @@
 import ctsb
 import ctsb.core
 from ctsb.core import Problem
-from ctsb.problems.time_series.lstm_output import LSTM_Output
+from ctsb.problems.simulated.lstm_output import LSTM_Output
 import numpy as np
 import matplotlib.pyplot as plt
 
