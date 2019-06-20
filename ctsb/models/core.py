@@ -6,9 +6,6 @@ from ctsb import error
 
 # class for online control tests
 class Model(object):
-	action_space = None
-	observation_space = None
-	metadata = {'render.modes': []}
 	spec = None
 
 	def initialize(self, **kwargs):
