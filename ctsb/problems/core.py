@@ -24,7 +24,7 @@ class Problem(object):
 		pass
 
 	def help(self):
-		# closes the problem and returns used memory
+		# prints information about this class and its methods
 		raise NotImplementedError
 
 	@property

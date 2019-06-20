@@ -16,7 +16,7 @@ class Unregistered(Error):
     """
     pass
 
-class UnregisteredEnv(Unregistered):
+class UnregisteredObject(Unregistered):
     """Raised when the user requests an env from the registry that does
     not actually exist.
     """
@@ -28,13 +28,13 @@ class UnregisteredBenchmark(Unregistered):
     """
     pass
 
-class DeprecatedEnv(Error):
+class DeprecatedObject(Error):
     """Raised when the user requests an env from the registry with an
     older version number than the latest env with the same name.
     """
     pass
 
-class UnseedableEnv(Error):
+class UnseedableObject(Error):
     """Raised when the user tries to seed an env that does not support
     seeding.
     """

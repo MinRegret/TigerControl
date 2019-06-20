@@ -5,9 +5,9 @@ import sys
 import warnings
 
 from ctsb import error
-from ctsb.core import Problem, Wrapper
-from ctsb.problems import problem, spec, register, help
+from ctsb.problems import Problem, problem, problem_registry, problem_spec
+from ctsb.models import Model, model, model_registry, model_spec
+from ctsb.help import help
 
 
-#print("ctsb/__init__.py")
-__all__ = ["Problem", "Wrapper", "problem", "spec", "register", "help"]
+__all__ = ["Problem", "problem", "Model", "model", "help"]

@@ -3,20 +3,14 @@ import importlib
 import warnings
 
 from ctsb import error, logger
+from ctsb.utils import Spec, Registry
 
 # This format is true today, but it's *not* an official spec.
 # [username/](problem-name)-v(version)    problem-name is group 1, version is group 2
 problem_id_re = re.compile(r'^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$')
 
 
-def load(name):
-    mod_name, attr_name = name.split(":")
-    mod = importlib.import_module(mod_name)
-    fn = getattr(mod, attr_name)
-    return fn
-
-
-class ProblemSpec(object):
+class ProblemSpec(Spec):
     """A specification for a particular instance of the problem. Used
     to register the parameters for official evaluations.
 
@@ -32,183 +26,35 @@ class ProblemSpec(object):
     Attributes:
         id (str): The official problem ID
     """
-
-    def __init__(self, id, entry_point=None, kwargs=None, nondeterministic=False, tags=None, max_episode_steps=None):
-        self.id = id
-        # Problemironment properties
-        self.nondeterministic = nondeterministic
-
-        if tags is None:
-            tags = {}
-        self.tags = tags
-
-        tags['wrapper_config.TimeLimit.max_episode_steps'] = max_episode_steps
-        
-        self.max_episode_steps = max_episode_steps
-
-        # We may make some of these other parameters public if they're
-        # useful.
-        match = problem_id_re.search(id)
-        if not match:
-            raise error.Error('Attempted to register malformed problem ID: {}. (Currently all IDs must be of the form {}.)'.format(id, problem_id_re.pattern))
-        self._problem_name = match.group(1)
-        self._entry_point = entry_point
-        self._kwargs = {} if kwargs is None else kwargs
-
-    def make(self, **kwargs):
-        """Instantiates an instance of the problem with appropriate kwargs"""
-        if self._entry_point is None:
-            raise error.Error('Attempting to make deprecated problem {}. (HINT: is there a newer registered version of this problem?)'.format(self.id))
-        _kwargs = self._kwargs.copy()
-        _kwargs.update(kwargs)
-        if callable(self._entry_point):
-            problem = self._entry_point(**_kwargs)
-        else:
-            cls = load(self._entry_point)
-            problem = cls(**_kwargs)
-
-        # Make the problem aware of which spec it came from.
-        problem.unwrapped.spec = self
-
-        return problem
-
-    def __repr__(self):
-        return "ProblemSpec({})".format(self.id)
+    def __str__(self):
+        return "Problem"
 
 
-class ProblemRegistry(object):
+class ProblemRegistry(Registry):
     """Register an problem by ID. IDs remain stable over time and are
     guaranteed to resolve to the same problem dynamics (or be
     desupported). The goal is that results on a particular problem
     should always be comparable, and not depend on the version of the
     code that was running.
     """
-
-    def __init__(self):
-        self.problem_specs = {}
-
-    def make(self, path, **kwargs):
-        if len(kwargs) > 0:
-            logger.info('Making new problem: %s (%s)', path, kwargs)
-        else:
-            logger.info('Making new problem: %s', path)
-        spec = self.spec(path)
-        problem = spec.make(**kwargs)
-
-        # don't wrap TimeLimit by default!
-
-        # We used to have people override _reset/_step rather than
-        # reset/step. Set _ctsb_disable_underscore_compat = True on
-        # your problem if you use these methods and don't want
-        # compatibility code to be invoked.
-        """
-        if hasattr(problem, "_reset") and hasattr(problem, "_step") and not getattr(problem, "_ctsb_disable_underscore_compat", False):
-            patch_deprecated_methods(problem)
-        if (problem.spec.max_episode_steps is not None) and not spec.tags.get('vnc'):
-            from ctsb.wrappers.time_limit import TimeLimit
-            problem = TimeLimit(problem, max_episode_steps=problem.spec.max_episode_steps)
-        """
-        return problem
-
-    def all(self):
-        return self.problem_specs.values()
-
-    def spec(self, path):
-        if ':' in path:
-            mod_name, _sep, id = path.partition(':')
-            try:
-                importlib.import_module(mod_name)
-            # catch ImportError for python2.7 compatibility
-            except ImportError:
-                raise error.Error('A module ({}) was specified for the problem but was not found, make sure the package is installed with `pip install` before calling `ctsb.make()`'.format(mod_name))
-        else:
-            id = path
-
-        match = problem_id_re.search(id)
-        if not match:
-            raise error.Error('Attempted to look up malformed problem ID: {}. (Currently all IDs must be of the form {}.)'.format(id.encode('utf-8'), problem_id_re.pattern))
-
-        try:
-            return self.problem_specs[id]
-        except KeyError:
-            # Parse the problem name and check to see if it matches the non-version
-            # part of a valid problem (could also check the exact number here)
-            problem_name = match.group(1)
-            matching_problems = [valid_problem_name for valid_problem_name, valid_problem_spec in self.problem_specs.items()
-                             if problem_name == valid_problem_spec._problem_name]
-            if matching_problems:
-                raise error.DeprecatedProblem('problem {} not found (valid versions include {})'.format(id, matching_problems))
-            else:
-                raise error.UnregisteredProblem('No registered problem with id: {}'.format(id))
-
-    def register(self, id, **kwargs):
-        if id in self.problem_specs:
-            raise error.Error('Cannot re-register id: {}'.format(id))
-        self.problem_specs[id] = ProblemSpec(id, **kwargs)
+    def __str__(self):
+        return "Problem"
 
 
+# Have a global problem_registry
+problem_registry = ProblemRegistry(problem_id_re)
 
-# Have a global registry
-registry = ProblemRegistry()
+def problem_register(id, **kwargs):
+    return problem_registry.register(id, **kwargs)
 
-def register(id, **kwargs):
-    return registry.register(id, **kwargs)
+def problem_spec(id):
+    return problem_registry.spec(id)
 
 def problem(id, **kwargs):
-    return registry.make(id, **kwargs)
-
-def spec(id):
-    return registry.spec(id)
-
-def help():
-    s = "\n"
-    for problem_id in registry.problem_specs.keys():
-        s += "\t" + problem_id + "\n"
-    print(global_help_string.format(s))
+    return problem_registry.make(id, **kwargs)
 
 
 warn_once = True
 
-global_help_string = """
-
-Welcome to CTSB - the Control and Time-Series Benchmarks framework!
-
-If this is your first time using CTSB, you might want to read more about it in 
-detail at https://github.com/johnhallman/ctsb.
-
-If you want to get going immediately, a good place to start is with our Problem 
-class, which provide implementations of standard control and time-series benchmarks.
-In order to return a Problem instance, simply call ctsb.make(*problem name*). This
-is the list of currently available Problems:
-{}
-For example, you can retrieve an linear dynamical system instance via:
-
-    'problem = ctsb.problem("LDS-v0")'
-
-Before you can start using your problem to benchmark your algorithm, you must
-initialize it by providing relevant dimensionality and other parameters. For our
-LDS instance, this corresponds to the input, output, and hidden state dimension 
-respectively:
-
-    'd_in, d_out, d_hid = 3, 1, 5'
-    'observation = problem.initialize(d_in, d_out, d_hid)'
-
-Notice that initializing the problem statement causes it to return the first value
-of the resulting time-series! Now, the parameters for 'initialize' vary from 
-problem to problem. To learn about the specific requirements, or the dynamics, of 
-your selected problem instance, call its 'help' method:
-
-    'problem.help()'
-
-Once you have initialized your problem, you can move the system forward one
-time-step by calling the 'step' method along with the appropriate inputs:
-
-    'action = np.zeros(d_in)'
-    'next_observation = problem.step(action)'
-
-Continue using 'step' to move the dynamics forward for as long as you need to
-test your model!
-
-"""
 
 
