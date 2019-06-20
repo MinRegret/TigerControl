@@ -3,9 +3,16 @@ from __future__ import print_function
 
 import os
 import sys
+import ctsb
 from urllib import request
 from urllib.error import URLError
 from urllib.request import urlretrieve
+
+# important - get absolute path of package directory
+def get_ctsb_dir():
+    init_dir = os.path.abspath(ctsb.__file__)
+    ctsb_dir = init_dir.rsplit('/', 1)[0]
+    return ctsb_dir
 
 def report_download_progress(chunk_number, chunk_size, file_size):
     if file_size != -1:
@@ -28,4 +35,3 @@ def download(destination_path, url, quiet):
             if not quiet:
                 # Just a newline.
                 print()
-

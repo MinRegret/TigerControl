@@ -5,6 +5,11 @@ class Error(Exception):
 
 # Local errors
 
+class StepOutOfBounds(Error):
+    """Raised when the user calls step at the end of the data-set stream
+    """
+    pass
+
 class Unregistered(Error):
     """Raised when the user requests an item from the registry that does
     not actually exist.

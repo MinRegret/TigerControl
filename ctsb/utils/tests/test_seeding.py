@@ -14,3 +14,8 @@ def test_valid_seeds():
     for seed in [0, 1]:
         random, seed1 = seeding.np_random(seed)
         assert seed == seed1
+
+
+if __name__ == '__main__':
+    test_invalid_seeds()
+    test_valid_seeds()

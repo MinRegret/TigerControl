@@ -3,11 +3,13 @@ S&P 500 daily opening price
 """
 
 import ctsb
-import os.path as osp
+import os
 import numpy as np
 import pandas as pd
-from ctsb.utils import seeding, sp500
-
+from ctsb.utils import seeding
+from ctsb.utils import sp500
+from ctsb.utils import get_ctsb_dir
+from ctsb.error import StepOutOfBounds
 
 class SP500(ctsb.Problem):
 	"""
@@ -17,7 +19,7 @@ class SP500(ctsb.Problem):
 
 	def __init__(self):
 		self.initialized = False
-		self.data_path = "../data/sp500.csv" # TODO: change to absolute path - os.path.abspath(ctsb)
+		self.data_path = os.path.join(get_ctsb_dir(), "data/sp500.csv")
 
 	def initialize(self):
 		"""
@@ -30,10 +32,8 @@ class SP500(ctsb.Problem):
 		"""
 		self.initialized = True
 		self.T = 0
-
-		# calls function that downloads data from online source
-		if not osp.isfile(self.data_path): sp500()
-		self.df = pd.read_csv(self.data_path)	
+		self.df = sp500() # get data
+		self.max_T = self.df.shape[0]
 
 		return self.df.iloc[self.T, 1]
 
@@ -48,6 +48,8 @@ class SP500(ctsb.Problem):
 		"""
 		assert self.initialized
 		self.T += 1
+		if self.T == self.max_T: 
+			raise StepOutOfBounds("Number of steps exceeded length of dataset ({})".format(self.max_T))
 		return self.df.iloc[self.T, 1]
 
 	def hidden(self):
@@ -60,7 +62,7 @@ class SP500(ctsb.Problem):
 			Date (string)
 		"""
 		assert self.initialized
-		return self.df.iloc[self.T, 0]
+		return "Timestep: {} out of {}, date: ".format(self.T+1, self.max_T) + self.df.iloc[self.T, 0]
 
 	def seed(self, seed=None):
 		"""
