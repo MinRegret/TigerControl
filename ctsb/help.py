@@ -5,7 +5,7 @@ from ctsb import error, logger, problem_registry
 
 def help():
     s = "\n"
-    for problem_id in problem_registry.problem_specs.keys():
+    for problem_id in problem_registry.keys():
         s += "\t" + problem_id + "\n"
     print(global_help_string.format(s))
 

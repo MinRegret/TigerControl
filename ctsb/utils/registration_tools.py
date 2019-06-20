@@ -91,6 +91,9 @@ class Registry(object):
         obj = spec.make(**kwargs)
         return obj
 
+    def keys(self):
+        return self.specs.keys()
+
     def all(self):
         return self.specs.values()
 
