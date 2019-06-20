@@ -5,8 +5,9 @@ import os
 import xlrd
 import datetime
 import csv
-import download_tools
+from ctsb.utils import download_tools
 
+# TODO: change relative path to os.path.abspath(ctsb) - DOESN'T WORK IN CURRENT FORM!
 def sp500():
 	url_sp500_xls = 'http://www.cboe.com/micro/buywrite/dailypricehistory.xls'
 	path_sp500_xls = '../data/sp500_xls.xls'

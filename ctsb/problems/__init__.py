@@ -3,7 +3,8 @@
 from ctsb.problems.registration import registry, register, problem, spec, help
 
 
-# ----- Time series -----
+# ---------- Simulated ----------
+
 
 register(
     id='Random-v0',
@@ -32,5 +33,15 @@ register(
 register(
     id='LSTM-v0',
     entry_point='ctsb.problems.simulated:LSTM_Output',
+    max_episode_steps=100000,
+)
+
+
+# ---------- Data based ----------
+
+
+register(
+    id='SP500-v0',
+    entry_point='ctsb.problems.data_based:SP500',
     max_episode_steps=100000,
 )
