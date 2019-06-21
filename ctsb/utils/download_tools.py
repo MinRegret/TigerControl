@@ -15,26 +15,26 @@ def get_ctsb_dir():
     return ctsb_dir
 
 def report_download_progress(chunk_number, chunk_size, file_size):
-	"""
-	Prints out the download progress bar
-	Args:
-		chunk_number(int): chunk number
-		chunk_size(int): maximize size of a chunk
-		file_size(int): total size of download
-	"""
+    """
+    Prints out the download progress bar
+    Args:
+        chunk_number(int): chunk number
+        chunk_size(int): maximize size of a chunk
+        file_size(int): total size of download
+    """
     if file_size != -1:
         percent = min(1, (chunk_number * chunk_size) / file_size)
         bar = '#' * int(64 * percent)
         sys.stdout.write('\r0% |{:<64}| {}%'.format(bar, int(percent * 100)))
 
 def download(destination_path, url, quiet):
-	"""
-	Downloads the file at url to destination_path
-	Args:
-		destination_path(string): the destination path of the download
-		url(string): the url of the file to download
-		quiet(boolean): If False, will report download progress and inform if download already exists
-	"""
+    """
+    Downloads the file at url to destination_path
+    Args:
+        destination_path(string): the destination path of the download
+        url(string): the url of the file to download
+        quiet(boolean): If False, will report download progress and inform if download already exists
+    """
     if os.path.exists(destination_path):
         if not quiet:
             print('{} already exists, skipping ...'.format(destination_path))

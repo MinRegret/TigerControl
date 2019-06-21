@@ -1,5 +1,5 @@
 import hashlib
-import numpy as np
+import jax.numpy as np
 import os
 import random as _random
 from six import integer_types
