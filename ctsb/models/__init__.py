@@ -8,6 +8,11 @@ from ctsb.models.core import Model
 
 
 model_register(
+    id='LastValue',
+    entry_point='ctsb.models.time_series:LastValue',
+)
+
+model_register(
     id='Linear',
     entry_point='ctsb.models.time_series:Linear',
 )
