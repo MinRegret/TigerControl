@@ -1,27 +1,27 @@
-# Problem class
+# Model class
 # Author: John Hallman
 
 import numpy
 from ctsb import error
 
-# class for online control tests
+# class for implementing algorithms with enforced modularity
 class Model(object):
 	spec = None
 
 	def initialize(self, **kwargs):
-		# resets problem to time 0
+		# initializes model parameters
 		raise NotImplementedError
 
-	def step(self, x=None, y=None):
-		# run one timestep of the problem's dynamics
+	def step(self, **kwargs):
+		# run one timestep of the model in its environment
 		raise NotImplementedError
 
 	def predict(self, x=None):
-		# run one timestep of the problem's dynamics
+		# returns model prediction for given input
 		raise NotImplementedError
 
 	def update(self, rule=None):
-		# run one timestep of the problem's dynamics
+		# update parameters according to given loss and update rule
 		raise NotImplementedError
 
 	def help(self):
@@ -32,7 +32,7 @@ class Model(object):
 	def unwrapped(self):
 		"""Completely unwrap this problem.
 		Returns:
-		    ctsb.Problem: The base non-wrapped ctsb.Problem instance
+		    ctsb.Model: The base non-wrapped ctsb.Model instance
 		"""
 		return self
 

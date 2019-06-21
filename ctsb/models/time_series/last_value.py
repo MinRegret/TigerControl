@@ -1,15 +1,14 @@
 """
-Linear combination of previous values
+Last observed value
 """
 
 import ctsb
 import numpy as np
 from ctsb.utils import seeding
 
-class Linear(ctsb.Model):
+class LastValue(ctsb.Model):
 	"""
-	Implements the equivalent of an AR(p) model - predicts a linear combination of the
-	previous p observed values in a time-series
+	Predicts the last value in the time series, i.e. x_t = x_(t-1)
 	"""
 
 	def __init__(self):
