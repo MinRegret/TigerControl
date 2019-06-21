@@ -3,76 +3,44 @@ Linear combination of previous values
 """
 
 import ctsb
-import numpy as np
+import jax.numpy as np
 from ctsb.utils import seeding
 
 class Linear(ctsb.Model):
-	"""
-	Implements the equivalent of an AR(p) model - predicts a linear combination of the
-	previous p observed values in a time-series
-	"""
+    """
+    Implements the equivalent of an AR(p) model - predicts a linear combination of the
+    previous p observed values in a time-series
+    """
 
-	def __init__(self):
-		self.initialized = False
+    def __init__(self):
+        self.initialized = False
 
-	def initialize(self):
-		"""
-		Description:
-			Randomly initialize the hidden dynamics of the system.
-		Args:
-			None
-		Returns:
-			None
-		"""
-		self.initialized = True
+    def initialize(self, **kwargs):
+        # initializes model parameters
+        raise NotImplementedError
 
-	def step(self):
-		"""
-		Description:
-			Moves the system dynamics one time-step forward.
-		Args:
-			None
-		Returns:
-			The next value in the time-series.
-		"""
-		assert self.initialized
-		return np.random.normal()
+    def step(self, **kwargs):
+        # run one timestep of the model in its environment
+        raise NotImplementedError
 
-	def hidden(self):
-		"""
-		Not implemented
-		"""
-		pass
+    def predict(self, x=None):
+        # returns model prediction for given input
+        raise NotImplementedError
 
-	def seed(self, seed=None):
-		"""
-		Description:
-			Seeds the random number generator to produce deterministic, reproducible results. 
-		Args:
-			seed (int): Default value None. The number that determines the seed of the random
-			number generator for the system.
-		Returns:
-			A list containing the resulting NumPy seed.
-		"""
-		self.np_random, seed = seeding.np_random(seed)
-		return [seed]
+    def update(self, rule=None):
+        # update parameters according to given loss and update rule
+        raise NotImplementedError
 
-	def close(self):
-		"""
-		Not implemented
-		"""
-		pass
-
-	def help(self):
-		"""
-		Description:
-			Prints information about this class and its methods.
-		Args:
-			None
-		Returns:
-			None
-		"""
-		print(Random_help)
+    def help(self):
+        """
+        Description:
+            Prints information about this class and its methods.
+        Args:
+            None
+        Returns:
+            None
+        """
+        print(Random_help)
 
 
 
@@ -86,38 +54,38 @@ Description: A random sequence of scalar values taken from an i.i.d. normal dist
 
 Methods:
 
-	initialize()
-		Description:
-			Randomly initialize the hidden dynamics of the system.
-		Args:
-			None
-		Returns:
-			None
+    initialize()
+        Description:
+            Randomly initialize the hidden dynamics of the system.
+        Args:
+            None
+        Returns:
+            None
 
-	step()
-		Description:
-			Moves the system dynamics one time-step forward.
-		Args:
-			None
-		Returns:
-			The next value in the time-series.
+    step()
+        Description:
+            Moves the system dynamics one time-step forward.
+        Args:
+            None
+        Returns:
+            The next value in the time-series.
 
-	seed(seed)
-		Description:
-			Seeds the random number generator to produce deterministic, reproducible results. 
-		Args:
-			seed (int): Default value None. The number that determines the seed of the random
-			number generator for the system.
-		Returns:
-			A list containing the resulting NumPy seed.
+    seed(seed)
+        Description:
+            Seeds the random number generator to produce deterministic, reproducible results. 
+        Args:
+            seed (int): Default value None. The number that determines the seed of the random
+            number generator for the system.
+        Returns:
+            A list containing the resulting NumPy seed.
 
-	help()
-		Description:
-			Prints information about this class and its methods.
-		Args:
-			None
-		Returns:
-			None
+    help()
+        Description:
+            Prints information about this class and its methods.
+        Args:
+            None
+        Returns:
+            None
 
 -------------------- *** --------------------
 
