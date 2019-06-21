@@ -10,6 +10,12 @@ from ctsb import error, logger
 
 
 def load(name):
+    """
+    Args:
+        name(string): path of object to be registered
+    Returns:
+        The class of the object specified by name
+    """
     mod_name, attr_name = name.split(":")
     mod = importlib.import_module(mod_name)
     fn = getattr(mod, attr_name)
@@ -17,20 +23,18 @@ def load(name):
 
 
 class Spec(object):
-    """A specification for a particular instance of the problem. Used
+    """A specification for a particular instance of the object to be registered. Used
     to register the parameters for official evaluations.
 
     Args:
-        id (str): The official problem ID
-        entry_point (Optional[str]): The Python entrypoint of the problem class (e.g. module.name:Class)
-        reward_threshold (Optional[int]): The reward threshold before the task is considered solved
-        kwargs (dict): The kwargs to pass to the problem class
-        nondeterministic (bool): Whether this problem is non-deterministic even after seeding
-        tags (dict[str:any]): A set of arbitrary key-value tags on this problem, including simple property=True tags
-        max_episode_steps (Optional[int]): The maximum number of steps that an episode can consist of
+        id (str): The official object ID
+        regexp(regular expression): the format of id for objects in the registry
+        entry_point (Optional[str]): The Python entrypoint of the object class (e.g. module.name:Class)
+        kwargs (dict): The kwargs to pass to the object class
+        tags (dict[str:any]): A set of arbitrary key-value tags on this object, including simple property=True tags
 
     Attributes:
-        id (str): The official problem ID
+        id (str): The official object ID
     """
 
     def __init__(self, id, regexp, entry_point=None, kwargs=None, tags=None):
@@ -51,7 +55,7 @@ class Spec(object):
         self._kwargs = {} if kwargs is None else kwargs
 
     def make(self, **kwargs):
-        """Instantiates an instance of the problem with appropriate kwargs"""
+        """Instantiates an instance of the object with appropriate kwargs"""
         if self._entry_point is None:
             raise error.Error('Attempting to make deprecated {} with ID: {}. (HINT: is there a newer registered version of this object?)'.format(self, self.id))
         _kwargs = self._kwargs.copy()
@@ -62,7 +66,7 @@ class Spec(object):
             cls = load(self._entry_point)
             obj = cls(**_kwargs)
 
-        # Make the problem aware of which spec it came from.
+        # Make the object aware of which spec it came from.
         obj.unwrapped.spec = self
         return obj
 
@@ -71,11 +75,15 @@ class Spec(object):
 
 
 class Registry(object):
-    """Register an problem by ID. IDs remain stable over time and are
-    guaranteed to resolve to the same problem dynamics (or be
-    desupported). The goal is that results on a particular problem
+    """Register object by ID. IDs remain stable over time and are
+    guaranteed to resolve to the same object dynamics (or be
+    desupported). The goal is that results on a particular object
     should always be comparable, and not depend on the version of the
     code that was running.
+
+    Args:
+        specs(dict): key-value pairs of (id, corresponding object in registry)
+        regexp(regular expression): format of id in registry
     """
 
     def __init__(self, regexp):
@@ -83,6 +91,13 @@ class Registry(object):
         self.regexp = regexp
 
     def make(self, path, **kwargs):
+        """
+        Args: 
+            path(string): id of object in registry
+            kwargs(dict): The kwargs to pass to the object class
+        Returns:
+            object instance
+        """
         if len(kwargs) > 0:
             logger.info('Making new {}: %s (%s)'.format(self), path, kwargs)
         else:
@@ -98,6 +113,12 @@ class Registry(object):
         return self.specs.values()
 
     def spec(self, path):
+        """
+        Args:
+            path(string): id of object in registry
+        Returns:
+            Instance of object in registry specified by path
+        """
         if ':' in path:
             mod_name, _sep, id = path.partition(':')
             try:
@@ -115,8 +136,8 @@ class Registry(object):
         try:
             return self.specs[id]
         except KeyError:
-            # Parse the problem name and check to see if it matches the non-version
-            # part of a valid problem (could also check the exact number here)
+            # Parse the object name and check to see if it matches the non-version
+            # part of a valid object (could also check the exact number here)
             name = match.group(1)
             matching_objects = [valid_name for valid_name, valid_spec in self.specs.items()
                              if name == valid_spec._name]
@@ -126,6 +147,12 @@ class Registry(object):
                 raise error.UnregisteredObject('No registered {} with ID: {}'.format(self, id))
 
     def register(self, id, **kwargs):
+        """
+        Populates the specs dict with a map from id to the object instance
+        Args:
+            id(string): id of object in registry
+            kwargs(dict): The kwargs to pass to the object class
+        """
         if id in self.specs:
             raise error.Error('Cannot re-register ID {} for {}'.format(id, self))
         self.specs[id] = Spec(id, self.regexp, **kwargs)

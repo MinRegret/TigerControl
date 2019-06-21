@@ -3,7 +3,7 @@ import os
 from ctsb.utils.dataset_registry import sp500
 from ctsb.utils.download_tools import get_ctsb_dir
 
-
+# Unit test for dataset_registry.SP500. Tests if file is downloaded and processed correctly.
 def test_sp500_download():
     sp500()
     ctsb_dir = get_ctsb_dir()
