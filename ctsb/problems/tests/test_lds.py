@@ -1,29 +1,35 @@
 # test the ARMA problem class
 
-import ctsb
-import ctsb.core
-from ctsb.core import Problem
-from ctsb.problems.simulated.lds import LDS
 import jax.numpy as np
+import jax.random as random
+import ctsb
 import matplotlib.pyplot as plt
+from ctsb.problems.core import Problem
+from ctsb.problems.simulated.lds import LDS
+from ctsb.utils.random import generate_key
 
 
-def test_lds():
-    T = 100000
+
+def test_lds(steps=100, show_plot=False):
+    T = steps
     n, m, d = 5, 3, 10
-    problem = LDS(n, m, d)
+    problem = LDS()
+    problem.initialize(n, m, d)
     assert problem.T == 0
 
     test_output = []
     for t in range(T):
-        u = np.random.normal(size=(n,))
+        u = random.normal(generate_key(),shape=(n,))
         test_output.append(problem.step(u))
 
     assert problem.T == T
-    plt.plot(test_output)
-    plt.show(block=False)
-    plt.pause(5)
-    plt.close()
+    if show_plot:
+        plt.plot(test_output)
+        plt.title("lds")
+        plt.show(block=False)
+        plt.pause(1)
+        plt.close()
+    print("test_lds passed")
     return
 
 

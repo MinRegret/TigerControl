@@ -1,31 +1,37 @@
 # test the ARMA problem class
 
-import ctsb
-import ctsb.core
-from ctsb.core import Problem
-from ctsb.problems.simulated.rnn_output import RNN_Output
 import jax.numpy as np
+import jax.random as random
 import matplotlib.pyplot as plt
+import ctsb
+from ctsb.problems.core import Problem
+from ctsb.problems.simulated.rnn_output import RNN_Output
+from ctsb.utils.random import generate_key
 
 
-def test_rnn():
-    T = 10000
+
+def test_rnn(steps=100, show_plot=False, verbose=False):
+    T = steps
     n, m, l, h = 5, 3, 5, 10
-    problem = RNN_Output(n, m, l, h)
+    problem = RNN_Output()
+    problem.initialize(n, m, l, h)
     assert problem.T == 0
 
     test_output = []
     for t in range(T):
-        if (t+1) * 10 % T == 0:
+        if verbose and (t+1) * 10 % T == 0:
             print("{} timesteps".format(t+1))
-        u = np.random.normal(size=(n,))
+        u = random.normal(generate_key(),shape=(n,))
         test_output.append(problem.step(u))
 
     assert problem.T == T
-    plt.plot(test_output)
-    plt.show(block=False)
-    plt.pause(5)
-    plt.close()
+    if show_plot:
+        plt.plot(test_output)
+        plt.title("rnn")
+        plt.show(block=False)
+        plt.pause(1)
+        plt.close()
+    print("test_rnn passed")
     return
 
 

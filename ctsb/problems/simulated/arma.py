@@ -2,6 +2,7 @@
 Autoregressive moving-average
 """
 
+import jax
 import jax.numpy as np
 import jax.random as random
 
@@ -69,10 +70,12 @@ class ARMA(ctsb.Problem):
         x_ma = np.dot(self.noise, self.psi)
         eps = random.normal(generate_key())
         x_new = self.c + x_ar + x_ma + eps
-        self.x[1:] = self.x[:-1]
-        self.x[0] = x_new
-        self.noise[1:] = self.noise[:-1]
-        self.noise[0] = eps
+        for i in range(self.p-1, 0, -1): # equivalent to self.x[(1,:)] = self.x[(:,-1)]
+            jax.ops.index_update(self.x, i, self.x[i-1])
+        for i in range(self.q-1, 0, -1): # equivalent to self.noise[1:] = self.noise[:-1]
+            jax.ops.index_update(self.noise, i, self.noise[i-1])
+        jax.ops.index_update(self.x, 0, x_new) # equivalent to self.x[0] = x_new
+        jax.ops.index_update(self.noise, 0, eps) # equivalent to self.noise[0] = eps        
         return x_new
 
     def hidden(self):
