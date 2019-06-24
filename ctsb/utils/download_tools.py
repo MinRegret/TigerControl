@@ -33,7 +33,7 @@ def download(destination_path, url, verbose):
     Args:
         destination_path(string): the destination path of the download
         url(string): the url of the file to download
-        quiet(boolean): If False, will report download progress and inform if download already exists
+        verbose(boolean): If True, will report download progress and inform if download already exists
     """
     if os.path.exists(destination_path):
         if verbose:
@@ -47,6 +47,6 @@ def download(destination_path, url, verbose):
         except URLError:
             raise RuntimeError('Error downloading resource!')
         finally:
-            if not quiet:
+            if verbose:
                 # Just a newline.
                 print()
