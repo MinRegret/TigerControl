@@ -37,5 +37,4 @@ def model(id, **kwargs):
 def model_spec(id):
     return model_registry.spec(id)
 
-warn_once = True
 

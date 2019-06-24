@@ -7,6 +7,9 @@ from ctsb import error
 class Problem(object):
     spec = None
 
+    def __init__(self):
+        self.initialized = False
+
     def initialize(self, **kwargs):
         # resets problem to time 0
         raise NotImplementedError
@@ -59,10 +62,6 @@ class Wrapper(Problem):
 
     """
     def __init__(self, problem):
-        self.problem = problem
-        self.action_space = self.problem.action_space
-        self.observation_space = self.problem.observation_space
-        self.metadata = self.problem.metadata
         self.spec = getattr(self.problem, 'spec', None)
 
     def __getattr__(self, name):

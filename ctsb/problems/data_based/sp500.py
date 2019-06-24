@@ -6,9 +6,7 @@ import ctsb
 import os
 import jax.numpy as np
 import pandas as pd
-from ctsb.utils import seeding
-from ctsb.utils import sp500
-from ctsb.utils import get_ctsb_dir
+from ctsb.utils import seeding, sp500, get_ctsb_dir
 from ctsb.error import StepOutOfBounds
 
 class SP500(ctsb.Problem):

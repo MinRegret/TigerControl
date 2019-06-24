@@ -54,7 +54,4 @@ def problem(id, **kwargs):
     return problem_registry.make(id, **kwargs)
 
 
-warn_once = True
-
-
 
