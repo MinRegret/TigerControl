@@ -39,7 +39,8 @@ def download(destination_path, url, quiet):
         if not quiet:
             print('{} already exists, skipping ...'.format(destination_path))
     else:
-        print('Downloading {} ...'.format(url))
+        if not quiet:
+            print('Downloading {} ...'.format(url))
         try:
             hook = None if quiet else report_download_progress
             urlretrieve(url, destination_path, reporthook=hook)

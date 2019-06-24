@@ -9,7 +9,7 @@ import pandas as pd
 from ctsb.utils.download_tools import *
 
 # check if S&P500 data exists, downloads if not. Returns dataframe containing data
-def sp500():
+def sp500(quiet=False):
     ctsb_dir = get_ctsb_dir()
     url_sp500_xls = 'http://www.cboe.com/micro/buywrite/dailypricehistory.xls'
     path_sp500_xls = os.path.join(ctsb_dir, 'data/sp500_xls.xls')
@@ -18,7 +18,7 @@ def sp500():
 
     # check if files have been downloaded before, else download
     if not os.path.exists(path_sp500_csv):
-        download(path_sp500_xls, url_sp500_xls, False) # get files from online URL
+        download(path_sp500_xls, url_sp500_xls, quiet) # get files from online URL
         book = xlrd.open_workbook(path_sp500_xls)
         sh = book.sheet_by_index(0)
         sp500_col = open(path_sp500_txt, 'w')
