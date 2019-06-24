@@ -2,9 +2,11 @@
 Autoregressive moving-average
 """
 
-import ctsb
 import jax.numpy as np
-from ctsb.utils import seeding
+import jax.random as random
+
+import ctsb
+from ctsb.utils import generate_key
 
 
 class ARMA(ctsb.Problem):
@@ -35,21 +37,21 @@ class ARMA(ctsb.Problem):
         self.initialized = True
         self.T = 0
         if type(p) == int:
-            phi = np.random.normal(size=(p,))
+            phi = random.normal(generate_key(), shape=(p,))
             self.phi = 1.0 * phi / np.linalg.norm(phi, ord=1)
         else:
             assert len(p.shape) == 1
             self.phi = p
         if type(q) == int:
-            self.psi = np.random.normal(size=(q,))
+            self.psi = random.normal(generate_key(), shape=(q,))
         else:
             assert len(q.shape) == 1
             self.psi = q
         self.p = self.phi.shape[0]
         self.q = self.psi.shape[0]
-        self.c = np.random.normal() if c == None else c
-        self.x = np.random.normal(size=(self.p,))
-        self.noise = np.random.normal(size=(q,))
+        self.c = random.normal(generate_key()) if c == None else c
+        self.x = random.normal(generate_key(), shape=(self.p,))
+        self.noise = random.normal(generate_key(), size=(q,))
         return self.x[0]
 
     def step(self):
@@ -65,7 +67,7 @@ class ARMA(ctsb.Problem):
         self.T += 1
         x_ar = np.dot(self.x, self.phi)
         x_ma = np.dot(self.noise, self.psi)
-        eps = np.random.normal()
+        eps = random.normal(generate_key())
         x_new = self.c + x_ar + x_ma + eps
         self.x[1:] = self.x[:-1]
         self.x[0] = x_new
@@ -85,19 +87,6 @@ class ARMA(ctsb.Problem):
         """
         assert self.initialized
         return (self.x, self.noise)
-
-    def seed(self, seed=None):
-        """
-        Description:
-            Seeds the random number generator to produce deterministic, reproducible results. 
-        Args:
-            seed (int): Default value None. The number that determines the seed of the random
-            number generator for the system.
-        Returns:
-            A list containing the resulting NumPy seed.
-        """
-        self.np_random, seed = seeding.np_random(seed)
-        return [seed]
 
     def close(self):
         """
@@ -159,15 +148,6 @@ Methods:
         Returns:
             (x, eps): The hidden state consisting of the last p x-values and the last q
             noise-values.
-
-    seed(seed)
-        Description:
-            Seeds the random number generator to produce deterministic, reproducible results. 
-        Args:
-            seed (int): Default value None. The number that determines the seed of the random
-            number generator for the system.
-        Returns:
-            A list containing the resulting NumPy seed.
 
     help()
         Description:
