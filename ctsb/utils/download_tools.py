@@ -27,7 +27,7 @@ def report_download_progress(chunk_number, chunk_size, file_size):
         bar = '#' * int(64 * percent)
         sys.stdout.write('\r0% |{:<64}| {}%'.format(bar, int(percent * 100)))
 
-def download(destination_path, url, quiet):
+def download(destination_path, url, verbose):
     """
     Downloads the file at url to destination_path
     Args:
@@ -36,13 +36,13 @@ def download(destination_path, url, quiet):
         quiet(boolean): If False, will report download progress and inform if download already exists
     """
     if os.path.exists(destination_path):
-        if not quiet:
+        if verbose:
             print('{} already exists, skipping ...'.format(destination_path))
     else:
-        if not quiet:
+        if verbose:
             print('Downloading {} ...'.format(url))
         try:
-            hook = None if quiet else report_download_progress
+            hook = report_download_progress if verbose else None
             urlretrieve(url, destination_path, reporthook=hook)
         except URLError:
             raise RuntimeError('Error downloading resource!')

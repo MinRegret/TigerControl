@@ -10,4 +10,4 @@ def run_all_tests():
 
 
 if __name__ == "__main__":
-    test_utils()
+    run_all_tests()

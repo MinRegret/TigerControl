@@ -9,8 +9,8 @@ def test_dataset_registry():
     print("test_dataset_registry passed")
 
 # Unit test for dataset_registry.SP500. Tests if file is downloaded and processed correctly.
-def test_sp500_download(quiet=True):
-    sp500(quiet)
+def test_sp500_download(verbose=False):
+    sp500(verbose)
     ctsb_dir = get_ctsb_dir()
     path_sp500_csv = os.path.join(ctsb_dir, 'data/sp500.csv')
     assert(os.path.isfile(path_sp500_csv))
