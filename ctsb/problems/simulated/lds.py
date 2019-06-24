@@ -2,9 +2,11 @@
 Linear dynamical system
 """
 
-import ctsb
 import jax.numpy as np
-from ctsb.utils import seeding
+import jax.random as random
+
+import ctsb
+from ctsb.utils import generate_key
 
 
 class LDS(ctsb.Problem):
@@ -36,11 +38,11 @@ class LDS(ctsb.Problem):
         normalize = lambda M, k: k * M / np.linalg.norm(M, ord=2)
 
         # initialize matrix dynamics
-        self.A = np.random.normal(size=(d, d))
-        self.B = np.random.normal(size=(d, n))
-        self.C = np.random.normal(size=(m, d))
-        self.D = np.random.normal(size=(m, n))
-        self.h = np.random.normal(size=(d,))
+        self.A = random.normal(generate_key(), shape=(d, d))
+        self.B = random.normal(generate_key(), shape=(d, n))
+        self.C = random.normal(generate_key(), shape=(m, d))
+        self.D = random.normal(generate_key(), shape=(m, n))
+        self.h = random.normal(generate_key(), shape=(d,))
 
         # adjust dynamics matrix A
         self.A = normalize(self.A, 1.0)
@@ -48,7 +50,7 @@ class LDS(ctsb.Problem):
         self.C = normalize(self.C, 1.0)
         self.D = normalize(self.D, 1.0)
 
-        y = np.dot(self.C, self.h) + np.dot(self.D, np.zeros(n)) + noise * np.random.normal(m,)
+        y = np.dot(self.C, self.h) + np.dot(self.D, np.zeros(n)) + noise * random.normal(generate_key(), shape=(m,))
         return y
 
 
@@ -64,8 +66,8 @@ class LDS(ctsb.Problem):
         assert self.initialized
         assert u.shape == (self.n,)
         self.T += 1
-        self.h = np.dot(self.A, self.h) + np.dot(self.B, u) + self.noise * np.random.normal(self.d,)
-        y = np.dot(self.C, self.h) + np.dot(self.D, u) + self.noise * np.random.normal(self.m,)
+        self.h = np.dot(self.A, self.h) + np.dot(self.B, u) + self.noise * random.normal(generate_key(), shape=(self.d,))
+        y = np.dot(self.C, self.h) + np.dot(self.D, u) + self.noise * random.normal(generate_key(), shape=(self.m,))
         return y
 
     def hidden(self):
@@ -79,19 +81,6 @@ class LDS(ctsb.Problem):
         """
         assert self.initialized
         return self.h
-
-    def seed(self, seed=None):
-        """
-        Description:
-            Seeds the random number generator to produce deterministic, reproducible results. 
-        Args:
-            seed (int): Default value None. The number that determines the seed of the random
-            number generator for the system.
-        Returns:
-            A list containing the resulting NumPy seed.
-        """
-        self.np_random, seed = seeding.np_random(seed)
-        return [seed]
 
     def close(self):
         """
@@ -149,15 +138,6 @@ Methods:
             None
         Returns:
             h: The hidden state of the LDS.
-
-    seed(seed)
-        Description:
-            Seeds the random number generator to produce deterministic, reproducible results. 
-        Args:
-            seed (int): Default value None. The number that determines the seed of the random
-            number generator for the system.
-        Returns:
-            A list containing the resulting NumPy seed.
 
     help()
         Description:
