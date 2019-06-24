@@ -1,6 +1,7 @@
 """
 Long-short term memory output
 """
+import jax
 import jax.numpy as np
 import tensorflow as tf
 
@@ -69,9 +70,8 @@ class LSTM_Output(ctsb.Problem):
         assert self.initialized
         assert x.shape == (self.n,)
         self.T += 1
-        self.x[1:,:] = self.x[:-1,:]
-        self.x[0,:] = x
-
+        self.x = jax.ops.index_update(self.x, jax.ops.index[1:,:], self.x[:-1,:]) # equivalent to self.x[1:,:] = self.x[:-1,:]
+        self.x = jax.ops.index_update(self.x, jax.ops.index[0,:], x) # equivalent to self.x[0,:] = x
         y = self.model.predict(self.x.reshape(1, self.l, self.n))[0]
         return y
 

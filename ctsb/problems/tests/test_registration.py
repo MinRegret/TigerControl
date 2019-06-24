@@ -76,9 +76,7 @@ def test_malformed_lookup():
     else:
         assert False
 
-
-if __name__ == "__main__":
-
+def test_registration():
     print("\n--- Testing registration ---\n")
 
     print("test_make")
@@ -101,6 +99,11 @@ if __name__ == "__main__":
 
 
     print("\n--- Tests complete ---\n")
+
+
+if __name__ == "__main__":
+    test_registration()
+    
 
 
 

@@ -1,17 +1,17 @@
 # test the ARMA problem class
 
 import ctsb
-import ctsb.core
-from ctsb.core import Problem
+from ctsb.problems.core import Problem
 from ctsb.problems.simulated.arma import ARMA
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
 
-def test_arma():
-    T = 100000
+def test_arma(steps=100, show_plot=False, verbose=False):
+    T = steps
     p, q = 3, 3
-    problem = ARMA(p, q)
+    problem = ARMA()
+    problem.initialize(p,q)
     assert problem.T == 0
 
     test_output = []
@@ -19,12 +19,16 @@ def test_arma():
         test_output.append(problem.step())
 
     assert problem.T == T
-    print(problem.phi)
-    print(problem.psi)
-    plt.plot(test_output)
-    plt.show(block=False)
-    plt.pause(5)
-    plt.close()
+    if verbose:
+        print(problem.phi)
+        print(problem.psi)
+    if show_plot:
+        plt.plot(test_output)
+        plt.title("arma")
+        plt.show(block=False)
+        plt.pause(1)
+        plt.close()
+    print("test_arma passed")
     return
 
 
