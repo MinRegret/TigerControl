@@ -27,7 +27,7 @@ class ProblemSpec(Spec):
         id (str): The official problem ID
     """
     def __str__(self):
-        return "Problem"
+        return "<CTSB Problem Spec>"
 
 
 class ProblemRegistry(Registry):
@@ -38,7 +38,7 @@ class ProblemRegistry(Registry):
     code that was running.
     """
     def __str__(self):
-        return "Problem"
+        return "<CTSB Problem Registry>"
 
 
 # Have a global problem_registry

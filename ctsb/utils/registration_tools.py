@@ -67,12 +67,14 @@ class Spec(object):
             obj = cls(**_kwargs)
 
         # Make the object aware of which spec it came from.
-        obj.unwrapped.spec = self
+        obj.spec = self
         return obj
 
     def __repr__(self):
-        return "{} Spec({})".format(self, self.id)
+        return "{} Spec({})".format(str(self), self.id)
 
+    def __str__(self):
+        return "<CTSB Spec>"
 
 class Registry(object):
     """Register object by ID. IDs remain stable over time and are

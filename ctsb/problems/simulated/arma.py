@@ -51,7 +51,7 @@ class ARMA(ctsb.Problem):
         self.q = self.psi.shape[0]
         self.c = random.normal(generate_key()) if c == None else c
         self.x = random.normal(generate_key(), shape=(self.p,))
-        self.noise = random.normal(generate_key(), size=(q,))
+        self.noise = random.normal(generate_key(), shape=(q,))
         return self.x[0]
 
     def step(self):

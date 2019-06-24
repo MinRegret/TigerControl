@@ -27,14 +27,6 @@ class Model(object):
         # prints information about this class and its methods
         raise NotImplementedError
 
-    @property
-    def unwrapped(self):
-        """Completely unwrap this problem.
-        Returns:
-            ctsb.Model: The base non-wrapped ctsb.Model instance
-        """
-        return self
-
     def __str__(self):
         if self.spec is None:
             return '<{} instance> call object help() method for info'.format(type(self).__name__)

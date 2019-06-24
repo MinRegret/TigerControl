@@ -13,7 +13,7 @@ model_id_re = re.compile(r'^(?:[\w:-]+\/)?[A-Z]+([\w:.-]+)$')
 class ModelSpec(Spec):
     # Spec class for pre-implemented Models
     def __str__(self):
-        return "Model"
+        return "<CTSB Model Spec>"
 
 
 class ModelRegistry(Registry):
@@ -21,7 +21,7 @@ class ModelRegistry(Registry):
     be called via ctsb.model("ID").
     """
     def __str__(self):
-        return "Model"
+        return "<CTSB Model Registry>"
 
 
 
