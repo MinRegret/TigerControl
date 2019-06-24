@@ -1,15 +1,12 @@
 """
 Recurrent neural network output
 """
-
-import ctsb
 import jax.numpy as np
 import tensorflow as tf
-from ctsb.utils import seeding
-
 from keras.models import Sequential, Model
 from keras.layers import Input, Dense, SimpleRNN
-
+import ctsb
+from ctsb.utils.random import generate_key
 
 class RNN_Output(ctsb.Problem):
     """
@@ -87,19 +84,6 @@ class RNN_Output(ctsb.Problem):
         assert self.initialized
         return self.hidden_model.predict(self.x.reshape(1, self.l, self.n))[0]
 
-    def seed(self, seed=None):
-        """
-        Description:
-            Seeds the random number generator to produce deterministic, reproducible results. 
-        Args:
-            seed (int): Default value None. The number that determines the seed of the random
-            number generator for the system.
-        Returns:
-            A list containing the resulting NumPy seed.
-        """
-        self.np_random, seed = seeding.np_random(seed)
-        return [seed]
-
     def close(self):
         """
         Not implemented
@@ -157,15 +141,6 @@ Methods:
             None
         Returns:
             h: The hidden state.
-
-    seed(seed)
-        Description:
-            Seeds the random number generator to produce deterministic, reproducible results. 
-        Args:
-            seed (int): Default value None. The number that determines the seed of the random
-            number generator for the system.
-        Returns:
-            A list containing the resulting NumPy seed.
 
     help()
         Description:

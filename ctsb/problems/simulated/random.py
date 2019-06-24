@@ -1,11 +1,10 @@
 """
 Produces randomly generated scalar values at every timestep, taken from a normal distribution.
 """
-
-import ctsb
 import jax.numpy as np
-from ctsb.utils import seeding
-
+import jax.random as random
+import ctsb
+from ctsb.utils.random import generate_key
 class Random(ctsb.Problem):
     """
     A random sequence of scalar values taken from an i.i.d. normal distribution.
@@ -37,26 +36,13 @@ class Random(ctsb.Problem):
         """
         assert self.initialized
         self.T += 1
-        return np.random.normal()
+        return random.normal(generate_key())
 
     def hidden(self):
         """
         Not implemented
         """
         pass
-
-    def seed(self, seed=None):
-        """
-        Description:
-            Seeds the random number generator to produce deterministic, reproducible results. 
-        Args:
-            seed (int): Default value None. The number that determines the seed of the random
-            number generator for the system.
-        Returns:
-            A list containing the resulting NumPy seed.
-        """
-        self.np_random, seed = seeding.np_random(seed)
-        return [seed]
 
     def close(self):
         """
@@ -102,15 +88,6 @@ Methods:
             None
         Returns:
             The next value in the time-series.
-
-    seed(seed)
-        Description:
-            Seeds the random number generator to produce deterministic, reproducible results. 
-        Args:
-            seed (int): Default value None. The number that determines the seed of the random
-            number generator for the system.
-        Returns:
-            A list containing the resulting NumPy seed.
 
     help()
         Description:
