@@ -4,16 +4,16 @@ import jax.numpy as np
 import jax.random as random
 import matplotlib.pyplot as plt
 import ctsb
-from ctsb.problems.simulated.rnn_output import RNN_Output
+from ctsb.problems.simulated.rnn_output_jax import RNN_Output
 from ctsb.utils.random import generate_key
 
 
 
 def test_rnn(steps=100, show_plot=False, verbose=False):
     T = steps
-    n, m, l, h = 5, 3, 5, 10
+    n, m = 5, 3
     problem = RNN_Output()
-    problem.initialize(n, m, l, h)
+    problem.initialize(n, m)
     assert problem.T == 0
 
     test_output = []
@@ -22,6 +22,10 @@ def test_rnn(steps=100, show_plot=False, verbose=False):
             print("{} timesteps".format(t+1))
         u = random.normal(generate_key(),shape=(n,))
         test_output.append(problem.step(u))
+
+    info = problem.hidden()
+    if verbose:
+        print(info)
 
     assert problem.T == T
     if show_plot:
@@ -35,4 +39,4 @@ def test_rnn(steps=100, show_plot=False, verbose=False):
 
 
 if __name__=="__main__":
-    test_rnn()
+    test_rnn(show_plot=True)

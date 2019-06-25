@@ -1,13 +1,17 @@
 """
-Long-short term memory output
+--- DEPRECATED ---
+
+Recurrent neural network output based on TensorFlow Keras implementation
 """
 import jax
 import jax.numpy as np
-import jax.experimental.stax as stax
+import tensorflow as tf
+from keras.models import Sequential, Model
+from keras.layers import Input, Dense, SimpleRNN
 import ctsb
 from ctsb.utils.random import generate_key
 
-class LSTM_Output(ctsb.Problem):
+class RNN_Output(ctsb.Problem):
     """
     Produces outputs from a randomly initialized recurrent neural network.
     """
@@ -15,30 +19,43 @@ class LSTM_Output(ctsb.Problem):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, n, m, h=64):
+    def initialize(self, n, m, l=32, h=128, rnn=None):
         """
         Description:
             Randomly initialize the RNN.
         Args:
             n (int): Input dimension.
             m (int): Observation/output dimension.
-            h (int): Default value 64. Hidden dimension of RNN.
+            l (int): Default value 32. Length of RNN memory, i.e. only consider last l inputs when producing next output.
+            h (int): Default value 128. Hidden dimension of RNN.
+            rnn (model): Default value None. Pretrained RNN to replace the hidden dynamics (must still specify
+                dimensions n and m), provided by the user.
         Returns:
             The first value in the time-series
         """
-        raise Exception("Change RNN code to LSTM code!")
-
         self.T = 0
         self.initialized = True
-        self.n, self.m, self.h = n, m, h
+        self.n, self.m, self.l, self.h = n, m, l, h
 
-        glorot_init = stax.glorot() # returns a function that initializes weights
-        self.W_h = glorot_init(generate_key(), (h, h))
-        self.W_x = glorot_init(generate_key(), (h, n))
-        self.W_out = glorot_init(generate_key(), (m, h))
-        self.b_h = np.zeros(h)
-        self.hid = np.zeros(h)
-        return np.dot(self.W_out, self.hid)
+        if rnn == None:
+            hidden = SimpleRNN(h, input_shape=(l,n))
+            output = Dense(m)
+            model = Sequential()
+            model.add(hidden)
+            model.add(output)
+            model.compile(loss='mse', optimizer='sgd')
+            hidden_model = Sequential()
+            hidden_model.add(hidden)
+            hidden_model.compile(loss='mse', optimizer='sgd')
+
+            self.model = model
+            self.hidden_model = hidden_model
+        else:
+            self.model = rnn
+        self.x = np.zeros(shape=(l,n))
+
+        y = self.model.predict(self.x.reshape(1, self.l, self.n))[0]
+        return y
         
     def step(self, x):
         """
@@ -52,9 +69,11 @@ class LSTM_Output(ctsb.Problem):
         assert self.initialized
         assert x.shape == (self.n,)
         self.T += 1
+        self.x = jax.ops.index_update(self.x, jax.ops.index[1:,:], self.x[:-1,:]) # equivalent to self.x[1:,:] = self.x[:-1,:]
+        self.x = jax.ops.index_update(self.x, jax.ops.index[0,:], x) # equivalent to self.x[0,:] = x
 
-        self.hid = np.tanh(np.dot(self.W_h, self.hid) + np.dot(self.W_x, x) + self.b_h)
-        return np.dot(self.W_out, self.hid)
+        y = self.model.predict(self.x.reshape(1, self.l, self.n))[0]
+        return y
 
     def hidden(self):
         """
@@ -66,7 +85,7 @@ class LSTM_Output(ctsb.Problem):
             h: The hidden state.
         """
         assert self.initialized
-        return self.hid
+        return self.hidden_model.predict(self.x.reshape(1, self.l, self.n))[0]
 
     def close(self):
         """
@@ -103,7 +122,10 @@ Methods:
         Args:
             n (int): Input dimension.
             m (int): Observation/output dimension.
-            h (int): Default value 64. Hidden dimension of RNN.
+            l (int): Default value 32. Length of RNN memory, i.e. only consider last l inputs when producing next output.
+            h (int): Default value 128. Hidden dimension of RNN.
+            rnn (model): Default value None. Pretrained RNN to replace the hidden dynamics (must still specify
+                dimensions n and m), provided by the user.
         Returns:
             The first value in the time-series
 

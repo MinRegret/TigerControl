@@ -16,6 +16,10 @@ def test_arma(steps=100, show_plot=False, verbose=False):
     test_output = []
     for t in range(T):
         test_output.append(problem.step())
+        
+    info = problem.hidden()
+    if verbose:
+        print(info)
 
     assert problem.T == T
     if verbose:
