@@ -2,8 +2,8 @@
 Last observed value
 """
 
-import ctsb
 import jax.numpy as np
+import ctsb
 from ctsb.utils import seeding
 
 class LastValue(ctsb.Model):
@@ -17,7 +17,7 @@ class LastValue(ctsb.Model):
     def initialize(self):
         """
         Description:
-            Randomly initialize the hidden dynamics of the system.
+            Initialize the (non-existent) hidden dynamics of the model.
         Args:
             None
         Returns:
@@ -25,42 +25,39 @@ class LastValue(ctsb.Model):
         """
         self.initialized = True
 
-    def step(self):
+    def step(self, x):
         """
         Description:
-            Moves the system dynamics one time-step forward.
+            Takes input observation and returns next prediction value,
+            then updates internal parameters
         Args:
+            x (float/numpy.ndarray): value at current time-step
+        Returns:
+            Predicted value for the next time-step
+        """
+        return x
+
+    def predict(self, x):
+        """
+        Description:
+            Takes input observation and returns next prediction value
+        Args:
+            x (float/numpy.ndarray): value at current time-step
+        Returns:
+            Predicted value for the next time-step
+        """
+        return x
+
+    def update(self, rule=None):
+        """
+        Description:
+            Takes update rule and adjusts internal parameters
+        Args:
+            rule (function): rule with which to alter parameters
+        Returns:
             None
-        Returns:
-            The next value in the time-series.
         """
-        assert self.initialized
-        return np.random.normal()
-
-    def hidden(self):
-        """
-        Not implemented
-        """
-        pass
-
-    def seed(self, seed=None):
-        """
-        Description:
-            Seeds the random number generator to produce deterministic, reproducible results. 
-        Args:
-            seed (int): Default value None. The number that determines the seed of the random
-            number generator for the system.
-        Returns:
-            A list containing the resulting NumPy seed.
-        """
-        self.np_random, seed = seeding.np_random(seed)
-        return [seed]
-
-    def close(self):
-        """
-        Not implemented
-        """
-        pass
+        return
 
     def help(self):
         """
@@ -71,44 +68,52 @@ class LastValue(ctsb.Model):
         Returns:
             None
         """
-        print(Random_help)
+        print(LastValue_help)
 
 
 
 # string to print when calling help() method
-Random_help = """
+LastValue_help = """
 
 -------------------- *** --------------------
 
-Id: Random-v0
-Description: A random sequence of scalar values taken from an i.i.d. normal distribution.
+Id: LastValue
+Description: Predicts the last value in the time series, i.e. x_t = x_(t-1)
 
 Methods:
 
     initialize()
         Description:
-            Randomly initialize the hidden dynamics of the system.
+            Initialize the (non-existent) hidden dynamics of the model.
         Args:
             None
         Returns:
             None
 
-    step()
+    step(x)
         Description:
-            Moves the system dynamics one time-step forward.
+            Takes input observation and returns next prediction value,
+            then updates internal parameters
         Args:
-            None
+            x (float/numpy.ndarray): value at current time-step
         Returns:
-            The next value in the time-series.
+            Predicted value for the next time-step
 
-    seed(seed)
+    predict(x)
         Description:
-            Seeds the random number generator to produce deterministic, reproducible results. 
+            Takes input observation and returns next prediction value
         Args:
-            seed (int): Default value None. The number that determines the seed of the random
-            number generator for the system.
+            x (float/numpy.ndarray): value at current time-step
         Returns:
-            A list containing the resulting NumPy seed.
+            Predicted value for the next time-step
+
+    update(rule=None)
+        Description:
+            Takes update rule and adjusts internal parameters
+        Args:
+            rule (function): rule with which to alter parameters
+        Returns:
+            None
 
     help()
         Description:
