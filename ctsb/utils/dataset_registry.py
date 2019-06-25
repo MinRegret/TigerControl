@@ -8,6 +8,25 @@ import datetime
 import csv
 import pandas as pd
 from ctsb.utils.download_tools import *
+import datetime
+
+def to_datetime(date, time):
+    day_month_year = [int(x) for x in date.split('/')]
+    hour_min = [int(x) for x in time.split(':')]
+    return datetime.datetime(day_month_year[2], 
+                             day_month_year[1], 
+                             day_month_year[0], 
+                             hour_min[0], 
+                             hour_min[1])
+
+def datetime_to_daysElapsed(cur_datetime, base_datetime):
+    time_delta = cur_datetime - base_datetime
+    print(time_delta)
+    print(type(time_delta))
+    time_to_days = (time_delta.seconds)/(24 * 60 * 60)
+    print(time_to_days)
+    print(time_delta.days)
+    return time_delta.days + time_to_days
 
 # checks if uci_indoor data exists, downloads if not. Returns dataframe containing data
 # Dataset credits: F. Zamora-Martínez, P. Romeu, P. Botella-Rocamora, J. Pardo, 
@@ -19,21 +38,43 @@ def uci_indoor(verbose=True):
     path_uci_indoor_zip = os.path.join(ctsb_dir, 'data/uci_indoor.zip')
     path_uci_indoor_txt1 = os.path.join(ctsb_dir, 'data/uci_indoor/NEW-DATA-1.T15.txt')
     path_uci_indoor_csv = os.path.join(ctsb_dir, 'data/uci_indoor.csv')
+    path_uci_indoor_cleaned_csv = os.path.join(ctsb_dir, 'data/uci_indoor_cleaned.csv')
     path_uci_indoor_unzip = os.path.join(ctsb_dir, 'data/uci_indoor')
 
     # check if files have been downloaded before, else download
-    if not os.path.exists(path_uci_indoor_csv):
+    if not os.path.exists(path_uci_indoor_cleaned_csv):
         download(path_uci_indoor_zip, url_uci_indoor_zip, verbose) # get files from online URL
         unzip(path_uci_indoor_zip,True)
         f = open(path_uci_indoor_txt1, 'r')
 
         list_of_vecs = [line.split() for line in f] # clean downloaded data
+        list_of_vecs[0] = list_of_vecs[0][1:]
         with open(path_uci_indoor_csv, "w") as c:
             writer = csv.writer(c)
             writer.writerows(list_of_vecs)
+
+
         os.remove(path_uci_indoor_zip) # clean up - remove unnecessary files
         shutil.rmtree(path_uci_indoor_unzip)
-    return pd.read_csv(path_uci_indoor_csv)
+        df = pd.read_csv(path_uci_indoor_csv)
+        base_datetime = to_datetime(df['1:Date'].iloc[0], df['2:Time'].iloc[0])
+        def uci_datetime_converter(row):
+            return datetime_to_daysElapsed(to_datetime(row['1:Date'],row['2:Time']), base_datetime)
+        # print("base_datetime: " + str(base_datetime))
+        df['24:Day_Of_Week'] = df.apply(uci_datetime_converter, axis=1)
+        with open(path_uci_indoor_csv,'r') as csvinput:
+            with open(path_uci_indoor_cleaned_csv, 'w') as csvoutput:
+                writer = csv.writer(csvoutput, lineterminator='\n')
+                reader = csv.reader(csvinput)
+                r = 0
+                appended_csv = [next(reader) + ['25:days_elapsed']]
+                for row in reader:
+                    row.append(df['24:Day_Of_Week'].iloc[r])
+                    appended_csv.append(row)
+                    r += 1
+                writer.writerows(appended_csv)
+    df = pd.read_csv(path_uci_indoor_cleaned_csv)
+    return df
 
 # check if S&P500 data exists, downloads if not. Returns dataframe containing data
 def sp500(verbose=True):

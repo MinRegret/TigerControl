@@ -6,7 +6,7 @@ from ctsb.utils.download_tools import get_ctsb_dir
 # add all unit tests in datset_registry
 def test_dataset_registry():
     # test_sp500_download()
-    csv_paths = ['data/sp500.csv', 'data/uci_indoor.csv']
+    csv_paths = ['data/sp500.csv', 'data/uci_indoor_cleaned.csv']
     download_fns = [sp500, uci_indoor]
     for i in range (0, len(csv_paths)):
     	test_dataset_download(csv_paths[i], download_fns[i])
@@ -18,7 +18,7 @@ def test_dataset_download(path_to_csv, download_fn, verbose=False):
  	ctsb_dir = get_ctsb_dir()
  	total_path = os.path.join(ctsb_dir, path_to_csv)
  	assert(os.path.isfile(total_path))
- 	os.remove(total_path)
+ 	# os.remove(total_path)
  	name = path_to_csv.split('.')[0].split('/')[1]
  	print(name + " download passed")
 
