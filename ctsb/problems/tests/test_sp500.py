@@ -17,8 +17,10 @@ def test_sp500(steps=100, show_plot=False, verbose=False):
         test_output.append(problem.step())
 
     assert problem.T == T
+    
+    info = problem.hidden()
     if verbose:
-        print(problem.hidden())
+        print(info)
     if show_plot:
         plt.plot(test_output)
         plt.title("S&P 500")

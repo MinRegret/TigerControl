@@ -22,6 +22,10 @@ def test_lstm(steps=100, show_plot=False, verbose=False):
         u = random.normal(generate_key(), shape=(n,))
         test_output.append(problem.step(u))
 
+    info = problem.hidden()
+    if verbose:
+        print(info)
+        
     assert problem.T == T
     if show_plot:
         plt.plot(test_output)
