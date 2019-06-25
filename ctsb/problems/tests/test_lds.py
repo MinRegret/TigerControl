@@ -1,10 +1,9 @@
-# test the ARMA problem class
+# test the LDS problem class
 
 import jax.numpy as np
 import jax.random as random
 import ctsb
 import matplotlib.pyplot as plt
-from ctsb.problems.core import Problem
 from ctsb.problems.simulated.lds import LDS
 from ctsb.utils.random import generate_key
 

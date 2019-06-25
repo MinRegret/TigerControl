@@ -3,15 +3,18 @@ from ctsb.problems.tests.test_lds import test_lds
 from ctsb.problems.tests.test_lstm_output import test_lstm
 from ctsb.problems.tests.test_random import test_random
 from ctsb.problems.tests.test_rnn_output import test_rnn
+from ctsb.problems.tests.test_sp500 import test_sp500
+from ctsb.problems.tests.test_uci_indoor import test_uci_indoor
 
-def run_all_tests():
-	show=True
+def run_all_tests(show=True):
 	print("Testing simulated problems...")
 	test_arma(show_plot=show)
 	test_lds(show_plot=show)
 	test_lstm(show_plot=show)
 	test_random(show_plot=show)
 	test_rnn(show_plot=show)
+	test_sp500(show_plot=show)
+	test_uci_indoor(show_plot=show)
 	print("All simulated problems tests passed")
 
 if __name__ == "__main__":

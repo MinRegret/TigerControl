@@ -1,7 +1,6 @@
 # test the ARMA problem class
 
 import ctsb
-from ctsb.problems.core import Problem
 from ctsb.problems.simulated.arma import ARMA
 import jax.numpy as np
 import matplotlib.pyplot as plt

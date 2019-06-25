@@ -1,14 +1,14 @@
-# test the Random problem class
+# test the S&P 500 problem class
 
 import ctsb
-from ctsb.problems.simulated.random import Random
+from ctsb.problems.data_based.sp500 import SP500
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
 
-def test_random(steps=100, show_plot=False):
+def test_sp500(steps=100, show_plot=False, verbose=False):
     T = steps
-    problem = Random()
+    problem = SP500()
     problem.initialize()
     assert problem.T == 0
 
@@ -17,15 +17,17 @@ def test_random(steps=100, show_plot=False):
         test_output.append(problem.step())
 
     assert problem.T == T
+    if verbose:
+        print(problem.hidden())
     if show_plot:
         plt.plot(test_output)
-        plt.title("random")
+        plt.title("S&P 500")
         plt.show(block=False)
         plt.pause(1)
         plt.close()
-    print("test_random passed")
+    print("test_sp500 passed")
     return
 
 
 if __name__=="__main__":
-    test_random()
+    test_sp500()

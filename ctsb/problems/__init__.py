@@ -40,3 +40,9 @@ problem_register(
     id='SP500-v0',
     entry_point='ctsb.problems.data_based:SP500',
 )
+
+problem_register(
+    id='UCI-Indoor-v0',
+    entry_point='ctsb.problems.data_based:UCI_Indoor',
+)
+

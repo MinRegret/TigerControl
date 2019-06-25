@@ -1,7 +1,6 @@
-# test the ARMA problem class
+# test the LSTM problem class
 
 import ctsb
-from ctsb.problems.core import Problem
 from ctsb.problems.simulated.lstm_output import LSTM_Output
 from ctsb.utils.random import generate_key
 import jax.numpy as np
