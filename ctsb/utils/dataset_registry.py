@@ -2,11 +2,38 @@ from __future__ import division
 from __future__ import print_function
 
 import os
+import shutil
 import xlrd
 import datetime
 import csv
 import pandas as pd
 from ctsb.utils.download_tools import *
+
+# checks if uci_indoor data exists, downloads if not. Returns dataframe containing data
+# Dataset credits: F. Zamora-Martínez, P. Romeu, P. Botella-Rocamora, J. Pardo, 
+# On-line learning of indoor temperature forecasting models towards energy efficiency, 
+# Energy and Buildings, Volume 83, November 2014, Pages 162-172, ISSN 0378-7788
+def uci_indoor(verbose=True):
+    ctsb_dir = get_ctsb_dir()
+    url_uci_indoor_zip = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00274/NEW-DATA.zip'
+    path_uci_indoor_zip = os.path.join(ctsb_dir, 'data/uci_indoor.zip')
+    path_uci_indoor_txt1 = os.path.join(ctsb_dir, 'data/uci_indoor/NEW-DATA-1.T15.txt')
+    path_uci_indoor_csv = os.path.join(ctsb_dir, 'data/uci_indoor.csv')
+    path_uci_indoor_unzip = os.path.join(ctsb_dir, 'data/uci_indoor')
+
+    # check if files have been downloaded before, else download
+    if not os.path.exists(path_uci_indoor_csv):
+        download(path_uci_indoor_zip, url_uci_indoor_zip, verbose) # get files from online URL
+        unzip(path_uci_indoor_zip,True)
+        f = open(path_uci_indoor_txt1, 'r')
+
+        list_of_vecs = [line.split() for line in f] # clean downloaded data
+        with open(path_uci_indoor_csv, "w") as c:
+            writer = csv.writer(c)
+            writer.writerows(list_of_vecs)
+        os.remove(path_uci_indoor_zip) # clean up - remove unnecessary files
+        shutil.rmtree(path_uci_indoor_unzip)
+    return pd.read_csv(path_uci_indoor_csv)
 
 # check if S&P500 data exists, downloads if not. Returns dataframe containing data
 def sp500(verbose=True):

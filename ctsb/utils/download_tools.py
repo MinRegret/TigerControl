@@ -3,6 +3,7 @@ from __future__ import print_function
 
 import os
 import sys
+import zipfile
 import ctsb
 from urllib import request
 from urllib.error import URLError
@@ -50,3 +51,19 @@ def download(destination_path, url, verbose):
             if verbose:
                 # Just a newline.
                 print()
+
+def unzip(zipped_path, verbose=False):
+    unzipped_path = os.path.splitext(zipped_path)[0]
+    if os.path.exists(unzipped_path):
+        if verbose:
+            print('{} already exists, skipping ... '.format(unzipped_path))
+        return
+    zip_ref = zipfile.ZipFile(zipped_path, 'r')
+    zip_ref.extractall(unzipped_path)
+    zip_ref.close()
+    '''
+    with gzip.open(zipped_path, 'rb') as zipped_file:
+        with open(unzipped_path, 'wb') as unzipped_file:
+            unzipped_file.write(zipped_file.read())
+            if verbose:
+                print('Unzipped {} ...'.format(zipped_path))'''

@@ -6,10 +6,10 @@ import ctsb
 import os
 import jax.numpy as np
 import pandas as pd
-from ctsb.utils import sp500, get_ctsb_dir
+from ctsb.utils import uci, get_ctsb_dir
 from ctsb.error import StepOutOfBounds
 
-class SP500(ctsb.Problem):
+class uci_indoor(ctsb.Problem):
     """
     Description: Outputs the daily opening price of the S&P 500 stock market index 
         from January 3, 1986 to June 29, 2018.
@@ -17,7 +17,7 @@ class SP500(ctsb.Problem):
 
     def __init__(self):
         self.initialized = False
-        self.data_path = os.path.join(get_ctsb_dir(), "data/sp500.csv")
+        self.data_path = os.path.join(get_ctsb_dir(), "data/uci.csv")
 
     def initialize(self):
         """
@@ -30,7 +30,7 @@ class SP500(ctsb.Problem):
         """
         self.initialized = True
         self.T = 0
-        self.df = sp500() # get data
+        self.df = uci() # get data
         self.max_T = self.df.shape[0]
 
         return self.df.iloc[self.T, 1]
