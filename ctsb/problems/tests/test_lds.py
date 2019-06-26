@@ -21,6 +21,10 @@ def test_lds(steps=100, show_plot=False):
         u = random.normal(generate_key(),shape=(n,))
         test_output.append(problem.step(u))
 
+    info = problem.hidden()
+    if verbose:
+        print(info)
+
     assert problem.T == T
     if show_plot:
         plt.plot(test_output)

@@ -23,7 +23,7 @@ problem_register(
 )
 
 problem_register(
-    id='RNN-v0',
+    id='RNN-v1',
     entry_point='ctsb.problems.simulated:RNN_Output',
 )
 
