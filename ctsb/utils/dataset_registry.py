@@ -67,7 +67,7 @@ def uci_indoor(verbose=True):
                 writer = csv.writer(csvoutput, lineterminator='\n')
                 reader = csv.reader(csvinput)
                 r = 0
-                appended_csv = [next(reader) + ['25:days_elapsed']]
+                appended_csv = [next(reader) + ['25:Days_Elapsed']]
                 for row in reader:
                     row.append(df['24:Day_Of_Week'].iloc[r])
                     appended_csv.append(row)

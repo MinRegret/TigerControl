@@ -5,7 +5,7 @@ Last observed value
 import jax.numpy as np
 import ctsb
 
-class LastValue(ctsb.Model):
+class PredictZero(ctsb.Model):
     """
     Predicts the last value in the time series, i.e. x_t = x_(t-1)
     """
@@ -45,7 +45,7 @@ class LastValue(ctsb.Model):
         Returns:
             Predicted value for the next time-step
         """
-        return x
+        return 0
 
     def update(self, rule=None):
         """
@@ -70,7 +70,7 @@ class LastValue(ctsb.Model):
         print(LastValue_help)
 
     def __str__(self):
-        return "<LastValue Model>"
+        return "<PredictZero Model>"
 
 
 

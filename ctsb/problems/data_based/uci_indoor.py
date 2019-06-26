@@ -48,7 +48,7 @@ class UCI_Indoor(ctsb.Problem):
         self.T += 1
         if self.T == self.max_T: 
             raise StepOutOfBounds("Number of steps exceeded length of dataset ({})".format(self.max_T))
-        return self.df.iloc[self.T, 1]
+        return self.df.iloc[self.T].drop(['1:Date','2:Time','24:Day_Of_Week'])
 
     def hidden(self):
         """
@@ -60,7 +60,7 @@ class UCI_Indoor(ctsb.Problem):
             Date (string)
         """
         assert self.initialized
-        return "Timestep: {} out of {}, date: ".format(self.T+1, self.max_T) + self.df.iloc[self.T, 0]
+        return "Timestep: {} out of {}".format(self.T+1, self.max_T) + '\n' + str(self.df.iloc[self.T][['1:Date','2:Time','24:Day_Of_Week']])
 
     def close(self):
         """

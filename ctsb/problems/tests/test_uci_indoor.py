@@ -23,11 +23,11 @@ def test_uci_indoor(steps=100, show_plot=False, verbose=False):
         plt.plot(test_output)
         plt.title("UCI Indoor")
         plt.show(block=False)
-        plt.pause(1)
+        plt.pause(10)
         plt.close()
     print("test_uci_indoor passed")
     return
 
 
 if __name__=="__main__":
-    test_uci_indoor(show_plot=True)
+    test_uci_indoor(show_plot=True, verbose=True)

@@ -4,7 +4,6 @@ Linear combination of previous values
 
 import ctsb
 import jax.numpy as np
-from ctsb.utils import seeding
 
 class Linear(ctsb.Model):
     """

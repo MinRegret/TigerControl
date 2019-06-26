@@ -108,6 +108,9 @@ class ARMA(ctsb.Problem):
         """
         print(ARMA_help)
 
+    def __str__(self):
+        return "<ARMA Problem>"
+
 
 # string to print when calling help() method
 ARMA_help = """
