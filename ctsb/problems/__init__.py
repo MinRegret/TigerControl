@@ -23,12 +23,22 @@ problem_register(
 )
 
 problem_register(
+    id='RNN-v0',
+    entry_point='ctsb.problems.simulated:RNN_Output_TF',
+)
+
+problem_register(
     id='RNN-v1',
     entry_point='ctsb.problems.simulated:RNN_Output',
 )
 
 problem_register(
     id='LSTM-v0',
+    entry_point='ctsb.problems.simulated:LSTM_Output_TF',
+)
+
+problem_register(
+    id='LSTM-v1',
     entry_point='ctsb.problems.simulated:LSTM_Output',
 )
 
@@ -42,7 +52,12 @@ problem_register(
 )
 
 problem_register(
-    id='UCI-Indoor-v0',
+    id='UCIIndoor-v0',
     entry_point='ctsb.problems.data_based:UCI_Indoor',
+)
+
+problem_register(
+    id='Crypto-v0',
+    entry_point='ctsb.problems.data_based:Crypto',
 )
 

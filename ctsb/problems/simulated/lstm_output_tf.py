@@ -14,7 +14,7 @@ import ctsb
 
 
 # class for online control tests
-class LSTM_Output(ctsb.Problem):
+class LSTM_Output_TF(ctsb.Problem):
     """
     Produces outputs from a randomly initialized long-short term memory LSTM (LSTM).
     """
