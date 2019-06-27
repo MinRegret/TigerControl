@@ -17,3 +17,8 @@ model_register(
     entry_point='ctsb.models.time_series:Linear',
 )
 
+model_register(
+    id='PredictZero',
+    entry_point='ctsb.models.time_series:PredictZero',
+)
+
