@@ -3,6 +3,7 @@
 
 from ctsb import error
 import jax.numpy as np
+from tqdm import tqdm
 
 # class for implementing algorithms with enforced modularity
 class Experiment(object):
@@ -34,7 +35,8 @@ class Experiment(object):
 
     def run_experiment(self, problem, obs, model):
         cur_x = obs
-        for i in range (0,self.T):
+        print ("running experiment: " + str(model) + " on " + str(problem))
+        for i in tqdm(range(0,self.T)):
             cur_y_pred = model.predict(cur_x)
             cur_y_true= problem.step()
             cur_loss = self.loss(cur_y_true, cur_y_pred)
@@ -43,6 +45,7 @@ class Experiment(object):
             cur_x = cur_y_true
         return
 
+    def 
     def get_prob_model_to_loss(self):
         return self.prob_model_to_loss
 

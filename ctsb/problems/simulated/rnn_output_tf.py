@@ -11,7 +11,7 @@ from keras.layers import Input, Dense, SimpleRNN
 import ctsb
 from ctsb.utils.random import generate_key
 
-class RNN_Output(ctsb.Problem):
+class RNN_Output_TF(ctsb.Problem):
     """
     Produces outputs from a randomly initialized recurrent neural network.
     """
