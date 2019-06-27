@@ -26,18 +26,20 @@ class LSTM_Output(ctsb.Problem):
         Returns:
             The first value in the time-series
         """
-        raise Exception("Change RNN code to LSTM code!")
 
         self.T = 0
         self.initialized = True
         self.n, self.m, self.h = n, m, h
 
         glorot_init = stax.glorot() # returns a function that initializes weights
-        self.W_h = glorot_init(generate_key(), (h, h))
-        self.W_x = glorot_init(generate_key(), (h, n))
-        self.W_out = glorot_init(generate_key(), (m, h))
-        self.b_h = np.zeros(h)
-        self.hid = np.zeros(h)
+        self.W_hh = glorot_init(generate_key(), (4*h, h)) # maps h_t to gates
+        self.W_xh = glorot_init(generate_key(), (4*h, n)) # maps x_t to gates
+        self.b_h = np.zeros(4*h)
+        jax.ops.index_update(self.b_h, jax.ops.index[h:2*h], np.ones(h)) # forget gate biased initialization
+        self.W_out = glorot_init(generate_key(), (m, h)) # maps h_t to output
+        self.cell = np.zeros(h) # long-term memory
+        self.hid = np.zeros(h) # short-term memory
+        self.sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
         return np.dot(self.W_out, self.hid)
         
     def step(self, x):
@@ -53,7 +55,10 @@ class LSTM_Output(ctsb.Problem):
         assert x.shape == (self.n,)
         self.T += 1
 
-        self.hid = np.tanh(np.dot(self.W_h, self.hid) + np.dot(self.W_x, x) + self.b_h)
+        gate = np.dot(self.W_hh, self.hid) + np.dot(self.W_xh, x) + self.b_h 
+        i, f, g, o = np.split(gate, 4) # order: input, forget, cell, output
+        self.cell =  self.sigmoid(f) * self.cell + self.sigmoid(i) * np.tanh(g)
+        self.hid = self.sigmoid(o) * np.tanh(self.cell)
         return np.dot(self.W_out, self.hid)
 
     def hidden(self):
@@ -83,12 +88,12 @@ class LSTM_Output(ctsb.Problem):
         Returns:
             None
         """
-        print(RNN_Output_help)
+        print(LSTM_Output_help)
 
 
 
 # string to print when calling help() method
-RNN_Output_help = """
+LSTM_Output_help = """
 
 -------------------- *** --------------------
 
