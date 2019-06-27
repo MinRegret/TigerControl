@@ -14,8 +14,9 @@ class Linear(ctsb.Model):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, **kwargs):
+    def initialize(self, p):
         # initializes model parameters
+        self.initialized = True
         raise NotImplementedError
 
     def step(self, **kwargs):
