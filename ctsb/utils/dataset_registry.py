@@ -52,8 +52,6 @@ def uci_indoor(verbose=True):
         with open(path_uci_indoor_csv, "w") as c:
             writer = csv.writer(c)
             writer.writerows(list_of_vecs)
-
-
         os.remove(path_uci_indoor_zip) # clean up - remove unnecessary files
         shutil.rmtree(path_uci_indoor_unzip)
         df = pd.read_csv(path_uci_indoor_csv)
@@ -105,3 +103,16 @@ def sp500(verbose=True):
         os.remove(path_sp500_xls) # clean up - remove unnecessary files
         os.remove(path_sp500_txt)
     return pd.read_csv(path_sp500_csv)
+
+def crypto():
+    ctsb_dir = get_ctsb_dir()
+    path_crypto_csv = os.path.join(ctsb_dir, 'data/crypto.csv')
+    # df = pd.read_csv(path_crypto_csv)
+    # print(df)
+    if not os.path.exists(path_crypto_csv):
+        df = pd.read_csv('https://query.data.world/s/43quzwdjeh2zmghpdcgvgkppo6bvg7')
+        dict_of_currency_dfs = {k: v for k, v in df.groupby('Currency')}
+        bdf = dict_of_currency_dfs['bitcoin']
+        bdf.to_csv(path_crypto_csv)
+    return pd.read_csv(path_crypto_csv)
+    

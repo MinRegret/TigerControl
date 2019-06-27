@@ -28,9 +28,9 @@ def test_arma_experiment(steps=100, show_plot=False, verbose=False):
 	all_models = []
 	all_loss_series = []
 	for problem, model_to_loss in prob_model_to_loss.items():
-		print(problem)
+		# print(problem)
 		for model, loss in model_to_loss.items():
-			print(model)
+			# print(model)
 			all_models.append(model)
 			all_loss_series.append(loss)
 	if show_plot:

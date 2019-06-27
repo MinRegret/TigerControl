@@ -6,18 +6,19 @@ import ctsb
 import os
 import jax.numpy as np
 import pandas as pd
-from ctsb.utils import uci_indoor, get_ctsb_dir
+from datetime import datetime
+from ctsb.utils import crypto, get_ctsb_dir
 from ctsb.error import StepOutOfBounds
 
-class UCI_Indoor(ctsb.Problem):
+
+class Crypto(ctsb.Problem):
     """
-    Description: Outputs the daily opening price of the S&P 500 stock market index 
-        from January 3, 1986 to June 29, 2018.
+    Description: Outputs the daily price of bitcoin
+        from 2013-04-28 to 2018-02-10
     """
 
     def __init__(self):
         self.initialized = False
-        self.data_path = os.path.join(get_ctsb_dir(), "data/uci.csv")
 
     def initialize(self):
         """
@@ -30,10 +31,10 @@ class UCI_Indoor(ctsb.Problem):
         """
         self.initialized = True
         self.T = 0
-        self.df = uci_indoor() # get data
+        self.df = crypto() # get data
         self.max_T = self.df.shape[0]
 
-        return self.df.iloc[self.T, 1]
+        return self.df.iloc[self.T, 3]
 
     def step(self):
         """
@@ -48,7 +49,7 @@ class UCI_Indoor(ctsb.Problem):
         self.T += 1
         if self.T == self.max_T: 
             raise StepOutOfBounds("Number of steps exceeded length of dataset ({})".format(self.max_T))
-        return self.df.iloc[self.T].drop(['1:Date','2:Time','24:Day_Of_Week'])
+        return self.df['Price'].iloc[self.T]
 
     def hidden(self):
         """
@@ -60,7 +61,9 @@ class UCI_Indoor(ctsb.Problem):
             Date (string)
         """
         assert self.initialized
-        return "Timestep: {} out of {}".format(self.T+1, self.max_T) + '\n' + str(self.df.iloc[self.T][['1:Date','2:Time','24:Day_Of_Week']])
+        ts = self.df['Date'].iloc[self.T]/1000
+        date_time = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+        return "Timestep: {} out of {}".format(self.T+1, self.max_T) + '\n' + str(date_time)
 
     def close(self):
         """
@@ -85,8 +88,9 @@ ARMA_help = """
 
 -------------------- *** --------------------
 
-Id: UCIIndoor-v0
-Description: Outputs various weather metrics from a UCI dataset from 13/3/2012 to 11/4/2012
+Id: Crypto-v0
+Description: Outputs the daily price of bitcoin
+        from 2013-04-28 to 2018-02-10
 
 Methods:
 
@@ -95,19 +99,19 @@ Methods:
         Args:
             None
         Returns:
-            The first uci_indoor value
+            The first bitcoin price
 
     step()
         Description:
-            Moves time forward by fifteen minutes and returns weather metrics
+            Moves time forward by one day and returns price of the bitcoin
         Args:
             None
         Returns:
-            The next uci_indoor value
+            The next bitcoin price
 
     hidden()
         Description:
-            Return the date corresponding to the last value of the uci_indoor that was returned
+            Return the date corresponding to the last price of bitcoin that was returned
         Args:
             None
         Returns:
