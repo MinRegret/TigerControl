@@ -7,7 +7,7 @@ import warnings
 import ctsb
 from ctsb import error
 from ctsb.problems import Problem, problem, problem_registry, problem_spec
-from ctsb.models import Model, model, model_registry, model_spec
+from ctsb.models import Model, model, CustomModel, model_registry, model_spec
 from ctsb.help import help
 from ctsb.utils import tests, set_key
 
