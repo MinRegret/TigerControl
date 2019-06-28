@@ -18,4 +18,4 @@ GLOBAL_RANDOM_KEY = random.PRNGKey(0)
 set_key()
 
 
-__all__ = ["Problem", "problem", "Model", "model", "help", "set_key"]
+__all__ = ["Problem", "problem", "Model", "model", "CustomModel", "help", "set_key"]
