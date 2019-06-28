@@ -8,7 +8,6 @@ import datetime
 import csv
 import pandas as pd
 from ctsb.utils.download_tools import *
-import datetime
 
 def to_datetime(date, time):
     day_month_year = [int(x) for x in date.split('/')]

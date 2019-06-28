@@ -42,3 +42,32 @@ class Model(object):
         return False
 
 
+# class for implementing algorithms with enforced modularity
+class CustomModel(Model):
+
+    def __init__(self):
+        pass
+
+    def initialize(self, predict, params=None, update=lambda x: x):
+        # initializes model parameters
+        assert type(predict) == type(lambda x: None) # class function
+        assert type(update) == type(lambda x: None) # class function
+
+        self.predict = predict
+        self.params = None
+        self.update = update
+
+    def step(self, **kwargs):
+        # run one timestep of the model in its environment
+        raise NotImplementedError
+
+    def predict(self, **kwargs):
+        # returns model prediction for given input
+        return self.predict(**kwargs)
+
+    def update(self, **kwargs):
+        # update parameters according to given loss and update rule
+        return self.update(**kwargs)
+
+
+

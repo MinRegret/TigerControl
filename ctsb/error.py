@@ -3,6 +3,11 @@ import sys
 class Error(Exception):
     pass
 
+class InvalidInput(Error):
+    """Raised when the user calls step at the end of the data-set stream
+    """
+    pass
+
 # Local errors
 
 class StepOutOfBounds(Error):
@@ -34,20 +39,9 @@ class DeprecatedObject(Error):
     """
     pass
 
-class UnseedableObject(Error):
-    """Raised when the user tries to seed an env that does not support
-    seeding.
-    """
-    pass
-
 class DependencyNotInstalled(Error):
     pass
 
-class UnsupportedMode(Exception):
-    """Raised when the user requests a rendering mode not supported by the
-    environment.
-    """
-    pass
 
 class ResetNeeded(Exception):
     """When the monitor is active, raised when the user tries to step an
@@ -102,9 +96,6 @@ class APIError(Error):
             return self.__unicode__()
 
 
-class APIConnectionError(APIError):
-    pass
-
 
 class InvalidRequestError(APIError):
 
@@ -116,29 +107,3 @@ class InvalidRequestError(APIError):
         self.param = param
 
 
-class AuthenticationError(APIError):
-    pass
-
-class RateLimitError(APIError):
-    pass
-
-# Video errors
-
-class VideoRecorderError(Error):
-    pass
-
-class InvalidFrame(Error):
-    pass
-
-# Wrapper errors
-
-class DoubleWrapperError(Error):
-    pass
-
-
-class WrapAfterConfigureError(Error):
-    pass
-
-
-class RetriesExceededError(Error):
-    pass
