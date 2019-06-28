@@ -1,16 +1,16 @@
-# test the Linear model class
+# test the PredictZero model class
 
 import ctsb
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
-def test_linear(steps=100, show_plot=True):
+def test_predict_zero(steps=100, show_plot=True):
     T = steps 
     p, q = 3, 3
     problem = ctsb.problem("ARMA-v0")
     cur_x = problem.initialize(p, q)
-    model = ctsb.model("Linear")
-    model.initialize(p)
+    model = ctsb.model("PredictZero")
+    model.initialize()
     loss = lambda y_true, y_pred: (y_true - y_pred)**2
  
     results = []
@@ -24,12 +24,12 @@ def test_linear(steps=100, show_plot=True):
 
     if show_plot:
         plt.plot(results)
-        plt.title("Linear model on ARMA problem")
+        plt.title("Zero model on ARMA problem")
         plt.show(block=False)
         plt.pause(1)
         plt.close()
-    print("test_linear passed")
+    print("test_predict_zero passed")
     return
 
 if __name__=="__main__":
-    test_linear()
+    test_predict_zero()
