@@ -1,6 +1,7 @@
 # Experiment class
 # Author: John Hallman
 
+import ctsb
 from ctsb import error
 import jax.numpy as np
 from tqdm import tqdm
@@ -8,25 +9,51 @@ import matplotlib.pyplot as plt
 
 # class for implementing algorithms with enforced modularity
 class Experiment(object):
-    def __init__(self):
+
+    def __init__(self, problem_id=None, problem_params=None, model_list=None, loss_fn=None, problem_to_param_models=None):
         self.initialized = False
-    
-    def initialize(self, problem_obs_models_list, loss_fn, timesteps):
+        
+    def initialize(self, loss_fn, problem_id=None, problem_params=None, model_id_list=None, problem_to_param_models=None):
         '''
+        There are two ways to specify initialize(). The first is to use the params (problem_id, problem_params, model_id_list, loss_fn)
+        and the second is to use the params (problem_to_param_models, loss_fn). The first way is useful if you only want to specify
+        a single problem, and the second way is useful if you want to specify multiple problems.
         Args:
-            problem_obs_models_list(list): list of tuples of the form (initalized problem, first_obs, [list of initialized models])
+            problem_id(string): name of problem in registry
+            problem_params(dict): hyperparameters for problem
+            model_id_list(list of strings): list of model_id to run on problem
             loss_fn(function): function mapping (predict_value, true_value) -> loss
-            timesteps(int): total number of steps to run experiment
-        Returns:
-            Instance of Experiment class
+            problem_to_param_models(dict): map of the form problem_id -> (hyperparameters for problem, model list)
         '''
         self.intialized = True
-        self.T = timesteps
+        self.T = 0
         self.loss = loss_fn
-        self.pom_ls = problem_obs_models_list
+        self.pom_ls = [] # (problem, initial observation, model) list
         self.prob_model_to_loss = {} # map of the form [problem][model] -> loss series
 
-    def run_all_experiments(self):
+        if problem_id != None:
+            problem = ctsb.problem(problem_id)
+            x_0 = problem.initialize(**problem_params)
+            model_list = []
+            for model_id in model_id_list:
+                model = ctsb.model(model_id)
+                model.initialize()
+                model_list.append(model)
+            self.pom_ls = [(problem, x_0, model_list)]
+            
+        else:
+            for problem_id, param_models in problem_to_param_models.items():
+                problem = ctsb.problem(problem_id)
+                x_0 = problem.initialize(**param_models[0])
+                model_list = []
+                for model_id in param_models[1]:
+                    model = ctsb.model(model_id)
+                    model.initialize()
+                    model_list.append(model)
+                self.pom_ls.append((problem, x_0, model_list))
+
+    def run_all_experiments(self, time_steps=100):
+        self.T = time_steps
         for (problem, obs, models) in self.pom_ls:
             self.prob_model_to_loss[problem] = {}
             for model in models:
