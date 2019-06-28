@@ -77,11 +77,11 @@ class UCI_Indoor(ctsb.Problem):
         Returns:
             None
         """
-        print(ARMA_help)
+        print(uci_indoor_help)
 
 
 # string to print when calling help() method
-ARMA_help = """
+uci_indoor_help = """
 
 -------------------- *** --------------------
 
