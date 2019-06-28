@@ -1,5 +1,5 @@
 """
-S&P 500 daily opening price
+bitcoin daily price
 """
 
 import ctsb
@@ -80,11 +80,14 @@ class Crypto(ctsb.Problem):
         Returns:
             None
         """
-        print(ARMA_help)
+        print(crypto_help)
+
+    def __str__(self):
+        return "<Crypto Problem>"
 
 
 # string to print when calling help() method
-ARMA_help = """
+crypto_help = """
 
 -------------------- *** --------------------
 
