@@ -4,8 +4,9 @@ Kalman Filter
 
 import jax.numpy as np
 import ctsb
+from ctsb.models.control import ControlModel
 
-class KalmanFilter(ctsb.Model):
+class KalmanFilter(ControlModel):
     """
     Kalman Filter adjusts measurements of a signal based on prior states and
     knowledge of intrinsic equations of the system.

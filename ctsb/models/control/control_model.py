@@ -6,7 +6,7 @@ from ctsb.models import Model
 
 
 # class for implementing algorithms with enforced modularity
-class ControlModel(ctsb.Model):
+class ControlModel(Model):
 
     def __init__(self):
         pass
