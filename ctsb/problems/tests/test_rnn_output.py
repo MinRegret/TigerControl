@@ -4,7 +4,7 @@ import jax.numpy as np
 import jax.random as random
 import matplotlib.pyplot as plt
 import ctsb
-from ctsb.problems.simulated.rnn_output_jax import RNN_Output
+from ctsb.problems.control.rnn_output import RNN_Output
 from ctsb.utils.random import generate_key
 
 

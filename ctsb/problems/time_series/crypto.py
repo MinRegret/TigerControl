@@ -6,18 +6,20 @@ import ctsb
 import os
 import jax.numpy as np
 import pandas as pd
-from ctsb.utils import sp500, get_ctsb_dir
+from datetime import datetime
+from ctsb.utils import crypto, get_ctsb_dir
 from ctsb.error import StepOutOfBounds
+from ctsb.problems.time_series import TimeSeriesProblem
 
-class SP500(ctsb.Problem):
+
+class Crypto(TimeSeriesProblem):
     """
-    Description: Outputs the daily opening price of the S&P 500 stock market index 
-        from January 3, 1986 to June 29, 2018.
+    Description: Outputs the daily price of bitcoin
+        from 2013-04-28 to 2018-02-10
     """
 
     def __init__(self):
         self.initialized = False
-        self.data_path = os.path.join(get_ctsb_dir(), "data/sp500.csv")
 
     def initialize(self):
         """
@@ -30,10 +32,10 @@ class SP500(ctsb.Problem):
         """
         self.initialized = True
         self.T = 0
-        self.df = sp500() # get data
+        self.df = crypto() # get data
         self.max_T = self.df.shape[0]
 
-        return self.df.iloc[self.T, 1]
+        return self.df.iloc[self.T, 3]
 
     def step(self):
         """
@@ -48,7 +50,7 @@ class SP500(ctsb.Problem):
         self.T += 1
         if self.T == self.max_T: 
             raise StepOutOfBounds("Number of steps exceeded length of dataset ({})".format(self.max_T))
-        return self.df.iloc[self.T, 1]
+        return self.df['Price'].iloc[self.T]
 
     def hidden(self):
         """
@@ -60,7 +62,9 @@ class SP500(ctsb.Problem):
             Date (string)
         """
         assert self.initialized
-        return "Timestep: {} out of {}, date: ".format(self.T+1, self.max_T) + self.df.iloc[self.T, 0]
+        ts = self.df['Date'].iloc[self.T]/1000
+        date_time = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+        return "Timestep: {} out of {}".format(self.T+1, self.max_T) + '\n' + str(date_time)
 
     def close(self):
         """
@@ -85,9 +89,9 @@ ARMA_help = """
 
 -------------------- *** --------------------
 
-Id: SP500-v0
-Description: Outputs the daily opening price of the S&P 500 stock market index from
-    January 3, 1986 to June 29, 2018.
+Id: Crypto-v0
+Description: Outputs the daily price of bitcoin
+        from 2013-04-28 to 2018-02-10
 
 Methods:
 
@@ -96,19 +100,19 @@ Methods:
         Args:
             None
         Returns:
-            The first S&P 500 value
+            The first bitcoin price
 
     step()
         Description:
-            Moves time forward by one day and returns value of the stock index
+            Moves time forward by one day and returns price of the bitcoin
         Args:
             None
         Returns:
-            The next S&P 500 value
+            The next bitcoin price
 
     hidden()
         Description:
-            Return the date corresponding to the last value of the S&P 500 that was returned
+            Return the date corresponding to the last price of bitcoin that was returned
         Args:
             None
         Returns:

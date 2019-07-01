@@ -1,7 +1,7 @@
 # test the UCI Indoor problem class
 
 import ctsb
-from ctsb.problems.data_based.uci_indoor import UCI_Indoor
+from ctsb.problems.time_series.uci_indoor import UCI_Indoor
 import jax.numpy as np
 import matplotlib.pyplot as plt
 

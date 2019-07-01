@@ -4,8 +4,9 @@ Last observed value
 
 import jax.numpy as np
 import ctsb
+from ctsb.models.time_series import TimeSeriesModel
 
-class PredictZero(ctsb.Model):
+class PredictZero(TimeSeriesModel):
     """
     Predicts the last value in the time series, i.e. x_t = x_(t-1)
     """

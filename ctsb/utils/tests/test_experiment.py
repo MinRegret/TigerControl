@@ -1,6 +1,6 @@
 
 import ctsb
-from ctsb.problems.simulated.arma import ARMA
+from ctsb.problems.control.arma import ARMA
 from ctsb.models.time_series.last_value import LastValue
 from ctsb.models.time_series.predict_zero import PredictZero
 from ctsb.utils.experiment import Experiment
