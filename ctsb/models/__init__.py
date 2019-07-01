@@ -1,7 +1,8 @@
 # models init file
 
 from ctsb.models.registration import model_registry, model_register, model, model_spec
-from ctsb.models.core import Model, CustomModel
+from ctsb.models.core import Model
+from ctsb.models.custom_model import CustomModel
 
 
 # ---------- Models ----------
