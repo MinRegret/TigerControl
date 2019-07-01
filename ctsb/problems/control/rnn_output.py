@@ -6,8 +6,9 @@ import jax.numpy as np
 import jax.experimental.stax as stax
 import ctsb
 from ctsb.utils.random import generate_key
+from ctsb.problems.control import ControlProblem
 
-class RNN_Output(ctsb.Problem):
+class RNN_Output(ControlProblem):
     """
     Produces outputs from a randomly initialized recurrent neural network.
     """

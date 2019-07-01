@@ -1,7 +1,7 @@
 # test the Random problem class
 
 import ctsb
-from ctsb.problems.simulated.random import Random
+from ctsb.problems.control.random import Random
 import jax.numpy as np
 import matplotlib.pyplot as plt
 

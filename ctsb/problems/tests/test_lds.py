@@ -4,12 +4,12 @@ import jax.numpy as np
 import jax.random as random
 import ctsb
 import matplotlib.pyplot as plt
-from ctsb.problems.simulated.lds import LDS
+from ctsb.problems.control.lds import LDS
 from ctsb.utils.random import generate_key
 
 
 
-def test_lds(steps=100, show_plot=False):
+def test_lds(steps=100, show_plot=False, verbose=False):
     T = steps
     n, m, d = 5, 3, 10
     problem = LDS()
