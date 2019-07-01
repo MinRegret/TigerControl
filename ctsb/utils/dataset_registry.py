@@ -10,8 +10,18 @@ import pandas as pd
 from ctsb.utils.download_tools import *
 
 def to_datetime(date, time):
+    """
+    Description:
+        Takes a date and a time and converts it to a datetime object.
+    Args:
+        date (string): Date in DD/MM/YYYY format
+        time (string): Time in hh:mm format
+    Returns:
+        Datetime object containing date and time information
+    """
     day_month_year = [int(x) for x in date.split('/')]
     hour_min = [int(x) for x in time.split(':')]
+
     return datetime.datetime(day_month_year[2], 
                              day_month_year[1], 
                              day_month_year[0], 
@@ -19,6 +29,15 @@ def to_datetime(date, time):
                              hour_min[1])
 
 def datetime_to_daysElapsed(cur_datetime, base_datetime):
+    """
+    Description:
+        Computes the number of days elapsed since 'base' date.
+    Args:
+        cur_datetime (datetime): Current date and time
+        base_datetime (datetime): Base date and time
+    Returns:
+        Datetime object containing date and time information
+    """
     time_delta = cur_datetime - base_datetime
     print(time_delta)
     print(type(time_delta))
