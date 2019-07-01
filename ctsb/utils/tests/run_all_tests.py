@@ -6,7 +6,7 @@ from ctsb.utils.tests.test_random import test_random
 from ctsb.utils.tests.test_registration_tools import test_registration_tools
 from ctsb.utils.tests.test_experiment import test_experiment
 
-# add all unit tests in dataset_registry!
+# add all unit tests in dataset_registry
 def run_all_tests():
     print("\nrunning all utils tests...\n")
     test_dataset_registry()
