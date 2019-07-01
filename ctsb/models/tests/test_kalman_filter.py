@@ -5,10 +5,10 @@ import jax.numpy as np
 import numpy.random as random
 import matplotlib.pyplot as plt
 
+# Test Kalman Filter for constant signal x = 0.5 with measurement noise 0.1
 def test_kalman_filter(steps=100, show_plot=True):
     T = steps 
 
-    # Testing constant signal x = 0.5 with measurement noise 0.1
     x_true = 0.5
     env_noise = 0.1
     x0 = 0

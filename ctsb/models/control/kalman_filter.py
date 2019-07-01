@@ -39,11 +39,18 @@ class KalmanFilter(ctsb.Model):
         self.initialized = False
 
     def to_ndarray(self, x):
-        if(type(x) is not np.ndarray):
-            x_2D = np.ndarray((1, 1))
-            x_2D[0, 0] = x
-        else:
-            x_2D = x
+        """
+        Description:
+            If x is a scalar, transform it to a (1, 1) numpy.ndarray;
+            otherwise, leave it unchanged.
+        Args:
+            x (float/numpy.ndarray)
+        Returns:
+            A numpy.ndarray representation of x
+        """
+        x = np.asarray(x)
+        if np.ndim(x) == 0:
+            x_2D = x[None, None]
         return x_2D
 
     def initialize(self, x, A, B, H, P, Q, R):
