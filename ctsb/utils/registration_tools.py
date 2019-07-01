@@ -109,9 +109,17 @@ class Registry(object):
         return obj
 
     def keys(self):
+        """
+        Returns:
+            Keys of specifications.
+        """
         return self.specs.keys()
 
     def all(self):
+        """
+        Returns:
+            Values of specifications.
+        """
         return self.specs.values()
 
     def spec(self, path):
