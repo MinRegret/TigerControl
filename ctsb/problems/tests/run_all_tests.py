@@ -16,13 +16,8 @@ def run_all_tests(show=True):
     test_rnn(show_plot=show)
     test_sp500(show_plot=show)
     test_uci_indoor(show_plot=show)
-<<<<<<< HEAD
-    print("\nall problems tests passed\n")
-
-=======
     test_crypto(show_plot=show)
-    print("\nall simulated problems tests passed\n")
+    print("\nall problems tests passed\n")
   
->>>>>>> 921192dfae05f70db29772c7615e1fdb169389bd
 if __name__ == "__main__":
     run_all_tests()
