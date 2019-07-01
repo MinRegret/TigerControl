@@ -9,15 +9,21 @@ from urllib import request
 from urllib.error import URLError
 from urllib.request import urlretrieve
 
-# important - get absolute path of package directory
 def get_ctsb_dir():
+    """
+    Description:
+        Gets absolute path of package directory.
+    Returns:
+        Absolute path of package directory
+    """
     init_dir = os.path.abspath(ctsb.__file__)
     ctsb_dir = init_dir.rsplit('/', 1)[0]
     return ctsb_dir
 
 def report_download_progress(chunk_number, chunk_size, file_size):
     """
-    Prints out the download progress bar
+    Description:
+        Prints out the download progress bar.
     Args:
         chunk_number(int): chunk number
         chunk_size(int): maximize size of a chunk
@@ -30,7 +36,8 @@ def report_download_progress(chunk_number, chunk_size, file_size):
 
 def download(destination_path, url, verbose):
     """
-    Downloads the file at url to destination_path
+    Description:
+        Downloads the file at url to destination_path.
     Args:
         destination_path(string): the destination path of the download
         url(string): the url of the file to download
@@ -53,6 +60,15 @@ def download(destination_path, url, verbose):
                 print()
 
 def unzip(zipped_path, verbose=False):
+    """
+    Description:
+        Unzips data from 'zipped_path'.
+    Args:
+        zipped_path(string): the path of the zipped file
+        verbose(boolean): If True, will report download progress and inform if download already exists
+    Returns:
+        None
+    """
     unzipped_path = os.path.splitext(zipped_path)[0]
     if os.path.exists(unzipped_path):
         if verbose:
@@ -61,9 +77,3 @@ def unzip(zipped_path, verbose=False):
     zip_ref = zipfile.ZipFile(zipped_path, 'r')
     zip_ref.extractall(unzipped_path)
     zip_ref.close()
-    '''
-    with gzip.open(zipped_path, 'rb') as zipped_file:
-        with open(unzipped_path, 'wb') as unzipped_file:
-            unzipped_file.write(zipped_file.read())
-            if verbose:
-                print('Unzipped {} ...'.format(zipped_path))'''
