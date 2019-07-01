@@ -75,7 +75,7 @@ class Experiment(object):
         Descripton:
             Runs all experiments for specified number of timesteps.
         Args:
-            problem:
+            problem: instance of Problem
             obs:
             model:
         '''
