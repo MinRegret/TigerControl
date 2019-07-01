@@ -1,0 +1,8 @@
+future
+numpy
+jax
+setuptools
+matplotlib
+pandas
+xlrd
+tqdm

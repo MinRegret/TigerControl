@@ -7,15 +7,15 @@ from ctsb.problems.tests.test_sp500 import test_sp500
 from ctsb.problems.tests.test_uci_indoor import test_uci_indoor
 
 def run_all_tests(show=True):
-	print("Testing simulated problems...")
-	test_arma(show_plot=show)
-	test_lds(show_plot=show)
-	test_lstm(show_plot=show)
-	test_random(show_plot=show)
-	test_rnn(show_plot=show)
-	test_sp500(show_plot=show)
-	test_uci_indoor(show_plot=show)
-	print("All simulated problems tests passed")
+    print("\nrunning all problems tests...\n")
+    test_arma(show_plot=show)
+    test_lds(show_plot=show)
+    test_lstm(show_plot=show)
+    test_random(show_plot=show)
+    test_rnn(show_plot=show)
+    test_sp500(show_plot=show)
+    test_uci_indoor(show_plot=show)
+    print("\nall problems tests passed\n")
 
 if __name__ == "__main__":
-	run_all_tests()
+    run_all_tests()

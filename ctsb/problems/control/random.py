@@ -5,7 +5,9 @@ import jax.numpy as np
 import jax.random as random
 import ctsb
 from ctsb.utils.random import generate_key
-class Random(ctsb.Problem):
+from ctsb.problems.control import ControlProblem
+
+class Random(ControlProblem):
     """
     A random sequence of scalar values taken from an i.i.d. normal distribution.
     """

@@ -2,6 +2,7 @@
 
 from ctsb.models.registration import model_registry, model_register, model, model_spec
 from ctsb.models.core import Model
+from ctsb.models.custom_model import CustomModel
 
 
 # ---------- Models ----------
@@ -15,5 +16,10 @@ model_register(
 model_register(
     id='Linear',
     entry_point='ctsb.models.time_series:Linear',
+)
+
+model_register(
+    id='PredictZero',
+    entry_point='ctsb.models.time_series:PredictZero',
 )
 

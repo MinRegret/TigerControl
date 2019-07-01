@@ -7,9 +7,10 @@ import jax.random as random
 
 import ctsb
 from ctsb.utils import generate_key
+from ctsb.problems.control import ControlProblem
 
 
-class LDS(ctsb.Problem):
+class LDS(ControlProblem):
     """
     Simulates a linear dynamical system.
     """

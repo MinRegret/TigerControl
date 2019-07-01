@@ -4,31 +4,38 @@ Linear combination of previous values
 
 import ctsb
 import jax.numpy as np
+from ctsb.models.time_series import TimeSeriesModel
 
-class Linear(ctsb.Model):
-    """
+class Linear(TimeSeriesModel):
+    """ # TODO: Fix Linear model!!!
     Implements the equivalent of an AR(p) model - predicts a linear combination of the
     previous p observed values in a time-series
-    """
+    """ 
 
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, **kwargs):
+    def initialize(self, p):
         # initializes model parameters
-        raise NotImplementedError
+        self.initialized = True
+        #raise NotImplementedError
 
     def step(self, **kwargs):
         # run one timestep of the model in its environment
-        raise NotImplementedError
+        #raise NotImplementedError
+        assert self.initialized
+        return 0
 
     def predict(self, x=None):
         # returns model prediction for given input
-        raise NotImplementedError
+        #raise NotImplementedError
+        assert self.initialized
+        return 0
 
     def update(self, rule=None):
         # update parameters according to given loss and update rule
-        raise NotImplementedError
+        #raise NotImplementedError
+        pass
 
     def help(self):
         """
