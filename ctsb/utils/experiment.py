@@ -133,7 +133,7 @@ class Experiment(object):
 
         fig.tight_layout()
         plt.show(block=False)
-        plt.pause(100)
+        plt.pause(5)
         plt.close()        
 
     def get_prob_model_to_loss(self):

@@ -1,6 +1,6 @@
 # ctsb.help() method
 
-from ctsb import error, logger, problem_registry
+from ctsb import problem_registry
 
 
 def help():

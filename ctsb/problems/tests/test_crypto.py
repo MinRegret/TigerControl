@@ -1,7 +1,7 @@
 # test the crypto problem class
 
 import ctsb
-from ctsb.problems.data_based.crypto import Crypto
+from ctsb.problems.time_series.crypto import Crypto
 import jax.numpy as np
 import matplotlib.pyplot as plt
 

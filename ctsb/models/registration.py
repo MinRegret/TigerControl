@@ -2,7 +2,7 @@ import re
 import importlib
 import warnings
 
-from ctsb import error, logger
+from ctsb import error
 from ctsb.utils import Spec, Registry
 
 # This format is true today, but it's *not* an official spec.
@@ -11,7 +11,17 @@ model_id_re = re.compile(r'^(?:[\w:-]+\/)?[A-Z]+([\w:.-]+)$')
 
 
 class ModelSpec(Spec):
-    # Spec class for pre-implemented Models
+    """A specification for a particular instance of the model. Used
+    to register the parameters for official evaluations.
+
+    Args:
+        id (str): The official model ID
+        entry_point (Optional[str]): The Python entrypoint of the problem class (e.g. module.name:Class)
+        kwargs (dict): The kwargs to pass to the model class
+
+    Attributes:
+        id (str): The official problem ID
+    """
     def __str__(self):
         return "<CTSB Model Spec>"
 
