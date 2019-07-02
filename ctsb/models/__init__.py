@@ -14,8 +14,8 @@ model_register(
 )
 
 model_register(
-    id='Linear',
-    entry_point='ctsb.models.time_series:Linear',
+    id='AutoRegressor',
+    entry_point='ctsb.models.time_series:AutoRegressor',
 )
 
 model_register(
