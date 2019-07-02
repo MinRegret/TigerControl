@@ -3,7 +3,6 @@
 import ctsb
 import jax.numpy as np
 import matplotlib.pyplot as plt
-from ctsb.models.custom import CustomModel
 
 # test a simple CustomModel that returns last value by storing a single param
 def test_custom_model(steps=100, show_plot=True):
@@ -15,7 +14,7 @@ def test_custom_model(steps=100, show_plot=True):
     cur_x = problem.initialize(p, q)
 
     # simple LastValue custom model implementation
-    class Custom(CustomModel):
+    class Custom(ctsb.CustomModel):
         def initialize(self):
             pass
         def predict(self, x):
