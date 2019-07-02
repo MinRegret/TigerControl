@@ -2,7 +2,7 @@ import re
 import importlib
 import warnings
 
-from ctsb import error, logger
+from ctsb import error
 
 # This format is true today, but it's *not* an official spec.
 # [username/](problem-name)-v(version)    problem-name is group 1, version is group 2
@@ -100,10 +100,6 @@ class Registry(object):
         Returns:
             object instance
         """
-        if len(kwargs) > 0:
-            logger.info('Making new {}: %s (%s)'.format(self), path, kwargs)
-        else:
-            logger.info('Making new {}: %s'.format(self), path)
         spec = self.spec(path)
         obj = spec.make(**kwargs)
         return obj
