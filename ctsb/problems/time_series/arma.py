@@ -8,10 +8,10 @@ import jax.random as random
 
 import ctsb
 from ctsb.utils import generate_key
-from ctsb.problems.time_series import TimeSeriesProblem
+from ctsb.problems.control import ControlProblem
 
 
-class ARMA(TimeSeriesProblem):
+class ARMA(ControlProblem):
     """
     Simulates an autoregressive moving-average time-series.
     """

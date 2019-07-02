@@ -3,9 +3,12 @@
 
 import ctsb
 from ctsb import error
+from ctsb.problems.control.control_problem import ControlProblem
+from ctsb.models.control import ControlModel
 import jax.numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+import inspect
 
 # class for implementing algorithms with enforced modularity
 class Experiment(object):
@@ -14,7 +17,7 @@ class Experiment(object):
         self.initialized = False
         
     def initialize(self, loss_fn, problem_id=None, problem_params=None, model_id_list=None, problem_to_param_models=None):
-        '''
+        ''' 
         Descripton:
             There are two ways to specify initialize(). The first is to use the params
             (problem_id, problem_params, model_id_list, loss_fn) and the second is to
@@ -79,14 +82,18 @@ class Experiment(object):
             obs:
             model:
         '''
+        is_control_problem = (inspect.getmro(problem.__class__))[1] == ControlProblem
+        is_control_model = (inspect.getmro(model.__class__))[1] == ControlModel
+        assert ((is_control_problem and is_control_model) or (not is_control_problem and not is_control_model))
+
         cur_x = obs
         print ("running experiment: " + str(model) + " on " + str(problem))
         for i in tqdm(range(0,self.T)):
             cur_y_pred = model.predict(cur_x)
-            cur_y_true= problem.step()
+            cur_y_true = problem.step(cur_x) if is_control_problem else problem.step()
             cur_loss = self.loss(cur_y_true, cur_y_pred)
             self.prob_model_to_loss[problem][model].append(cur_loss)
-            model.update(cur_loss)
+            model.update(cur_y_true)
             cur_x = cur_y_true
         return
 
