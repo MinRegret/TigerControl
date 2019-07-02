@@ -19,7 +19,7 @@ class Model(object):
         # returns model prediction for given input
         raise NotImplementedError
 
-    def update(self, rule=None):
+    def update(self, **kwargs):
         # update parameters according to given loss and update rule
         raise NotImplementedError
 

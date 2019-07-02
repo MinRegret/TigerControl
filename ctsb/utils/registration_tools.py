@@ -91,6 +91,7 @@ class Registry(object):
     def __init__(self, regexp):
         self.specs = {}
         self.regexp = regexp
+        self.custom = {}
 
     def make(self, path, **kwargs):
         """

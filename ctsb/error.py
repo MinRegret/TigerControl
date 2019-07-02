@@ -56,9 +56,9 @@ class ResetNotAllowed(Exception):
     """
     pass
 
-class InvalidAction(Exception):
-    """Raised when the user performs an action not contained within the
-    action space
+class InvalidClass(Exception):
+    """Raised when the user tries to register a class without sufficient
+    preimplemented methods
     """
     pass
 
