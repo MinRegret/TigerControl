@@ -1,5 +1,5 @@
 """
-Last observed value
+Predict 0
 """
 
 import jax.numpy as np
@@ -8,7 +8,7 @@ from ctsb.models.time_series import TimeSeriesModel
 
 class PredictZero(TimeSeriesModel):
     """
-    Predicts the last value in the time series, i.e. x_t = x_(t-1)
+    Predicts the next value in the time series to be 0, i.e. x(t) = 0
     """
 
     def __init__(self):
@@ -17,7 +17,7 @@ class PredictZero(TimeSeriesModel):
     def initialize(self):
         """
         Description:
-            Initialize the (non-existent) hidden dynamics of the model.
+            Initialize the (non-existent) hidden dynamics of the model
         Args:
             None
         Returns:
@@ -35,7 +35,7 @@ class PredictZero(TimeSeriesModel):
         Returns:
             Predicted value for the next time-step
         """
-        return x
+        return 0
 
     def predict(self, x):
         """
@@ -62,13 +62,13 @@ class PredictZero(TimeSeriesModel):
     def help(self):
         """
         Description:
-            Prints information about this class and its methods.
+            Prints information about this class and its methods
         Args:
             None
         Returns:
             None
         """
-        print(LastValue_help)
+        print(PredictZero_help)
 
     def __str__(self):
         return "<PredictZero Model>"
@@ -76,18 +76,18 @@ class PredictZero(TimeSeriesModel):
 
 
 # string to print when calling help() method
-LastValue_help = """
+PredictZero_help = """
 
 -------------------- *** --------------------
 
-Id: LastValue
-Description: Predicts the last value in the time series, i.e. x_t = x_(t-1)
+Id: PredictZero
+Description: Predicts the next value in the time series to be 0, i.e. x(t) = 0
 
 Methods:
 
     initialize()
         Description:
-            Initialize the (non-existent) hidden dynamics of the model.
+            Initialize the (non-existent) hidden dynamics of the model
         Args:
             None
         Returns:
@@ -120,7 +120,7 @@ Methods:
 
     help()
         Description:
-            Prints information about this class and its methods.
+            Prints information about this class and its methods
         Args:
             None
         Returns:
