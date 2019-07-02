@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 
 # run all experiment teps
 def test_experiment(steps=100):
-    test_single_problem_experiment_intialize(steps)
-    test_multiple_problem_experiment_inialize(steps)
+    test_single_problem_experiment_initialize(steps)
+    test_multiple_problem_experiment_initialize(steps)
     print("test_experiment passed")
 
-def test_single_problem_experiment_intialize(steps=100):
+def test_single_problem_experiment_initialize(steps=100):
     exp = Experiment()
     MSE = lambda y_true, y_pred: (y_true - y_pred)**2
     exp.initialize(MSE, problem_id="ARMA-v0", problem_params={'p': 3, 'q':3}, model_id_list=['LastValue', 'PredictZero'])
@@ -22,7 +22,7 @@ def test_single_problem_experiment_intialize(steps=100):
     exp.plot_all_problem_results()
     return
 
-def test_multiple_problem_experiment_inialize(steps=100):
+def test_multiple_problem_experiment_initialize(steps=100):
     exp = Experiment()
     MSE = lambda y_true, y_pred: (y_true - y_pred)**2
     model_id_list = ['LastValue', 'PredictZero']
@@ -80,7 +80,7 @@ def test_arma_experiment(steps=100, show_plot=False, verbose=False):
 '''
 
 if __name__ == "__main__":
-    test_experiment()
-    # test_single_problem_experiment_intialize()
+    # test_experiment()
+    test_single_problem_experiment_initialize()
     # test_arma_and_crypto(show_plot=True)
     # test_arma_experiment(show_plot=True)
