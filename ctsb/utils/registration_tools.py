@@ -106,6 +106,7 @@ class Registry(object):
         return obj
 
     def list_ids(self):
+        """
         Returns:
             Keys of specifications.
         """
