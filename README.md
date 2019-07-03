@@ -15,14 +15,14 @@ Installation
 
 Either install ``ctsb`` by cloning this GitHub repo if you want to make customizable changes
 
-.. code:: shell
-
+```
     git clone https://github.com/johnhallman/ctsb.git
     cd ctsb
     pip install -e .
+```
 
 Or install the package directly using pip
 
-.. code:: shell
-
+```
     pip install git+https://github.com/johnhallman/ctsb.git
+```
