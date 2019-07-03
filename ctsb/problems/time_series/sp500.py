@@ -80,6 +80,9 @@ class SP500(TimeSeriesProblem):
         """
         print(ARMA_help)
 
+    def __str__(self):
+        return "<SP500 Problem>"
+
 
 # string to print when calling help() method
 ARMA_help = """

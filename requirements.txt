@@ -7,3 +7,4 @@ matplotlib
 pandas
 xlrd
 tqdm
+gym
