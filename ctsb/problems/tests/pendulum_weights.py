@@ -1,39 +1,9 @@
-# import os, inspect
-# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-# parentdir = os.path.dirname(os.path.dirname(currentdir))
-# os.sys.path.insert(0, parentdir)
-
-# import gym
+"""
+Weights for PyBullet Pendulum problem test
+"""
 import jax.numpy as np
-# import pybullet_envs
-# import time
 
-from ctsb.models.control.control_model import ControlModel
-
-def relu(x):
-  return np.maximum(x, 0)
-
-
-class SmallReactivePolicy(ControlModel):
-  "Simple multi-layer perceptron policy, no internal state"
-
-  def __init__(self):
-    self.initialized = False
-
-  def initialize(self, observation_space, action_space):
-    self.initialized = True
-    assert weights_dense1_w.shape == (observation_space.shape[0], 64.0)
-    assert weights_dense2_w.shape == (64.0, 32.0)
-    assert weights_final_w.shape == (32.0, action_space.shape[0])
-
-  def predict(self, ob):
-    x = ob
-    x = relu(np.dot(x, weights_dense1_w) + weights_dense1_b)
-    x = relu(np.dot(x, weights_dense2_w) + weights_dense2_b)
-    x = np.dot(x, weights_final_w) + weights_final_b
-    return x
-
-# yapf: disable
+# neural network weights
 weights_dense1_w = np.array(
     [[
         +0.5877, -0.5825, -0.5542, -0.2557, -0.4485, +1.4126, +0.2701, -0.6204,
@@ -505,4 +475,4 @@ weights_final_w = np.array([[-0.2378], [+0.1955], [-0.2006], [-0.5372],
                             [-0.3073], [+0.3354], [+0.9354], [+0.8831]])
 
 weights_final_b = np.array([+0.2753])
-# yapf: enable
+
