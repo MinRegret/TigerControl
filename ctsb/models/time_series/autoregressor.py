@@ -88,8 +88,8 @@ class AutoRegressor(TimeSeriesModel):
             raise NotImplementedError
 
         f_grad = jit(grad(loss))
-        #val_grad = 
-        self.params = self.params - lr * f_grad(self.params, self.past, y)
+        val_grad = f_grad(self.params, self.past, y)
+        self.params = self.params - lr * val_grad / np.linalg.norm(val_grad)
 
         return
 
