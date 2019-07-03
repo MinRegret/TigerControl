@@ -30,6 +30,7 @@ class AutoRegressor(TimeSeriesModel):
         self.past = jax.ops.index_update(self.past, 0, 1)
 
         self.params = np.zeros(p + 1)
+        self.params = jax.ops.index_update(self.past, p, 1) # default to LastValue
 
     def step(self, x):
         """
