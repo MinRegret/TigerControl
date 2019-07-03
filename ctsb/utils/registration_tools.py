@@ -105,7 +105,7 @@ class Registry(object):
         obj = spec.make(**kwargs)
         return obj
 
-    def keys(self):
+    def list_ids(self):
         """
         Returns:
             Keys of specifications.

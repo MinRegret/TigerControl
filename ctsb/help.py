@@ -5,7 +5,7 @@ from ctsb import problem_registry
 
 def help():
     s = "\n"
-    for problem_id in problem_registry.keys():
+    for problem_id in problem_registry.list_ids():
         s += "\t" + problem_id + "\n"
     print(global_help_string.format(s))
 
@@ -20,7 +20,7 @@ detail at https://github.com/johnhallman/ctsb.
 
 If you want to get going immediately, a good place to start is with our Problem 
 class, which provide implementations of standard control and time-series benchmarks.
-In order to return a Problem instance, simply call ctsb.make(*problem name*). This
+In order to return a Problem instance, simply call ctsb.problem(*problem name*). This
 is the list of currently available Problems:
 {}
 For example, you can retrieve an linear dynamical system instance via:

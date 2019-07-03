@@ -27,7 +27,7 @@ def test_registry():
         raise Exception("Registry successfully registered bad ID")
     except error.Error:
         pass
-    keys = test_registry.keys()
+    keys = test_registry.list_ids()
     vals = test_registry.all()
 
 
