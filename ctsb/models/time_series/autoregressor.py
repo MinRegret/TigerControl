@@ -30,7 +30,7 @@ class AutoRegressor(TimeSeriesModel):
         self.past = jax.ops.index_update(self.past, 0, 1)
 
         self.params = np.zeros(p + 1)
-        self.params = jax.ops.index_update(self.past, p, 1) # default to LastValue
+        self.params = jax.ops.index_update(self.params, p, 0) # default to LastValue (?) 0 -> 1
 
     def step(self, x):
         """
@@ -65,14 +65,14 @@ class AutoRegressor(TimeSeriesModel):
 
         return np.dot(self.params, self.past)
 
-    def update(self, y, loss = None, lr = 0.01):
+    def update(self, y, loss = None, lr = 0.001):
         """
         Description:
             Updates parameters based on correct value, loss and learning rate.
         Args:
             y (int/numpy.ndarray): True value at current time-step
-            loss (function): (optional)
-            lr (float):
+            loss (function): specifies loss function to be used; defaults to MSE
+            lr (float): specifies learning rate; defaults to 0.001.
         Returns:
             None
         """
