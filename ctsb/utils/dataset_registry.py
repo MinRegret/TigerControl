@@ -10,8 +10,18 @@ import pandas as pd
 from ctsb.utils.download_tools import *
 
 def to_datetime(date, time):
+    """
+    Description:
+        Takes a date and a time and converts it to a datetime object.
+    Args:
+        date (string): Date in DD/MM/YYYY format
+        time (string): Time in hh:mm format
+    Returns:
+        Datetime object containing date and time information
+    """
     day_month_year = [int(x) for x in date.split('/')]
     hour_min = [int(x) for x in time.split(':')]
+
     return datetime.datetime(day_month_year[2], 
                              day_month_year[1], 
                              day_month_year[0], 
@@ -19,19 +29,33 @@ def to_datetime(date, time):
                              hour_min[1])
 
 def datetime_to_daysElapsed(cur_datetime, base_datetime):
+    """
+    Description:
+        Computes the number of days elapsed since 'base' date.
+    Args:
+        cur_datetime (datetime): Current date and time
+        base_datetime (datetime): Base date and time
+    Returns:
+        Datetime object containing number of days elapsed
+    """
     time_delta = cur_datetime - base_datetime
-    print(time_delta)
-    print(type(time_delta))
     time_to_days = (time_delta.seconds)/(24 * 60 * 60)
-    print(time_to_days)
-    print(time_delta.days)
     return time_delta.days + time_to_days
 
-# checks if uci_indoor data exists, downloads if not. Returns dataframe containing data
-# Dataset credits: F. Zamora-Martínez, P. Romeu, P. Botella-Rocamora, J. Pardo, 
-# On-line learning of indoor temperature forecasting models towards energy efficiency, 
-# Energy and Buildings, Volume 83, November 2014, Pages 162-172, ISSN 0378-7788
 def uci_indoor(verbose=True):
+    """
+    Description:
+        Checks if uci_indoor data exists, downloads if not.
+
+        Dataset credits: F. Zamora-Martínez, P. Romeu, P. Botella-Rocamora, J. Pardo, 
+        On-line learning of indoor temperature forecasting models towards energy efficiency,
+        Energy and Buildings, Volume 83, November 2014, Pages 162-172, ISSN 0378-7788
+    Args:
+        verbose (boolean): Specifies if download progress should be printed
+    Returns:
+        Dataframe containing uci_indoor data
+    """
+
     ctsb_dir = get_ctsb_dir()
     url_uci_indoor_zip = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00274/NEW-DATA.zip'
     path_uci_indoor_zip = os.path.join(ctsb_dir, 'data/uci_indoor.zip')
@@ -48,6 +72,7 @@ def uci_indoor(verbose=True):
 
         list_of_vecs = [line.split() for line in f] # clean downloaded data
         list_of_vecs[0] = list_of_vecs[0][1:]
+
         with open(path_uci_indoor_csv, "w") as c:
             writer = csv.writer(c)
             writer.writerows(list_of_vecs)
@@ -55,9 +80,10 @@ def uci_indoor(verbose=True):
         shutil.rmtree(path_uci_indoor_unzip)
         df = pd.read_csv(path_uci_indoor_csv)
         base_datetime = to_datetime(df['1:Date'].iloc[0], df['2:Time'].iloc[0])
+
         def uci_datetime_converter(row):
             return datetime_to_daysElapsed(to_datetime(row['1:Date'],row['2:Time']), base_datetime)
-        # print("base_datetime: " + str(base_datetime))
+        
         df['24:Day_Of_Week'] = df.apply(uci_datetime_converter, axis=1)
         with open(path_uci_indoor_csv,'r') as csvinput:
             with open(path_uci_indoor_cleaned_csv, 'w') as csvoutput:
@@ -73,8 +99,16 @@ def uci_indoor(verbose=True):
     df = pd.read_csv(path_uci_indoor_cleaned_csv)
     return df
 
-# check if S&P500 data exists, downloads if not. Returns dataframe containing data
 def sp500(verbose=True):
+    """
+    Description:
+        Checks if S&P500 data exists, downloads if not.
+    Args:
+        verbose (boolean): Specifies if download progress should be printed
+    Returns:
+        Dataframe containing S&P500 data
+    """
+
     ctsb_dir = get_ctsb_dir()
     url_sp500_xls = 'http://www.cboe.com/micro/buywrite/dailypricehistory.xls'
     path_sp500_xls = os.path.join(ctsb_dir, 'data/sp500_xls.xls')
@@ -104,10 +138,17 @@ def sp500(verbose=True):
     return pd.read_csv(path_sp500_csv)
 
 def crypto():
+    """
+    Description:
+        Checks if cryptocurrency data exists, downloads if not.
+    Args:
+        None
+    Returns:
+        Dataframe containing cryptocurrency data
+    """
     ctsb_dir = get_ctsb_dir()
     path_crypto_csv = os.path.join(ctsb_dir, 'data/crypto.csv')
-    # df = pd.read_csv(path_crypto_csv)
-    # print(df)
+    
     if not os.path.exists(path_crypto_csv):
         df = pd.read_csv('https://query.data.world/s/43quzwdjeh2zmghpdcgvgkppo6bvg7')
         dict_of_currency_dfs = {k: v for k, v in df.groupby('Currency')}

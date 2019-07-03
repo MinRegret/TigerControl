@@ -2,6 +2,8 @@
 
 from ctsb.problems.registration import problem_registry, problem_register, problem, problem_spec
 from ctsb.problems.core import Problem
+from ctsb.problems.time_series import TimeSeriesProblem
+from ctsb.problems.control import ControlProblem
 
 
 # ---------- Simulated ----------
@@ -9,27 +11,27 @@ from ctsb.problems.core import Problem
 
 problem_register(
     id='Random-v0',
-    entry_point='ctsb.problems.simulated:Random',
+    entry_point='ctsb.problems.control:Random',
 )
 
 problem_register(
     id='ARMA-v0',
-    entry_point='ctsb.problems.simulated:ARMA',
+    entry_point='ctsb.problems.control:ARMA',
 )
 
 problem_register(
     id='LDS-v0',
-    entry_point='ctsb.problems.simulated:LDS',
+    entry_point='ctsb.problems.control:LDS',
 )
 
 problem_register(
     id='RNN-v0',
-    entry_point='ctsb.problems.simulated:RNN_Output',
+    entry_point='ctsb.problems.control:RNN_Output',
 )
 
 problem_register(
     id='LSTM-v0',
-    entry_point='ctsb.problems.simulated:LSTM_Output',
+    entry_point='ctsb.problems.control:LSTM_Output',
 )
 
 
@@ -38,16 +40,16 @@ problem_register(
 
 problem_register(
     id='SP500-v0',
-    entry_point='ctsb.problems.data_based:SP500',
+    entry_point='ctsb.problems.time_series:SP500',
 )
 
 problem_register(
     id='UCIIndoor-v0',
-    entry_point='ctsb.problems.data_based:UCI_Indoor',
+    entry_point='ctsb.problems.time_series:UCI_Indoor',
 )
 
 problem_register(
     id='Crypto-v0',
-    entry_point='ctsb.problems.data_based:Crypto',
+    entry_point='ctsb.problems.time_series:Crypto',
 )
 

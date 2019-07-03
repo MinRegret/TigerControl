@@ -1,7 +1,8 @@
 # models init file
 
 from ctsb.models.registration import model_registry, model_register, model, model_spec
-from ctsb.models.core import Model, CustomModel
+from ctsb.models.core import Model
+from ctsb.models.custom import CustomModel, register_custom_model
 
 
 # ---------- Models ----------
@@ -13,8 +14,8 @@ model_register(
 )
 
 model_register(
-    id='Linear',
-    entry_point='ctsb.models.time_series:Linear',
+    id='AutoRegressor',
+    entry_point='ctsb.models.time_series:AutoRegressor',
 )
 
 model_register(

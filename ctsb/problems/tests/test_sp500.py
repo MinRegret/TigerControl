@@ -1,7 +1,7 @@
 # test the S&P 500 problem class
 
 import ctsb
-from ctsb.problems.data_based.sp500 import SP500
+from ctsb.problems.time_series.sp500 import SP500
 import jax.numpy as np
 import matplotlib.pyplot as plt
 

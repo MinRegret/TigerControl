@@ -1,35 +1,56 @@
 """
-Linear combination of previous values
+Produces randomly generated scalar values at every timestep, taken from a normal distribution.
 """
-
-import ctsb
 import jax.numpy as np
+import jax.random as random
+import ctsb
+from ctsb.utils.random import generate_key
+from ctsb.problems.control import ControlProblem
 
-class Linear(ctsb.Model):
+class Random(ControlProblem):
     """
-    Implements the equivalent of an AR(p) model - predicts a linear combination of the
-    previous p observed values in a time-series
+    A random sequence of scalar values taken from an i.i.d. normal distribution.
     """
 
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, p):
-        # initializes model parameters
+    def initialize(self):
+        """
+        Description:
+            Randomly initialize the hidden dynamics of the system.
+        Args:
+            None
+        Returns:
+            None
+        """
+        self.T = 0
         self.initialized = True
-        raise NotImplementedError
 
-    def step(self, **kwargs):
-        # run one timestep of the model in its environment
-        raise NotImplementedError
+    def step(self):
+        """
+        Description:
+            Moves the system dynamics one time-step forward.
+        Args:
+            None
+        Returns:
+            The next value in the time-series.
+        """
+        assert self.initialized
+        self.T += 1
+        return random.normal(generate_key())
 
-    def predict(self, x=None):
-        # returns model prediction for given input
-        raise NotImplementedError
+    def hidden(self):
+        """
+        Not implemented
+        """
+        pass
 
-    def update(self, rule=None):
-        # update parameters according to given loss and update rule
-        raise NotImplementedError
+    def close(self):
+        """
+        Not implemented
+        """
+        pass
 
     def help(self):
         """
@@ -69,15 +90,6 @@ Methods:
             None
         Returns:
             The next value in the time-series.
-
-    seed(seed)
-        Description:
-            Seeds the random number generator to produce deterministic, reproducible results. 
-        Args:
-            seed (int): Default value None. The number that determines the seed of the random
-            number generator for the system.
-        Returns:
-            A list containing the resulting NumPy seed.
 
     help()
         Description:

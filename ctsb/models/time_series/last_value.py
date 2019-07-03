@@ -4,10 +4,11 @@ Last observed value
 
 import jax.numpy as np
 import ctsb
+from ctsb.models.time_series import TimeSeriesModel
 
-class LastValue(ctsb.Model):
+class LastValue(TimeSeriesModel):
     """
-    Predicts the last value in the time series, i.e. x_t = x_(t-1)
+    Predicts the last value in the time series, i.e. x(t) = x(t-1)
     """
 
     def __init__(self):
@@ -16,7 +17,7 @@ class LastValue(ctsb.Model):
     def initialize(self):
         """
         Description:
-            Initialize the (non-existent) hidden dynamics of the model.
+            Initialize the (non-existent) hidden dynamics of the model
         Args:
             None
         Returns:
@@ -61,7 +62,7 @@ class LastValue(ctsb.Model):
     def help(self):
         """
         Description:
-            Prints information about this class and its methods.
+            Prints information about this class and its methods
         Args:
             None
         Returns:
@@ -80,13 +81,13 @@ LastValue_help = """
 -------------------- *** --------------------
 
 Id: LastValue
-Description: Predicts the last value in the time series, i.e. x_t = x_(t-1)
+Description: Predicts the last value in the time series, i.e. x(t) = x(t-1)
 
 Methods:
 
     initialize()
         Description:
-            Initialize the (non-existent) hidden dynamics of the model.
+            Initialize the (non-existent) hidden dynamics of the model
         Args:
             None
         Returns:
@@ -119,7 +120,7 @@ Methods:
 
     help()
         Description:
-            Prints information about this class and its methods.
+            Prints information about this class and its methods
         Args:
             None
         Returns:

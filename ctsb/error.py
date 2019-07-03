@@ -27,6 +27,7 @@ class UnregisteredObject(Unregistered):
     """
     pass
 
+
 class UnregisteredBenchmark(Unregistered):
     """Raised when the user requests an env from the registry that does
     not actually exist.
@@ -55,9 +56,9 @@ class ResetNotAllowed(Exception):
     """
     pass
 
-class InvalidAction(Exception):
-    """Raised when the user performs an action not contained within the
-    action space
+class InvalidClass(Exception):
+    """Raised when the user tries to register a class without sufficient
+    preimplemented methods
     """
     pass
 

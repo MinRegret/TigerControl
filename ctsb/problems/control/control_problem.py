@@ -1,27 +1,27 @@
-# Model class
+# Problem class
 # Author: John Hallman
 
 from ctsb import error
+from ctsb.problems import Problem
 
-# class for implementing algorithms with enforced modularity
-class Model(object):
+# class for online control tests
+class ControlProblem(Problem):
     spec = None
 
+    def __init__(self):
+        self.initialized = False
+
     def initialize(self, **kwargs):
-        # initializes model parameters
+        # resets problem to time 0
         raise NotImplementedError
 
-    def step(self, **kwargs):
-        # run one timestep of the model in its environment
+    def step(self, action=None):
+        #Run one timestep of the problem's dynamics. 
         raise NotImplementedError
 
-    def predict(self, x=None):
-        # returns model prediction for given input
-        raise NotImplementedError
-
-    def update(self, **kwargs):
-        # update parameters according to given loss and update rule
-        raise NotImplementedError
+    def close(self):
+        # closes the problem and returns used memory
+        pass
 
     def help(self):
         # prints information about this class and its methods
@@ -40,6 +40,4 @@ class Model(object):
         self.close()
         # propagate exception
         return False
-
-
 

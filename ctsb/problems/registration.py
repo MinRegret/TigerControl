@@ -2,7 +2,7 @@ import re
 import importlib
 import warnings
 
-from ctsb import error, logger
+from ctsb import error
 from ctsb.utils import Spec, Registry
 
 # This format is true today, but it's *not* an official spec.

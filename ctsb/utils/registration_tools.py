@@ -2,7 +2,7 @@ import re
 import importlib
 import warnings
 
-from ctsb import error, logger
+from ctsb import error
 
 # This format is true today, but it's *not* an official spec.
 # [username/](problem-name)-v(version)    problem-name is group 1, version is group 2
@@ -91,6 +91,7 @@ class Registry(object):
     def __init__(self, regexp):
         self.specs = {}
         self.regexp = regexp
+        self.custom = {}
 
     def make(self, path, **kwargs):
         """
@@ -100,18 +101,21 @@ class Registry(object):
         Returns:
             object instance
         """
-        if len(kwargs) > 0:
-            logger.info('Making new {}: %s (%s)'.format(self), path, kwargs)
-        else:
-            logger.info('Making new {}: %s'.format(self), path)
         spec = self.spec(path)
         obj = spec.make(**kwargs)
         return obj
 
     def list_ids(self):
+        Returns:
+            Keys of specifications.
+        """
         return self.specs.keys()
 
     def all(self):
+        """
+        Returns:
+            Values of specifications.
+        """
         return self.specs.values()
 
     def spec(self, path):

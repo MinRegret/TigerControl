@@ -1,11 +1,14 @@
 # Experiment class
-# Author: John Hallman
+# Author: Alex Yu
 
 import ctsb
 from ctsb import error
+from ctsb.problems.control.control_problem import ControlProblem
+from ctsb.models.control import ControlModel
 import jax.numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+import inspect
 
 # class for implementing algorithms with enforced modularity
 class Experiment(object):
@@ -14,16 +17,19 @@ class Experiment(object):
         self.initialized = False
         
     def initialize(self, loss_fn, problem_id=None, problem_params=None, model_id_list=None, problem_to_param_models=None):
-        '''
-        There are two ways to specify initialize(). The first is to use the params (problem_id, problem_params, model_id_list, loss_fn)
-        and the second is to use the params (problem_to_param_models, loss_fn). The first way is useful if you only want to specify
-        a single problem, and the second way is useful if you want to specify multiple problems.
+        ''' 
+        Descripton:
+            There are two ways to specify initialize(). The first is to use the params
+            (problem_id, problem_params, model_id_list, loss_fn) and the second is to
+            use the params (problem_to_param_models, loss_fn). The first way is useful
+            if you only want to specify a single problem, and the second way is useful
+            if you want to specify multiple problems.
         Args:
-            problem_id(string): name of problem in registry
-            problem_params(dict): hyperparameters for problem
-            model_id_list(list of strings): list of model_id to run on problem
-            loss_fn(function): function mapping (predict_value, true_value) -> loss
-            problem_to_param_models(dict): map of the form problem_id -> (hyperparameters for problem, model list)
+            problem_id (string): name of problem in registry
+            problem_params (dict): hyperparameters for problem
+            model_id_list (list of strings): list of model_id to run on problem
+            loss_fn (function): function mapping (predict_value, true_value) -> loss
+            problem_to_param_models (dict): map of the form problem_id -> (hyperparameters for problem, model list)
         '''
         self.intialized = True
         self.T = 0
@@ -53,6 +59,12 @@ class Experiment(object):
                 self.pom_ls.append((problem, x_0, model_list))
 
     def run_all_experiments(self, time_steps=100):
+        '''
+        Descripton:
+            Runs all experiments for specified number of timesteps.
+        Args:
+            time_steps (int): number of time steps 
+        '''
         self.T = time_steps
         for (problem, obs, models) in self.pom_ls:
             self.prob_model_to_loss[problem] = {}
@@ -62,14 +74,26 @@ class Experiment(object):
         return
 
     def run_experiment(self, problem, obs, model):
+        '''
+        Descripton:
+            Runs all experiments for specified number of timesteps.
+        Args:
+            problem: instance of Problem
+            obs:
+            model:
+        '''
+        is_control_problem = (inspect.getmro(problem.__class__))[1] == ControlProblem
+        is_control_model = (inspect.getmro(model.__class__))[1] == ControlModel
+        assert ((is_control_problem and is_control_model) or (not is_control_problem and not is_control_model))
+
         cur_x = obs
         print ("running experiment: " + str(model) + " on " + str(problem))
         for i in tqdm(range(0,self.T)):
             cur_y_pred = model.predict(cur_x)
-            cur_y_true= problem.step()
+            cur_y_true = problem.step(cur_x) if is_control_problem else problem.step()
             cur_loss = self.loss(cur_y_true, cur_y_pred)
             self.prob_model_to_loss[problem][model].append(cur_loss)
-            model.update(cur_loss)
+            model.update(cur_y_true)
             cur_x = cur_y_true
         return
 
@@ -116,7 +140,7 @@ class Experiment(object):
 
         fig.tight_layout()
         plt.show(block=False)
-        plt.pause(100)
+        plt.pause(5)
         plt.close()        
 
     def get_prob_model_to_loss(self):

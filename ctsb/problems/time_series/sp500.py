@@ -8,8 +8,9 @@ import jax.numpy as np
 import pandas as pd
 from ctsb.utils import sp500, get_ctsb_dir
 from ctsb.error import StepOutOfBounds
+from ctsb.problems.time_series import TimeSeriesProblem
 
-class SP500(ctsb.Problem):
+class SP500(TimeSeriesProblem):
     """
     Description: Outputs the daily opening price of the S&P 500 stock market index 
         from January 3, 1986 to June 29, 2018.
