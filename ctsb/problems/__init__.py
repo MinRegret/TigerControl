@@ -34,6 +34,11 @@ problem_register(
     entry_point='ctsb.problems.control:LSTM_Output',
 )
 
+problem_register(
+    id='Pendulum-v0',
+    entry_point='ctsb.problems.control:InvertedPendulumSwingupBulletEnv'
+)
+
 
 # ---------- Data based ----------
 

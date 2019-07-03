@@ -14,6 +14,9 @@ def test_experiment(steps=100):
     test_multiple_problem_experiment_initialize(steps)
     print("test_experiment passed")
 
+
+def test_single_lds_experiment
+
 def test_single_problem_experiment_initialize(steps=100):
     exp = Experiment()
     MSE = lambda y_true, y_pred: (y_true - y_pred)**2
