@@ -110,14 +110,14 @@ class Registry(object):
         Returns:
             Keys of specifications.
         """
-        return self.specs.keys()
+        return list(self.specs.keys()) + list(self.custom.keys())
 
     def all(self):
         """
         Returns:
             Values of specifications.
         """
-        return self.specs.values()
+        return list(self.specs.values())
 
     def spec(self, path):
         """
