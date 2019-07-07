@@ -44,7 +44,7 @@ def test_pendulum(show_plot=False):
         frame = 0
         score = 0
         restart_delay = 0
-        while time.time() - t_start < 5:
+        while time.time() - t_start < 10:
             time.sleep(1. / 60.)
             a = model.predict(obs)
             obs, r, done, _ = problem.step(a)
