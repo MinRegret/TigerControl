@@ -27,3 +27,8 @@ model_register(
     id='KalmanFilter',
     entry_point='ctsb.models.control:KalmanFilter',
 )
+
+model_register(
+    id='TD3',
+    entry_point='ctsb.models.control:TD3',
+)
