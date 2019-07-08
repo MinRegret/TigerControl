@@ -27,3 +27,8 @@ model_register(
     id='KalmanFilter',
     entry_point='ctsb.models.control:KalmanFilter',
 )
+
+model_register(
+    id='ShootingMethod',
+    entry_point='ctsb.models.control:ShootingMethod',
+)
