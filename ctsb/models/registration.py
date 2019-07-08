@@ -35,6 +35,11 @@ class ModelRegistry(Registry):
     def __str__(self):
         return "<CTSB Model Registry>"
 
+    def __init__(self, regexp):
+        self.specs = {}
+        self.regexp = regexp
+        self.custom = {}
+
     def make(self, path, **kwargs):
         """
         Args: 
@@ -50,6 +55,13 @@ class ModelRegistry(Registry):
         obj = spec.make(**kwargs)
         return obj
 
+    def list_ids(self):
+        """
+        Returns:
+            Keys of specifications.
+        """
+        return list(self.specs.keys()) + list(self.custom.keys())
+        
     # register a custom model class
     def register_custom(self, id, custom_class):
         self.custom[id] = custom_class

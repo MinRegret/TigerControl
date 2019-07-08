@@ -1,7 +1,7 @@
 # test the ARMA problem class
 
 import ctsb
-from ctsb.problems.control.arma import ARMA
+from ctsb.problems.time_series.arma import ARMA
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
@@ -16,7 +16,7 @@ def test_arma(steps=100, show_plot=False, verbose=False):
     test_output = []
     for t in range(T):
         test_output.append(problem.step())
-        
+
     info = problem.hidden()
     if verbose:
         print(info)
@@ -29,7 +29,7 @@ def test_arma(steps=100, show_plot=False, verbose=False):
         plt.plot(test_output)
         plt.title("arma")
         plt.show(block=False)
-        plt.pause(1)
+        plt.pause(10)
         plt.close()
     print("test_arma passed")
     return
