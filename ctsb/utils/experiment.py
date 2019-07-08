@@ -16,20 +16,16 @@ class Experiment(object):
     def __init__(self, problem_id=None, problem_params=None, model_list=None, loss_fn=None, problem_to_param_models=None):
         self.initialized = False
         
-    def initialize(self, loss_fn, problem_id=None, problem_params=None, model_id_list=None, problem_to_param_models=None):
-        ''' 
-        Descripton:
-            There are two ways to specify initialize(). The first is to use the params
-            (problem_id, problem_params, model_id_list, loss_fn) and the second is to
-            use the params (problem_to_param_models, loss_fn). The first way is useful
-            if you only want to specify a single problem, and the second way is useful
-            if you want to specify multiple problems.
-        Args:
-            problem_id (string): name of problem in registry
-            problem_params (dict): hyperparameters for problem
-            model_id_list (list of strings): list of model_id to run on problem
-            loss_fn (function): function mapping (predict_value, true_value) -> loss
-            problem_to_param_models (dict): map of the form problem_id -> (hyperparameters for problem, model list)
+    def initialize(self, loss_fn, problem_to_params, model_to_params, problem_to_models=None):
+        '''
+            Description:
+                Initializes the experiment instance. 
+            Args:
+                loss_fn (function): function mapping (predict_value, true_value) -> loss
+                problem_to_param (dict): map of the form problem_id -> hyperparameters for problem
+                model_to_param (dict): map of the form model_id -> hyperparameters for model
+                problem_to_models (dict) : map of the form problem_id -> list of model_id. If None, then we assume that the
+                user wants to test every model in model_to_params against every problem in problem_to_params
         '''
         self.intialized = True
         self.T = 0
@@ -37,26 +33,16 @@ class Experiment(object):
         self.pom_ls = [] # (problem, initial observation, model) list
         self.prob_model_to_loss = {} # map of the form [problem][model] -> loss series
 
-        if problem_id != None:
+        for problem_id, problem_params in problem_to_params.items():
             problem = ctsb.problem(problem_id)
             x_0 = problem.initialize(**problem_params)
-            model_list = []
-            for model_id in model_id_list:
+            initialized_models = []
+            model_list = problem_to_models[problem_id] if problem_to_models != None else list(model_to_params.keys())
+            for model_id in model_list:
                 model = ctsb.model(model_id)
-                model.initialize()
-                model_list.append(model)
-            self.pom_ls = [(problem, x_0, model_list)]
-            
-        else:
-            for problem_id, param_models in problem_to_param_models.items():
-                problem = ctsb.problem(problem_id)
-                x_0 = problem.initialize(**param_models[0])
-                model_list = []
-                for model_id in param_models[1]:
-                    model = ctsb.model(model_id)
-                    model.initialize()
-                    model_list.append(model)
-                self.pom_ls.append((problem, x_0, model_list))
+                model.initialize(**model_to_params[model_id])
+                initialized_models.append(model)
+            self.pom_ls.append((problem, x_0, initialized_models))
 
     def run_all_experiments(self, time_steps=100):
         '''
@@ -78,9 +64,9 @@ class Experiment(object):
         Descripton:
             Runs all experiments for specified number of timesteps.
         Args:
-            problem: instance of Problem
-            obs:
-            model:
+            problem (instance of ctsb.Problem): initialized problem
+            obs (initial observation): initial observation
+            model (instance of ctsb.Model): initialized model
         '''
         is_control_problem = (inspect.getmro(problem.__class__))[1] == ControlProblem
         is_control_model = (inspect.getmro(model.__class__))[1] == ControlModel
@@ -96,16 +82,6 @@ class Experiment(object):
             model.update(cur_y_true)
             cur_x = cur_y_true
         return
-
-    '''
-    def plot_single_problem_results(self, problem, model_list):
-        for model in model_list:
-            plt.plot(self.prob_model_to_loss[problem][model])
-        plt.title("Problem:" + str(problem) + " , Models:" + str(model_list))
-        plt.show(block=False)
-        plt.pause(10)
-        plt.close()
-    '''
 
     def plot_all_problem_results(self):
         all_problem_info = []
