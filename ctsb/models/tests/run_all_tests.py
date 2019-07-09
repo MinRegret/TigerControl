@@ -3,6 +3,7 @@ from ctsb.models.tests.test_predict_zero import test_predict_zero
 from ctsb.models.tests.test_autoregressor import test_autoregressor
 from ctsb.models.tests.test_kalman_filter import test_kalman_filter
 from ctsb.models.tests.test_shooting_method import test_shooting_method
+from ctsb.models.tests.test_lqr import test_lqr
 from ctsb.models.tests.test_custom_model import test_custom_model
 
 def run_all_tests(steps=1000, show=True):
