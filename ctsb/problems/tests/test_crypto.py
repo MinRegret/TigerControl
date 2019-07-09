@@ -6,7 +6,7 @@ import jax.numpy as np
 import matplotlib.pyplot as plt
 
 
-def test_crypto(steps=100, show_plot=False, verbose=False):
+def test_crypto(steps=1000, show_plot=False, verbose=False):
     T = steps
     problem = Crypto()
     problem.initialize()

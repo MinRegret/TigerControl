@@ -6,7 +6,7 @@ import numpy.random as random
 import matplotlib.pyplot as plt
 
 # Test Kalman Filter for constant signal x = 0.5 with measurement noise 0.1
-def test_kalman_filter(steps=100, show_plot=True):
+def test_kalman_filter(steps=1000, show_plot=True):
     T = steps 
 
     x_true = 0.5

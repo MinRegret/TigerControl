@@ -36,12 +36,23 @@ class LSTM_Output(ControlProblem):
         self.W_hh = glorot_init(generate_key(), (4*h, h)) # maps h_t to gates
         self.W_xh = glorot_init(generate_key(), (4*h, n)) # maps x_t to gates
         self.b_h = np.zeros(4*h)
-        jax.ops.index_update(self.b_h, jax.ops.index[h:2*h], np.ones(h)) # forget gate biased initialization
+        self.b_h = jax.ops.index_update(self.b_h, jax.ops.index[h:2*h], np.ones(h)) # forget gate biased initialization
         self.W_out = glorot_init(generate_key(), (m, h)) # maps h_t to output
         self.cell = np.zeros(h) # long-term memory
         self.hid = np.zeros(h) # short-term memory
-        self.sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
         return np.dot(self.W_out, self.hid)
+
+        sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
+        def _step(x, hid, cell):
+
+            gate = np.dot(self.W_hh, hid) + np.dot(self.W_xh, x) + self.b_h 
+            i, f, g, o = np.split(gate, 4) # order: input, forget, cell, output
+            next_cell =  sigmoid(f) * cell + sigmoid(i) * np.tanh(g)
+            next_hid = sigmoid(o) * np.tanh(next_cell)
+            y = np.dot(self.W_out, next_hid)
+            return (next_hid, next_cell, y)
+
+        self._step = jax.jit(_step)
         
     def step(self, x):
         """
@@ -56,11 +67,8 @@ class LSTM_Output(ControlProblem):
         assert x.shape == (self.n,)
         self.T += 1
 
-        gate = np.dot(self.W_hh, self.hid) + np.dot(self.W_xh, x) + self.b_h 
-        i, f, g, o = np.split(gate, 4) # order: input, forget, cell, output
-        self.cell =  self.sigmoid(f) * self.cell + self.sigmoid(i) * np.tanh(g)
-        self.hid = self.sigmoid(o) * np.tanh(self.cell)
-        return np.dot(self.W_out, self.hid)
+        self.hid, self.cell, y = self._step(x, self.hid, self.cell)
+        return y
 
     def hidden(self):
         """
@@ -72,13 +80,7 @@ class LSTM_Output(ControlProblem):
             h: The hidden state.
         """
         assert self.initialized
-        return self.hid
-
-    def close(self):
-        """
-        Not implemented
-        """
-        pass
+        return (self.hid, self.cell)
 
     def help(self):
         """

@@ -6,10 +6,10 @@ import math
 import matplotlib.pyplot as plt
 
 def y(t):
-    return math.exp(t) * (1 + 2 * t)
+    return np.exp(t) * (1 + 2 * t)
 
 def f(y, t):
-    return y + 4 * math.exp(t)
+    return y + 4 * np.exp(t)
 
 def test_shooting_method(steps=10, show_plot=True):
     T = steps 

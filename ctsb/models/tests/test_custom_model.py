@@ -5,7 +5,7 @@ import jax.numpy as np
 import matplotlib.pyplot as plt
 
 # test a simple CustomModel that returns last value by storing a single param
-def test_custom_model(steps=100, show_plot=True):
+def test_custom_model(steps=1000, show_plot=True):
     # initial preparation
     T = steps 
     p, q = 3, 3
