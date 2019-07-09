@@ -37,6 +37,13 @@ class RNN_Output(ControlProblem):
         self.W_out = glorot_init(generate_key(), (m, h))
         self.b_h = np.zeros(h)
         self.hid = np.zeros(h)
+
+        def _step(x, hid):
+            next_hid = np.tanh(np.dot(self.W_h, hid) + np.dot(self.W_x, x) + self.b_h)
+            y = np.dot(self.W_out, next_hid)
+            return (next_hid, y)
+
+        self._step = jax.jit(_step)
         return np.dot(self.W_out, self.hid)
         
     def step(self, x):
@@ -52,8 +59,8 @@ class RNN_Output(ControlProblem):
         assert x.shape == (self.n,)
         self.T += 1
 
-        self.hid = np.tanh(np.dot(self.W_h, self.hid) + np.dot(self.W_x, x) + self.b_h)
-        return np.dot(self.W_out, self.hid)
+        self.hid, y = self._step(x, self.hid)
+        return y
 
     def hidden(self):
         """
@@ -66,12 +73,6 @@ class RNN_Output(ControlProblem):
         """
         assert self.initialized
         return self.hid
-
-    def close(self):
-        """
-        Not implemented
-        """
-        pass
 
     def help(self):
         """
