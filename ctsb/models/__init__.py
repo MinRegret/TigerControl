@@ -29,6 +29,11 @@ model_register(
 )
 
 model_register(
+    id='TD3',
+    entry_point='ctsb.models.control:TD3',
+)
+
+model_register(
     id='ShootingMethod',
     entry_point='ctsb.models.control:ShootingMethod',
 )

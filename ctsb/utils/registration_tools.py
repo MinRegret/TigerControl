@@ -91,7 +91,6 @@ class Registry(object):
     def __init__(self, regexp):
         self.specs = {}
         self.regexp = regexp
-        self.custom = {}
 
     def make(self, path, **kwargs):
         """
@@ -110,7 +109,7 @@ class Registry(object):
         Returns:
             Keys of specifications.
         """
-        return list(self.specs.keys()) + list(self.custom.keys())
+        return list(self.specs.keys())
 
     def all(self):
         """

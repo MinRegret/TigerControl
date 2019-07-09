@@ -8,12 +8,30 @@ from ctsb.utils.experiment import Experiment
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
-# run all experiment teps
-def test_experiment(steps=100):
-    test_single_problem_experiment_initialize(steps)
-    test_multiple_problem_experiment_initialize(steps)
-    print("test_experiment passed")
+def test_experiment_initialize(steps=100):
+    # test without problem_to_models
+    exp = Experiment()
+    MSE = lambda y_true, y_pred: (y_true - y_pred)**2
+    problem_to_params = {'ARMA-v0' : {'p':3, 'q':3}, 
+                         'SP500-v0' : {}}
+    model_to_params = {'LastValue': {},
+                       'PredictZero': {}}
+    exp.initialize(MSE, problem_to_params, model_to_params)
+    exp.run_all_experiments(steps)
+    exp.plot_all_problem_results()
 
+    # test with problem_to_models
+    exp = Experiment()
+    problem_to_models = {'ARMA-v0' : ['LastValue'],
+                         'SP500-v0' : ['PredictZero']}
+    exp.initialize(MSE, problem_to_params, model_to_params, problem_to_models)
+    exp.run_all_experiments(steps)
+    exp.plot_all_problem_results()
+    return
+
+if __name__ == "__main__":
+    test_experiment_initialize()
+'''
 def test_single_problem_experiment_initialize(steps=100):
     exp = Experiment()
     MSE = lambda y_true, y_pred: (y_true - y_pred)**2
@@ -31,7 +49,7 @@ def test_multiple_problem_experiment_initialize(steps=100):
     exp.run_all_experiments(steps)
     exp.plot_all_problem_results()
     return
-'''
+
 def test_arma_and_crypto(steps=100, show_plot=False, verbose=False):
     T = steps
     p, q = 3, 3
@@ -79,8 +97,4 @@ def test_arma_experiment(steps=100, show_plot=False, verbose=False):
     return
 '''
 
-if __name__ == "__main__":
-    # test_experiment()
-    test_single_problem_experiment_initialize()
-    # test_arma_and_crypto(show_plot=True)
-    # test_arma_experiment(show_plot=True)
+

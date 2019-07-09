@@ -13,16 +13,38 @@ Although there are several machine learning platforms that aid with the implemen
 Installation
 ============
 
-Either install ``ctsb`` by cloning this GitHub repo if you want to make customizable changes
+Before installing CTSB and its dependencies, create a new conda environment in order to avoid package conflicts.
+
+```
+    conda create -n name-of-your-environment python=3.x
+    conda activate name-of-your-environment
+```
+
+Next, either install CTSB by cloning this GitHub repo if you want to make customizable changes...
 
 ```
     git clone https://github.com/johnhallman/ctsb.git
     cd ctsb
     pip install -e .
+    cd ..
 ```
 
-Or install the package directly using pip
+... or install the package directly using pip.
 
 ```
     pip install git+https://github.com/johnhallman/ctsb.git
 ```
+
+Finally, run a demo to verify that the installation was successful!
+
+```
+    cd ctsb
+    python ctsb/problems/tests/test_pendulum.py
+```
+
+
+Quickstart
+============
+
+To learn more about CTSB and how to incorporate it into your research, check out the Quickstart guide in the ```ctsb/notebooks``` folder.
+

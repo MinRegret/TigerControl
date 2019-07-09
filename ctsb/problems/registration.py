@@ -4,6 +4,7 @@ import warnings
 
 from ctsb import error
 from ctsb.utils import Spec, Registry
+import pybullet_envs
 
 # This format is true today, but it's *not* an official spec.
 # [username/](problem-name)-v(version)    problem-name is group 1, version is group 2
@@ -39,6 +40,56 @@ class ProblemRegistry(Registry):
     """
     def __str__(self):
         return "<CTSB Problem Registry>"
+
+    def __init__(self, regexp):
+        self.specs = {}
+        self.regexp = regexp
+        self.pybullet_passed = []
+        self.pybullet_failed = []
+        for name in [name.split('- ')[-1] for name in pybullet_envs.getList()]:
+            try:
+                #env = pybullet_envs.make(name) # TODO: decomment eventually, figure out how
+                #env.close()
+                self.pybullet_passed.append(name)
+            except:
+                self.pybullet_failed.append(name)
+
+    def list_ids(self):
+        """
+        Returns:
+            Keys of specifications.
+        """
+        return list(self.specs.keys()) + self.pybullet_passed
+
+    def make(self, path, **kwargs):
+        """
+        Args: 
+            path(string): id of object in registry
+            kwargs(dict): The kwargs to pass to the object class
+        Returns:
+            object instance
+        """
+        if path in self.pybullet_failed:
+            raise error.PyBulletBug("Failed to build PyBullet env with ID {}".format(path))
+        if path in self.pybullet_passed:
+            return pybullet_envs.make(path)
+
+        spec = self.spec(path)
+        obj = spec.make(**kwargs)
+        return obj
+
+    def register(self, id, **kwargs):
+        """
+        Populates the specs dict with a map from id to the object instance
+        Args:
+            id(string): id of object in registry
+            kwargs(dict): The kwargs to pass to the object class
+        """
+        if id in self.specs:
+            raise error.Error('Cannot re-register ID {} for {}'.format(id, self))
+        if id in self.pybullet_passed + self.pybullet_failed:
+            raise error.Error('ID {} for {} already exists as a PyBullet environment'.format(id, self))
+        self.specs[id] = Spec(id, self.regexp, **kwargs)
 
 
 # Have a global problem_registry

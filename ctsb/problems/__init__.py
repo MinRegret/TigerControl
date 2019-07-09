@@ -6,18 +6,8 @@ from ctsb.problems.time_series import TimeSeriesProblem
 from ctsb.problems.control import ControlProblem
 
 
-# ---------- Simulated ----------
+# ---------- Control ----------
 
-
-problem_register(
-    id='Random-v0',
-    entry_point='ctsb.problems.control:Random',
-)
-
-problem_register(
-    id='ARMA-v0',
-    entry_point='ctsb.problems.control:ARMA',
-)
 
 problem_register(
     id='LDS-v0',
@@ -34,9 +24,24 @@ problem_register(
     entry_point='ctsb.problems.control:LSTM_Output',
 )
 
+problem_register(
+    id='Pendulum-v0',
+    entry_point='ctsb.problems.control:InvertedPendulumSwingupBulletEnv'
+)
 
-# ---------- Data based ----------
 
+# ---------- Time-series ----------
+
+
+problem_register(
+    id='Random-v0',
+    entry_point='ctsb.problems.time_series:Random',
+)
+
+problem_register(
+    id='ARMA-v0',
+    entry_point='ctsb.problems.time_series:ARMA',
+)
 
 problem_register(
     id='SP500-v0',
