@@ -40,11 +40,9 @@ class LSTM_Output(ControlProblem):
         self.W_out = glorot_init(generate_key(), (m, h)) # maps h_t to output
         self.cell = np.zeros(h) # long-term memory
         self.hid = np.zeros(h) # short-term memory
-        return np.dot(self.W_out, self.hid)
 
-        sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
         def _step(x, hid, cell):
-
+            sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
             gate = np.dot(self.W_hh, hid) + np.dot(self.W_xh, x) + self.b_h 
             i, f, g, o = np.split(gate, 4) # order: input, forget, cell, output
             next_cell =  sigmoid(f) * cell + sigmoid(i) * np.tanh(g)
@@ -53,6 +51,7 @@ class LSTM_Output(ControlProblem):
             return (next_hid, next_cell, y)
 
         self._step = jax.jit(_step)
+        return np.dot(self.W_out, self.hid)
         
     def step(self, x):
         """
