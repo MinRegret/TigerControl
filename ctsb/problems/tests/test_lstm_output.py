@@ -8,7 +8,7 @@ import jax.random as random
 import matplotlib.pyplot as plt
 
 
-def test_lstm(steps=100, show_plot=False, verbose=False):
+def test_lstm(steps=1000, show_plot=False, verbose=False):
     T = steps
     n, m, h = 5, 3, 10
     problem = LSTM_Output()

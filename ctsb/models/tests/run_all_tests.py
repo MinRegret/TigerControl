@@ -6,15 +6,14 @@ from ctsb.models.tests.test_shooting_method import test_shooting_method
 from ctsb.models.tests.test_lqr import test_lqr
 from ctsb.models.tests.test_custom_model import test_custom_model
 
-def run_all_tests(show=True):
+def run_all_tests(steps=1000, show=True):
     print("\nrunning all models tests...\n")
-    test_last_value(show_plot=show)
-    test_predict_zero(show_plot=show)
-    test_custom_model(show_plot=show)
-    test_autoregressor(show_plot=show)
-    test_kalman_filter(show_plot=show)
-    test_shooting_method(show_plot=show)
-    test_lqr(show_plot=show)
+    test_last_value(steps=1000, show_plot=show)
+    test_predict_zero(steps=1000, show_plot=show)
+    test_custom_model(steps=1000, show_plot=show)
+    test_autoregressor(steps=1000, show_plot=show)
+    test_kalman_filter(steps=1000, show_plot=show)
+    test_shooting_method(steps=1000, show_plot=show)
     print("\nall models tests passed\n")
 
 if __name__ == "__main__":

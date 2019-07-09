@@ -4,7 +4,7 @@ import ctsb
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
-def test_predict_zero(steps=100, show_plot=True):
+def test_predict_zero(steps=1000, show_plot=True):
     T = steps 
     p, q = 3, 3
     problem = ctsb.problem("ARMA-v0")

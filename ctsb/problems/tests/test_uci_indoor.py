@@ -6,7 +6,7 @@ import jax.numpy as np
 import matplotlib.pyplot as plt
 
 
-def test_uci_indoor(steps=100, show_plot=False, verbose=False):
+def test_uci_indoor(steps=1000, show_plot=False, verbose=False):
     T = steps
     problem = UCI_Indoor()
     problem.initialize()

@@ -8,8 +8,7 @@ from ctsb.problems.control.lds import LDS
 from ctsb.utils.random import generate_key
 
 
-
-def test_lds(steps=100, show_plot=False, verbose=False):
+def test_lds(steps=1000, show_plot=False, verbose=False):
     T = steps
     n, m, d = 5, 3, 10
     problem = LDS()

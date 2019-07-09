@@ -9,7 +9,7 @@ from ctsb.utils.random import generate_key
 
 
 
-def test_rnn(steps=100, show_plot=False, verbose=False):
+def test_rnn(steps=1000, show_plot=False, verbose=False):
     T = steps
     n, m = 5, 3
     problem = RNN_Output()

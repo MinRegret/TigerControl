@@ -54,6 +54,21 @@ class ARMA(TimeSeriesProblem):
         self.c = random.normal(generate_key()) if c == None else c
         self.x = random.normal(generate_key(), shape=(self.p,))
         self.noise = random.normal(generate_key(), shape=(q,))
+
+        def _step(x, noise, eps):
+            x_ar = np.dot(x, self.phi)
+            x_ma = np.dot(noise, self.psi)
+            x_new = self.c + x_ar + x_ma + eps
+
+            next_x = jax.ops.index_update(x, jax.ops.index[1:], x[:-1])
+            next_noise = jax.ops.index_update(noise, jax.ops.index[1:], noise[:-1])
+
+            next_x = jax.ops.index_update(next_x, 0, x_new) # equivalent to self.x[0] = x_new
+            next_noise = jax.ops.index_update(next_noise, 0, eps) # equivalent to self.noise[0] = eps  
+
+            return (next_x, next_noise, x_new)
+
+        self._step = jax.jit(_step)
         return self.x[0]
 
     def step(self):
@@ -67,16 +82,7 @@ class ARMA(TimeSeriesProblem):
         """
         assert self.initialized
         self.T += 1
-        x_ar = np.dot(self.x, self.phi)
-        x_ma = np.dot(self.noise, self.psi)
-        eps = random.normal(generate_key())
-        x_new = self.c + x_ar + x_ma + eps
-
-        jax.ops.index_update(self.x, jax.ops.index[1:], self.x[:-1])
-        jax.ops.index_update(self.noise, jax.ops.index[1:], self.noise[:-1])
-
-        jax.ops.index_update(self.x, 0, x_new) # equivalent to self.x[0] = x_new
-        jax.ops.index_update(self.noise, 0, eps) # equivalent to self.noise[0] = eps        
+        self.x, self.noise, x_new = self._step(self.x, self.noise, random.normal(generate_key()))  
         return x_new
 
     def hidden(self):
@@ -91,12 +97,6 @@ class ARMA(TimeSeriesProblem):
         """
         assert self.initialized
         return (self.x, self.noise)
-
-    def close(self):
-        """
-        Not implemented
-        """
-        pass
 
     def help(self):
         """

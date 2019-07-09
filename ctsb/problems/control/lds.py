@@ -2,6 +2,7 @@
 Linear dynamical system
 """
 
+import jax
 import jax.numpy as np
 import jax.random as random
 
@@ -51,6 +52,14 @@ class LDS(ControlProblem):
         self.C = normalize(self.C, 1.0)
         self.D = normalize(self.D, 1.0)
 
+        def _step(u, h, eps):
+            eps_h, eps_y = eps
+            next_h = np.dot(self.A, h) + np.dot(self.B, u) + self.noise * eps_h
+            y = np.dot(self.C, next_h) + np.dot(self.D, u) + self.noise * eps_y
+            return (next_h, y)
+
+        self._step = jax.jit(_step)
+
         y = np.dot(self.C, self.h) + np.dot(self.D, np.zeros(n)) + noise * random.normal(generate_key(), shape=(m,))
         return y
 
@@ -67,8 +76,8 @@ class LDS(ControlProblem):
         assert self.initialized
         assert u.shape == (self.n,)
         self.T += 1
-        self.h = np.dot(self.A, self.h) + np.dot(self.B, u) + self.noise * random.normal(generate_key(), shape=(self.d,))
-        y = np.dot(self.C, self.h) + np.dot(self.D, u) + self.noise * random.normal(generate_key(), shape=(self.m,))
+
+        self.h, y = self._step(u, self.h, (random.normal(generate_key(), shape=(self.d,)), random.normal(generate_key(), shape=(self.m,))))
         return y
 
     def hidden(self):
@@ -82,12 +91,6 @@ class LDS(ControlProblem):
         """
         assert self.initialized
         return self.h
-
-    def close(self):
-        """
-        Not implemented
-        """
-        pass
 
     def help(self):
         """
