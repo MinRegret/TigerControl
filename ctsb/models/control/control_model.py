@@ -4,7 +4,6 @@
 from ctsb import error
 from ctsb.models import Model
 
-
 # class for implementing algorithms with enforced modularity
 class ControlModel(Model):
 

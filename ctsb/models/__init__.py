@@ -32,3 +32,8 @@ model_register(
     id='ShootingMethod',
     entry_point='ctsb.models.control:ShootingMethod',
 )
+
+model_register(
+    id='LQR',
+    entry_point='ctsb.models.control:LQR',
+)
