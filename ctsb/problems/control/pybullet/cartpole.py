@@ -4,7 +4,6 @@
 import os
 import pybullet as p
 import pybullet_data
-import time
 from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
 
 class CartPole(PyBulletProblem):
@@ -44,6 +43,7 @@ class CartPole(PyBulletProblem):
             self._initialized = True
 
     # move one step in the simulation
+    # run time.sleep(<timeStep>) after if using GUI
     def step(self, force):
         p.setJointMotorControl2(self._cartpole, 0, p.TORQUE_CONTROL, force=force)
         p.stepSimulation()
@@ -54,33 +54,51 @@ class CartPole(PyBulletProblem):
         joints = list(range(self._numJoints))
         self._state = p.getJointStates(self._cartpole, joints)
     
-    # save state to disk
-    def saveState(self, path = None):
-        pass
+    # save sim state to disk
+    def saveToDisk(self, filename):
+        p.saveBullet(filename)
 
-    # load state from disk
-    def loadState(self, path):
-        pass
+    # load sim state from disk
+    def loadFromDisk(self, name):
+        p.restoreState(fileName = name)
+        self.updateState()
 
-    # return current state
+    # save state to memory
+    # keep track of state id
+    def saveToMemory(self):
+        stateID = p.saveState()
+        return stateID
+
+    # load state from memory
+    def loadFromMemory(self, ID):
+        p.restoreState(stateId = ID)
+        self.updateState()
+        
+    # return current joint state
     def getState(self):
-        return self._state # format output at some point
+        stateList = []
+        for joint in range(self._numJoints):
+            stateList.append({"pos": self._state[joint][0], 
+                              "vel": self._state[joint][1],
+                              "force": self._state[joint][3],
+                              "rForces": self._state[joint][2]})
+        return stateList 
 
+    # disconnect from physics server, end simulation
     def disconnect(self):
         p.disconnect()
 
 # debug
 c = CartPole()   
 c.initialize()
-for i in range(240 * 1):
-    if i % 2: c.step(5)
-    else: c.step(-5)
-    time.sleep(1. / 240)
 
-print("STATE")
+num = c.saveToMemory()
+for i in range(240 * 1):
+    if i % 2: c.step(100)
+    else: c.step(-100)
 for s in c.getState():
     print(s)
-c.disconnect()
-
-    
+c.loadFromMemory(num)
+for s in c.getState():
+    print(s) 
 
