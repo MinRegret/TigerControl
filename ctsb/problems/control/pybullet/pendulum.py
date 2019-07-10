@@ -3,10 +3,10 @@ PyBullet Pendulum enviornment
 """
 import gym
 import pybullet_envs
-from ctsb.problems.control.control_problem import ControlProblem
+from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
 
 
-class InvertedPendulumSwingupBulletEnv(ControlProblem):
+class InvertedPendulumSwingupBulletEnv(PyBulletProblem):
     """
     Simulates a pendulum balanced on a cartpole.
     """
