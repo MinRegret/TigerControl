@@ -9,6 +9,7 @@ import jax.numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import inspect
+from jax import jit
 
 # class for implementing algorithms with enforced modularity
 class Experiment(object):
@@ -55,8 +56,8 @@ class Experiment(object):
         for (problem, obs, models) in self.pom_ls:
             self.prob_model_to_loss[problem] = {}
             for model in models:
-                self.prob_model_to_loss[problem][model] = []
-                self.run_experiment(problem, obs, model)
+                print("model:" + str(model))
+                self.prob_model_to_loss[problem][model] = self.run_experiment(problem, obs, model)
         return
 
     def run_experiment(self, problem, obs, model):
@@ -71,17 +72,18 @@ class Experiment(object):
         is_control_problem = (inspect.getmro(problem.__class__))[1] == ControlProblem
         is_control_model = (inspect.getmro(model.__class__))[1] == ControlModel
         assert ((is_control_problem and is_control_model) or (not is_control_problem and not is_control_model))
-
+        # args = {'problem_step' : problem.step, 'obs' : obs, 'model_predict' : model.predict}
         cur_x = obs
-        print ("running experiment: " + str(model) + " on " + str(problem))
+        loss = []
         for i in tqdm(range(0,self.T)):
             cur_y_pred = model.predict(cur_x)
             cur_y_true = problem.step(cur_x) if is_control_problem else problem.step()
             cur_loss = self.loss(cur_y_true, cur_y_pred)
-            self.prob_model_to_loss[problem][model].append(cur_loss)
+            loss.append(cur_loss)
             model.update(cur_y_true)
             cur_x = cur_y_true
-        return
+        
+        return loss
 
     def plot_all_problem_results(self):
         all_problem_info = []
