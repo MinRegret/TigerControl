@@ -4,13 +4,15 @@
 import os
 import pybullet as p
 import pybullet_data
+import time
+from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
 
-class CartPoleProblem():
+class CartPole(PyBulletProblem):
 
     def __init__(self):
         self._initialized = False
 
-    def initialize(self, graphical=True, timeStep = 0.01):
+    def initialize(self, graphical=True, timeStep = 1. / 240):
         if not self._initialized:
     
             # set render mode, time step
@@ -64,14 +66,21 @@ class CartPoleProblem():
     def getState(self):
         return self._state # format output at some point
 
+    def disconnect(self):
+        p.disconnect()
+
 # debug
-c = CartPoleProblem()   
+c = CartPole()   
 c.initialize()
-for i in range(10000000):
+for i in range(240 * 1):
     if i % 2: c.step(5)
     else: c.step(-5)
+    time.sleep(1. / 240)
 
-
+print("STATE")
+for s in c.getState():
+    print(s)
+c.disconnect()
 
     
 
