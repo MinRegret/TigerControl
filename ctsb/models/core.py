@@ -29,9 +29,9 @@ class Model(object):
 
     def __str__(self):
         if self.spec is None:
-            return '<{} instance> call object help() method for info'.format(type(self).__name__)
+            return '<{} instance>'.format(type(self).__name__)
         else:
-            return '<{}<{}>> call object help() method for info'.format(type(self).__name__, self.spec.id)
+            return '<{}<{}>>'.format(type(self).__name__, self.spec.id)
 
     def __enter__(self):
         return self

@@ -3,41 +3,35 @@
 
 from ctsb import error
 from ctsb.problems import Problem
+import pybullet as p
 
 # class for online control tests
 class PyBulletProblem(Problem):
-    spec = None
+    
+    # save sim state to disk
+    def saveToDisk(self, filename):
+        p.saveBullet(filename)
 
-    def __init__(self):
-        self.initialized = False
+    # load sim state from disk
+    def loadFromDisk(self, name):
+        p.restoreState(fileName = name)
+        self.updateState()
 
-    def initialize(self, **kwargs):
-        # resets problem to time 0
-        raise NotImplementedError
+    # save state to memory
+    # keep track of state id
+    def saveToMemory(self):
+        stateID = p.saveState()
+        return stateID
 
-    def step(self, action=None):
-        #Run one timestep of the problem's dynamics. 
-        raise NotImplementedError
+    # load state from memory
+    def loadFromMemory(self, ID):
+        p.restoreState(stateId = ID)
+        self.updateState()
+        
 
-    def close(self):
-        # closes the problem and returns used memory
-        pass
+    # disconnect from physics server, end simulation
+    def disconnect(self):
+        p.disconnect()
 
-    def help(self):
-        # prints information about this class and its methods
-        raise NotImplementedError
 
-    def __str__(self):
-        if self.spec is None:
-            return '<{} instance> call object help() method for info'.format(type(self).__name__)
-        else:
-            return '<{}<{}>> call object help() method for info'.format(type(self).__name__, self.spec.id)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
-        self.close()
-        # propagate exception
-        return False
 
