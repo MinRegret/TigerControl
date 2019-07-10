@@ -26,7 +26,7 @@ class PyBulletProblem(Problem):
     # load state from memory
     def loadFromMemory(self, ID):
         p.restoreState(stateId = ID)
-        self.updateState()
+        # self.updateState()
         
 
     # disconnect from physics server, end simulation
