@@ -9,7 +9,7 @@ from gym import spaces
 from ctsb.problems.control.control_problem import ControlProblem
 
 
-class Kuka_diverse_object(ControlProblem):
+class KukaDiverseObject(ControlProblem):
     """
     Simulates a pendulum balanced on a cartpole.
     """
@@ -26,6 +26,7 @@ class Kuka_diverse_object(ControlProblem):
         self.problem = problem
         self.observation_space = problem.observation_space
         self.action_space = problem.action_space
+        self.state = {}
         initial_obs = problem.reset()
         return initial_obs
 

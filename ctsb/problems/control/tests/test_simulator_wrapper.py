@@ -6,6 +6,7 @@ import ctsb
 import jax.numpy as np
 from ctsb.models.control.control_model import ControlModel
 from cartpole_weights import *
+from ctsb.problems.control.pybullet.simulator_wrapper import SimulatorWrapper
 
 
 # neural network policy class trained specifically for the cartpole problem
@@ -43,40 +44,44 @@ def test_cartpole(show_plot=False):
         frame = 0
         score = 0
         restart_delay = 0
-        saved = False
+        while time.time() - t_start < 1:
+            time.sleep(1. / 60.)
+            a = model.predict(obs)
+            obs, r, done, _ = problem.step(a)
+
+            score += r
+            frame += 1
+            print("frame: " + str(frame))
+
+    print("about to save to memory")
+    save_to_mem_ID = problem.saveToMemory()
+    print("save_to_mem_ID: " + str(save_to_mem_ID))
+
+    # run simulator for 4 seconds
+    simulator = SimulatorWrapper(problem, save_to_mem_ID)
+    simulator.loadFromMemory(simulator.state_id)
+    print("simulator.loadFromMemory worked")
+    sim_score = score
+    sim_frame = frame
+    if show_plot:
         while time.time() - t_start < 5:
             time.sleep(1. / 60.)
             a = model.predict(obs)
-            obs, r, done, _ = problem.step(a)
+            obs, r, done, _ = simulator.step(a)
+            sim_score += r
+            sim_frame += 1
 
-            score += r
-            frame += 1
-            #still_open = problem.render("human")
-            #if still_open == False:
-            #    return
-            if time.time() - t_start > 0 and not saved:
-                print("about to save to memory")
-                save_to_mem_ID = problem.saveToMemory()
-                saved = True
-            if not done: continue
-            if restart_delay == 0:
-                print("score=%0.2f in %i frames" % (score, frame))
-                restart_delay = 60 * 2  # 2 sec at 60 fps
-            else:
-                restart_delay -= 1
-                if restart_delay > 0: continue
-                break
-
-    print("save_to_mem_ID: " + str(save_to_mem_ID))
+    # resume stepping through problem for 2 seconds from the point when the simulator was launched (i.e. t = 1)
     problem.loadFromMemory(save_to_mem_ID)
-    print("loadFromMemory worked")
+    print("problem.loadFromMemory worked")
     if show_plot:
-        while time.time() - t_start < 6:
+        while time.time() - t_start < 7:
             time.sleep(1. / 60.)
             a = model.predict(obs)
             obs, r, done, _ = problem.step(a)
             score += r
             frame += 1
+            print("frame: " + str(frame))
 
     print("test_cartpole passed")
 
