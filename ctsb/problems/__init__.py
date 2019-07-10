@@ -10,6 +10,21 @@ from ctsb.problems.control import ControlProblem
 
 
 problem_register(
+    id='Pendulum-v0',
+    entry_point='ctsb.problems.control.pybullet:InvertedPendulumSwingupBulletEnv'
+)
+
+
+problem_register(
+    id='CartPole-v0',
+    entry_point='ctsb.problems.control.pybullet:CartPole'
+)
+
+
+# ---------- Control ----------
+
+
+problem_register(
     id='LDS-v0',
     entry_point='ctsb.problems.control:LDS',
 )
@@ -22,11 +37,6 @@ problem_register(
 problem_register(
     id='LSTM-v0',
     entry_point='ctsb.problems.control:LSTM_Output',
-)
-
-problem_register(
-    id='Pendulum-v0',
-    entry_point='ctsb.problems.control:InvertedPendulumSwingupBulletEnv'
 )
 
 
