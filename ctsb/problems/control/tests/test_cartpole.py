@@ -1,15 +1,14 @@
 """
-Test for PyBullet Pendulum problem
+Test for PyBullet cartpole problem
 """
 import time
 import ctsb
 import jax.numpy as np
 from ctsb.models.control.control_model import ControlModel
-from ctsb.problems.control.pendulum import InvertedPendulumSwingupBulletEnv
-from pendulum_weights import *
+from cartpole_weights import *
 
 
-# neural network policy class trained specifically for the pendulum problem
+# neural network policy class trained specifically for the cartpole problem
 class SmallReactivePolicy(ControlModel):
     "Simple multi-layer perceptron policy, no internal state"
 
@@ -30,10 +29,10 @@ class SmallReactivePolicy(ControlModel):
         return x
 
 
-# pendulum test
-def test_pendulum(show_plot=False):
-    problem = ctsb.problem("Pendulum-v0")
-    obs = problem.initialize()
+# cartpole test
+def test_cartpole(show_plot=False):
+    problem = ctsb.problem("Cartpole-v0")
+    obs = problem.initialize(render=True)
 
     model = SmallReactivePolicy()
     model.initialize(problem.get_observation_space(), problem.get_action_space())
@@ -51,9 +50,9 @@ def test_pendulum(show_plot=False):
 
             score += r
             frame += 1
-            still_open = problem.render("human")
-            if still_open == False:
-                return
+            #still_open = problem.render("human")
+            #if still_open == False:
+            #    return
             if not done: continue
             if restart_delay == 0:
                 print("score=%0.2f in %i frames" % (score, frame))
@@ -62,9 +61,9 @@ def test_pendulum(show_plot=False):
                 restart_delay -= 1
                 if restart_delay > 0: continue
                 break
-    print("test_pendulum passed")
+    print("test_cartpole passed")
 
 
 if __name__ == "__main__":
-    test_pendulum(show_plot=True)
+    test_cartpole(show_plot=True)
 
