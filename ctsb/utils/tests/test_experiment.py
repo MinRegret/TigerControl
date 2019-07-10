@@ -1,14 +1,15 @@
 
 import ctsb
-from ctsb.problems.time_series import Crypto
-from ctsb.problems.control.arma import ARMA
-from ctsb.models.time_series.last_value import LastValue
-from ctsb.models.time_series.predict_zero import PredictZero
+# from ctsb.problems.time_series import Crypto
+# from ctsb.problems.time_series.arma import ARMA
+# from ctsb.models.time_series.last_value import LastValue
+# from ctsb.models.time_series.predict_zero import PredictZero
 from ctsb.utils.experiment import Experiment
 import jax.numpy as np
 import matplotlib.pyplot as plt
+import time
 
-def test_experiment_initialize(steps=100):
+def test_experiment_initialize(steps=1000):
     # test without problem_to_models
     exp = Experiment()
     MSE = lambda y_true, y_pred: (y_true - y_pred)**2
@@ -17,8 +18,11 @@ def test_experiment_initialize(steps=100):
     model_to_params = {'LastValue': {},
                        'PredictZero': {}}
     exp.initialize(MSE, problem_to_params, model_to_params)
+    start = time.time()
     exp.run_all_experiments(steps)
-    exp.plot_all_problem_results()
+    end = time.time()
+    print(end - start)
+    '''exp.plot_all_problem_results()
 
     # test with problem_to_models
     exp = Experiment()
@@ -26,7 +30,7 @@ def test_experiment_initialize(steps=100):
                          'SP500-v0' : ['PredictZero']}
     exp.initialize(MSE, problem_to_params, model_to_params, problem_to_models)
     exp.run_all_experiments(steps)
-    exp.plot_all_problem_results()
+    exp.plot_all_problem_results()'''
     return
 
 if __name__ == "__main__":

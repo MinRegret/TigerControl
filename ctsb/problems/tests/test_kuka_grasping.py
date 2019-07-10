@@ -36,12 +36,12 @@ def main():
     policy = ContinuousDownwardBiasPolicy()
 
     while True:
-        obs, done = env.reset(), False
+        done = False
         episode_rew = 0
         while not done:
-            env.render(mode='human')
+            problem.render(mode='human')
             act = policy.sample_action(obs, .1)
-            obs, rew, done, _ = env.step([0, 0, 0, 0, 0])
+            obs, rew, done, _ = problem.step([0, 0, 0, 0, 0])
             episode_rew += rew
 
 
