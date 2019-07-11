@@ -10,7 +10,7 @@ from ctsb.problems.control import ControlProblem
 
 
 problem_register(
-    id='Cartpole-v0',
+    id='CartPole-v0',
     entry_point='ctsb.problems.control.pybullet:CartPole'
 )
 
