@@ -5,3 +5,4 @@ from ctsb.models.control.kalman_filter import KalmanFilter
 from ctsb.models.control.td3 import TD3
 from ctsb.models.control.ode_shooting_method import ODEShootingMethod
 from ctsb.models.control.lqr import LQR
+from ctsb.models.control.mppi import MPPI
