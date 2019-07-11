@@ -16,7 +16,7 @@ class CartPole(PyBulletProblem):
 
     def initialize(self, render=False):
         self.initialized = True
-        self.env = gym.make("InvertedPendulumSwingupBulletEnv-v0")
+        self.env = gym.make("InvertedPendulumBulletEnv-v0")
         if render:
             self.env.render(mode="human")
         self.sim = SimulatorWrapper(self.env)
