@@ -31,7 +31,7 @@ class SmallReactivePolicy(ControlModel):
 
 # cartpole test
 def test_cartpole(show_plot=False):
-    problem = ctsb.problem("Cartpole-v0")
+    problem = ctsb.problem("CartPole-v0")
     obs = problem.initialize(render=True)
 
     model = SmallReactivePolicy()
