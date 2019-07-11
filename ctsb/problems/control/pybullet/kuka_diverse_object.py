@@ -7,6 +7,7 @@ import gym
 from pybullet_envs.bullet.kuka_diverse_object_gym_env import KukaDiverseObjectEnv
 from gym import spaces
 from ctsb.problems.control.control_problem import ControlProblem
+from ctsb.problems.control.pybullet.simulator_wrapper import SimulatorWrapper
 
 
 class KukaDiverseObject(ControlProblem):
@@ -19,15 +20,14 @@ class KukaDiverseObject(ControlProblem):
     def initialize(self):
         self.initialized = True
 
-        problem = KukaDiverseObjectEnv(renders=True, isDiscrete=False)
-
+        self.env = KukaDiverseObjectEnv(renders=True, isDiscrete=False)
+        self.sim = SimulatorWrapper(self.env)
         # problem = gym.make("InvertedPendulumSwingupBulletEnv-v0")
         # problem.render(mode="human")
-        self.problem = problem
-        self.observation_space = problem.observation_space
-        self.action_space = problem.action_space
+        self.observation_space = self.env.observation_space
+        self.action_space = self.env.action_space
         self.state = {}
-        initial_obs = problem.reset()
+        initial_obs = self.env.reset()
         return initial_obs
 
     def step(self, action):
@@ -41,8 +41,8 @@ class KukaDiverseObject(ControlProblem):
           done: Bool of whether or not the episode has ended.
           debug: Dictionary of extra information provided by environment.
         """
-        dv = self.problem._dv  # velocity per physics step.
-        if self.problem._isDiscrete:
+        dv = self.env._dv  # velocity per physics step.
+        if self.env._isDiscrete:
           # Static type assertion for integers.
           assert isinstance(action, int)
           if self.problem._removeHeightHack:
@@ -65,11 +65,11 @@ class KukaDiverseObject(ControlProblem):
             dz = dv
             da = 0.25 * action[2]
 
-        return self.problem._step_continuous([dx, dy, dz, da, 0.3])
+        return self.env._step_continuous([dx, dy, dz, da, 0.3])
         # return self.problem.step2(a)
 
     def render(self, mode='human', close=False):
-        self.problem.render(mode=mode, close=close)
+        self.env.render(mode=mode, close=close)
 
     def get_observation_space(self):
         return self.observation_space

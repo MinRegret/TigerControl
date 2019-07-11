@@ -9,7 +9,7 @@ import numpy as np
 # os.sys.path.insert(0, parentdir)
 
 import gym
-from ctsb.problems.control.pybullet import Kuka_diverse_object
+from ctsb.problems.control.pybullet.kuka_diverse_object import KukaDiverseObject
 # from pybullet_envs.bullet.kuka_diverse_object_gym_env import KukaDiverseObjectEnv
 from gym import spaces
 
@@ -38,7 +38,7 @@ class ContinuousDownwardBiasPolicy(object):
 
 def main():
 
-  problem = Kuka_diverse_object()
+  problem = KukaDiverseObject()
   obs = problem.initialize()
   policy = ContinuousDownwardBiasPolicy()
 
