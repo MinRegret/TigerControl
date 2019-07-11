@@ -8,104 +8,89 @@ from ctsb.models.control import ControlModel
 
 class ShootingMethod(ControlModel):
     """
-    Implements the shooting method to solve second order boundary value
-    problems with conditions y(0) = a and y(L) = b. Assumes that the
-    second order BVP has been converted to a first order system of two
-    equations.
+    Implements the shooting method.
     """
 
     def __init__(self):
         self.initialized = False
 
-    def euler(self, f, a, z, t, dt = 0.1):
+    def trial(self, sim, x, target, T):
         """
-        Description:
-            Solve corresponding initial value problem.
+        Description: Try out a random trajectory starting from the given state.
         Args:
-            f (function): describes dy/dt = f(y,t)
-            a (float): value of y(0)
-            z (float): value of y'(0)
-            t (float): time value to determine y at
-            dt (float): stepsize
+            sim (simulator) : environment simulator
+            x (float / numpy.ndarray): initial state
+            target (float / numpy.ndarray): target state
+            T (int): number of actions to plan
         Returns:
-            Estimated solution function values at times specified in t
+            Tuple containing a random trajectory and its distance from the target.
         """
 
-        n = t / dt # compute number of iterations
-        cur_t = 0
+        raise NotImplementedError
 
-        for i in range(int(n)):
-
-            z += dt * f(cur_t, a)
-            a += dt * z
-            cur_t += dt
-
-        return z
-
-    def initialize(self, f, a, b, z1, z2, t):
+    def initialize(self, sim, x, target, T = 1):
         """
-        Description:
-            Initialize the dynamics of the model.
+        Description: Initialize the dynamics of the model.
         Args:
-            f (function): describes dy/dt = f(y,t)
-            a (float): value of y(0)
-            b (float): value of y(L)
-            z1 (float): first initial estimate of y'(0)
-            z2 (float): second initial estimate of y'(0)
-            t (float): time value to determine y at
+            sim (simulator) : environment simulator
+            x (float / numpy.ndarray): initial state
+            target (float / numpy.ndarray): target state
+            T (int): number of actions to plan
         """
 
         self.initialized = True
 
-        self.f, self.a, self.b, self.z1, self.z2, self.t = f, a, b, z1, z2, t
+        self.sim, self.x, self.target, self.T = sim, x, target, T
 
-        self.w1 = self.euler(f, a, z1, t)
-        self.w2 = self.euler(f, a, z2, t)
+        (self.u, self.dist) = self.trial(sim, x, target, T)
 
     def step(self, n = 1):
         """
         Description:
-            Updates internal parameters for n iterations and then returns
-            current solution estimation.
+            Try n new trajectories and return the current best one
         Args:
-            n (non-negative int): number of updates
+            n (non-negative int): number of new trajectories to try
         Returns:
-            Estimated solution function values at times specified in t
+            Current best trajectory
         """
 
         for i in range(n):
 
-            if(self.w1 == self.w2):
-                break
+            u, dist =  self.trial(self.sim, self.x, self.target, self.T)
+            if (dist < self.dist):
+                self.u, self.dist = u, dist
 
-            self.z1, self.z2 = self.z2, self.z2 + (self.z2 - self.z1) / (self.w2 - self.w1) * (self.b - self.w2)
-            self.w1 = self.w2
-            self.w2 = self.euler(self.f, self.a, self.z2, self.t)
-
-        return self.w2
+        return self.u
 
     def predict(self):
         """
         Description:
-            Returns current solution estimation.
+            Returns current best trajectory.
         Args:
             None
         Returns:
-            Estimated solution function values at times specified in t
+            Current best trajectory
         """
 
-        return self.w2
+        return self.u
 
 
-    def update(self):
+    def update(self, n = 1):
         """
         Description:
-            N / A
+            Try n new trajectories and return the current best one
         Args:
-            N / A
+            n (non-negative int): number of new trajectories to try
         Returns:
-            N / A
+           None
         """
+
+        for i in range(n):
+            
+            u, dist =  self.trial(self.sim, self.x, self.target, self.T)
+            if (dist < self.dist):
+                self.u, self.dist = u, dist
+
         return
 
     def help(self):
@@ -130,48 +115,41 @@ ShootingMethod_help = """
 
 Id: ShootingMethod
 
-Description: Implements the shooting method to solve second order boundary value
-            problems with conditions y(0) = a and y(L) = b. Assumes that the
-            second order BVP has been converted to a first order system of two
-            equations.
+Description: Implements the shooting method.
 
 Methods:
 
-    initialize(f, a, b, z1, z2, t)
-        Description:
-            Initialize the dynamics of the model.
+    initialize(sim, x, target, T)
+        Description: Initialize the dynamics of the model.
         Args:
-            f (function): describes dy/dt = f(y,t)
-            a (float): value of y(0)
-            b (float): value of y(L)
-            z1 (float): first initial estimate of y'(0)
-            z2 (float): second initial estimate of y'(0)
-            t (float): time value to determine y at
+            sim (simulator) : environment simulator
+            x (float / numpy.ndarray): initial state
+            target (float / numpy.ndarray): target state
+            T (int): number of actions to plan
 
     step(n)
         Description:
-            Updates internal parameters for n iterations and then returns
-            current solution estimation.
+            Try n new trajectories and return the current best one
         Args:
-            n (non-negative int): number of updates
+            n (non-negative int): number of new trajectories to try
         Returns:
-            Estimated solution function values at times specified in t
+            Current best trajectory
 
     predict()
         Description:
-            Returns current solution estimation.
+            Returns current best trajectory.
         Args:
             None
         Returns:
-            Estimated solution function values at times specified in t
+            Current best trajectory
 
-    update()
+    update(n)
         Description:
-            N / A
+            Try n new trajectories and return the current best one
         Args:
-            N / A
+            n (non-negative int): number of new trajectories to try
         Returns:
-            N / A
+           None
 
     help()
         Description:
