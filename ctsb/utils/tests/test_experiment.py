@@ -14,16 +14,17 @@ def test_experiment_initialize(steps=1000):
     exp = Experiment()
     MSE = lambda y_true, y_pred: (y_true - y_pred)**2
     problem_to_params = {'ARMA-v0' : {'p':3, 'q':3}, 
-                         'SP500-v0' : {}}
+                         'SP500-v0' : {}} 
     model_to_params = {'LastValue': {},
-                       'PredictZero': {}}
+                       'PredictZero': {},
+                       'ArmaOgd' : {'p':10}}
     exp.initialize(MSE, problem_to_params, model_to_params)
     start = time.time()
     exp.run_all_experiments(steps)
     end = time.time()
     print(end - start)
-    '''exp.plot_all_problem_results()
-
+    exp.plot_all_problem_results()
+    '''
     # test with problem_to_models
     exp = Experiment()
     problem_to_models = {'ARMA-v0' : ['LastValue'],

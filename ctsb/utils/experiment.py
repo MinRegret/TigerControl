@@ -117,9 +117,9 @@ class Experiment(object):
                 ax[i].set_ylabel("loss")
 
         fig.tight_layout()
-        plt.show(block=False)
-        plt.pause(5)
-        plt.close()        
+        plt.show()
+        '''        plt.pause(5)'''
+        '''plt.close()        '''
 
     def get_prob_model_to_loss(self):
         return self.prob_model_to_loss
