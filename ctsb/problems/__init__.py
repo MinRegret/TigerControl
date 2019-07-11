@@ -15,8 +15,8 @@ problem_register(
 )
 
 problem_register(
-    id='CartPoleSwingUp-v0',
-    entry_point='ctsb.problems.control.pybullet:CartPoleSwingUp'
+    id='CartPoleSwingup-v0',
+    entry_point='ctsb.problems.control.pybullet:CartPoleSwingup'
 )
 
 problem_register(

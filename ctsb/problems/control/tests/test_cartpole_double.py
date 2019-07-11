@@ -32,10 +32,11 @@ class SmallReactivePolicy(ControlModel):
         return x
 
 
+
 # cartpole test
-def test_cartpole(show_plot=False):
+def test_cartpole_double(show_plot=False):
     problem = ctsb.problem("CartPoleDouble-v0")
-    obs = problem.initialize(render=True)
+    obs = problem.initialize(render=show_plot)
 
     model = SmallReactivePolicy()
     model.initialize(problem.get_observation_space(), problem.get_action_space())
@@ -59,7 +60,7 @@ def test_cartpole(show_plot=False):
             #    return
             if time.time() - t_start > 0 and not saved:
                 print("about to save to memory")
-                save_to_mem_ID = problem.saveToMemory()
+                save_to_mem_ID = problem.getState()
                 saved = True
             if not done: continue
             if restart_delay == 0:
@@ -71,7 +72,7 @@ def test_cartpole(show_plot=False):
                 break
 
     print("save_to_mem_ID: " + str(save_to_mem_ID))
-    problem.loadFromMemory(save_to_mem_ID)
+    problem.loadState(save_to_mem_ID)
     print("loadFromMemory worked")
     if show_plot:
         while time.time() - t_start < 6:
@@ -85,5 +86,5 @@ def test_cartpole(show_plot=False):
 
 
 if __name__ == "__main__":
-    test_cartpole(show_plot=True)
+    test_cartpole_double(show_plot=True)
 

@@ -8,16 +8,16 @@ from ctsb.problems.time_series.tests.run_all_tests import run_all_tests as time_
 from ctsb.models.tests.run_all_tests import run_all_tests as models_tests
 
 # run all sub-level tests
-def run_all_tests():
+def run_all_tests(show_results=False):
 
     print("\n----- Running all CTSB tests! -----\n")
 
-    utils_tests()
-    control_problems_tests()
-    time_series_problems_tests()
-    models_tests()
+    utils_tests(show=show_results)
+    control_problems_tests(show=show_results)
+    time_series_problems_tests(show=show_results)
+    models_tests(show=show_results)
 
     print("\n----- Tests done -----\n")
 
 if __name__ == "__main__":
-    run_all_tests()
+    run_all_tests(show_results=False)
