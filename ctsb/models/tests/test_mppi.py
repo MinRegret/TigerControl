@@ -18,7 +18,7 @@ def test_mppi(steps=10, show_plot=True):
     noise_sigma = 10
     lambda_ = 1
 
-    U = [i for i in random.uniform(generate_key(), minval = ACTION_LOW, maxval = ACTION_HIGH, shape = (T,))]  # pendulum joint effort in (-2, +2)
+    U = random.uniform(generate_key(), minval = ACTION_LOW, maxval = ACTION_HIGH, shape = (T,))  # pendulum joint effort in (-2, +2)
 
     problem = ctsb.problem("CartPole-v0")
     problem.initialize()
