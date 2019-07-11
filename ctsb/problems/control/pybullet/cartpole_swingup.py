@@ -6,7 +6,7 @@ import pybullet_envs
 from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
 
 
-class CartPole(PyBulletProblem):
+class CartPoleSwingUp(PyBulletProblem):
     """
     Simulates a pendulum balanced on a cartpole.
     """
@@ -15,7 +15,7 @@ class CartPole(PyBulletProblem):
 
     def initialize(self, render=False):
         self.initialized = True
-        problem = gym.make("InvertedPendulumBulletEnv-v0")
+        problem = gym.make("InvertedPendulumSwingupBulletEnv-v0")
         if render:
             problem.render(mode="human")
         self.problem = problem
