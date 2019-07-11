@@ -1,5 +1,5 @@
 """
-S&P 500 daily opening price
+UCI indoor temperature data
 """
 
 import ctsb
@@ -12,8 +12,7 @@ from ctsb.problems.time_series import TimeSeriesProblem
 
 class UCI_Indoor(TimeSeriesProblem):
     """
-    Description: Outputs the daily opening price of the S&P 500 stock market index 
-        from January 3, 1986 to June 29, 2018.
+    Description: Outputs various weather metrics from a UCI dataset from 13/3/2012 to 11/4/2012
     """
 
     def __init__(self):
@@ -27,7 +26,7 @@ class UCI_Indoor(TimeSeriesProblem):
         Args:
             None
         Returns:
-            The first S&P 500 value
+            The first uci_indoor value
         """
         self.initialized = True
         self.T = 0
@@ -39,11 +38,11 @@ class UCI_Indoor(TimeSeriesProblem):
     def step(self):
         """
         Description:
-            Moves time forward by one day and returns value of the stock index
+            Moves time forward by fifteen minutes and returns weather metrics
         Args:
             None
         Returns:
-            The next S&P 500 value
+            The next uci_indoor value
         """
         assert self.initialized
         self.T += 1
@@ -54,7 +53,7 @@ class UCI_Indoor(TimeSeriesProblem):
     def hidden(self):
         """
         Description:
-            Return the date corresponding to the last value of the S&P 500 that was returned
+            Return the date corresponding to the last value of the uci_indoor that was returned
         Args:
             None
         Returns:
