@@ -44,22 +44,22 @@ def test_cartpole(show_plot=False):
         frame = 0
         score = 0
         restart_delay = 0
-        while time.time() - t_start < 1.2:
+        while time.time() - t_start < 1:
             time.sleep(1. / 60.)
             a = model.predict(obs)
             obs, r, done, _ = problem.step(a)
 
             score += r
             frame += 1
-            # print("frame: " + str(frame))
+            print("frame: " + str(frame))
 
     print("about to save to memory")
-    save_to_mem_ID = problem.saveState()
+    save_to_mem_ID = problem.saveToMemory()
     print("save_to_mem_ID: " + str(save_to_mem_ID))
 
     # run simulator for 4 seconds
     simulator = SimulatorWrapper(problem, save_to_mem_ID)
-    simulator.loadState(simulator.state_id)
+    simulator.loadFromMemory(simulator.state_id)
     print("simulator.loadFromMemory worked")
     sim_score = score
     sim_frame = frame
@@ -72,7 +72,7 @@ def test_cartpole(show_plot=False):
             sim_frame += 1
 
     # resume stepping through problem for 2 seconds from the point when the simulator was launched (i.e. t = 1)
-    problem.loadState(save_to_mem_ID)
+    problem.loadFromMemory(save_to_mem_ID)
     print("problem.loadFromMemory worked")
     if show_plot:
         while time.time() - t_start < 7:
@@ -81,7 +81,7 @@ def test_cartpole(show_plot=False):
             obs, r, done, _ = problem.step(a)
             score += r
             frame += 1
-            # print("frame: " + str(frame))
+            print("frame: " + str(frame))
 
     print("test_cartpole passed")
 
