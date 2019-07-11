@@ -117,14 +117,14 @@ class ODEShootingMethod(ControlModel):
         Returns:
             None
         """
-        print(ShootingMethod_help)
+        print(ODEShootingMethod_help)
 
     def __str__(self):
         return "<ODEShootingMethod Model>"
 
 
 # string to print when calling help() method
-ShootingMethod_help = """
+ODEShootingMethod_help = """
 
 -------------------- *** --------------------
 
