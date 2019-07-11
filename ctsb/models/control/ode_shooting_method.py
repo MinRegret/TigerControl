@@ -1,12 +1,12 @@
 """
-Shooting Method
+ODE Shooting Method
 """
 
 import jax.numpy as np
 import ctsb
 from ctsb.models.control import ControlModel
 
-class ShootingMethod(ControlModel):
+class ODEShootingMethod(ControlModel):
     """
     Implements the shooting method to solve second order boundary value
     problems with conditions y(0) = a and y(L) = b. Assumes that the
@@ -117,18 +117,18 @@ class ShootingMethod(ControlModel):
         Returns:
             None
         """
-        print(ShootingMethod_help)
+        print(ODEShootingMethod_help)
 
     def __str__(self):
-        return "<ShootingMethod Model>"
+        return "<ODEShootingMethod Model>"
 
 
 # string to print when calling help() method
-ShootingMethod_help = """
+ODEShootingMethod_help = """
 
 -------------------- *** --------------------
 
-Id: ShootingMethod
+Id: ODEShootingMethod
 
 Description: Implements the shooting method to solve second order boundary value
             problems with conditions y(0) = a and y(L) = b. Assumes that the

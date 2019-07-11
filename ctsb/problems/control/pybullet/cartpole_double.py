@@ -4,10 +4,9 @@ PyBullet Pendulum enviornment
 import gym
 import pybullet_envs
 from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
-from ctsb.problems.control.pybullet.simulation_wrapper import SimulationWrapper
 
 
-class CartPole(PyBulletProblem):
+class CartPoleDouble(PyBulletProblem):
     """
     Simulates a pendulum balanced on a cartpole.
     """
@@ -16,20 +15,20 @@ class CartPole(PyBulletProblem):
 
     def initialize(self, render=False):
         self.initialized = True
-        self.env = gym.make("InvertedPendulumBulletEnv-v0")
+        problem = gym.make("InvertedDoublePendulumBulletEnv-v0")
         if render:
-            self.env.render(mode="human")
-        self.sim = SimulationWrapper(self.env)
+            problem.render(mode="human")
+        self.problem = problem
         self.observation_space = problem.observation_space
         self.action_space = problem.action_space
         initial_obs = problem.reset()
         return initial_obs
 
     def step(self, a):
-        return self.sim.step(a)
+        return self.problem.step(a)
 
     def render(self, mode='human', close=False):
-        self.env.render(mode=mode, close=close)
+        self.problem.render(mode=mode, close=close)
 
     def get_observation_space(self):
         return self.observation_space
