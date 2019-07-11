@@ -57,7 +57,7 @@ class Experiment(object):
             self.prob_model_to_loss[problem] = {}
             for model in models:
                 print("model:" + str(model))
-                self.prob_model_to_loss[problem][model] = jit(self.run_experiment, static_argnums=[0,2])(problem, obs, model)
+                self.prob_model_to_loss[problem][model] = self.run_experiment(problem, obs, model)
         return
 
     def run_experiment(self, problem, obs, model):

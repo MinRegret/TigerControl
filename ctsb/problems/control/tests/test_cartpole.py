@@ -56,7 +56,7 @@ def test_cartpole(show_plot=False):
             #    return
             if time.time() - t_start > 0 and not saved:
                 print("about to save to memory")
-                save_to_mem_ID = problem.getState()
+                save_to_mem_ID = problem.saveToMemory()
                 saved = True
             if not done: continue
             if restart_delay == 0:
@@ -68,7 +68,7 @@ def test_cartpole(show_plot=False):
                 break
 
     print("save_to_mem_ID: " + str(save_to_mem_ID))
-    problem.loadState(save_to_mem_ID)
+    problem.loadFromMemory(save_to_mem_ID)
     print("loadFromMemory worked")
     if show_plot:
         while time.time() - t_start < 6:
