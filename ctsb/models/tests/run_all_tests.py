@@ -13,7 +13,7 @@ def run_all_tests(steps=1000, show=True):
     test_custom_model(steps=1000, show_plot=show)
     test_autoregressor(steps=1000, show_plot=show)
     test_kalman_filter(steps=1000, show_plot=show)
-    test_shooting_method(steps=1000, show_plot=show)
+    test_ode_shooting_method(steps=1000, show_plot=show)
     print("\nall models tests passed\n")
 
 if __name__ == "__main__":
