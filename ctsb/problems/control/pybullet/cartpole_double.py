@@ -1,9 +1,10 @@
 """
-PyBullet Pendulum enviornment
+PyBullet Double Pendulum enviornment
 """
 import gym
 import pybullet_envs
 from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
+from ctsb.problems.control.pybullet.simulator_wrapper import SimulatorWrapper
 
 
 class CartPoleDouble(PyBulletProblem):
@@ -15,17 +16,17 @@ class CartPoleDouble(PyBulletProblem):
 
     def initialize(self, render=False):
         self.initialized = True
-        problem = gym.make("InvertedDoublePendulumBulletEnv-v0")
+        self.env = gym.make("InvertedDoublePendulumBulletEnv-v0")
         if render:
-            problem.render(mode="human")
-        self.problem = problem
-        self.observation_space = problem.observation_space
-        self.action_space = problem.action_space
-        initial_obs = problem.reset()
+            self.env.render(mode="human")
+        self.sim = SimulatorWrapper(self.env)
+        self.observation_space = self.env.observation_space
+        self.action_space = self.env.action_space
+        initial_obs = self.env.reset()
         return initial_obs
 
     def step(self, a):
-        return self.problem.step(a)
+        return self.sim.step(a)
 
     def render(self, mode='human', close=False):
         self.problem.render(mode=mode, close=close)

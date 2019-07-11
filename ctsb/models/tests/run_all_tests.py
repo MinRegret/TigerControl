@@ -6,7 +6,7 @@ from ctsb.models.tests.test_ode_shooting_method import test_ode_shooting_method
 from ctsb.models.tests.test_lqr import test_lqr
 from ctsb.models.tests.test_custom_model import test_custom_model
 
-def run_all_tests(steps=1000, show=True):
+def run_all_tests(steps=1000, show=False):
     print("\nrunning all models tests...\n")
     test_last_value(steps=1000, show_plot=show)
     test_predict_zero(steps=1000, show_plot=show)
@@ -17,4 +17,4 @@ def run_all_tests(steps=1000, show=True):
     print("\nall models tests passed\n")
 
 if __name__ == "__main__":
-    run_all_tests()
+    run_all_tests(show=True)
