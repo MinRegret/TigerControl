@@ -34,8 +34,8 @@ model_register(
 )
 
 model_register(
-    id='ShootingMethod',
-    entry_point='ctsb.models.control:ShootingMethod',
+    id='ODEShootingMethod',
+    entry_point='ctsb.models.control:ODEShootingMethod',
 )
 
 model_register(

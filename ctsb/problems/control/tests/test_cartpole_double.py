@@ -4,7 +4,9 @@ Test for PyBullet cartpole problem
 import time
 import ctsb
 import jax.numpy as np
+import jax.random as random
 from ctsb.models.control.control_model import ControlModel
+from ctsb.utils import generate_key
 from cartpole_weights import *
 
 
@@ -17,13 +19,14 @@ class SmallReactivePolicy(ControlModel):
 
     def initialize(self, observation_space, action_space):
         self.initialized = True
-        assert weights_dense1_w.shape == (observation_space.shape[0], 64.0)
+        self.weights_dense1_w = random.normal(generate_key(), shape=(observation_space.shape[0], 64))
+        #assert weights_dense1_w.shape == (observation_space.shape[0], 64.0)
         assert weights_dense2_w.shape == (64.0, 32.0)
         assert weights_final_w.shape == (32.0, action_space.shape[0])
 
     def predict(self, ob): # weights can be fount at the end of the file
         x = ob
-        x = np.maximum((np.dot(x, weights_dense1_w) + weights_dense1_b), 0)
+        x = np.maximum((np.dot(x, self.weights_dense1_w) + weights_dense1_b), 0)
         x = np.maximum((np.dot(x, weights_dense2_w) + weights_dense2_b), 0)
         x = np.dot(x, weights_final_w) + weights_final_b
         return x
@@ -31,7 +34,7 @@ class SmallReactivePolicy(ControlModel):
 
 # cartpole test
 def test_cartpole(show_plot=False):
-    problem = ctsb.problem("CartPole-v0")
+    problem = ctsb.problem("CartPoleDouble-v0")
     obs = problem.initialize(render=True)
 
     model = SmallReactivePolicy()
@@ -56,7 +59,7 @@ def test_cartpole(show_plot=False):
             #    return
             if time.time() - t_start > 0 and not saved:
                 print("about to save to memory")
-                save_to_mem_ID = problem.getState()
+                save_to_mem_ID = problem.saveToMemory()
                 saved = True
             if not done: continue
             if restart_delay == 0:
@@ -68,7 +71,7 @@ def test_cartpole(show_plot=False):
                 break
 
     print("save_to_mem_ID: " + str(save_to_mem_ID))
-    problem.loadState(save_to_mem_ID)
+    problem.loadFromMemory(save_to_mem_ID)
     print("loadFromMemory worked")
     if show_plot:
         while time.time() - t_start < 6:
