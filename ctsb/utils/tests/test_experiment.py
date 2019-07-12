@@ -16,8 +16,7 @@ def test_experiment_initialize(steps=1000):
     problem_to_params = {'ARMA-v0' : {'p':3, 'q':3}, 
                          'SP500-v0' : {}} 
     model_to_params = {'LastValue': {},
-                       'PredictZero': {},
-                       'ArmaOgd' : {'p':10}}
+                       'PredictZero': {},}
     exp.initialize(MSE, problem_to_params, model_to_params)
     start = time.time()
     exp.run_all_experiments(steps)
