@@ -6,7 +6,7 @@ import jax.random as random
 from ctsb.utils.random import set_key, generate_key, get_global_key
 
 # test jax random number generator seeding implementation
-def test_random():
+def test_random(show=False):
     set_key(5)
     a1 = get_global_key()
     r1 = generate_key()
