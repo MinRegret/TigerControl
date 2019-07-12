@@ -26,6 +26,7 @@ class Random(TimeSeriesProblem):
         """
         self.T = 0
         self.initialized = True
+        self.has_regressors = False
 
     def step(self):
         """

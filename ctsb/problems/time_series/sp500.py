@@ -33,6 +33,7 @@ class SP500(TimeSeriesProblem):
         self.T = 0
         self.df = sp500() # get data
         self.max_T = self.df.shape[0]
+        self.has_regressors = False
 
         return self.df.iloc[self.T, 1]
 

@@ -34,6 +34,7 @@ class Crypto(TimeSeriesProblem):
         self.T = 0
         self.df = crypto() # get data
         self.max_T = self.df.shape[0]
+        self.has_regressors = False
 
         return self.df.iloc[self.T, 3]
 
