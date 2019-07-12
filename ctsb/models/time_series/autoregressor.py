@@ -30,7 +30,7 @@ class AutoRegressor(TimeSeriesModel):
         self.past = jax.ops.index_update(self.past, 0, 1)
 
         self.params = np.zeros(p + 1)
-        self.params = jax.ops.index_update(self.params, p, 0) # in order to default to LastValue change 0 to 1
+        #self.params = jax.ops.index_update(self.params, p, 0) # in order to default to LastValue change 0 to 1
 
     def step(self, x):
         """
@@ -42,8 +42,8 @@ class AutoRegressor(TimeSeriesModel):
             Predicted value for the next time-step
         """
         assert self.initialized
-
-        self.past = jax.ops.index_update(self.past, jax.ops.index[1:self.past.shape[0] - 1], self.past[2:])
+        
+        self.past = np.roll(self.past, -1) 
         self.past = jax.ops.index_update(self.past, self.past.shape[0] - 1, x)
 
         return np.dot(self.params, self.past)
@@ -60,7 +60,7 @@ class AutoRegressor(TimeSeriesModel):
         
         assert self.initialized
 
-        self.past = jax.ops.index_update(self.past, jax.ops.index[1:self.past.shape[0] - 1], self.past[2:])
+        self.past = np.roll(self.past, -1) 
         self.past = jax.ops.index_update(self.past, self.past.shape[0] - 1, x)
 
         return np.dot(self.params, self.past)

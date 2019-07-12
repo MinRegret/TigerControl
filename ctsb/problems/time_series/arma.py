@@ -60,8 +60,8 @@ class ARMA(TimeSeriesProblem):
             x_ma = np.dot(noise, self.psi)
             x_new = self.c + x_ar + x_ma + eps
 
-            next_x = jax.ops.index_update(x, jax.ops.index[1:], x[:-1])
-            next_noise = jax.ops.index_update(noise, jax.ops.index[1:], noise[:-1])
+            next_x = np.roll(x, 1) 
+            next_noise = np.roll(noise, 1)
 
             next_x = jax.ops.index_update(next_x, 0, x_new) # equivalent to self.x[0] = x_new
             next_noise = jax.ops.index_update(next_noise, 0, eps) # equivalent to self.noise[0] = eps  
