@@ -9,11 +9,11 @@ from ctsb.utils.tests.test_experiment import test_experiment
 # add all unit tests in dataset_registry
 def run_all_tests(show=False):
     print("\nrunning all utils tests...\n")
-    test_dataset_registry()
-    test_download_tools()
-    test_random()
-    test_registration_tools()
-    test_experiment()
+    test_dataset_registry(show=show)
+    test_download_tools(show=show)
+    test_random(show=show)
+    test_registration_tools(show=show)
+    test_experiment(show=show)
     print("\nall utils tests passed\n")
 
 if __name__ == '__main__':
