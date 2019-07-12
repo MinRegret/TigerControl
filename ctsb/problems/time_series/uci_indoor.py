@@ -34,6 +34,7 @@ class UCI_Indoor(TimeSeriesProblem):
         self.df = uci_indoor() # get data
         self.max_T = self.df.shape[0]
         self.pred_indices = pred_indices
+        self.has_regressors = True
 
         # return self.df.iloc[self.T].drop(['1:Date','2:Time','24:Day_Of_Week'])
         return (None, self.df.iloc[self.T].drop(self.pred_indices))

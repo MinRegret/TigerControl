@@ -76,12 +76,23 @@ class Experiment(object):
         cur_x = obs
         loss = []
         for i in tqdm(range(0,self.T)):
-            cur_y_pred = model.predict(cur_x)
-            cur_y_true = problem.step(cur_x) if is_control_problem else problem.step()
-            cur_loss = self.loss(cur_y_true, cur_y_pred)
+            model_output = model.predict(cur_x)
+            #cur_y_true = problem.step(model_output) if is_control_problem else problem.step()
+            cur_y_true = None
+            if is_control_problem and problem.has_regressors:
+                cur_y_true, cur_x = problem.step(model_output)
+            elif is_control_problem and not problem.has_regressors:
+                cur_y_true = problem.step(model_output)
+                cur_x = cur_y_true
+            elif not is_control_problem and problem.has_regressors:
+                cur_y_true, cur_x = problem.step()
+            else:
+                cur_y_true = problem.step()
+                cur_X = cur_y_true
+            cur_loss = self.loss(cur_y_true, model_output)
             loss.append(cur_loss)
             model.update(cur_y_true)
-            cur_x = cur_y_true
+            # cur_x = cur_y_true
         
         return loss
 
