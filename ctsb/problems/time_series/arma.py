@@ -37,6 +37,7 @@ class ARMA(TimeSeriesProblem):
             The first value in the time-series
         """
         self.initialized = True
+        self.has_regressors = False
         self.T = 0
         if type(p) == int:
             phi = random.normal(generate_key(), shape=(p,))

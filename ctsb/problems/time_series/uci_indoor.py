@@ -18,8 +18,9 @@ class UCI_Indoor(TimeSeriesProblem):
     def __init__(self):
         self.initialized = False
         self.data_path = os.path.join(get_ctsb_dir(), "data/uci.csv")
+        self.pred_indices = []
 
-    def initialize(self):
+    def initialize(self, pred_indices=[]):
         """
         Description:
             Check if data exists, else download, clean, and setup.
@@ -32,8 +33,10 @@ class UCI_Indoor(TimeSeriesProblem):
         self.T = 0
         self.df = uci_indoor() # get data
         self.max_T = self.df.shape[0]
+        self.pred_indices = pred_indices
 
-        return self.df.iloc[self.T, 1]
+        # return self.df.iloc[self.T].drop(['1:Date','2:Time','24:Day_Of_Week'])
+        return (None, self.df.iloc[self.T].drop(self.pred_indices))
 
     def step(self):
         """
@@ -48,7 +51,8 @@ class UCI_Indoor(TimeSeriesProblem):
         self.T += 1
         if self.T == self.max_T: 
             raise StepOutOfBounds("Number of steps exceeded length of dataset ({})".format(self.max_T))
-        return self.df.iloc[self.T].drop(['1:Date','2:Time','24:Day_Of_Week'])
+        return (self.df.iloc[self.T - 1][self.pred_indices], self.df.iloc[self.T].drop(self.pred_indices))
+        # return self.df.iloc[self.T].drop(['1:Date','2:Time','24:Day_Of_Week'])
 
     def hidden(self):
         """
