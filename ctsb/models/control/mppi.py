@@ -43,11 +43,10 @@ class MPPI(ControlModel):
         self.cost_total = np.zeros(shape=(self.K))
 
         self.env = env
-        self.env.initialize()
 
         self.x_init = self.env.getState()
 
-        self.noise = random.normal(generate_key(), shape=(self.K, self.T)) * noise_sigma + noise_mu
+        self.noise = (random.normal(generate_key(), shape=(self.K, self.T))) * noise_sigma + noise_mu
 
     def compute_total_cost(self, k):
         self.env.env.state = self.x_init
@@ -81,7 +80,7 @@ class MPPI(ControlModel):
             eta = np.sum(cost_total_non_zero)
             omega = 1/eta * cost_total_non_zero
 
-            self.U += [np.sum(omega * self.noise[:, t]) for t in range(self.T)]
+            self.U += self.noise.T @ omega
 
             self.env.env.state = self.x_init
             s, r, _, _ = self.env.step([self.U[0]])
@@ -90,9 +89,7 @@ class MPPI(ControlModel):
 
             self.U = np.roll(self.U, -1)  # shift all elements to the left
 
-            #self.U[-1] = self.u_init 
             self.U = jax.ops.index_update(self.U, -1, self.u_init)
-            #self.cost_total[:] = 0
             self.cost_total = np.zeros(self.cost_total.shape)
 
             self.x_init = self.env.getState()
