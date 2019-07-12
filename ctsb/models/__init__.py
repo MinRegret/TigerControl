@@ -7,7 +7,6 @@ from ctsb.models.custom import CustomModel, register_custom_model
 
 # ---------- Models ----------
 
-
 model_register(
     id='LastValue',
     entry_point='ctsb.models.time_series:LastValue',
@@ -58,3 +57,7 @@ model_register(
     id='MPPI',
     entry_point='ctsb.models.control:MPPI',
 )
+
+model_register(
+    id='CartpoleNN',
+    entry_point='ctsb.models.control:CartpoleNN')

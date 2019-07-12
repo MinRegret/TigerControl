@@ -69,7 +69,7 @@ def test_cartpole(show_plot=False):
 
     print("save_to_mem_ID: " + str(save_to_mem_ID))
     problem.loadState(save_to_mem_ID)
-    print("loadFromMemory worked")
+    print("loadState worked")
     if show_plot:
         while time.time() - t_start < 6:
             time.sleep(1. / 60.)

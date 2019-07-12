@@ -15,6 +15,7 @@ class PyBulletProblem(Problem):
     def initiliaze(self):
         self.initialized = True
         self.sim = None
+        self.env = None
 
     def getState(self):
         return self.sim.getState()
@@ -27,7 +28,8 @@ class PyBulletProblem(Problem):
         p.disconnect()
     
     def get_simulator(self):
-        return self.sim
+        sim_copy = SimulatorWrapper(self.sim.getEnv())
+        return sim_copy
 
 
 
