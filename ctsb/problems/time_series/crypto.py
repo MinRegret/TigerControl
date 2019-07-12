@@ -28,7 +28,7 @@ class Crypto(TimeSeriesProblem):
         Args:
             None
         Returns:
-            The first S&P 500 value
+            The first bitcoin price
         """
         self.initialized = True
         self.T = 0
@@ -40,11 +40,11 @@ class Crypto(TimeSeriesProblem):
     def step(self):
         """
         Description:
-            Moves time forward by one day and returns value of the stock index
+            Moves time forward by one day and returns price of the bitcoin
         Args:
             None
         Returns:
-            The next S&P 500 value
+            The next bitcoin price
         """
         assert self.initialized
         self.T += 1
@@ -55,7 +55,7 @@ class Crypto(TimeSeriesProblem):
     def hidden(self):
         """
         Description:
-            Return the date corresponding to the last value of the S&P 500 that was returned
+            Return the date corresponding to the last price of bitcoin that was returned
         Args:
             None
         Returns:
