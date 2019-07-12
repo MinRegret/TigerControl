@@ -44,22 +44,13 @@ class ProblemRegistry(Registry):
     def __init__(self, regexp):
         self.specs = {}
         self.regexp = regexp
-        self.pybullet_passed = []
-        self.pybullet_failed = []
-        for name in [name.split('- ')[-1] for name in pybullet_envs.getList()]:
-            try:
-                #env = pybullet_envs.make(name) # TODO: decomment eventually, figure out how
-                #env.close()
-                self.pybullet_passed.append(name)
-            except:
-                self.pybullet_failed.append(name)
 
     def list_ids(self):
         """
         Returns:
             Keys of specifications.
         """
-        return list(self.specs.keys()) + self.pybullet_passed
+        return list(self.specs.keys())
 
     def make(self, path, **kwargs):
         """
@@ -69,11 +60,6 @@ class ProblemRegistry(Registry):
         Returns:
             object instance
         """
-        if path in self.pybullet_failed:
-            raise error.PyBulletBug("Failed to build PyBullet env with ID {}".format(path))
-        if path in self.pybullet_passed:
-            return pybullet_envs.make(path)
-
         spec = self.spec(path)
         obj = spec.make(**kwargs)
         return obj
@@ -87,8 +73,6 @@ class ProblemRegistry(Registry):
         """
         if id in self.specs:
             raise error.Error('Cannot re-register ID {} for {}'.format(id, self))
-        if id in self.pybullet_passed + self.pybullet_failed:
-            raise error.Error('ID {} for {} already exists as a PyBullet environment'.format(id, self))
         self.specs[id] = Spec(id, self.regexp, **kwargs)
 
 

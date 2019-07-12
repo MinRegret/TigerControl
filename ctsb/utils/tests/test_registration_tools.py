@@ -8,8 +8,8 @@ from ctsb import error, problems
 from ctsb.utils.registration_tools import *
 from ctsb.problems.registration import ProblemRegistry
 
-
-def test_registration_tools():
+# run all registry tests
+def test_registration_tools(show=False):
     test_registry()
     test_ctsb_problem()
     test_missing_lookup()

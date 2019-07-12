@@ -59,7 +59,7 @@ def download(destination_path, url, verbose):
                 # Just a newline.
                 print()
 
-def unzip(zipped_path, verbose=False):
+def unzip(zipped_path, unzipped_path=None, verbose=False):
     """
     Description:
         Unzips data from 'zipped_path'.
@@ -69,7 +69,8 @@ def unzip(zipped_path, verbose=False):
     Returns:
         None
     """
-    unzipped_path = os.path.splitext(zipped_path)[0]
+    if not unzipped_path:
+        unzipped_path = os.path.splitext(zipped_path)[0]
     if os.path.exists(unzipped_path):
         if verbose:
             print('{} already exists, skipping ... '.format(unzipped_path))
@@ -77,3 +78,5 @@ def unzip(zipped_path, verbose=False):
     zip_ref = zipfile.ZipFile(zipped_path, 'r')
     zip_ref.extractall(unzipped_path)
     zip_ref.close()
+
+
