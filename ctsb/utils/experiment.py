@@ -10,6 +10,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import inspect
 from jax import jit
+import time
 
 # class for implementing algorithms with enforced modularity
 class Experiment(object):
@@ -33,6 +34,7 @@ class Experiment(object):
         self.loss = loss_fn
         self.pom_ls = [] # (problem, initial observation, model) list
         self.prob_model_to_loss = {} # map of the form [problem][model] -> loss series
+        self.prob_model_to_time = {} # map of the form [problem][model] -> time
 
         for problem_id, problem_params in problem_to_params.items():
             problem = ctsb.problem(problem_id)
@@ -45,7 +47,7 @@ class Experiment(object):
                 initialized_models.append(model)
             self.pom_ls.append((problem, x_0, initialized_models))
 
-    def run_all_experiments(self, time_steps=100):
+    def run_all_experiments(self, time_steps=1000):
         '''
         Descripton:
             Runs all experiments for specified number of timesteps.
@@ -55,9 +57,12 @@ class Experiment(object):
         self.T = time_steps
         for (problem, obs, models) in self.pom_ls:
             self.prob_model_to_loss[problem] = {}
+            self.prob_model_to_time[problem] = {}
             for model in models:
                 print("model:" + str(model))
+                time_start = time.time()
                 self.prob_model_to_loss[problem][model] = self.run_experiment(problem, obs, model)
+                self.prob_model_to_time[problem][model] = time.time() - time_start
         return
 
     def run_experiment(self, problem, obs, model):
@@ -134,6 +139,16 @@ class Experiment(object):
 
     def get_prob_model_to_loss(self):
         return self.prob_model_to_loss
+
+    def get_performance_metrics(self):
+        print("=============== Time Elapsed ================")
+        for problem, model_time in self.prob_model_to_time.items():
+            print(problem)
+            for model, time in model_time.items():
+                print(str(model) + " : " + str(time))
+
+        print("=============== Memory Consumed ================")
+
 
     def help(self):
         # prints information about this class and its methods

@@ -8,6 +8,8 @@ from ctsb.utils.experiment import Experiment
 import jax.numpy as np
 import matplotlib.pyplot as plt
 import time
+from memory_profiler import memory_usage
+
 
 def test_experiment_initialize(steps=1000):
     # test without problem_to_models
@@ -19,10 +21,14 @@ def test_experiment_initialize(steps=1000):
                        'PredictZero': {},}
     exp.initialize(MSE, problem_to_params, model_to_params)
     start = time.time()
-    exp.run_all_experiments(steps)
+    mem_usage = memory_usage((exp.run_all_experiments, [100]))
+
     end = time.time()
     print(end - start)
     exp.plot_all_problem_results()
+    exp.get_performance_metrics()
+    print('Memory usage (in chunks of .1 seconds): %s' % mem_usage)
+    print('Maximum memory usage: %s' % max(mem_usage))
     '''
     # test with problem_to_models
     exp = Experiment()
