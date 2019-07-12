@@ -5,9 +5,6 @@ class SimulatorWrapper(object):
 	def __init__(self, env):
 		self.env = env
 
-	def set_state_from(self, state_id):
-		self.loadFromMemory(state_id)
-
 	def saveFile(self, filename):
 		p.saveBullet(filename)
 
@@ -29,3 +26,6 @@ class SimulatorWrapper(object):
 
 	def step(self, action):
 		return self.env.step(action)
+
+	def getEnv(self):
+		return self.env
