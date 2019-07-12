@@ -4,7 +4,7 @@ import ctsb
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
-def test_autoregressor(steps=1000, show_plot=True):
+def test_autoregressor(steps=10, show_plot=True):
     T = steps 
     p, q = 3, 0
     problem = ctsb.problem("ARMA-v0")

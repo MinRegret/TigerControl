@@ -6,7 +6,7 @@ import jax.numpy as np
 import matplotlib.pyplot as plt
 
 
-def test_arma(steps=1000, show_plot=False, verbose=False):
+def test_arma(steps=1000, show_plot=True, verbose=False):
     T = steps
     p, q = 3, 3
     problem = ARMA()

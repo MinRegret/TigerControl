@@ -53,8 +53,6 @@ class MPPI(ControlModel):
         for t in range(self.T):
             perturbed_action_t = self.U[t] + self.noise[k, t]
             _, reward, _, _ = self.env.step([perturbed_action_t])
-
-            #self.cost_total[k] += -reward
             self.cost_total = jax.ops.index_update(self.cost_total, k, self.cost_total[k] - reward)
 
     def ensure_non_zero(self, cost, beta, factor):
@@ -84,7 +82,7 @@ class MPPI(ControlModel):
 
             self.env.env.state = self.x_init
             s, r, _, _ = self.env.step([self.U[0]])
-            print("action taken: {:.2f} cost received: {:.2f}".format(self.U[0], -r))
+            #print("action taken: {:.2f} cost received: {:.2f}".format(self.U[0], -r))
             self.env.render()
 
             self.U = np.roll(self.U, -1)  # shift all elements to the left

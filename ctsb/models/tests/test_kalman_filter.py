@@ -2,7 +2,8 @@
 
 import ctsb
 import jax.numpy as np
-import numpy.random as random
+import jax.random as random
+from ctsb.utils import generate_key
 import matplotlib.pyplot as plt
 
 # Test Kalman Filter for constant signal x = 0.5 with measurement noise 0.1
@@ -20,7 +21,7 @@ def test_kalman_filter(steps=1000, show_plot=True):
 
     results = []
     for i in range(T):
-        z = x_true + float(random.normal(0, env_noise, 1))
+        z = x_true + float(random.normal(generate_key(), shape = (1,)) * env_noise)
         x_pred = model.step(0, z)
         cur_loss = float(loss(x_true, x_pred))
         results.append(cur_loss)
