@@ -6,9 +6,9 @@ import jax.random as random
 from ctsb.utils import generate_key
 import matplotlib.pyplot as plt
 
-def test_mppi(steps=10000, show_plot=True):
+def test_mppi(steps=1000, show_plot=True):
 
-    T = 1000
+    T = 100
     K = steps
 
     ACTION_LOW = -2.0
@@ -20,12 +20,12 @@ def test_mppi(steps=10000, show_plot=True):
 
     U = random.uniform(generate_key(), minval = ACTION_LOW, maxval = ACTION_HIGH, shape = (T,))  # pendulum joint effort in (-2, +2)
 
-    problem = ctsb.problem("CartPole-v0")
+    problem = ctsb.problem("CartPoleSwingup-v0")
     problem.initialize(render = show_plot)
 
     model = ctsb.model("MPPI")
     model.initialize(env = problem, K = K, T = T, U = U, lambda_ = lambda_, u_init = 0)
-    model.step(n = 10000)
+    model.step(n = 1000)
  
     print("test_mppi passed")
     return
