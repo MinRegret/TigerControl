@@ -59,7 +59,6 @@ class LQR(ControlModel):
         
         self.F, self.f, self.C, self.c, self.T, self.x = self.extend(F, T), self.extend(f, T), self.extend(C, T), self.extend(c, T), T, self.to_ndarray(x)
         
-
         self.u = self.extend(np.zeros((self.F[0].shape[1] - self.x.shape[0], 1)), T)
         
         self.K = self.extend(np.zeros((self.u[0].shape[0], self.x.shape[0])), T)

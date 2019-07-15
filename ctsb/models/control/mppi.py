@@ -11,8 +11,7 @@ from ctsb.models.control import ControlModel
 
 class MPPI(ControlModel):
     """
-    Computes optimal set of actions using the Linear Quadratic Regulator
-    algorithm.
+    Implements Model Predictive Path Integral Control to compute optimal control sequence.
     """
 
     def __init__(self):
@@ -23,12 +22,14 @@ class MPPI(ControlModel):
         Description:
             Initialize the dynamics of the model.
         Args:
-            F (float/numpy.ndarray): past value contribution coefficients
-            f (float/numpy.ndarray): bias coefficients
-            C (float/numpy.ndarray): quadratic cost coefficients
-            c (float/numpy.ndarray): linear cost coefficients
-            T (postive int): number of timesteps
-            x (float/numpy.ndarray): initial state
+            env (problem): The problem instance
+            K (non-negative int): Number of trajectory samples
+            T (non-negative int): Number of time steps
+            U (array): Initial control sequence
+            lambda_ (float): Scaling to ensure non-zero cost
+            noise_mu (float): Mean of perturbation
+            noise_sigma (float): Variance of perturbation
+            u_init (float): Initial action
         """
         self.initialized = True
 
@@ -48,32 +49,15 @@ class MPPI(ControlModel):
 
         self.noise = (random.normal(generate_key(), shape=(self.K, self.T))) * noise_sigma + noise_mu
 
-    def compute_total_cost(self, k):
-        self.env.env.state = self.x_init
-        for t in range(self.T):
-            perturbed_action_t = self.U[t] + self.noise[k, t]
-            _, reward, _, _ = self.env.step([perturbed_action_t])
-            self.cost_total = jax.ops.index_update(self.cost_total, k, self.cost_total[k] - reward)
+        def _ensure_non_zero(self, cost, beta, factor):
+            return np.exp(-factor * (cost - beta))
 
-    def ensure_non_zero(self, cost, beta, factor):
-        return np.exp(-factor * (cost - beta))
-
-    def step(self, n = 100):
-        """
-        Description: Updates internal parameters and then returns the
-        	estimated optimal set of actions
-        Args:
-            None
-        Returns:
-            n (non-negative int):
-        """
-
-        for i in range(n):
+        def _update():
             for k in range(self.K):
                 self.compute_total_cost(k)
 
             beta = np.min(self.cost_total)  # minimum cost of all trajectories
-            cost_total_non_zero = self.ensure_non_zero(cost=self.cost_total, beta=beta, factor=1/self.lambda_)
+            cost_total_non_zero = self._ensure_non_zero(cost=self.cost_total, beta=beta, factor=1/self.lambda_)
 
             eta = np.sum(cost_total_non_zero)
             omega = 1/eta * cost_total_non_zero
@@ -82,18 +66,40 @@ class MPPI(ControlModel):
 
             self.env.env.state = self.x_init
             s, r, _, _ = self.env.step([self.U[0]])
-            #print("action taken: {:.2f} cost received: {:.2f}".format(self.U[0], -r))
             self.env.render()
 
             self.U = np.roll(self.U, -1)  # shift all elements to the left
-
             self.U = jax.ops.index_update(self.U, -1, self.u_init)
+
             self.cost_total = np.zeros(self.cost_total.shape)
 
             self.x_init = self.env.getState()
+            return
 
-        return
+        self._ensure_non_zero = jax.jit(_ensure_non_zero)
+        self._update = jax.jit(_update)
 
+    def compute_total_cost(self, k):
+        self.env.env.state = self.x_init
+        for t in range(self.T):
+            perturbed_action_t = self.U[t] + self.noise[k, t]
+            _, reward, _, _ = self.env.step([perturbed_action_t])
+            self.cost_total = jax.ops.index_update(self.cost_total, k, self.cost_total[k] - reward)
+
+    def step(self, n = 100):
+        """
+        Description: Updates internal parameters and then returns the
+            estimated optimal set of actions
+        Args:
+            n (non-negative int): Number of updates
+        Returns:
+            Estimated optimal set of actions
+        """
+
+        for i in range(n):
+            self._update()
+
+        return self.U
 
     def predict(self):
         """
@@ -104,16 +110,18 @@ class MPPI(ControlModel):
         Returns:
             Estimated optimal set of actions
         """
-        return
+        return self.U
 
 
     def update(self, n = 100):
         """
         Description:
-        	Updates internal parameters
+            Updates internal parameters
         Args:
-            None
+            n (non-negative int): Number of updates
         """
+        for i in range(n):
+            self._update()
         return
 
     def help(self):
@@ -138,27 +146,28 @@ MPPI_help = """
 
 Id: MPPI
 
-Description: Computes optimal set of actions using the Linear Quadratic Regulator
-    algorithm.
+Description: Implements Model Predictive Path Integral Control to compute optimal control sequence.
 
 Methods:
 
-    initialize(F, f, C, c, T, x)
+    initialize(env, K, T, U, lambda_=1.0, noise_mu=0, noise_sigma=1, u_init=1)
         Description:
             Initialize the dynamics of the model
         Args:
-            F (float/numpy.ndarray): past value contribution coefficients
-            f (float/numpy.ndarray): bias coefficients
-            C (float/numpy.ndarray): quadratic cost coefficients
-            c (float/numpy.ndarray): linear cost coefficients
-            T (postive int): number of timesteps
-            x (float/numpy.ndarray): initial state
+            env (problem): The problem instance
+            K (non-negative int): Number of trajectory samples
+            T (non-negative int): Number of time steps
+            U (array): Initial control sequence
+            lambda_ (float): Scaling to ensure non-zero cost
+            noise_mu (float): Mean of perturbation
+            noise_sigma (float): Variance of perturbation
+            u_init (float): Initial action
 
     step()
         Description: Updates internal parameters and then returns the
-        	estimated optimal set of actions
+            estimated optimal set of actions
         Args:
-            None
+            n (non-negative int): Number of updates
         Returns:
             Estimated optimal set of actions
 
@@ -172,9 +181,9 @@ Methods:
 
     update()
         Description:
-        	Updates internal parameters
+            Updates internal parameters
         Args:
-            None
+            n (non-negative int): Number of updates
 
     help()
         Description:
