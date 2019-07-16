@@ -72,3 +72,8 @@ problem_register(
     entry_point='ctsb.problems.time_series:Crypto',
 )
 
+problem_register(
+    id='CtrlIndices-v0',
+    entry_point='ctsb.problems.time_series:CtrlIndices',
+)
+
