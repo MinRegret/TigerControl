@@ -3,7 +3,6 @@
 from ctsb.models.custom import CustomModel
 from ctsb.models.registration import model_registry
 from ctsb import error
-import copy
 
 
 # verifies that a given class has the necessary minimum model methods

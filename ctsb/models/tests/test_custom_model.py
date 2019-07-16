@@ -1,4 +1,4 @@
-# test the CusomModel class
+# test the CustomModel class
 
 import ctsb
 import jax.numpy as np
