@@ -1,5 +1,5 @@
 """
-S&P 500 daily opening price
+Monthly values of control indices useful for predicting La Nina/El Nino
 """
 
 import ctsb
@@ -12,7 +12,11 @@ from ctsb.problems.time_series import TimeSeriesProblem
 
 class CtrlIndices(TimeSeriesProblem):
     """
-    Description: ...
+    Description: Collection of monthly values of control indices useful for predicting
+                 La Nina/El Nino. More specifically, the user can choose any of pna, ea,
+                 wa, wp, eu, soi, esoi, nino12, nino34, nino4, oni of nino34 (useful for
+                 La Nino/El Nino identification) to be used as input and/or output in
+                 the problem instance.
     """
 
     def __init__(self):
@@ -21,13 +25,23 @@ class CtrlIndices(TimeSeriesProblem):
     def initialize(self, input_signals = ['pna', 'ea', 'wa', 'wp', 'eu', 'soi', 'esoi', 'nino12', 'nino34', 'nino4'], include_month = False, output_signals = ['oni'], history = 1, timeline = 1):
         """
         Description:
-            Check if data exists, else download, clean, and setup.
+            Initializes the ctrl_indices dataset to a format suited to the online learning setting.
+            By default, the current values of all available signals are used to predict the next
+            value of nino34's oni. 
         Args:
-            None
+            input_signals (list of strings): signals used for prediction
+            include_month (boolean): True if the month should be used as a feature,
+                                     False otherwise
+            output_signals (list of strings): signals we are trying to predict
+            history (int): number of past observations used for prediction
+            timeline (int/list of ints): the forecasting timeline(s)
         Returns:
-            The first tuple of observations and corresponding label
+            X (numpy.ndarray): First observation
+            y (numpy.ndarray): First label
         """
+
         self.initialized = True
+        self.has_regressors = True
         self.T = 0
         self.X, self.y = ctrl_indices(input_signals, include_month, output_signals, history, timeline) # get data
         self.max_T = self.y.shape[0]
@@ -37,11 +51,12 @@ class CtrlIndices(TimeSeriesProblem):
     def step(self):
         """
         Description:
-            Moves time forward by one day and returns value of the stock index
+            Moves time forward by one month and returns the corresponding observation and label.
         Args:
             None
         Returns:
-            The next tuple of observations and corresponding label
+            X (numpy.ndarray): Next observation
+            y (numpy.ndarray): Next label
         """
         assert self.initialized
 
@@ -54,15 +69,15 @@ class CtrlIndices(TimeSeriesProblem):
     def hidden(self):
         """
         Description:
-            Return the date corresponding to the last value of the S&P 500 that was returned
+            Return the timestep corresponding to the last (observation, label) pair returned.
         Args:
             None
         Returns:
-            Date (string)
+            Current timestep
         """
         assert self.initialized
 
-        return "Timestep: {} out of {}".format(self.T+1, self.max_T)
+        return "Timestep: {} out of {}".format(self.T + 1, self.max_T)
 
     def close(self):
         """
@@ -79,45 +94,59 @@ class CtrlIndices(TimeSeriesProblem):
         Returns:
             None
         """
-        print(ARMA_help)
+        print(CtrlIndices_help)
 
     def __str__(self):
-        return "<SP500 Problem>"
+        return "<CtrlIndices Problem>"
 
 
 # string to print when calling help() method
-ARMA_help = """
+CtrlIndices_help = """
 
 -------------------- *** --------------------
 
-Id: SP500-v0
-Description: Outputs the daily opening price of the S&P 500 stock market index from
-    January 3, 1986 to June 29, 2018.
+Id: CtrlIndices-v0
+
+Description: Collection of monthly values of control indices useful for predicting
+             La Nina/El Nino. More specifically, the user can choose any of pna, ea,
+             wa, wp, eu, soi, esoi, nino12, nino34, nino4, oni of nino34 (useful for
+             La Nino/El Nino identification) to be used as input and/or output in
+             the problem instance.
 
 Methods:
 
-    initialize()
-            Check if data exists, else download, clean, and setup.
+    initialize(input_signals, include_month, output_signals, history, timeline)
+        Description:
+            Initializes the ctrl_indices dataset to a format suited to the online learning setting.
+            By default, the current values of all available signals are used to predict the next
+            value of nino34's oni. 
         Args:
-            None
+            input_signals (list of strings): signals used for prediction
+            include_month (boolean): True if the month should be used as a feature,
+                                     False otherwise
+            output_signals (list of strings): signals we are trying to predict
+            history (int): number of past observations used for prediction
+            timeline (int/list of ints): the forecasting timeline(s)
         Returns:
-            The first S&P 500 value
+            X (numpy.ndarray): First observation
+            y (numpy.ndarray): First label
 
     step()
         Description:
-            Moves time forward by one day and returns value of the stock index
+            Moves time forward by one month and returns the corresponding observation and label.
         Args:
             None
         Returns:
-            The next S&P 500 value
+            X (numpy.ndarray): Next observation
+            y (numpy.ndarray): Next label
 
     hidden()
         Description:
-            Return the date corresponding to the last value of the S&P 500 that was returned
+            Return the timestep corresponding to the last (observation, label) pair returned.
         Args:
             None
         Returns:
-            Date (string)
+            Current timestep
 
     help()
         Description:
