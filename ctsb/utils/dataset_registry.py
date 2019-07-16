@@ -161,11 +161,17 @@ def crypto():
 def ctrl_indices(input_signals, include_month, output_signals, history, timeline):
     """
     Description:
-        ...
+        Transforms the ctrl_indices dataset into a format suitable for online learning.
     Args:
-        ...
+        input_signals (list of strings): signals used for prediction
+        include_month (boolean): True if the month should be used as a feature,
+                                 False otherwise
+        output_signals (list of strings): signals we are trying to predict
+        history (int): number of past observations used for prediction
+        timeline (int/list of ints): the forecasting timeline(s)
     Returns:
-        ...
+        X (numpy.ndarray): Input Observations
+        y (numpy.ndarray): Labels
     """
 
     ############################## GET DATA ###################################
@@ -241,6 +247,10 @@ def ctrl_indices(input_signals, include_month, output_signals, history, timeline
     for i in range(effective_length):
         X[i, 0:history, :] = X_signals[i:(i + history)]
 
+    # if we use only one observation
+    if(history == 1):
+        X = X.rehshape((effective_length, np.array(input_signals).shape[0] + include_month))
+
     # Labels
     y = np.ndarray((effective_length, timeline.shape[0], np.array(output_signals).shape[0]))
 
@@ -250,6 +260,7 @@ def ctrl_indices(input_signals, include_month, output_signals, history, timeline
             y[i, n_t, :] = y_signals[i + history + t - 1]
         n_t += 1
 
+    # if we predict only one timeline
     if(timeline.shape[0] == 1):
         y = y.reshape((effective_length, np.array(output_signals).shape[0]))
 

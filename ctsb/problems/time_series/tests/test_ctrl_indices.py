@@ -1,4 +1,4 @@
-# test the crypto problem class
+# test the CtrlIndices problem class
 
 import ctsb
 import jax.numpy as np
