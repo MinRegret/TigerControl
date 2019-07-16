@@ -19,6 +19,7 @@ class SP500(TimeSeriesProblem):
     def __init__(self):
         self.initialized = False
         self.data_path = os.path.join(get_ctsb_dir(), "data/sp500.csv")
+        self.has_regressors = False
 
     def initialize(self):
         """
@@ -33,9 +34,8 @@ class SP500(TimeSeriesProblem):
         self.T = 0
         self.df = sp500() # get data
         self.max_T = self.df.shape[0]
-        self.has_regressors = False
-
-        return (self.df.iloc[self.T, 1], None)
+        
+        return self.df.iloc[self.T, 1]
 
     def step(self):
         """
@@ -50,7 +50,7 @@ class SP500(TimeSeriesProblem):
         self.T += 1
         if self.T == self.max_T: 
             raise StepOutOfBounds("Number of steps exceeded length of dataset ({})".format(self.max_T))
-        return (self.df.iloc[self.T, 1], None)
+        return self.df.iloc[self.T, 1]
 
     def hidden(self):
         """

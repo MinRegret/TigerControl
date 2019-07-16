@@ -9,9 +9,18 @@ from memory_profiler import memory_usage
 
 # run all experiment tests
 def test_experiment(steps=1000, show=False):
-    test_experiment_time_series(steps=steps, verbose=show)
+    # test_experiment_time_series(steps=steps, verbose=show)
+    test_experiment_regressor(steps=steps, verbose=show)
     print("test_experiment passed")
 
+def test_experiment_regressor(steps=1000, verbose=False):
+    exp = Experiment()
+    MSE = lambda y_true, y_pred: (y_true - y_pred)**2
+    problem_to_params = {'UCIIndoor-v0' : {'pred_indices': ['5:Weather_Temperature']}} 
+    model_to_params = {'RNN': {'n': 24, 'm': 1}}
+    exp.initialize(MSE, problem_to_params, model_to_params)
+    exp.run_all_experiments()
+    exp.plot_all_problem_results()
 
 def test_experiment_time_series(steps=1000, verbose=False):
     # test without problem_to_models
@@ -35,5 +44,5 @@ def test_experiment_time_series(steps=1000, verbose=False):
     return
 
 if __name__ == "__main__":
-    test_experiment_initialize()
+    test_experiment()
 

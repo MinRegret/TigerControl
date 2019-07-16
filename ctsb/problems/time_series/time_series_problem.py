@@ -9,6 +9,7 @@ class TimeSeriesProblem(Problem):
 
     def initialize(self, **kwargs):
         # resets problem to time 0
+        self.has_regressors = None
         raise NotImplementedError
 
     def step(self, action=None):

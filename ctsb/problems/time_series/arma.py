@@ -18,6 +18,7 @@ class ARMA(TimeSeriesProblem):
 
     def __init__(self):
         self.initialized = False
+        self.has_regressors = False
 
     def initialize(self, p, q, c=None):
         """
@@ -37,7 +38,6 @@ class ARMA(TimeSeriesProblem):
             The first value in the time-series
         """
         self.initialized = True
-        self.has_regressors = False
         self.T = 0
         if type(p) == int:
             phi = random.normal(generate_key(), shape=(p,))
@@ -70,7 +70,7 @@ class ARMA(TimeSeriesProblem):
             return (next_x, next_noise, x_new)
 
         self._step = jax.jit(_step)
-        return (self.x[0], None)
+        return self.x[0]
 
     def step(self):
         """
@@ -84,7 +84,7 @@ class ARMA(TimeSeriesProblem):
         assert self.initialized
         self.T += 1
         self.x, self.noise, x_new = self._step(self.x, self.noise, random.normal(generate_key()))  
-        return (x_new, None)
+        return x_new
 
     def hidden(self):
         """

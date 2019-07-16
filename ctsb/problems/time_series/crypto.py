@@ -20,6 +20,7 @@ class Crypto(TimeSeriesProblem):
 
     def __init__(self):
         self.initialized = False
+        self.has_regressors = False
 
     def initialize(self):
         """
@@ -34,9 +35,8 @@ class Crypto(TimeSeriesProblem):
         self.T = 0
         self.df = crypto() # get data
         self.max_T = self.df.shape[0]
-        self.has_regressors = False
-
-        return (self.df.iloc[self.T, 3], None)
+        
+        return self.df.iloc[self.T, 3]
 
     def step(self):
         """
@@ -51,7 +51,7 @@ class Crypto(TimeSeriesProblem):
         self.T += 1
         if self.T == self.max_T: 
             raise StepOutOfBounds("Number of steps exceeded length of dataset ({})".format(self.max_T))
-        return (self.df['Price'].iloc[self.T], None)
+        return self.df['Price'].iloc[self.T]
 
     def hidden(self):
         """

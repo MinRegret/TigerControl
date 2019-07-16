@@ -19,6 +19,7 @@ class UCI_Indoor(TimeSeriesProblem):
         self.initialized = False
         self.data_path = os.path.join(get_ctsb_dir(), "data/uci.csv")
         self.pred_indices = []
+        self.has_regressors = True
 
     def initialize(self, pred_indices=[]):
         """
@@ -34,8 +35,7 @@ class UCI_Indoor(TimeSeriesProblem):
         self.df = uci_indoor() # get data
         self.max_T = self.df.shape[0]
         self.pred_indices = pred_indices
-        self.has_regressors = True
-
+        
         # return self.df.iloc[self.T].drop(['1:Date','2:Time','24:Day_Of_Week'])
         return (self.df.iloc[self.T].drop(self.pred_indices), self.df.iloc[self.T][self.pred_indices])
 
