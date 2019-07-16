@@ -39,11 +39,6 @@ model_register(
 )
 
 model_register(
-    id='TD3',
-    entry_point='ctsb.models.control:TD3',
-)
-
-model_register(
     id='ODEShootingMethod',
     entry_point='ctsb.models.control:ODEShootingMethod',
 )
@@ -59,5 +54,8 @@ model_register(
 )
 
 model_register(
-    id='CartpoleNN',
-    entry_point='ctsb.models.control:CartpoleNN')
+    id='CartPoleNN',
+    entry_point='ctsb.models.control:CartPoleNN',
+)
+
+
