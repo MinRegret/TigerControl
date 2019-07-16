@@ -97,7 +97,7 @@ def uci_indoor(verbose=True):
                     r += 1
                 writer.writerows(appended_csv)
     df = pd.read_csv(path_uci_indoor_cleaned_csv)
-    return df
+    return df.drop(['1:Date','2:Time'],axis=1)
 
 def sp500(verbose=True):
     """

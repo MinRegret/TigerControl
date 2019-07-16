@@ -80,6 +80,14 @@ class Experiment(object):
         is_control_model = (inspect.getmro(model.__class__))[1] == ControlModel
         assert ((is_control_problem and is_control_model) or (not is_control_problem and not is_control_model))
         (cur_x, cur_y) = obs
+        # print(cur_x)
+        # print(type(cur_x))
+        print(cur_y)
+        print(type(cur_y))
+        print(cur_x)
+        print(type(cur_x))
+        print(model.predict(cur_x))
+        print(type(model.predict(cur_x)))
         cur_loss = self.loss(cur_y, model.predict(cur_x))
         loss = [cur_loss]
         for i in tqdm(range(0,self.T)):
