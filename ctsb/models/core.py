@@ -11,10 +11,6 @@ class Model(object):
         # initializes model parameters
         raise NotImplementedError
 
-    def step(self, **kwargs):
-        # run one timestep of the model in its environment
-        raise NotImplementedError
-
     def predict(self, x=None):
         # returns model prediction for given input
         raise NotImplementedError

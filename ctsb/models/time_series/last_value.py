@@ -25,18 +25,6 @@ class LastValue(TimeSeriesModel):
         """
         self.initialized = True
 
-    def step(self, x):
-        """
-        Description:
-            Takes input observation and returns next prediction value,
-            then updates internal parameters
-        Args:
-            x (float/numpy.ndarray): value at current time-step
-        Returns:
-            Predicted value for the next time-step
-        """
-        return x
-
     def predict(self, x):
         """
         Description:

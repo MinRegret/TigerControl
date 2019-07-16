@@ -32,22 +32,6 @@ class AutoRegressor(TimeSeriesModel):
         self.params = np.zeros(p + 1)
         #self.params = jax.ops.index_update(self.params, p, 0) # in order to default to LastValue change 0 to 1
 
-    def step(self, x):
-        """
-        Description:
-            Run one timestep of the model in its environment then update internal parameters
-        Args:
-            x (int/numpy.ndarray):  Value at current time-step
-        Returns:
-            Predicted value for the next time-step
-        """
-        assert self.initialized
-        
-        self.past = np.roll(self.past, -1) 
-        self.past = jax.ops.index_update(self.past, self.past.shape[0] - 1, x)
-
-        return np.dot(self.params, self.past)
-
     def predict(self, x):
         """
         Description:

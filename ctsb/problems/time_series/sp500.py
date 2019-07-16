@@ -35,7 +35,7 @@ class SP500(TimeSeriesProblem):
         self.max_T = self.df.shape[0]
         self.has_regressors = False
 
-        return self.df.iloc[self.T, 1]
+        return (self.df.iloc[self.T, 1], None)
 
     def step(self):
         """
@@ -50,7 +50,7 @@ class SP500(TimeSeriesProblem):
         self.T += 1
         if self.T == self.max_T: 
             raise StepOutOfBounds("Number of steps exceeded length of dataset ({})".format(self.max_T))
-        return self.df.iloc[self.T, 1]
+        return (self.df.iloc[self.T, 1], None)
 
     def hidden(self):
         """
