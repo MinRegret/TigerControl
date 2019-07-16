@@ -29,20 +29,6 @@ class ArmaAdaGrad(ctsb.CustomModel):
         self.t = 1
         self.max_norm = 1
 
-    
-    def step(self, x):  
-        """ I don't know what this is for..."""
-        """
-        Description:
-            Run one timestep of the model in its environment then update internal parameters
-        Args:
-            x (int/numpy.ndarray):  Value at current time-step
-        Returns:
-            Predicted value for the next time-step
-        """
-        return np.dot(self.params, self.past)
-        
-
     def predict(self, x):
         """
         Description:
@@ -60,8 +46,6 @@ class ArmaAdaGrad(ctsb.CustomModel):
         self.past = temp
         """ and predict"""
         return np.dot(self.params, self.past)
-
-
 
     def update(self, y, loss = None):
         """

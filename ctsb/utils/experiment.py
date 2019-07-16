@@ -32,20 +32,27 @@ class Experiment(object):
         self.intialized = True
         self.T = 0
         self.loss = loss_fn
-        self.pom_ls = [] # (problem, initial observation, model) list
+        self.pom_ls = [] # (problem, initial observation (x,y), model) list
         self.prob_model_to_loss = {} # map of the form [problem][model] -> loss series
         self.prob_model_to_time = {} # map of the form [problem][model] -> time
 
         for problem_id, problem_params in problem_to_params.items():
             problem = ctsb.problem(problem_id)
-            x_0 = problem.initialize(**problem_params)
+            x_0, y_0 = None, None
+            if problem.has_regressors:
+                x_0, y_0 = problem.initialize(**problem_params)
+            else:
+                x_0 = problem.initialize(**problem_params)
             initialized_models = []
             model_list = problem_to_models[problem_id] if problem_to_models != None else list(model_to_params.keys())
             for model_id in model_list:
                 model = ctsb.model(model_id)
                 model.initialize(**model_to_params[model_id])
                 initialized_models.append(model)
-            self.pom_ls.append((problem, x_0, initialized_models))
+            if problem.has_regressors:
+                self.pom_ls.append((problem, (x_0, y_0), initialized_models))
+            else:
+                self.pom_ls.append((problem, (x_0, None), initialized_models))
 
     def run_all_experiments(self, time_steps=1000):
         '''
@@ -78,23 +85,24 @@ class Experiment(object):
         is_control_model = (inspect.getmro(model.__class__))[1] == ControlModel
         assert ((is_control_problem and is_control_model) or (not is_control_problem and not is_control_model))
         # args = {'problem_step' : problem.step, 'obs' : obs, 'model_predict' : model.predict}
-        cur_x = obs
-        loss = []
+        (cur_x, cur_y) = obs
+        cur_loss = self.loss(cur_y, model.predict(cur_x))
+        loss = [cur_loss]
         for i in tqdm(range(0,self.T)):
-            model_output = model.predict(cur_x)
+            # model_output = model.predict(cur_x)
             #cur_y_true = problem.step(model_output) if is_control_problem else problem.step()
             cur_y_true = None
             if is_control_problem and problem.has_regressors:
-                cur_y_true, cur_x = problem.step(model_output)
+                cur_x, cur_y = problem.step(model_output)
             elif is_control_problem and not problem.has_regressors:
-                cur_y_true = problem.step(model_output)
-                cur_x = cur_y_true
+                cur_y, _ = problem.step(model_output)
+                cur_x = cur_y
             elif not is_control_problem and problem.has_regressors:
-                cur_y_true, cur_x = problem.step()
+                cur_x, cur_y = problem.step()
             else:
-                cur_y_true = problem.step()
-                cur_X = cur_y_true
-            cur_loss = self.loss(cur_y_true, model_output)
+                cur_y = problem.step()
+                cur_x = cur_y
+            cur_loss = self.loss(cur_y, model.predict(cur_x))
             loss.append(cur_loss)
             model.update(cur_y_true)
             # cur_x = cur_y_true

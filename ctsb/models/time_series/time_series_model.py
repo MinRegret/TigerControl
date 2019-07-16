@@ -20,18 +20,4 @@ class TimeSeriesModel(Model):
         self._params = params
         self._update = update
 
-    def step(self, **kwargs):
-        # run one timestep of the model in its environment
-        raise NotImplementedError
-
-    def predict(self, x):
-        # returns model prediction for given input
-        return self._predict(self._params, x)
-
-    def update(self, args):
-        # update parameters according to given loss and update rule
-        self._params = self._update(self._params, args)
-
-    def get_params(self):
-        return self._params
 

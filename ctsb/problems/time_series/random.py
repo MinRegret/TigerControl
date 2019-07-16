@@ -27,6 +27,7 @@ class Random(TimeSeriesProblem):
         self.T = 0
         self.initialized = True
         self.has_regressors = False
+        return (random.normal(generate_key()), None)
 
     def step(self):
         """
@@ -39,7 +40,7 @@ class Random(TimeSeriesProblem):
         """
         assert self.initialized
         self.T += 1
-        return random.normal(generate_key())
+        return (random.normal(generate_key()), None)
 
     def hidden(self):
         """

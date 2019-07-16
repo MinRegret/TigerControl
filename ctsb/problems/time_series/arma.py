@@ -70,7 +70,7 @@ class ARMA(TimeSeriesProblem):
             return (next_x, next_noise, x_new)
 
         self._step = jax.jit(_step)
-        return self.x[0]
+        return (self.x[0], None)
 
     def step(self):
         """
@@ -84,7 +84,7 @@ class ARMA(TimeSeriesProblem):
         assert self.initialized
         self.T += 1
         self.x, self.noise, x_new = self._step(self.x, self.noise, random.normal(generate_key()))  
-        return x_new
+        return (x_new, None)
 
     def hidden(self):
         """
