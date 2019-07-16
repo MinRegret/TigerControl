@@ -5,7 +5,7 @@ import time
 import ctsb
 import jax.numpy as np
 from ctsb.models.control.control_model import ControlModel
-from cartpole_weights import *
+from ctsb.models.control.cartpole_weights import *
 
 
 # neural network policy class trained specifically for the cartpole problem
@@ -48,7 +48,7 @@ def test_cartpole(show_plot=False):
             time.sleep(1. / 60.)
             a = model.predict(obs)
             obs, r, done, _ = problem.step(a)
-
+            print ("obs: " + str(obs))
             score += r
             frame += 1
             #still_open = problem.render("human")

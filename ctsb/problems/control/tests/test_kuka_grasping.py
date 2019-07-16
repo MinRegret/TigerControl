@@ -39,9 +39,9 @@ def main():
         done = False
         episode_rew = 0
         while not done:
-            problem.render(mode='human')
+            env.render(mode='human')
             act = policy.sample_action(obs, .1)
-            obs, rew, done, _ = problem.step([0, 0, 0, 0, 0])
+            obs, rew, done, _ = env.step([0, 0, 0, 0, 0])
             episode_rew += rew
 
 
