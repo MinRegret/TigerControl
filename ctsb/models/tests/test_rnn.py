@@ -8,16 +8,16 @@ from ctsb.utils import generate_key
 
 def test_rnn(steps=1000, show_plot=True):
     T = steps 
-    n, m, d = 4, 5, 10
+    n, m, l, d = 4, 5, 10, 10
     problem = ctsb.problem("LDS-v0")
     y_true = problem.initialize(n, m, d)
     model = ctsb.model("RNN")
-    model.initialize(n, m)
+    model.initialize(n, m, l, d)
     loss = lambda pred, true: np.sum((pred - true)**2)
  
     results = []
     for i in range(T):
-        u = random.normal(generate_key, (n,))
+        u = random.normal(generate_key(), (n,))
         y_pred = model.predict(u)
         y_true = problem.step(u)
         results.append(loss(y_true, y_pred))

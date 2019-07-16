@@ -40,7 +40,7 @@ class RNN(TimeSeriesModel):
         W_x = glorot_init(generate_key(), (h, n))
         W_out = glorot_init(generate_key(), (m, h))
         b_h = np.zeros(h)
-        self.params = (W_h, W_x, W_out, b_h)
+        self.params = [W_h, W_x, W_out, b_h]
         self.hid = np.zeros(h)
         self.x = np.zeros((l, n))
 
@@ -53,8 +53,7 @@ class RNN(TimeSeriesModel):
             return (y, next_hid)
         self._fast_predict = jax.jit(_fast_predict)
 
-        def _slow_predict(params, x):
-            x_list = np.split(x, self.l)
+        def _slow_predict(params, x_list):
             W_h, W_x, W_out, b_h = params
             next_hid = np.zeros(self.h)
             for x in x_list:
@@ -72,25 +71,28 @@ class RNN(TimeSeriesModel):
         if update:
             self._update = jax.jit(update)
         else:
-            def _update(params, pred, x, hid, y_true):
+            def _update(params, pred, x, y_true):
                 lr = 0.01 # learning rate
-                _loss = lambda params, pred, x, hid, y_true:
-                    y_pred = pred(params, x, hid)
+                def _loss(params, x, y_true):
+                    y_pred = pred(params, x)
                     loss = np.sum((y_pred - y_true)**2)
                     return loss
                 _gradient = jax.grad(_loss)
-                delta = _gradient(params, pred, x, hid, y_true)
-                return params - lr * delta
-            self._update = jax.jit(_update)
+                delta = _gradient(params, x, y_true)
+                new_params = [w - lr*dw for w, dw in zip(params, delta)]
+                return new_params
+
+
+            self._update = jax.jit(_update, static_argnums=[1])
 
         return
 
-    def predict(x):
+    def predict(self, x):
         self.x = self._update_x(self.x, x)
         y, self.hid = self._fast_predict(self.params, x, self.hid)
         return y
 
-    def update(y, loss=None):
+    def update(self, y, loss=None):
         self.params = self._update(self.params, self._slow_predict, self.x, y)
         return
 
