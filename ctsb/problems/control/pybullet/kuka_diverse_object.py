@@ -45,7 +45,7 @@ class KukaDiverseObject(ControlProblem):
         if self.env._isDiscrete:
           # Static type assertion for integers.
           assert isinstance(action, int)
-          if self.problem._removeHeightHack:
+          if self.env._removeHeightHack:
             dx = [0, -dv, dv, 0, 0, 0, 0, 0, 0][action]
             dy = [0, 0, 0, -dv, dv, 0, 0, 0, 0][action]
             dz = [0, 0, 0, 0, 0, -dv, dv, 0, 0][action]
@@ -58,15 +58,14 @@ class KukaDiverseObject(ControlProblem):
         else:
           dx = dv * action[0]
           dy = dv * action[1]
-          if self.problem._removeHeightHack:
+          if self.env._removeHeightHack:
             dz = dv * action[2]
             da = 0.25 * action[3]
           else:
-            dz = dv
+            dz = -dv
             da = 0.25 * action[2]
 
         return self.env._step_continuous([dx, dy, dz, da, 0.3])
-        # return self.problem.step2(a)
 
     def render(self, mode='human', close=False):
         self.env.render(mode=mode, close=close)
