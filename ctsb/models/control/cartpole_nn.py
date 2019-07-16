@@ -2,7 +2,7 @@
 from ctsb.models.control.control_model import ControlModel
 from ctsb.models.control.cartpole_weights import *
 
-class CartpoleNN(ControlModel):
+class CartPoleNN(ControlModel):
     "Simple multi-layer perceptron policy, no internal state"
 
     def __init__(self):

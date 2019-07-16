@@ -20,7 +20,7 @@ class CtrlIndices(TimeSeriesProblem):
         self.initialized = False
         self.data_path = os.path.join(get_ctsb_dir(), "data/CM4_ctrl_indices.nc")
 
-    def initialize(self, pred_indices=[]):
+    def initialize(self):
         """
         Description:
             Check if data exists, else download, clean, and setup.
@@ -33,8 +33,6 @@ class CtrlIndices(TimeSeriesProblem):
         self.T = 0
         self.df = sp500() # get data
         self.max_T = self.df.shape[0]
-        self.has_regressors = True
-        self.pred_indices = pred_indices
 
         return self.df.iloc[self.T, 1]
 
