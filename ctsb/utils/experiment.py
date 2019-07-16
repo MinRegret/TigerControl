@@ -104,7 +104,7 @@ class Experiment(object):
                 cur_x = cur_y
             cur_loss = self.loss(cur_y, model.predict(cur_x))
             loss.append(cur_loss)
-            model.update(cur_y_true)
+            model.update(cur_y)
             # cur_x = cur_y_true
         
         return loss
