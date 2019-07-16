@@ -15,43 +15,45 @@ from gym import spaces
 
 
 class ContinuousDownwardBiasPolicy(object):
-  """Policy which takes continuous actions, and is biased to move down.
-  """
-
-  def __init__(self, height_hack_prob=0.9):
-    """Initializes the DownwardBiasPolicy.
-
-    Args:
-        height_hack_prob: The probability of moving down at every move.
+    """Policy which takes continuous actions, and is biased to move down.
     """
-    self._height_hack_prob = height_hack_prob
-    self._action_space = spaces.Box(low=-1, high=1, shape=(5,))
 
-  def sample_action(self, obs, explore_prob):
-    """Implements height hack and grasping threshold hack.
-    """
-    dx, dy, dz, da, close = self._action_space.sample()
-    if np.random.random() < self._height_hack_prob:
-      dz = -1
-    return [dx, dy, dz, da, 0.5]
+    def __init__(self, height_hack_prob=0.9):
+        """Initializes the DownwardBiasPolicy.
+
+        Args:
+                height_hack_prob: The probability of moving down at every move.
+        """
+        self._height_hack_prob = height_hack_prob
+        self._action_space = spaces.Box(low=-1, high=1, shape=(5,))
+
+    def sample_action(self, obs, explore_prob):
+        """Implements height hack and grasping threshold hack.
+        """
+        dx, dy, dz, da, close = self._action_space.sample()
+        if np.random.random() < self._height_hack_prob:
+            dz = -1
+        return [dx, dy, dz, da, 0.5]
 
 
-def main():
+def test_kuka_diverse_object(show=False):
 
-  problem = KukaDiverseObject()
-  obs = problem.initialize()
-  policy = ContinuousDownwardBiasPolicy()
+    problem = KukaDiverseObject()
+    obs = problem.initialize()
+    policy = ContinuousDownwardBiasPolicy()
 
-  while True:
-    done =  False
-    episode_rew = 0
-    while not done:
-      problem.render(mode='human')
-      act = policy.sample_action(obs, .1)
-      obs, rew, done, _ = problem.step(act)
-      episode_rew += rew
-    print("Episode reward", episode_rew)
+    while True:
+        done =  False
+        episode_rew = 0
+        while not done:
+            if show:
+                problem.render(mode='human')
+            act = policy.sample_action(obs, .1)
+            obs, rew, done, _ = problem.step(act)
+            episode_rew += rew
+        print("Episode reward", episode_rew)
 
 
 if __name__ == '__main__':
-  main()
+    test_kuka_diverse_object()
+

@@ -26,19 +26,12 @@ def test_experiment_time_series(steps=1000, verbose=False):
     mem_usage = memory_usage((exp.run_all_experiments, [100]))
 
     end = time.time()
-    print(end - start)
-    exp.plot_all_problem_results()
-    exp.get_performance_metrics()
-    print('Memory usage (in chunks of .1 seconds): %s' % mem_usage)
-    print('Maximum memory usage: %s' % max(mem_usage))
-    '''
-    # test with problem_to_models
-    exp = Experiment()
-    problem_to_models = {'ARMA-v0' : ['LastValue'],
-                         'SP500-v0' : ['PredictZero']}
-    exp.initialize(MSE, problem_to_params, model_to_params, problem_to_models)
-    exp.run_all_experiments(steps)
-    exp.plot_all_problem_results()'''
+    if verbose:
+        print(end - start)
+        exp.plot_all_problem_results()
+        exp.get_performance_metrics()
+        print('Memory usage (in chunks of .1 seconds): %s' % mem_usage)
+        print('Maximum memory usage: %s' % max(mem_usage))
     return
 
 if __name__ == "__main__":
