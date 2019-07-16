@@ -155,4 +155,17 @@ def crypto():
         bdf = dict_of_currency_dfs['bitcoin']
         bdf.to_csv(path_crypto_csv)
     return pd.read_csv(path_crypto_csv)
+
+
+def ctrl_indices(X, y, history, timeline):
+    """
+    Description:
+        ...
+    Args:
+        ...
+    Returns:
+        ...
+    """
+
+    datapath = 'ctsb/ctsb/data/CM4_ctrl_indices.nc'
     
