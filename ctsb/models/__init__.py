@@ -28,6 +28,11 @@ model_register(
 )
 
 model_register(
+    id='LSTM',
+    entry_point='ctsb.models.time_series:LSTM',
+)
+
+model_register(
     id='ArmaOgd',
     entry_point='ctsb.models.time_series:ArmaOgd',
 )

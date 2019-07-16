@@ -8,7 +8,7 @@ import ctsb
 from ctsb.utils.random import generate_key
 from ctsb.models.time_series import TimeSeriesModel
 
-class RNN(TimeSeriesModel):
+class LSTM(TimeSeriesModel):
     """
     Produces outputs from a randomly initialized recurrent neural network.
     """
@@ -19,12 +19,12 @@ class RNN(TimeSeriesModel):
     def initialize(self, n, m, l=32, h=64, update=None):
         """
         Description:
-            Randomly initialize the RNN.
+            Randomly initialize the LSTM.
         Args:
             n (int): Input dimension.
             m (int): Observation/output dimension.
             l (int): Length of memory for update step purposes.
-            h (int): Default value 64. Hidden dimension of RNN.
+            h (int): Default value 64. Hidden dimension of LSTM.
             update (func): update function implemented with Jax NumPy,
                 takes params, pred, x, y as input and returns updated params
         Returns:
@@ -36,28 +36,39 @@ class RNN(TimeSeriesModel):
 
         # initialize parameters
         glorot_init = stax.glorot() # returns a function that initializes weights
-        W_h = glorot_init(generate_key(), (h, h))
-        W_x = glorot_init(generate_key(), (h, n))
-        W_out = glorot_init(generate_key(), (m, h))
-        b_h = np.zeros(h)
-        self.params = [W_h, W_x, W_out, b_h]
+        W_hh = glorot_init(generate_key(), (4*h, h)) # maps h_t to gates
+        W_xh = glorot_init(generate_key(), (4*h, n)) # maps x_t to gates
+        W_out = glorot_init(generate_key(), (m, h)) # maps h_t to output
+        b_h = np.zeros(4*h)
+        b_h = jax.ops.index_update(b_h, jax.ops.index[h:2*h], np.ones(h)) # forget gate biased initialization
+        self.params = [W_hh, W_xh, W_out, b_h]
         self.hid = np.zeros(h)
+        self.cell = np.zeros(h)
         self.x = np.zeros((l, n))
 
         # initialize jax.jitted predict and update functions
-
-        def _fast_predict(params, x, hid):
-            W_h, W_x, W_out, b_h = params
-            next_hid = np.tanh(np.dot(W_h, hid) + np.dot(W_x, x) + b_h)
+        def _fast_predict(params, x, hid, cell):
+            W_hh, W_xh, W_out, b_h = params
+            sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
+            gate = np.dot(W_hh, hid) + np.dot(W_xh, x) + b_h 
+            i, f, g, o = np.split(gate, 4) # order: input, forget, cell, output
+            next_cell =  sigmoid(f) * cell + sigmoid(i) * np.tanh(g)
+            next_hid = sigmoid(o) * np.tanh(next_cell)
             y = np.dot(W_out, next_hid)
-            return (y, next_hid)
+            return (y, next_hid, next_cell)
+
         self._fast_predict = jax.jit(_fast_predict)
 
         def _slow_predict(params, x_list):
-            W_h, W_x, W_out, b_h = params
+            W_hh, W_xh, W_out, b_h = params
+            sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
             next_hid = np.zeros(self.h)
+            next_cell = np.zeros(self.h)
             for x in x_list:
-                next_hid = np.tanh(np.dot(W_h, next_hid) + np.dot(W_x, x) + b_h)
+                gate = np.dot(W_hh, next_hid) + np.dot(W_xh, x) + b_h 
+                i, f, g, o = np.split(gate, 4) # order: input, forget, cell, output
+                next_cell =  sigmoid(f) * next_cell + sigmoid(i) * np.tanh(g)
+                next_hid = sigmoid(o) * np.tanh(next_cell)
             y = np.dot(W_out, next_hid)
             return y
         self._slow_predict = jax.jit(_slow_predict)
@@ -87,7 +98,7 @@ class RNN(TimeSeriesModel):
 
     def predict(self, x):
         self.x = self._update_x(self.x, x)
-        y, self.hid = self._fast_predict(self.params, x, self.hid)
+        y, self.hid, self.cell = self._fast_predict(self.params, x, self.hid, self.cell)
         return y
 
     def update(self, y, loss=None):
@@ -103,42 +114,41 @@ class RNN(TimeSeriesModel):
         Returns:
             None
         """
-        print(RNN_help)
+        print(LSTM_help)
 
 
 
 # string to print when calling help() method
-RNN_help = """
+LSTM_help = """
 
 -------------------- *** --------------------
 
-Id: RNN
+Id: LSTM
 Description: Implements a Recurrent Neural Network model.
 
 Methods:
 
-    initialize(n, m, l=32, h=64, update=None):
+    initialize(n, m, l=32, h=128,)
         Description:
-            Randomly initialize the RNN.
+            Randomly initialize the LSTM.
         Args:
             n (int): Input dimension.
             m (int): Observation/output dimension.
-            l (int): Length of memory for update step purposes.
-            h (int): Default value 64. Hidden dimension of RNN.
-            update (func): update function implemented with Jax NumPy,
-                takes params, pred, x, y as input and returns updated params
-
-    predict(x)
-        Description:
-            Makes a prediction given input x
-        Args:
-            x (numpy.ndarray): RNN input, an n-dimensional real-valued vector.
+            h (int): Default value 64. Hidden dimension of LSTM.
         Returns:
-            The output of the RNN computed on the past l inputs, including the new x.
+            The first value in the time-series
 
-    update(y)
+    step(x)
         Description:
-            Updates internal parameters
+            Takes an input and produces the next output of the LSTM.
+        Args:
+            x (numpy.ndarray): LSTM input, an n-dimensional real-valued vector.
+        Returns:
+            The output of the LSTM computed on the past l inputs, including the new x.
+
+    hidden()
+        Description:
+            Return the hidden state of the LSTM when computed on the last l inputs.
         Args:
             None
         Returns:
