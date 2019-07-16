@@ -4,7 +4,6 @@ from ctsb.models.registration import model_registry, model_register, model, mode
 from ctsb.models.core import Model
 from ctsb.models.custom import CustomModel, register_custom_model
 
-
 # ---------- Models ----------
 
 model_register(

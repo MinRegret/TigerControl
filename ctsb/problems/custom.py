@@ -1,9 +1,15 @@
-# custom method registration tools
+# Problem class
+# Author: John Hallman
 
-from ctsb.problems.custom import CustomProblem
-from ctsb.problems.registration import problem_registry
 from ctsb import error
+from ctsb.problems import Problem
+from ctsb.problems.registration import problem_registry
 
+
+# class for implementing algorithms with enforced modularity
+class CustomProblem(object):
+    def __init__(self):
+        pass
 
 # verifies that a given class has the necessary minimum problem methods
 def verify_valid_problem(problem_class):

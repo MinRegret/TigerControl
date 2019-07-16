@@ -1,9 +1,15 @@
-# custom method registration tools
+# Model class
+# Author: John Hallman
 
-from ctsb.models.custom import CustomModel
-from ctsb.models.registration import model_registry
 from ctsb import error
+from ctsb.models import Model
+from ctsb.models.registration import model_registry
 
+
+# class for implementing algorithms with enforced modularity
+class CustomModel(object):
+    def __init__(self):
+        pass
 
 # verifies that a given class has the necessary minimum model methods
 def verify_valid_model(model_class):
