@@ -52,9 +52,9 @@ class Experiment(object):
             if problem.has_regressors:
                 self.pom_ls.append((problem, (x_0, y_0), initialized_models))
             else:
-                self.pom_ls.append((problem, (x_0, None), initialized_models))
+                self.pom_ls.append((problem, x_0, initialized_models))
 
-    def run_all_experiments(self, time_steps=1000):
+    def run_all_experiments(self, time_steps=100):
         '''
         Descripton:
             Runs all experiments for specified number of timesteps.
@@ -68,10 +68,49 @@ class Experiment(object):
             for model in models:
                 print("model:" + str(model))
                 time_start = time.time()
-                self.prob_model_to_loss[problem][model] = self.run_experiment(problem, obs, model)
+                if problem.has_regressors:
+                    self.prob_model_to_loss[problem][model] = self.run_exp_regressor(problem, obs, model)
+                else: 
+                    self.prob_model_to_loss[problem][model] = self.run_exp_not_regressor(problem,obs,model)
                 self.prob_model_to_time[problem][model] = time.time() - time_start
-        return
+        return        
 
+    def run_exp_regressor(self, problem, obs, model):
+        is_control_problem = (inspect.getmro(problem.__class__))[1] == ControlProblem
+        is_control_model = (inspect.getmro(model.__class__))[1] == ControlModel
+        assert ((is_control_problem and is_control_model) or (not is_control_problem and not is_control_model))
+        (cur_x, cur_y) = obs
+        cur_loss = self.loss(cur_y, model.predict(cur_x))
+        loss = [cur_loss]
+        for i in tqdm(range(0,self.T)):
+            if is_control_problem:
+                cur_x, cur_y = problem.step(model_output)
+            else:
+                cur_x, cur_y = problem.step()
+
+            cur_loss = self.loss(cur_y, model.predict(cur_x))
+            loss.append(cur_loss)
+            model.update(cur_y)        
+        return loss
+
+    def run_exp_not_regressor(self, problem, obs, model):
+        is_control_problem = (inspect.getmro(problem.__class__))[1] == ControlProblem
+        is_control_model = (inspect.getmro(model.__class__))[1] == ControlModel
+        assert ((is_control_problem and is_control_model) or (not is_control_problem and not is_control_model))
+        cur_x = obs
+        loss = []
+        for i in tqdm(range(0,self.T)):
+            cur_y_true = None
+            if is_control_problem:
+                cur_y = problem.step(model_output)
+            else:
+                cur_y = problem.step()
+            cur_loss = self.loss(cur_y, model.predict(cur_x))
+            loss.append(cur_loss)
+            cur_x = cur_y
+            model.update(cur_y)        
+        return loss
+    
     def run_experiment(self, problem, obs, model):
         '''
         Descripton:
@@ -84,13 +123,10 @@ class Experiment(object):
         is_control_problem = (inspect.getmro(problem.__class__))[1] == ControlProblem
         is_control_model = (inspect.getmro(model.__class__))[1] == ControlModel
         assert ((is_control_problem and is_control_model) or (not is_control_problem and not is_control_model))
-        # args = {'problem_step' : problem.step, 'obs' : obs, 'model_predict' : model.predict}
         (cur_x, cur_y) = obs
-        cur_loss = self.loss(cur_y, model.predict(cur_x))
+        cur_loss = self.loss(cur_y, model.predict(cur_x)) if problem.has_regressors else self.lo
         loss = [cur_loss]
         for i in tqdm(range(0,self.T)):
-            # model_output = model.predict(cur_x)
-            #cur_y_true = problem.step(model_output) if is_control_problem else problem.step()
             cur_y_true = None
             if is_control_problem and problem.has_regressors:
                 cur_x, cur_y = problem.step(model_output)
@@ -104,9 +140,7 @@ class Experiment(object):
                 cur_x = cur_y
             cur_loss = self.loss(cur_y, model.predict(cur_x))
             loss.append(cur_loss)
-            model.update(cur_y)
-            # cur_x = cur_y_true
-        
+            model.update(cur_y)        
         return loss
 
     def plot_all_problem_results(self):
@@ -125,6 +159,8 @@ class Experiment(object):
         if len(self.pom_ls) == 1:
             (problem, problem_loss_plus_model, model_list) = all_problem_info[0]
             for (loss,model) in problem_loss_plus_model:
+                # print("LOSS:")
+                print(loss)
                 ax.plot(loss, label=str(model))
                 ax.legend(loc="upper left")
             ax.set_title("Problem:" + str(problem))
