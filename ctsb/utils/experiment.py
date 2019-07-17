@@ -66,7 +66,7 @@ class Experiment(object):
             self.prob_model_to_loss[problem] = {}
             self.prob_model_to_time[problem] = {}
             for model in models:
-                print("model:" + str(model))
+                # print("model:" + str(model))
                 time_start = time.time()
                 if problem.has_regressors:
                     self.prob_model_to_loss[problem][model] = self.run_exp_regressor(problem, obs, model)
@@ -82,12 +82,12 @@ class Experiment(object):
         (cur_x, cur_y) = obs
         # print(cur_x)
         # print(type(cur_x))
-        print(cur_y)
+        '''print(cur_y)
         print(type(cur_y))
         print(cur_x)
         print(type(cur_x))
         print(model.predict(cur_x))
-        print(type(model.predict(cur_x)))
+        print(type(model.predict(cur_x)))'''
         cur_loss = self.loss(cur_y, model.predict(cur_x))
         loss = [cur_loss]
         for i in tqdm(range(0,self.T)):
@@ -168,7 +168,7 @@ class Experiment(object):
             (problem, problem_loss_plus_model, model_list) = all_problem_info[0]
             for (loss,model) in problem_loss_plus_model:
                 # print("LOSS:")
-                print(loss)
+                # print(loss)
                 ax.plot(loss, label=str(model))
                 ax.legend(loc="upper left")
             ax.set_title("Problem:" + str(problem))

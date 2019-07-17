@@ -20,7 +20,7 @@ class ARMA(TimeSeriesProblem):
         self.initialized = False
         self.has_regressors = False
 
-    def initialize(self, p, q, c=None):
+    def initialize(self, p, q, c=None, noise_magnitude=1.0):
         """
         Description:
             Randomly initialize the hidden dynamics of the system.
@@ -52,9 +52,10 @@ class ARMA(TimeSeriesProblem):
             self.psi = q
         self.p = self.phi.shape[0]
         self.q = self.psi.shape[0]
+        self.noise_magnitude = noise_magnitude
         self.c = random.normal(generate_key()) if c == None else c
         self.x = random.normal(generate_key(), shape=(self.p,))
-        self.noise = random.normal(generate_key(), shape=(q,))
+        self.noise = self.noise_magnitude * random.normal(generate_key(), shape=(q,))
 
         def _step(x, noise, eps):
             x_ar = np.dot(x, self.phi)
@@ -83,7 +84,7 @@ class ARMA(TimeSeriesProblem):
         """
         assert self.initialized
         self.T += 1
-        self.x, self.noise, x_new = self._step(self.x, self.noise, random.normal(generate_key()))  
+        self.x, self.noise, x_new = self._step(self.x, self.noise, self.noise_magnitude * random.normal(generate_key()))  
         return x_new
 
     def hidden(self):
