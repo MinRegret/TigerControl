@@ -1,6 +1,7 @@
 """
 Recurrent neural network output
 """
+
 import jax
 import jax.numpy as np
 import jax.experimental.stax as stax
@@ -18,7 +19,7 @@ class RNN(TimeSeriesModel):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, n, m, l=32, h=64, optimizer=None):
+    def initialize(self, n, m, l = 32, h = 64, optimizer = SGD, loss = mse, lr = 0.003):
         """
         Description:
             Randomly initialize the RNN.
@@ -27,10 +28,9 @@ class RNN(TimeSeriesModel):
             m (int): Observation/output dimension.
             l (int): Length of memory for update step purposes.
             h (int): Default value 64. Hidden dimension of RNN.
-            update (func): update function implemented with Jax NumPy,
-                takes params, pred, x, y as input and returns updated params
-        Returns:
-            The first value in the time-series
+            optimizer (class): optimizer choice
+            loss (class): loss choice
+            lr (float): learning rate for update
         """
         self.T = 0
         self.initialized = True
@@ -47,7 +47,6 @@ class RNN(TimeSeriesModel):
         self.x = np.zeros((l, n))
 
         # initialize jax.jitted predict and update functions
-
         def _fast_predict(params, x, hid):
             W_h, W_x, W_out, b_h = params
             next_hid = np.tanh(np.dot(W_h, hid) + np.dot(W_x, x) + b_h)
@@ -70,36 +69,34 @@ class RNN(TimeSeriesModel):
             return new_x
         self._update_x = jax.jit(_update_x)
 
-        '''
-        if update:
-            self._update = jax.jit(update)
-        else:
-            def _update(params, pred, x, y_true):
-                lr = 0.01 # learning rate
-                def _loss(params, x, y_true):
-                    y_pred = pred(params, x)
-                    loss = np.sum((y_pred - y_true)**2)
-                    return loss
-                _gradient = jax.grad(_loss)
-                delta = _gradient(params, x, y_true)
-                new_params = [w - lr*dw for w, dw in zip(params, delta)]
-                return new_params
-            self._update = jax.jit(_update, static_argnums=[1])
-        '''
-        self.optimizer = SGD(pred=self._slow_predict, loss=mse, learning_rate=0.003)
-        return
+        self.optimizer = optimizer(pred = self._slow_predict, loss = loss, learning_rate = lr)
 
     def predict(self, x):
+        """
+        Description:
+            Predict next value given observation
+        Args:
+            x (int/numpy.ndarray): Observation
+        Returns:
+            Predicted value for the next time-step
+        """
+        assert self.initialized
+
         self.x = self._update_x(self.x, x)
         y, self.hid = self._fast_predict(self.params, x, self.hid)
+
         return y
 
-    # def update(self, y, loss=None):
-    #     self.params = self._update(self.params, self._slow_predict, self.x, y)
-    #    return
-
     def update(self, y):
-        self.params = self.optimizer.update(self.x, y, self.params)
+        """
+        Description:
+            Updates parameters
+        Args:
+            y (int/numpy.ndarray): True value at current time-step
+        Returns:
+            None
+        """
+        self.params = self.optimizer.update(self.params, self.x, y)
         return
 
     def help(self):
@@ -113,8 +110,6 @@ class RNN(TimeSeriesModel):
         """
         print(RNN_help)
 
-
-
 # string to print when calling help() method
 RNN_help = """
 
@@ -125,7 +120,7 @@ Description: Implements a Recurrent Neural Network model.
 
 Methods:
 
-    initialize(n, m, l=32, h=64, update=None):
+    initialize(n, m, l = 32, h = 64, optimizer = SGD, loss = mse, lr = 0.003):
         Description:
             Randomly initialize the RNN.
         Args:
@@ -133,24 +128,25 @@ Methods:
             m (int): Observation/output dimension.
             l (int): Length of memory for update step purposes.
             h (int): Default value 64. Hidden dimension of RNN.
-            update (func): update function implemented with Jax NumPy,
-                takes params, pred, x, y as input and returns updated params
+            optimizer (class): optimizer choice
+            loss (class): loss choice
+            lr (float): learning rate for update
 
     predict(x)
         Description:
-            Makes a prediction given input x
+            Predict next value given observation
         Args:
-            x (numpy.ndarray): RNN input, an n-dimensional real-valued vector.
+            x (int/numpy.ndarray): Observation
         Returns:
-            The output of the RNN computed on the past l inputs, including the new x.
+            Predicted value for the next time-step
 
     update(y)
         Description:
-            Updates internal parameters
+            Updates parameters
         Args:
-            None
+            y (int/numpy.ndarray): True value at current time-step
         Returns:
-            h: The hidden state.
+            None
 
     help()
         Description:

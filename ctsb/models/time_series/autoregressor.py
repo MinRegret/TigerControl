@@ -7,6 +7,8 @@ import jax
 import jax.numpy as np
 from jax import grad, jit, vmap
 from ctsb.models.time_series import TimeSeriesModel
+from ctsb.models.optimizers.SGD import SGD
+from ctsb.models.optimizers.losses import mse
 
 class AutoRegressor(TimeSeriesModel):
     """
@@ -17,12 +19,15 @@ class AutoRegressor(TimeSeriesModel):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, p):
+    def initialize(self, p, optimizer = SGD, loss = mse, lr = 0.001):
         """
         Description:
             Initializes autoregressive model parameters
         Args:
             p (int): Length of history used for prediction
+            optimizer (class): optimizer choice
+            loss (class): loss choice
+            lr (float): learning rate for update
         """
         self.initialized = True
 
@@ -30,7 +35,18 @@ class AutoRegressor(TimeSeriesModel):
         self.past = jax.ops.index_update(self.past, 0, 1)
 
         self.params = np.zeros(p + 1)
-        #self.params = jax.ops.index_update(self.params, p, 0) # in order to default to LastValue change 0 to 1
+
+        def _predict(params, inputs):
+            return np.dot(params, inputs)
+        self._predict = jax.jit(_predict)
+
+        def _update_past(self_past, x):
+            new_past = np.roll(self_past, -1)
+            new_past = jax.ops.index_update(new_past, new_past.shape[0] - 1, x)
+            return new_past
+        self._update_past = jax.jit(_update_past)
+
+        self.optimizer = optimizer(pred = self._predict, loss = loss, learning_rate = lr)
 
     def predict(self, x):
         """
@@ -44,37 +60,21 @@ class AutoRegressor(TimeSeriesModel):
         
         assert self.initialized
 
-        self.past = np.roll(self.past, -1) 
-        self.past = jax.ops.index_update(self.past, self.past.shape[0] - 1, x)
+        self.past = self._update_past(self.past, x)
 
-        return np.dot(self.params, self.past)
+        return self._predict(self.params, self.past)
 
-    def update(self, y, loss = None, lr = 0.001):
+    def update(self, y):
         """
         Description:
-            Updates parameters based on correct value, loss and learning rate.
+            Updates parameters using the specified optimizer
         Args:
             y (int/numpy.ndarray): True value at current time-step
-            loss (function): specifies loss function to be used; defaults to MSE
-            lr (float): specifies learning rate; defaults to 0.001.
         Returns:
             None
         """
 
-        if(loss is None):
-            # default to MSE
-            def MSE(params, inputs, targets):
-                preds = np.dot(params, inputs)
-                return np.sum((preds - targets)**2)
-            loss = MSE
-        else:
-            # check for correct format
-            raise NotImplementedError
-
-        f_grad = jit(grad(loss))
-        val_grad = f_grad(self.params, self.past, y)
-        self.params = self.params - lr * val_grad / np.linalg.norm(val_grad)
-
+        self.params = self.optimizer.update(self.params, self.past, y)
         return
 
     def help(self):
