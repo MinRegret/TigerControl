@@ -1,5 +1,5 @@
 """
-Recurrent neural network output
+LSTM neural network output
 """
 import jax
 import jax.numpy as np
@@ -13,13 +13,13 @@ from ctsb.models.optimizers.losses import mse
 
 class LSTM(TimeSeriesModel):
     """
-    Produces outputs from a randomly initialized recurrent neural network.
+    Produces outputs from a randomly initialized LSTM neural network.
     """
 
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, n, m, l=32, h=64, optimizer=None, optimizer_params_dict=None, loss=None):
+    def initialize(self, n, m, l = 32, h = 64, optimizer = SGD, optimizer_params_dict = None, loss = mse, lr = 0.0001):
         """
         Description:
             Randomly initialize the LSTM.
@@ -28,10 +28,9 @@ class LSTM(TimeSeriesModel):
             m (int): Observation/output dimension.
             l (int): Length of memory for update step purposes.
             h (int): Default value 64. Hidden dimension of LSTM.
-            optimizer(class) : optimizer class
-
-        Returns:
-            The first value in the time-series
+            optimizer (class): optimizer choice
+            loss (class): loss choice
+            lr (float): learning rate for update
         """
         self.T = 0
         self.initialized = True
@@ -53,18 +52,8 @@ class LSTM(TimeSeriesModel):
         def _fast_predict(params, x, hid, cell):
             W_hh, W_xh, W_out, b_h = params
             sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
-            print("variables")
-            print(hid)
-            print(cell)
-            print(x)
             gate = np.dot(W_hh, hid) + np.dot(W_xh, x) + b_h 
-            print(gate)
             i, f, g, o = np.split(gate, 4) # order: input, forget, cell, output
-            print("i = " + str(i))
-            print("f = " + str(f))
-            print("g = " + str(g))
-            print("o = " + str(o))
-            print("cell = " + str(cell))
             next_cell =  sigmoid(f) * cell + sigmoid(i) * np.tanh(g)
             next_hid = sigmoid(o) * np.tanh(next_cell)
             y = np.dot(W_out, next_hid)
@@ -91,24 +80,8 @@ class LSTM(TimeSeriesModel):
             new_x = jax.ops.index_update(new_x, jax.ops.index[0,:], x)
             return new_x
         self._update_x = jax.jit(_update_x)
-        '''
-        if update:
-            self._update = jax.jit(update)
-        else:
-            def _update(params, pred, x, y_true):
-                lr = 0.01 # learning rate
-                def _loss(params, x, y_true):
-                    y_pred = pred(params, x)
-                    loss = np.sum((y_pred - y_true)**2)
-                    return loss
-                _gradient = jax.grad(_loss)
-                delta = _gradient(params, x, y_true)
-                new_params = [w - lr*dw for w, dw in zip(params, delta)]
-                return new_params
-            self._update = jax.jit(_update, static_argnums=[1])
-        '''
         self.loss = loss
-        self.optimizer = optimizer(pred=self._slow_predict, loss=self.loss, learning_rate=0.0001, params_dict=optimizer_params_dict)
+        self.optimizer = optimizer(pred=self._slow_predict, loss=self.loss, learning_rate=lr, params_dict=optimizer_params_dict)
         return
 
     def to_ndarray(self, x):
@@ -123,19 +96,35 @@ class LSTM(TimeSeriesModel):
         """
         x = np.asarray(x)
         if np.ndim(x) == 0:
-            x_1D = x[None]
-        return x_1D
+            x = x[None]
+        return x
 
     def predict(self, x):
+        """
+        Description:
+            Predict next value given observation
+        Args:
+            x (int/numpy.ndarray): Observation
+        Returns:
+            Predicted value for the next time-step
+        """
+        assert self.initialized
+
         self.x = self._update_x(self.x, self.to_ndarray(x))
         y, self.hid, self.cell = self._fast_predict(self.params, self.to_ndarray(x), self.hid, self.cell)
+
         return y
 
-    # def update(self, y, loss=None):
-    #    self.params = self._update(self.params, self._slow_predict, self.x, y)
-    #    return
-
     def update(self, y):
+        """
+        Description:
+            Updates parameters
+        Args:
+            y (int/numpy.ndarray): True value at current time-step
+        Returns:
+            None
+        """
+        assert self.initialized
         self.params = self.optimizer.update(self.params, self.x, y)
         return
 
@@ -158,35 +147,37 @@ LSTM_help = """
 -------------------- *** --------------------
 
 Id: LSTM
-Description: Implements a Recurrent Neural Network model.
+Description: Implements a LSTM Neural Network model.
 
 Methods:
 
-    initialize(n, m, l=32, h=128,)
+    initialize(n, m, l = 32, h = 64, optimizer = SGD, optimizer_params_dict = None, loss = mse, lr = 0.0001)
         Description:
             Randomly initialize the LSTM.
         Args:
             n (int): Input dimension.
             m (int): Observation/output dimension.
+            l (int): Length of memory for update step purposes.
             h (int): Default value 64. Hidden dimension of LSTM.
-        Returns:
-            The first value in the time-series
+            optimizer (class): optimizer choice
+            loss (class): loss choice
+            lr (float): learning rate for update
 
-    step(x)
+    predict(x)
         Description:
-            Takes an input and produces the next output of the LSTM.
+            Predict next value given observation
         Args:
-            x (numpy.ndarray): LSTM input, an n-dimensional real-valued vector.
+            x (int/numpy.ndarray): Observation
         Returns:
-            The output of the LSTM computed on the past l inputs, including the new x.
+            Predicted value for the next time-step
 
-    hidden()
+    update(y)
         Description:
-            Return the hidden state of the LSTM when computed on the last l inputs.
+            Updates parameters
         Args:
+            y (int/numpy.ndarray): True value at current time-step
+        Returns:
             None
-        Returns:
-            h: The hidden state.
 
     help()
         Description:
