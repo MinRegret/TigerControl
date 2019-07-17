@@ -7,6 +7,8 @@ import jax.experimental.stax as stax
 import ctsb
 from ctsb.utils.random import generate_key
 from ctsb.models.time_series import TimeSeriesModel
+from ctsb.models.optimizers.SGD import SGD
+from ctsb.models.optimizers.losses import mse
 
 class RNN(TimeSeriesModel):
     """
@@ -16,7 +18,7 @@ class RNN(TimeSeriesModel):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, n, m, l=32, h=64, update=None):
+    def initialize(self, n, m, l=32, h=64, optimizer=None):
         """
         Description:
             Randomly initialize the RNN.
@@ -68,6 +70,7 @@ class RNN(TimeSeriesModel):
             return new_x
         self._update_x = jax.jit(_update_x)
 
+        '''
         if update:
             self._update = jax.jit(update)
         else:
@@ -82,7 +85,8 @@ class RNN(TimeSeriesModel):
                 new_params = [w - lr*dw for w, dw in zip(params, delta)]
                 return new_params
             self._update = jax.jit(_update, static_argnums=[1])
-
+        '''
+        self.optimizer = SGD(pred=self._slow_predict, loss=mse, learning_rate=0.003)
         return
 
     def predict(self, x):
@@ -90,8 +94,12 @@ class RNN(TimeSeriesModel):
         y, self.hid = self._fast_predict(self.params, x, self.hid)
         return y
 
-    def update(self, y, loss=None):
-        self.params = self._update(self.params, self._slow_predict, self.x, y)
+    # def update(self, y, loss=None):
+    #     self.params = self._update(self.params, self._slow_predict, self.x, y)
+    #    return
+
+    def update(self, y):
+        self.params = self.optimizer.update(self.x, y, self.params)
         return
 
     def help(self):

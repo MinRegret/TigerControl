@@ -7,6 +7,9 @@ import jax.experimental.stax as stax
 import ctsb
 from ctsb.utils.random import generate_key
 from ctsb.models.time_series import TimeSeriesModel
+from ctsb.models.optimizers.SGD import SGD
+from ctsb.models.optimizers.losses import mse
+
 
 class LSTM(TimeSeriesModel):
     """
@@ -16,7 +19,7 @@ class LSTM(TimeSeriesModel):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, n, m, l=32, h=64, update=None):
+    def initialize(self, n, m, l=32, h=64, optimizer=None):
         """
         Description:
             Randomly initialize the LSTM.
@@ -50,8 +53,18 @@ class LSTM(TimeSeriesModel):
         def _fast_predict(params, x, hid, cell):
             W_hh, W_xh, W_out, b_h = params
             sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
+            print("variables")
+            print(hid)
+            print(cell)
+            print(x)
             gate = np.dot(W_hh, hid) + np.dot(W_xh, x) + b_h 
+            print(gate)
             i, f, g, o = np.split(gate, 4) # order: input, forget, cell, output
+            print("i = " + str(i))
+            print("f = " + str(f))
+            print("g = " + str(g))
+            print("o = " + str(o))
+            print("cell = " + str(cell))
             next_cell =  sigmoid(f) * cell + sigmoid(i) * np.tanh(g)
             next_hid = sigmoid(o) * np.tanh(next_cell)
             y = np.dot(W_out, next_hid)
@@ -78,7 +91,7 @@ class LSTM(TimeSeriesModel):
             new_x = jax.ops.index_update(new_x, jax.ops.index[0,:], x)
             return new_x
         self._update_x = jax.jit(_update_x)
-
+        '''
         if update:
             self._update = jax.jit(update)
         else:
@@ -93,16 +106,36 @@ class LSTM(TimeSeriesModel):
                 new_params = [w - lr*dw for w, dw in zip(params, delta)]
                 return new_params
             self._update = jax.jit(_update, static_argnums=[1])
-
+        '''
+        self.optimizer = SGD(pred=self._slow_predict, loss=mse, learning_rate=0.0001)
         return
 
+    def to_ndarray(self, x):
+        """
+        Description:
+            If x is a scalar, transform it to a (1, 1) numpy.ndarray;
+            otherwise, leave it unchanged.
+        Args:
+            x (float/numpy.ndarray)
+        Returns:
+            A numpy.ndarray representation of x
+        """
+        x = np.asarray(x)
+        if np.ndim(x) == 0:
+            x_1D = x[None]
+        return x_1D
+
     def predict(self, x):
-        self.x = self._update_x(self.x, x)
-        y, self.hid, self.cell = self._fast_predict(self.params, x, self.hid, self.cell)
+        self.x = self._update_x(self.x, self.to_ndarray(x))
+        y, self.hid, self.cell = self._fast_predict(self.params, self.to_ndarray(x), self.hid, self.cell)
         return y
 
-    def update(self, y, loss=None):
-        self.params = self._update(self.params, self._slow_predict, self.x, y)
+    # def update(self, y, loss=None):
+    #    self.params = self._update(self.params, self._slow_predict, self.x, y)
+    #    return
+
+    def update(self, y):
+        self.params = self.optimizer.update(self.x, y, self.params)
         return
 
     def help(self):
