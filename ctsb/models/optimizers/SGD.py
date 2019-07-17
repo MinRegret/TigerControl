@@ -5,7 +5,7 @@ import jax.numpy as np
 import jax.experimental.stax as stax
 
 class SGD(Optimizer):
-	def __init__(self, pred, loss, learning_rate):
+	def __init__(self, pred, loss, learning_rate, params_dict=None):
 		self.lr = learning_rate
 		loss_fn = lambda model_params, a, b : loss(pred(model_params, a), b)
 		self.grad_fn = jax.jit(jax.grad(loss_fn))
