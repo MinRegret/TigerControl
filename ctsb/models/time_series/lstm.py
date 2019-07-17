@@ -19,7 +19,7 @@ class LSTM(TimeSeriesModel):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, n, m, l=32, h=64, optimizer=None):
+    def initialize(self, n, m, l=32, h=64, optimizer=None, optimizer_params_dict=None, loss=None):
         """
         Description:
             Randomly initialize the LSTM.
@@ -28,8 +28,8 @@ class LSTM(TimeSeriesModel):
             m (int): Observation/output dimension.
             l (int): Length of memory for update step purposes.
             h (int): Default value 64. Hidden dimension of LSTM.
-            update (func): update function implemented with Jax NumPy,
-                takes params, pred, x, y as input and returns updated params
+            optimizer(class) : optimizer class
+
         Returns:
             The first value in the time-series
         """
@@ -107,7 +107,8 @@ class LSTM(TimeSeriesModel):
                 return new_params
             self._update = jax.jit(_update, static_argnums=[1])
         '''
-        self.optimizer = SGD(pred=self._slow_predict, loss=mse, learning_rate=0.0001)
+        self.loss = loss
+        self.optimizer = optimizer(pred=self._slow_predict, loss=self.loss, learning_rate=0.0001, params_dict=optimizer_params_dict)
         return
 
     def to_ndarray(self, x):
@@ -135,7 +136,7 @@ class LSTM(TimeSeriesModel):
     #    return
 
     def update(self, y):
-        self.params = self.optimizer.update(self.x, y, self.params)
+        self.params = self.optimizer.update(self.params, self.x, y)
         return
 
     def help(self):

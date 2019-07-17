@@ -2,7 +2,8 @@ import ctsb
 """import jax.numpy as np """
 import numpy as np 
 import matplotlib.pyplot as plt
-
+from ctsb.models.optimizers.Adagrad import Adagrad
+from ctsb.models.optimizers.losses import mse
 
 
 class ArmaAdaGrad(ctsb.CustomModel):
@@ -14,7 +15,7 @@ class ArmaAdaGrad(ctsb.CustomModel):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, p):
+    def initialize(self, p, optimizer=None, optimizer_params_dict=None, loss=None):
         """
         Description:
             Initializes autoregressive model parameters
@@ -28,6 +29,10 @@ class ArmaAdaGrad(ctsb.CustomModel):
         self.G = np.ones(p+1)
         self.t = 1
         self.max_norm = 1
+        self.optimizer = optimizer(pred=self.predict, 
+                                 loss=loss, 
+                                 learning_rate=None, 
+                                 params_dict={'G':self.G, 'past':self.past, 'max_norm':self.max_norm, 'order':self.order})
 
     def predict(self, x):
         """
@@ -47,6 +52,10 @@ class ArmaAdaGrad(ctsb.CustomModel):
         """ and predict"""
         return np.dot(self.params, self.past)
 
+    def update(self, y, loss=None):
+        self.params = self.optimizer.update(self.params, None, y, {'past': self.past})
+
+    '''
     def update(self, y, loss = None):
         """
         Description:
@@ -73,7 +82,7 @@ class ArmaAdaGrad(ctsb.CustomModel):
         if np.linalg.norm(self.params) > self.order:
             self.params = self.params / np.linalg.norm(self.params) 
 
-        return
+        return'''
 
 
     def help(self):
@@ -86,9 +95,3 @@ class ArmaAdaGrad(ctsb.CustomModel):
             None
         """
         print('shalom')
-
-
-
-
-
-
