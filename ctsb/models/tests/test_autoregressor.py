@@ -19,7 +19,9 @@ def test_autoregressor(steps=10, show_plot=True):
         cur_y_true = problem.step()
         cur_loss = loss(cur_y_true, cur_y_pred)
         results.append(cur_loss)
+        #print("BEFORE", model.params)
         model.update(cur_loss)
+        #print("AFTER", model.params)
         cur_x = cur_y_true
 
     if show_plot:
