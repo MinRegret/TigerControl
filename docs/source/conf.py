@@ -19,7 +19,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'ctsb_docs'
+project = 'ctsb'
 copyright = '2019, alexjyu'
 author = 'alexjyu'
 
