@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 def test_mppi(steps=1000, show_plot=True):
 
-    T = 100
+    T = 2
     K = steps
 
     ACTION_LOW = -2.0
@@ -25,7 +25,7 @@ def test_mppi(steps=1000, show_plot=True):
 
     model = ctsb.model("MPPI")
     model.initialize(env = problem, K = K, T = T, U = U, lambda_ = lambda_, u_init = 0)
-    model.step(n = 1000)
+    model.step(n = 2)
  
     print("test_mppi passed")
     return

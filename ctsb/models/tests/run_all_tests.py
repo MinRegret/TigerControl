@@ -1,24 +1,14 @@
-from ctsb.models.tests.test_last_value import test_last_value
-from ctsb.models.tests.test_predict_zero import test_predict_zero
-from ctsb.models.tests.test_autoregressor import test_autoregressor
-from ctsb.models.tests.test_kalman_filter import test_kalman_filter
-from ctsb.models.tests.test_ode_shooting_method import test_ode_shooting_method
-from ctsb.models.tests.test_lqr import test_lqr
-from ctsb.models.tests.test_rnn import test_rnn
-from ctsb.models.tests.test_lstm import test_lstm
-from ctsb.models.tests.test_custom_model import test_custom_model
+from ctsb.models.control.tests.run_all_tests import run_all_tests as control_model_tests
+from ctsb.models.time_series.tests.run_all_tests import run_all_tests as time_series_model_tests
+from ctsb.models.optimizers.tests.run_all_tests import run_all_tests as optimizers_tests
 
 def run_all_tests(steps=1000, show=False):
     print("\nrunning all models tests...\n")
-    test_last_value(steps=1000, show_plot=show)
-    test_predict_zero(steps=1000, show_plot=show)
-    test_custom_model(steps=1000, show_plot=show)
-    test_autoregressor(steps=1000, show_plot=show)
-    test_kalman_filter(steps=1000, show_plot=show)
-    test_ode_shooting_method(steps=1000, show_plot=show)
-    test_rnn(steps=1000, show_plot=show)
-    test_lstm(steps=1000, show_plot=show)
+    control_model_tests(steps=steps, show=show)
+    time_series_model_tests(steps=steps, show=show)
+    optimizers_tests(steps=steps, show=show)
+    test_custom_model(steps=steps, show_plot=show)
     print("\nall models tests passed\n")
 
 if __name__ == "__main__":
-    run_all_tests(show=True)
+    run_all_tests(show=False)

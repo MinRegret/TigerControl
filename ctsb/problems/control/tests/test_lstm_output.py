@@ -1,7 +1,6 @@
 # test the LSTM problem class
 
 import ctsb
-from ctsb.problems.control.lstm_output import LSTM_Output
 from ctsb.utils.random import generate_key
 import jax.numpy as np
 import jax.random as random
@@ -11,7 +10,7 @@ import matplotlib.pyplot as plt
 def test_lstm(steps=1000, show_plot=False, verbose=False):
     T = steps
     n, m, h = 5, 3, 10
-    problem = LSTM_Output()
+    problem = ctsb.problem("LSTM-v0")
     problem.initialize(n, m, h)
     assert problem.T == 0
 

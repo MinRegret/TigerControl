@@ -1,14 +1,13 @@
 # test the crypto problem class
 
 import ctsb
-from ctsb.problems.time_series.crypto import Crypto
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
 
 def test_crypto(steps=1000, show_plot=False, verbose=False):
     T = steps
-    problem = Crypto()
+    problem = ctsb.problem("Crypto-v0")
     problem.initialize()
     assert problem.T == 0
 

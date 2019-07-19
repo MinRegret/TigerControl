@@ -10,7 +10,7 @@ from ctsb.utils.dataset_registry import ctrl_indices, get_ctsb_dir
 from ctsb.error import StepOutOfBounds
 from ctsb.problems.time_series import TimeSeriesProblem
 
-class CtrlIndices(TimeSeriesProblem):
+class ENSO(TimeSeriesProblem):
     """
     Description: Collection of monthly values of control indices useful for predicting
                  La Nina/El Nino. More specifically, the user can choose any of pna, ea,
@@ -94,18 +94,18 @@ class CtrlIndices(TimeSeriesProblem):
         Returns:
             None
         """
-        print(CtrlIndices_help)
+        print(ENSO_help)
 
     def __str__(self):
-        return "<CtrlIndices Problem>"
+        return "<ENSO Problem>"
 
 
 # string to print when calling help() method
-CtrlIndices_help = """
+ENSO_help = """
 
 -------------------- *** --------------------
 
-Id: CtrlIndices-v0
+Id: ENSO-v0
 
 Description: Collection of monthly values of control indices useful for predicting
              La Nina/El Nino. More specifically, the user can choose any of pna, ea,
