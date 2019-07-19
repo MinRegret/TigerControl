@@ -19,7 +19,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'ctsb_docs'
+project = 'ctsb'
 copyright = '2019, alexjyu'
 author = 'alexjyu'
 
@@ -103,7 +103,7 @@ html_static_path = ['nstatic']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'ctsb_docsdoc'
+htmlhelp_basename = 'ctsbdoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -130,7 +130,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'ctsb_docs.tex', 'ctsb\\_docs Documentation',
+    (master_doc, 'ctsb.tex', 'ctsb\\_docs Documentation',
      'alexjyu', 'manual'),
 ]
 
@@ -140,7 +140,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'ctsb_docs', 'ctsb_docs Documentation',
+    (master_doc, 'ctsb', 'ctsb Documentation',
      [author], 1)
 ]
 
@@ -151,8 +151,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'ctsb_docs', 'ctsb_docs Documentation',
-     author, 'ctsb_docs', 'One line description of project.',
+    (master_doc, 'ctsb', 'ctsb Documentation',
+     author, 'ctsb', 'One line description of project.',
      'Miscellaneous'),
 ]
 
