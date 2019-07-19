@@ -151,7 +151,7 @@ class Experiment(object):
             model.update(cur_y)        
         return loss
 
-    def plot_all_problem_results(self):
+    def plot_all_problem_results(self, time=None):
         all_problem_info = []
         for problem, model_to_loss in self.prob_model_to_loss.items():
             # print(problem)
@@ -185,9 +185,12 @@ class Experiment(object):
                 ax[i].set_ylabel("loss")
 
         fig.tight_layout()
-        plt.show()
-        '''        plt.pause(5)'''
-        '''plt.close()        '''
+        if time:
+            plt.show(block=False)
+            plt.pause(time)
+            plt.close()
+        else:
+            plt.show()
 
     def get_prob_model_to_loss(self):
         return self.prob_model_to_loss
