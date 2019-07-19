@@ -118,16 +118,16 @@ class Experiment(object):
             cur_x = cur_y
             model.update(cur_y)        
         return loss
-    
+    '''
     def run_experiment(self, problem, obs, model):
-        '''
+        
         Descripton:
             Runs all experiments for specified number of timesteps.
         Args:
             problem (instance of ctsb.Problem): initialized problem
             obs (initial observation): initial observation
             model (instance of ctsb.Model): initialized model
-        '''
+        
         is_control_problem = (inspect.getmro(problem.__class__))[1] == ControlProblem
         is_control_model = (inspect.getmro(model.__class__))[1] == ControlModel
         assert ((is_control_problem and is_control_model) or (not is_control_problem and not is_control_model))
@@ -149,7 +149,7 @@ class Experiment(object):
             cur_loss = self.loss(cur_y, model.predict(cur_x))
             loss.append(cur_loss)
             model.update(cur_y)        
-        return loss
+        return loss'''
 
     def plot_all_problem_results(self, time=None):
         all_problem_info = []
