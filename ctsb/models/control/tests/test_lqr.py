@@ -71,7 +71,8 @@ def test_lqr(steps=10, show_plot=True):
     if show_plot:
         plt.title("LQR")
         plt.legend()
-        plt.show()
+        plt.show(block=False)
+        plt.pause(3)
         plt.close()
 
     print("test_lqr passed")

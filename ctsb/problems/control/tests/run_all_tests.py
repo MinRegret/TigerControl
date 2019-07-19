@@ -5,6 +5,9 @@ from ctsb.problems.control.tests.test_cartpole import test_cartpole
 from ctsb.problems.control.tests.test_cartpole_double import test_cartpole_double
 from ctsb.problems.control.tests.test_cartpole_swingup import test_cartpole_swingup
 from ctsb.problems.control.tests.test_simulator_wrapper import test_simulator_wrapper
+from ctsb.problems.control.tests.test_kuka_objects import test_kuka_objects
+from ctsb.problems.control.tests.test_kuka_diverse_objects import test_kuka_diverse_objects
+
 
 def run_all_tests(steps=1000, show=False):
     print("\nrunning all control problems tests...\n")
@@ -16,6 +19,8 @@ def run_all_tests(steps=1000, show=False):
     test_cartpole(verbose=show)
     test_cartpole_swingup(verbose=show)
     test_cartpole_double(verbose=show)
+    test_kuka_objects(verbose=show)
+    test_kuka_diverse_objects(verbose=show)
     test_simulator_wrapper(verbose=show)
     print("\nall pybullet problems tests passed\n")
   

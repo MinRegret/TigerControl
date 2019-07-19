@@ -7,7 +7,7 @@ from ctsb.problems.control import ControlProblem
 from ctsb.problems.custom import register_custom_problem, CustomProblem
 
 
-# ---------- Control ----------
+# ---------- PyBullet ----------
 
 
 problem_register(
@@ -23,6 +23,16 @@ problem_register(
 problem_register(
     id='CartPoleDouble-v0',
     entry_point='ctsb.problems.control.pybullet:CartPoleDouble'
+)
+
+problem_register(
+    id='Kuka-v0',
+    entry_point='ctsb.problems.control.pybullet:Kuka'
+)
+
+problem_register(
+    id='KukaDiverse-v0',
+    entry_point='ctsb.problems.control.pybullet:KukaDiverse'
 )
 
 
@@ -74,7 +84,12 @@ problem_register(
 )
 
 problem_register(
-    id='CtrlIndices-v0',
-    entry_point='ctsb.problems.time_series:CtrlIndices',
+    id='Unemployment-v0',
+    entry_point='ctsb.problems.time_series:Unemployment',
+)
+
+problem_register(
+    id='ENSO-v0',
+    entry_point='ctsb.problems.time_series:ENSO',
 )
 

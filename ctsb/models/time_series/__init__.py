@@ -4,7 +4,7 @@ from ctsb.models.time_series.time_series_model import TimeSeriesModel
 from ctsb.models.time_series.autoregressor import AutoRegressor
 from ctsb.models.time_series.last_value import LastValue
 from ctsb.models.time_series.predict_zero import PredictZero
-from ctsb.models.time_series.ArmaOgd import ArmaOgd
-from ctsb.models.time_series.Arma_adagrad import ArmaAdaGrad
+from ctsb.models.time_series.arma_ogd import ArmaOgd
+from ctsb.models.time_series.arma_adagrad import ArmaAdaGrad
 from ctsb.models.time_series.rnn import RNN
 from ctsb.models.time_series.lstm import LSTM

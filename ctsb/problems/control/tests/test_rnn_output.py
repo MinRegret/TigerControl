@@ -4,7 +4,6 @@ import jax.numpy as np
 import jax.random as random
 import matplotlib.pyplot as plt
 import ctsb
-from ctsb.problems.control.rnn_output import RNN_Output
 from ctsb.utils.random import generate_key
 
 
@@ -12,7 +11,7 @@ from ctsb.utils.random import generate_key
 def test_rnn(steps=1000, show_plot=False, verbose=False):
     T = steps
     n, m = 5, 3
-    problem = RNN_Output()
+    problem = ctsb.problem("RNN-v0")
     problem.initialize(n, m)
     assert problem.T == 0
 

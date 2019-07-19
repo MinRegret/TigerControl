@@ -1,16 +1,9 @@
-"""Runs a random policy for the random object KukaDiverseObjectEnv.
+"""Runs a random policy for the random object KukaObjectEnv.
 """
 
 import os, inspect
 import numpy as np
-
-# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-# parentdir = os.path.dirname(os.path.dirname(currentdir))
-# os.sys.path.insert(0, parentdir)
-
 import gym
-from ctsb.problems.control.pybullet.kuka_diverse_object import KukaDiverseObject
-# from pybullet_envs.bullet.kuka_diverse_object_gym_env import KukaDiverseObjectEnv
 from gym import spaces
 
 
@@ -36,9 +29,9 @@ class ContinuousDownwardBiasPolicy(object):
         return [dx, dy, dz, da, 0.5]
 
 
-def test_kuka_diverse_object(show=False):
+def test_kuka(show=False):
 
-    problem = KukaDiverseObject()
+    problem = ctsb.problem("Kuka-v0")
     obs = problem.initialize()
     policy = ContinuousDownwardBiasPolicy()
 
@@ -55,5 +48,5 @@ def test_kuka_diverse_object(show=False):
 
 
 if __name__ == '__main__':
-    test_kuka_diverse_object()
+    test_kuka()
 
