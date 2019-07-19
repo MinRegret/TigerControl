@@ -130,7 +130,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'ctsb.tex', 'ctsb\\_docs Documentation',
+    (master_doc, 'ctsb.tex', 'ctsb\\ Documentation',
      'alexjyu', 'manual'),
 ]
 
