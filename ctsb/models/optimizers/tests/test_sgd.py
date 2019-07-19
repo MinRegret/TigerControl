@@ -14,6 +14,7 @@ def test_sgd(time=1, show=False):
     exp.run_all_experiments(time_steps=3000)
     if show:
         exp.plot_all_problem_results(time=time)
+    print("test_sgd passed")
 
 if __name__ == "__main__":
     test_sgd(time=3)

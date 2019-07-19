@@ -14,6 +14,7 @@ def test_ogd(time=3, show=False):
     exp.run_all_experiments(time_steps=1000)
     if show:
         exp.plot_all_problem_results(time=time)
+    print("test_ogd passed")
 
 if __name__ == "__main__":
     test_ogd(time=3)
