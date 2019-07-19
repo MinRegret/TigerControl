@@ -12,7 +12,7 @@ class ArmaOgd(ctsb.CustomModel):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, p):
+    def initialize(self, p, optimizer=None, optimizer_params_dict=None, loss=None):
         """
         Description:
             Initializes autoregressive model parameters
@@ -26,6 +26,10 @@ class ArmaOgd(ctsb.CustomModel):
         self.lr = 1
         self.t = 1
         self.max_norm = 1
+        self.optimizer = optimizer(pred=self.predict, 
+                                   loss=loss, 
+                                   learning_rate=self.lr, 
+                                   params_dict={'t':self.t, 'past':self.past, 'max_norm':self.max_norm})
 
     def predict(self, x):
         """
@@ -45,6 +49,9 @@ class ArmaOgd(ctsb.CustomModel):
         """ and predict"""
         return np.dot(self.params, self.past)
 
+    def update(self, y, loss=None):
+        self.params = self.optimizer.update(self.params, None, y, {'past': self.past})
+    '''
     def update(self, y, loss = None):
         """
         Description:
@@ -65,6 +72,7 @@ class ArmaOgd(ctsb.CustomModel):
         self.lr = 1 / (self.max_norm * np.sqrt(self.t))
         self.params = self.params - self.lr * grad 
         return
+    '''
 
 
     def help(self):
