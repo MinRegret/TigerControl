@@ -1,14 +1,13 @@
 # test the Random problem class
 
 import ctsb
-from ctsb.problems.time_series.random import Random
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
 
 def test_random(steps=1000, show_plot=False):
     T = steps
-    problem = Random()
+    problem = ctsb.problem("Random-v0")
     problem.initialize()
     assert problem.T == 0
 

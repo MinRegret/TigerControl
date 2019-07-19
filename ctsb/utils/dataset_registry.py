@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 from ctsb.utils.download_tools import *
 
+
 def to_datetime(date, time):
     """
     Description:
@@ -43,6 +44,53 @@ def datetime_to_daysElapsed(cur_datetime, base_datetime):
     time_to_days = (time_delta.seconds)/(24 * 60 * 60)
     return time_delta.days + time_to_days
 
+
+def unemployment(verbose=True):
+    """
+    Description:
+        Checks if unemployment data exists, downloads if not.
+
+        Dataset credits: https://fred.stlouisfed.org/series/UNRATE, 
+        Federal Reserve Bank of St. Louis.
+    Args:
+        verbose (boolean): Specifies if download progress should be printed
+    Returns:
+        Dataframe containing Unemployment data
+    """
+
+    import datetime
+    from urllib.request import urlretrieve
+    ctsb_dir = get_ctsb_dir()
+    path_csv = os.path.join(ctsb_dir, 'data/unemployment.csv')
+    if os.path.exists(path_csv): # if file exists return csv
+        return pd.read_csv(path_csv)
+
+
+    day = datetime.date.today()
+    for i in range(10): # try downloading 10 times
+        day_string = day.isoformat()
+        url_core = "https://fred.stlouisfed.org/graph/fredgraph.csv?bgcolor=%23e1e9f0&chart_type=line&drp=0&fo=open%20sans&graph_bgcolor=%23ffffff&height=450&mode=fred&recession_bars=on&txtcolor=%23444444&ts=12&tts=12&width=1168&nt=0&thu=0&trc=0&show_legend=yes&show_axis_titles=yes&show_tooltip=yes&id=UNRATE&scale=left&cosd=1948-01-01&coed=2019-06-01&line_color=%234572a7&link_values=false&line_style=solid&mark_type=none&mw=3&lw=2&ost=-99999&oet=99999&mma=0&fml=a&fq=Monthly&fam=avg&fgst=lin&fgsnd=2009-06-01&line_index=1&transformation=lin&vintage_date={}&revision_date={}&nd=1948-01-01"
+        url_csv = url_core.format(day_string, day_string)
+
+        try:
+            urlretrieve(url_csv, path_csv)
+            return pd.read_csv(path_csv)
+        except Exception as e:
+            if verbose:
+                print("date {} download failed: {}".format(day, e))
+
+        day = day - datetime.timedelta(days=1) # try with previous day
+
+    # final attempt
+    try:
+        url_csv = "https://fred.stlouisfed.org/graph/fredgraph.csv?bgcolor=%23e1e9f0&chart_type=line&drp=0&fo=open%20sans&graph_bgcolor=%23ffffff&height=450&mode=fred&recession_bars=on&txtcolor=%23444444&ts=12&tts=12&width=1168&nt=0&thu=0&trc=0&show_legend=yes&show_axis_titles=yes&show_tooltip=yes&id=UNRATE&scale=left&cosd=1948-01-01&coed=2019-06-01&line_color=%234572a7&link_values=false&line_style=solid&mark_type=none&mw=3&lw=2&ost=-99999&oet=99999&mma=0&fml=a&fq=Monthly&fam=avg&fgst=lin&fgsnd=2009-06-01&line_index=1&transformation=lin&vintage_date=2019-07-19&revision_date=2019-07-19&nd=1948-01-01"
+
+        urlretrieve(url_csv, path_csv)
+        return pd.read_csv(path_csv)
+    except Exception as e:
+        raise RuntimeError("Error downloading URL: {}".format(e))
+
+
 def uci_indoor(verbose=True):
     """
     Description:
@@ -58,17 +106,17 @@ def uci_indoor(verbose=True):
     """
 
     ctsb_dir = get_ctsb_dir()
-    url_uci_indoor_zip = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00274/NEW-DATA.zip'
-    path_uci_indoor_zip = os.path.join(ctsb_dir, 'data/uci_indoor.zip')
+    url_population_csv = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00274/NEW-DATA.zip'
+    path_population_csv = os.path.join(ctsb_dir, 'data/uci_indoor.zip')
     path_uci_indoor_txt1 = os.path.join(ctsb_dir, 'data/uci_indoor/NEW-DATA-1.T15.txt')
     path_uci_indoor_csv = os.path.join(ctsb_dir, 'data/uci_indoor.csv')
-    path_uci_indoor_cleaned_csv = os.path.join(ctsb_dir, 'data/uci_indoor_cleaned.csv')
+    path_population_cleaned_csv = os.path.join(ctsb_dir, 'data/uci_indoor_cleaned.csv')
     path_uci_indoor_unzip = os.path.join(ctsb_dir, 'data/uci_indoor')
 
     # check if files have been downloaded before, else download
-    if not os.path.exists(path_uci_indoor_cleaned_csv):
-        download(path_uci_indoor_zip, url_uci_indoor_zip, verbose) # get files from online URL
-        unzip(path_uci_indoor_zip,True)
+    if not os.path.exists(path_population_cleaned_csv):
+        download(path_population_csv, url_population_csv, verbose) # get files from online URL
+        unzip(path_population_csv,True)
         f = open(path_uci_indoor_txt1, 'r')
 
         list_of_vecs = [line.split() for line in f] # clean downloaded data
@@ -77,7 +125,7 @@ def uci_indoor(verbose=True):
         with open(path_uci_indoor_csv, "w") as c:
             writer = csv.writer(c)
             writer.writerows(list_of_vecs)
-        os.remove(path_uci_indoor_zip) # clean up - remove unnecessary files
+        os.remove(path_population_csv) # clean up - remove unnecessary files
         shutil.rmtree(path_uci_indoor_unzip)
         df = pd.read_csv(path_uci_indoor_csv)
         base_datetime = to_datetime(df['1:Date'].iloc[0], df['2:Time'].iloc[0])
@@ -87,7 +135,7 @@ def uci_indoor(verbose=True):
         
         df['24:Day_Of_Week'] = df.apply(uci_datetime_converter, axis=1)
         with open(path_uci_indoor_csv,'r') as csvinput:
-            with open(path_uci_indoor_cleaned_csv, 'w') as csvoutput:
+            with open(path_population_cleaned_csv, 'w') as csvoutput:
                 writer = csv.writer(csvoutput, lineterminator='\n')
                 reader = csv.reader(csvinput)
                 r = 0
@@ -97,8 +145,10 @@ def uci_indoor(verbose=True):
                     appended_csv.append(row)
                     r += 1
                 writer.writerows(appended_csv)
-    df = pd.read_csv(path_uci_indoor_cleaned_csv)
+
+    df = pd.read_csv(path_population_cleaned_csv)
     return df.drop(['1:Date','2:Time'],axis=1)
+
 
 def sp500(verbose=True):
     """
@@ -137,6 +187,7 @@ def sp500(verbose=True):
         os.remove(path_sp500_xls) # clean up - remove unnecessary files
         os.remove(path_sp500_txt)
     return pd.read_csv(path_sp500_csv)
+
 
 def crypto():
     """

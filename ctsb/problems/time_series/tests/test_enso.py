@@ -1,19 +1,20 @@
-# test the S&P 500 problem class
+# test the ENSO problem class
 
 import ctsb
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
 
-def test_sp500(steps=1000, show_plot=False, verbose=False):
+def test_ctrl_indices(steps=1000, show_plot=False, verbose=False):
     T = steps
-    problem = ctsb.problem("SP500-v0")
+    problem = ctsb.problem("ENSO-v0")
     problem.initialize()
     assert problem.T == 0
 
     test_output = []
     for t in range(T):
-        test_output.append(problem.step())
+        x_t, y_t = problem.step()
+        test_output.append(y_t)
 
     assert problem.T == T
     
@@ -22,13 +23,13 @@ def test_sp500(steps=1000, show_plot=False, verbose=False):
         print(info)
     if show_plot:
         plt.plot(test_output)
-        plt.title("S&P 500")
+        plt.title("ONI")
         plt.show(block=False)
         plt.pause(1)
         plt.close()
-    print("test_sp500 passed")
+    print("test_ctrl_indices passed")
     return
 
 
 if __name__=="__main__":
-    test_sp500()
+    test_ctrl_indices(show_plot=True)

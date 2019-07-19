@@ -1,10 +1,9 @@
-"""
-Runs a random policy for the random object KukaDiverseObjectEnv.
+"""Runs a random policy for the random object KukaDiverseObjectEnv.
 """
 
+import os, inspect
 import numpy as np
 import gym
-from pybullet_envs.bullet.kuka_diverse_object_gym_env import KukaDiverseObjectEnv
 from gym import spaces
 
 
@@ -27,23 +26,27 @@ class ContinuousDownwardBiasPolicy(object):
         dx, dy, dz, da, close = self._action_space.sample()
         if np.random.random() < self._height_hack_prob:
             dz = -1
-        return [dx, dy, dz, da, 0]
+        return [dx, dy, dz, da, 0.5]
 
 
-def main():
+def test_kuka_diverse(show=False):
 
-    env = KukaDiverseObjectEnv(renders=True, isDiscrete=False)
+    problem = ctsb.problem("KukaDiverse-v0")
+    obs = problem.initialize()
     policy = ContinuousDownwardBiasPolicy()
 
     while True:
-        done = False
+        done =  False
         episode_rew = 0
         while not done:
-            env.render(mode='human')
+            if show:
+                problem.render(mode='human')
             act = policy.sample_action(obs, .1)
-            obs, rew, done, _ = env.step([0, 0, 0, 0, 0])
+            obs, rew, done, _ = problem.step(act)
             episode_rew += rew
+        print("Episode reward", episode_rew)
 
 
 if __name__ == '__main__':
-    main()
+    test_kuka_diverse()
+

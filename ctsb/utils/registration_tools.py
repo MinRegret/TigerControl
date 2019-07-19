@@ -1,7 +1,7 @@
 import re
 import importlib
 import warnings
-
+from difflib import get_close_matches
 from ctsb import error
 
 # This format is true today, but it's *not* an official spec.
@@ -91,6 +91,7 @@ class Registry(object):
     def __init__(self, regexp):
         self.specs = {}
         self.regexp = regexp
+        self.custom = {}
 
     def make(self, path, **kwargs):
         """
@@ -100,6 +101,10 @@ class Registry(object):
         Returns:
             object instance
         """
+
+        if path in self.custom:
+            return self.custom[path]()
+
         spec = self.spec(path)
         obj = spec.make(**kwargs)
         return obj
@@ -109,7 +114,7 @@ class Registry(object):
         Returns:
             Keys of specifications.
         """
-        return list(self.specs.keys())
+        return list(self.specs.keys()) + list(self.custom.keys())
 
     def all(self):
         """
@@ -137,7 +142,10 @@ class Registry(object):
 
         match = self.regexp.search(id)
         if not match:
-            raise error.Error('Attempted to look up malformed {} ID: {}. (Currently all IDs must be of the form {}.)'.format(self, id.encode('utf-8'), self.regexp.pattern))
+            closest = get_close_matches(id, self.list_ids(), n=1)
+            if closest:
+                raise error.UnregisteredObject('No registered {} with ID: {}, did you mean {}?'.format(self, id, closest[0]))
+            raise error.Error('Attempted to look up malformed {} ID: {}. (All IDs must be of the form {}.)'.format(self, id.encode('utf-8'), self.regexp.pattern))
 
         try:
             return self.specs[id]
@@ -150,6 +158,9 @@ class Registry(object):
             if matching_objects:
                 raise error.DeprecatedObject('{} with ID {} not found (valid versions include {})'.format(self, id, matching_objects))
             else:
+                closest = get_close_matches(id, self.list_ids(), n=1)
+                if closest:
+                    raise error.UnregisteredObject('No registered {} with ID: {}, did you mean {}?'.format(self, id, closest[0]))
                 raise error.UnregisteredObject('No registered {} with ID: {}'.format(self, id))
 
     def register(self, id, **kwargs):
@@ -162,5 +173,10 @@ class Registry(object):
         if id in self.specs:
             raise error.Error('Cannot re-register ID {} for {}'.format(id, self))
         self.specs[id] = Spec(id, self.regexp, **kwargs)
+
+    # register a custom model class
+    def register_custom(self, id, custom_class):
+        self.custom[id] = custom_class
+
 
 

@@ -30,7 +30,7 @@ def test_kalman_filter(steps=1000, show_plot=True):
         plt.plot(results)
         plt.title("KalmanFilter model on constant signal")
         plt.show(block=False)
-        plt.pause(1)
+        plt.pause(3)
         plt.close()
     print("test_kalman_filter passed")
     return

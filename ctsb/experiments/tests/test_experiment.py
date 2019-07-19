@@ -1,6 +1,6 @@
 
 import ctsb
-from ctsb.utils.experiment import Experiment
+from ctsb.experiments.core import Experiment
 import jax.numpy as np
 import matplotlib.pyplot as plt
 import time
@@ -9,7 +9,7 @@ from memory_profiler import memory_usage
 
 # run all experiment tests
 def test_experiment(steps=1000, show=False):
-    # test_experiment_time_series(steps=steps, verbose=show)
+    test_experiment_time_series(steps=steps, verbose=show)
     test_experiment_regressor(steps=steps, verbose=show)
     print("test_experiment passed")
 
@@ -20,7 +20,7 @@ def test_experiment_regressor(steps=1000, verbose=False):
     model_to_params = {'RNN': {'n': 22, 'm': 1}}
     exp.initialize(MSE, problem_to_params, model_to_params)
     exp.run_all_experiments()
-    exp.plot_all_problem_results()
+    exp.plot_all_problem_results(time=3.0)
 
 def test_experiment_time_series(steps=1000, verbose=False):
     # test without problem_to_models
@@ -37,7 +37,7 @@ def test_experiment_time_series(steps=1000, verbose=False):
     end = time.time()
     if verbose:
         print(end - start)
-        exp.plot_all_problem_results()
+        exp.plot_all_problem_results(time=3.0)
         exp.get_performance_metrics()
         print('Memory usage (in chunks of .1 seconds): %s' % mem_usage)
         print('Maximum memory usage: %s' % max(mem_usage))

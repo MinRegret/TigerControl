@@ -5,6 +5,8 @@ Run all tests for the CTSB framework
 from ctsb.utils.tests.run_all_tests import run_all_tests as utils_tests
 from ctsb.problems.tests.run_all_tests import run_all_tests as problems_tests
 from ctsb.models.tests.run_all_tests import run_all_tests as models_tests
+from ctsb.experiments.tests.run_all_tests import run_all_tests as experiments_tests
+from ctsb.tests.test_ctsb_functionality import test_ctsb_functionality
 
 # run all sub-level tests
 def run_all_tests(show_results=False):
@@ -14,6 +16,8 @@ def run_all_tests(show_results=False):
     utils_tests(show=show_results)
     problems_tests(show=show_results)
     models_tests(show=show_results)
+    experiments_tests(show=show_results)
+    test_ctsb_functionality()
 
     print("\n----- Tests done -----\n")
 

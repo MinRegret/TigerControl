@@ -35,37 +35,6 @@ class ModelRegistry(Registry):
     def __str__(self):
         return "<CTSB Model Registry>"
 
-    def __init__(self, regexp):
-        self.specs = {}
-        self.regexp = regexp
-        self.custom = {}
-
-    def make(self, path, **kwargs):
-        """
-        Args: 
-            path(string): id of object in registry
-            kwargs(dict): The kwargs to pass to the object class
-        Returns:
-            object instance
-        """
-        if path in self.custom:
-            return self.custom[path]()
-
-        spec = self.spec(path)
-        obj = spec.make(**kwargs)
-        return obj
-
-    def list_ids(self):
-        """
-        Returns:
-            Keys of specifications.
-        """
-        return list(self.specs.keys()) + list(self.custom.keys())
-        
-    # register a custom model class
-    def register_custom(self, id, custom_class):
-        self.custom[id] = custom_class
-
 
 # Have a global model_registry
 model_registry = ModelRegistry(model_id_re)
