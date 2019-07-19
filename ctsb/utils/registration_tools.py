@@ -91,6 +91,7 @@ class Registry(object):
     def __init__(self, regexp):
         self.specs = {}
         self.regexp = regexp
+        self.custom = {}
 
     def make(self, path, **kwargs):
         """
@@ -100,6 +101,12 @@ class Registry(object):
         Returns:
             object instance
         """
+        if path not in self.custom and path not in self.specs:
+            pass #TODO: fix
+
+        if path in self.custom:
+            return self.custom[path]()
+
         spec = self.spec(path)
         obj = spec.make(**kwargs)
         return obj
@@ -109,7 +116,7 @@ class Registry(object):
         Returns:
             Keys of specifications.
         """
-        return list(self.specs.keys())
+        return list(self.specs.keys()) + list(self.custom.keys())
 
     def all(self):
         """
@@ -162,5 +169,10 @@ class Registry(object):
         if id in self.specs:
             raise error.Error('Cannot re-register ID {} for {}'.format(id, self))
         self.specs[id] = Spec(id, self.regexp, **kwargs)
+
+    # register a custom model class
+    def register_custom(self, id, custom_class):
+        self.custom[id] = custom_class
+
 
 

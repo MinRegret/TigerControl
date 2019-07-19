@@ -41,49 +41,7 @@ class ProblemRegistry(Registry):
     def __str__(self):
         return "<CTSB Problem Registry>"
 
-    def __init__(self, regexp):
-        self.specs = {}
-        self.regexp = regexp
-        self.custom = {}
 
-
-    def make(self, path, **kwargs):
-        """
-        Args: 
-            path(string): id of object in registry
-            kwargs(dict): The kwargs to pass to the object class
-        Returns:
-            object instance
-        """
-        if path in self.custom:
-            return self.custom[path]()
-
-        spec = self.spec(path)
-        obj = spec.make(**kwargs)
-        return obj
-
-    def list_ids(self):
-        """
-        Returns:
-            Keys of specifications.
-        """
-        return list(self.specs.keys()) + list(self.custom.keys())
-        
-
-    def register(self, id, **kwargs):
-        """
-        Populates the specs dict with a map from id to the object instance
-        Args:
-            id(string): id of object in registry
-            kwargs(dict): The kwargs to pass to the object class
-        """
-        if id in self.specs:
-            raise error.Error('Cannot re-register ID {} for {}'.format(id, self))
-        self.specs[id] = Spec(id, self.regexp, **kwargs)
-
-    # register a custom model class
-    def register_custom(self, id, custom_class):
-        self.custom[id] = custom_class
 
 # Have a global problem_registry
 problem_registry = ProblemRegistry(problem_id_re)
