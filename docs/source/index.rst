@@ -3,28 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to ctsb's documentation!
-=====================================
+CTSB reference documentation
+===============================
 
-
-Another simple header
-=====================
-
-Here is some text.::
-	print 'hello'
-	>> hello
-
-Guide
-^^^^^
-
+For an introduction to CTSB, start at the
+`CTSB GitHub page <https://github.com/johnhallman/ctsb>`_.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 3
+   :caption: Contents
 
-   license
-   help
-
+   ctsb
 
 
 Indices and tables
