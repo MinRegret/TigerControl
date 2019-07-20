@@ -33,19 +33,12 @@ Before installing CTSB's dependencies, create a new conda environment in order t
     conda activate name-of-your-environment
 ```
 
-Next, clone the GitHub repository.
+Next, clone the GitHub repository and install the full package.
 
 ```
     git clone https://github.com/johnhallman/ctsb.git
     cd ctsb
-```
-
-Use either pip or pip3 to install the necessary dependencies, and then run setup.
-
-```
-    pip install -r requirements.txt
-    pip install pybullet
-    pip install -e .
+    pip install -e '.[all]'
 ```
 
 Finally, run a demo to verify that the installation was successful!
