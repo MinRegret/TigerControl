@@ -4,7 +4,6 @@ import warnings
 
 from ctsb import error
 from ctsb.utils import Spec, Registry
-import pybullet_envs
 
 # This format is true today, but it's *not* an official spec.
 # [username/](problem-name)-v(version)    problem-name is group 1, version is group 2

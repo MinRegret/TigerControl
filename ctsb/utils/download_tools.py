@@ -5,7 +5,6 @@ import os
 import sys
 import zipfile
 import ctsb
-from urllib import request
 from urllib.error import URLError
 from urllib.request import urlretrieve
 

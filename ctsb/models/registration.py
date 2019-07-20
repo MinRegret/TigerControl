@@ -35,7 +35,6 @@ class ModelRegistry(Registry):
     def __str__(self):
         return "<CTSB Model Registry>"
 
-
 # Have a global model_registry
 model_registry = ModelRegistry(model_id_re)
 
