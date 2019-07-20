@@ -13,38 +13,50 @@ Although there are several machine learning platforms that aid with the implemen
 Installation
 ============
 
-Before installing CTSB and its dependencies, create a new conda environment in order to avoid package conflicts.
+### Quick install (excluding PyBullet)
+
+Use pip or pip3 to obtain a minimal installation of CTSB, which excludes all PyBullet control problems.
+
+```
+    pip install git+https://github.com/johnhallman/ctsb.git
+```
+
+You can now use CTSB in your Python code by calling '''import ctsb''' at the top of your code.
+
+
+### Full install (including PyBullet)
+
+Before installing CTSB's dependencies, create a new conda environment in order to avoid package conflicts.
 
 ```
     conda create -n name-of-your-environment python=3.x
     conda activate name-of-your-environment
 ```
 
-Next, either install CTSB by cloning this GitHub repo if you want to make customizable changes...
+Next, clone the GitHub repository.
 
 ```
     git clone https://github.com/johnhallman/ctsb.git
     cd ctsb
+```
+
+Use either pip or pip3 to install the necessary dependencies, and then run setup.
+
+```
+    pip install -r requirements.txt
+    pip install pybullet
     pip install -e .
-    cd ..
-```
-
-... or install the package directly using pip.
-
-```
-    pip install git+https://github.com/johnhallman/ctsb.git
 ```
 
 Finally, run a demo to verify that the installation was successful!
 
 ```
-    cd ctsb
     python ctsb/problems/tests/test_pendulum.py
 ```
 
 
-Quickstart
-============
+For more information
+====================
 
-To learn more about CTSB and how to incorporate it into your research, check out the Quickstart guide in the ```ctsb/notebooks``` folder.
+To learn more about CTSB and how to incorporate it into your research, check out the Quickstart guide in the ```ctsb/notebooks``` folder. Alternatively, check out our [readthedocs](https://ctsb.readthedocs.io/en/latest/) guide for more information and full APIs.
 
