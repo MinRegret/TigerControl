@@ -13,8 +13,8 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=open('requirements.txt').read().split('\n'),
     extras_require={
-        'all': ['pybullet', 'pybullet_envs']
-            }
+        'all': ['pybullet', 'pybullet_envs'],
+            },
     version=version,
     license='Apache License 2.0',
     description='A control and time-series algorithms benchmarking framework',
