@@ -1,9 +1,9 @@
 """Runs a random policy for the random object KukaObjectEnv.
 """
 
-import os, inspect
+import ctsb
 import numpy as np
-import gym
+import time
 from gym import spaces
 
 
@@ -35,7 +35,8 @@ def test_kuka(show=False):
     obs = problem.initialize()
     policy = ContinuousDownwardBiasPolicy()
 
-    while True:
+    t_start = time.time()
+    while time.time() - t_start < 5:
         done =  False
         episode_rew = 0
         while not done:
@@ -44,7 +45,6 @@ def test_kuka(show=False):
             act = policy.sample_action(obs, .1)
             obs, rew, done, _ = problem.step(act)
             episode_rew += rew
-        print("Episode reward", episode_rew)
 
 
 if __name__ == '__main__':

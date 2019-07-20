@@ -35,6 +35,26 @@ problem_register(
     entry_point='ctsb.problems.control.pybullet:KukaDiverse'
 )
 
+problem_register(
+    id='Minitaur-v0',
+    entry_point='ctsb.problems.control.pybullet:Minitaur'
+)
+
+problem_register(
+    id='HalfCheetah-v0',
+    entry_point='ctsb.problems.control.pybullet:HalfCheetah'
+)
+
+problem_register(
+    id='Ant-v0',
+    entry_point='ctsb.problems.control.pybullet:Ant'
+)
+
+problem_register(
+    id='Humanoid-v0',
+    entry_point='ctsb.problems.control.pybullet:Humanoid'
+)
+
 
 # ---------- Control ----------
 
