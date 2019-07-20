@@ -6,31 +6,11 @@ from ctsb.problems import Problem
 import pybullet as p
 from ctsb.problems.control.pybullet.simulator_wrapper import SimulatorWrapper
 
-# class for online control tests
-class PyBulletProblem(Problem):
-    
-    def __init__(self):
-        self.initialized = False
+# inherits the following methods from SimulatorWrapper:
+# initialize, saveFile, loadFile, getState, loadState, reset, render, step
+# get_observation_space, get_action_space, fork
+class PyBulletProblem(SimulatorWrapper):
 
-    def initiliaze(self):
-        self.initialized = True
-        self.sim = None
-        self.env = None
-
-    def getState(self):
-        return self.sim.getState()
-
-    def loadState(self, id):
-        p.restoreState(stateId=id)
-
-    # disconnect from physics server, end simulation
-    def disconnect(self):
-        p.disconnect()
-    
+    # same as calling fork()
     def get_simulator(self):
-        sim_copy = SimulatorWrapper(self.sim.getEnv())
-        return sim_copy
-
-
-
-
+        return self.fork()

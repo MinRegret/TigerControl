@@ -2,30 +2,47 @@
 import pybullet as p
 
 class SimulatorWrapper(object):
-	def __init__(self, env):
-		self.env = env
 
-	def saveFile(self, filename):
-		p.saveBullet(filename)
+    def __init__(self):
+        self.initialized = False
+        self._env = None
 
-	# load sim state from disk
-	def loadFile(self, name):
-		p.restoreState(fileName = name)
-		self.updateState()
+    def initialize(self, env):
+        self.initialized = True
+        self._env = env
 
-	# save state to memory
-	# keep track of state id
-	def getState(self):
-		stateID = p.saveState()
-		return stateID
+    # state saving and loading methods
+    def saveFile(self, filename):
+        p.saveBullet(filename)
 
-	# load state from memory
-	def loadState(self, ID):
-		p.restoreState(stateId = ID)
-		# self.updateState()
+    def loadFile(self, name):
+        p.restoreState(fileName = name)
+        self.updateState()
 
-	def step(self, action):
-		return self.env.step(action)
+    def getState(self):
+        stateID = p.saveState()
+        return stateID
 
-	def getEnv(self):
-		return self.env
+    def loadState(self, ID):
+        p.restoreState(stateId = ID)
+
+    # gym environment methods
+    def reset(self):
+        return self._env.reset()
+
+    def render(self, mode='human', close=False):
+        self._env.render(mode=mode, close=close)
+
+    def step(self, action):
+        assert self.initialized
+        return self._env.step(action)
+
+    def get_observation_space(self):
+        return self._env.observation_space.shape
+
+    def get_action_space(self):
+        return self._env.action_space.shape
+
+    # return clone of simulator
+    def fork(self):
+        return SimulatorWrapper(self._env)
