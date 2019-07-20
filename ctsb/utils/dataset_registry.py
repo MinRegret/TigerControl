@@ -12,7 +12,7 @@ from ctsb.utils.download_tools import *
 
 
 def to_datetime(date, time):
-    """ Description: Takes a date and a time and converts it to a datetime object.
+    r""" Description: Takes a date and a time and converts it to a datetime object.
     Args:
         date (string): Date in DD/MM/YYYY format
         time (string): Time in hh:mm format
