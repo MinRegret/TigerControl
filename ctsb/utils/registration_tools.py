@@ -105,8 +105,12 @@ class Registry(object):
         if path in self.custom:
             return self.custom[path]()
 
-        spec = self.spec(path)
-        obj = spec.make(**kwargs)
+        try:
+            spec = self.spec(path)
+            obj = spec.make(**kwargs)
+        except ModuleNotFoundError as e:
+            s = "Not all dependencies have been installed. Please check for missing packages. \nFull error: {}".format(path, e)
+            raise error.DependencyNotInstalled(s)
         return obj
 
     def list_ids(self):
