@@ -21,7 +21,7 @@ Use pip or pip3 to obtain a minimal installation of CTSB, which excludes all PyB
     pip install git+https://github.com/johnhallman/ctsb.git
 ```
 
-You can now use CTSB in your Python code by calling '''import ctsb''' at the top of your code.
+You can now use CTSB in your Python code by calling `import ctsb` in your files. 
 
 
 ### Full install (including PyBullet)
