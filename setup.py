@@ -6,13 +6,15 @@ import setuptools
 version = '0.1'
 
 setuptools.setup(
-    # Needed to silence warnings (and to be a worthwhile package)
     name='ctsb',
     url='https://github.com/johnhallman/ctsb',
     author='John Hallman',
     author_email='johnolof@gmail.com',
     packages=setuptools.find_packages(),
     install_requires=open('requirements.txt').read().split('\n'),
+    extras_require={
+        'all': ['pybullet', 'pybullet_envs']
+            }
     version=version,
     license='Apache License 2.0',
     description='A control and time-series algorithms benchmarking framework',
