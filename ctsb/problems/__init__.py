@@ -1,7 +1,7 @@
 # problems init file
 
 from ctsb.problems.core import Problem
-from ctsb.problems.registration import problem_registry, problem_register, problem, problem_spec
+from ctsb.problems.registration import problem_registry, problem_register, problem
 from ctsb.problems.time_series import TimeSeriesProblem
 from ctsb.problems.control import ControlProblem
 from ctsb.problems.custom import register_custom_problem, CustomProblem
