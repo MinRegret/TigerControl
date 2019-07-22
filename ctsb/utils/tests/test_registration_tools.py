@@ -21,14 +21,17 @@ def test_registry():
     regexp = re.compile(r'^([\w:.-]+)-v(\d+)$') # regular expression accepts "string"-v#
     test_registry = Registry(regexp)
 
-    test_registry.register(id='GoodID-v0', entry_point='ctsb.problems.control:Random')
+    test_registry.register(id='GoodID-v0', entry_point='ctsb.problems.time_series:Random')
     try:
-        test_registry.register(id='BadID', entry_point='ctsb.problems.control:Random')
+        test_registry.register(id='BadID', entry_point='ctsb.problems.time_series:Random')
         raise Exception("Registry successfully registered bad ID")
     except error.Error:
         pass
     keys = test_registry.list_ids()
     vals = test_registry.all()
+    obj_class = test_registry.get_class('GoodID-v0')
+    obj_instance = obj_class()
+    return
 
 
 def test_ctsb_problem():
