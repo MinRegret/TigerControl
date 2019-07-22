@@ -11,8 +11,11 @@ class LastValue(TimeSeriesModel):
     Predicts the last value in the time series, i.e. x(t) = x(t-1)
     """
 
+    compatibles = set(['TimeSeries'])
+
     def __init__(self):
         self.initialized = False
+        self.uses_regressors = False
 
     def initialize(self):
         """
@@ -24,6 +27,7 @@ class LastValue(TimeSeriesModel):
             None
         """
         self.initialized = True
+        self.x = 0
 
     def predict(self, x):
         """
@@ -34,9 +38,9 @@ class LastValue(TimeSeriesModel):
         Returns:
             Predicted value for the next time-step
         """
-        return x
+        return self.x
 
-    def update(self, rule=None):
+    def update(self, y):
         """
         Description:
             Takes update rule and adjusts internal parameters
@@ -45,7 +49,7 @@ class LastValue(TimeSeriesModel):
         Returns:
             None
         """
-        return
+        self.x = y
 
     def help(self):
         """

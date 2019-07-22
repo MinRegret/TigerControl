@@ -11,6 +11,8 @@ class LQR(ControlModel):
     Computes optimal set of actions using the Linear Quadratic Regulator
     algorithm.
     """
+    
+    compatibles = set([])
 
     def __init__(self):
         self.initialized = False

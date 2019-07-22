@@ -16,8 +16,11 @@ class RNN(TimeSeriesModel):
     Produces outputs from a randomly initialized recurrent neural network.
     """
 
+    compatibles = set(['TimeSeries'])
+
     def __init__(self):
         self.initialized = False
+        self.uses_regressors = True
 
     def initialize(self, n, m, l = 32, h = 64, optimizer = SGD, loss = mse, lr = 0.003):
         """

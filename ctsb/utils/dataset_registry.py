@@ -12,9 +12,7 @@ from ctsb.utils.download_tools import *
 
 
 def to_datetime(date, time):
-    """
-    Description:
-        Takes a date and a time and converts it to a datetime object.
+    r""" Description: Takes a date and a time and converts it to a datetime object.
     Args:
         date (string): Date in DD/MM/YYYY format
         time (string): Time in hh:mm format
@@ -301,7 +299,7 @@ def ctrl_indices(input_signals, include_month, output_signals, history, timeline
 
     # if we use only one observation
     if(history == 1):
-        X = X.rehshape((effective_length, np.array(input_signals).shape[0] + include_month))
+        X = X.reshape((effective_length, np.array(input_signals).shape[0] + include_month))
 
     # Labels
     y = np.ndarray((effective_length, timeline.shape[0], np.array(output_signals).shape[0]))
