@@ -11,7 +11,7 @@ import csv
 all_metrics = ['mse', 'cross_entropy']
 
 ## no uciindoor-v0 , ctrl indices has some problems##
-all_problems = ['Random-v0', 'ARMA-v0', 'SP500-v0', 'Crypto-v0', 'CtrlIndices-v0']
+all_problems = ['Random-v0', 'ARMA-v0', 'SP500-v0', 'Crypto-v0', 'ENSO-v0']
 
 ####### LSTM AND RNN NOT INCLUDED BECAUSE THEY NEED INPUT SHAPE ###############
 ####### and ArmaAdaGrad is not classified as timeseries & other problems ... ###########
@@ -50,6 +50,7 @@ def recompute():
                 writer = csv.writer(csvfile)
                 for model_id in all_models:
                     print("Getting %s: Running %s on %s" % (metric, problem_id[:-3], model_id))
+                    #loss, time, memory = run_experiment((problem_id, None), (model_id, None), metric, key = key, timesteps = timesteps)
                     try:
                         loss, time, memory = run_experiment((problem_id, None), (model_id, None), metric, key = key, timesteps = timesteps)
                     except:
