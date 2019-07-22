@@ -104,27 +104,27 @@ def uci_indoor(verbose=True):
     """
 
     ctsb_dir = get_ctsb_dir()
-    url_population_csv = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00274/NEW-DATA.zip'
-    path_population_csv = os.path.join(ctsb_dir, 'data/uci_indoor.zip')
+    url_uci_indoor = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00274/NEW-DATA.zip'
+    path_uci_indoor_zip = os.path.join(ctsb_dir, 'data/uci_indoor.zip')
+    path_uci_indoor_unzip = os.path.join(ctsb_dir, 'data/uci_indoor')
     path_uci_indoor_txt1 = os.path.join(ctsb_dir, 'data/uci_indoor/NEW-DATA-1.T15.txt')
     path_uci_indoor_csv = os.path.join(ctsb_dir, 'data/uci_indoor.csv')
-    path_population_cleaned_csv = os.path.join(ctsb_dir, 'data/uci_indoor_cleaned.csv')
-    path_uci_indoor_unzip = os.path.join(ctsb_dir, 'data/uci_indoor')
+    path_uci_indoor_cleaned = os.path.join(ctsb_dir, 'data/uci_indoor_cleaned.csv')
 
     # check if files have been downloaded before, else download
-    if not os.path.exists(path_population_cleaned_csv):
-        download(path_population_csv, url_population_csv, verbose) # get files from online URL
-        unzip(path_population_csv,True)
-        f = open(path_uci_indoor_txt1, 'r')
-
-        list_of_vecs = [line.split() for line in f] # clean downloaded data
-        list_of_vecs[0] = list_of_vecs[0][1:]
-
-        with open(path_uci_indoor_csv, "w") as c:
-            writer = csv.writer(c)
+    if not os.path.exists(path_uci_indoor_cleaned):
+        download(path_uci_indoor_zip, url_uci_indoor, verbose) # get files from online URL
+        unzip(path_uci_indoor_zip)
+        os.remove(path_uci_indoor_zip) # clean up - remove unnecessary files
+        
+        with open(path_uci_indoor_txt1, 'r') as txt_file:
+            list_of_vecs = [line.split() for line in txt_file] # clean downloaded data
+            list_of_vecs[0] = list_of_vecs[0][1:]
+        with open(path_uci_indoor_csv, "w") as csv_file:
+            writer = csv.writer(csv_file)
             writer.writerows(list_of_vecs)
-        os.remove(path_population_csv) # clean up - remove unnecessary files
-        shutil.rmtree(path_uci_indoor_unzip)
+        shutil.rmtree(path_uci_indoor_unzip) # clean up - remove unnecessary files
+
         df = pd.read_csv(path_uci_indoor_csv)
         base_datetime = to_datetime(df['1:Date'].iloc[0], df['2:Time'].iloc[0])
 
@@ -133,7 +133,7 @@ def uci_indoor(verbose=True):
         
         df['24:Day_Of_Week'] = df.apply(uci_datetime_converter, axis=1)
         with open(path_uci_indoor_csv,'r') as csvinput:
-            with open(path_population_cleaned_csv, 'w') as csvoutput:
+            with open(path_uci_indoor_cleaned, 'w') as csvoutput:
                 writer = csv.writer(csvoutput, lineterminator='\n')
                 reader = csv.reader(csvinput)
                 r = 0
@@ -143,9 +143,10 @@ def uci_indoor(verbose=True):
                     appended_csv.append(row)
                     r += 1
                 writer.writerows(appended_csv)
-
-    df = pd.read_csv(path_population_cleaned_csv)
-    return df.drop(['1:Date','2:Time'],axis=1)
+        os.remove(path_uci_indoor_csv)
+        
+    df = pd.read_csv(path_uci_indoor_cleaned) # clean up - remove unnecessary files
+    return df
 
 
 def sp500(verbose=True):
