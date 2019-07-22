@@ -9,7 +9,7 @@ from ctsb.problems.time_series import TimeSeriesProblem
 
 class Random(TimeSeriesProblem):
     """
-    A random sequence of scalar values taken from an i.i.d. normal distribution.
+    Description: A random sequence of scalar values taken from an i.i.d. normal distribution.
     """
 
     compatibles = set(['Random-v0', 'TimeSeries'])
@@ -20,8 +20,7 @@ class Random(TimeSeriesProblem):
 
     def initialize(self):
         """
-        Description:
-            Randomly initialize the hidden dynamics of the system.
+        Description: Randomly initialize the hidden dynamics of the system.
         Args:
             None
         Returns:
@@ -33,8 +32,7 @@ class Random(TimeSeriesProblem):
 
     def step(self):
         """
-        Description:
-            Moves the system dynamics one time-step forward.
+        Description: Moves the system dynamics one time-step forward.
         Args:
             None
         Returns:
@@ -58,8 +56,7 @@ class Random(TimeSeriesProblem):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
         Args:
             None
         Returns:

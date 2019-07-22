@@ -13,7 +13,7 @@ from ctsb.problems.control import ControlProblem
 
 class LDS(ControlProblem):
     """
-    Simulates a linear dynamical system.
+    Description: Simulates a linear dynamical system.
     """
 
     def __init__(self):
@@ -21,8 +21,7 @@ class LDS(ControlProblem):
 
     def initialize(self, n, m, d, noise=1.0):
         """
-        Description:
-            Randomly initialize the hidden dynamics of the system.
+        Description: Randomly initialize the hidden dynamics of the system.
         Args:
             n (int): Input dimension.
             m (int): Observation/output dimension.
@@ -66,8 +65,7 @@ class LDS(ControlProblem):
 
     def step(self, u):
         """
-        Description:
-            Moves the system dynamics one time-step forward.
+        Description: Moves the system dynamics one time-step forward.
         Args:
             u (numpy.ndarray): control input, an n-dimensional real-valued vector.
         Returns:
@@ -82,8 +80,7 @@ class LDS(ControlProblem):
 
     def hidden(self):
         """
-        Description:
-            Return the hidden state of the system.
+        Description: Return the hidden state of the system.
         Args:
             None
         Returns:
@@ -94,8 +91,7 @@ class LDS(ControlProblem):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
         Args:
             None
         Returns:

@@ -4,15 +4,19 @@
 from ctsb import error
 from ctsb.models import Model
 
-
-# class for implementing algorithms with enforced modularity
 class TimeSeriesModel(Model):
-
+    ''' Description: class for implementing algorithms with enforced modularity '''
     def __init__(self):
         pass
 
     def initialize(self, predict=lambda params, x: x, params=None, update=lambda params, x: params):
-        # initializes model parameters
+        ''' Description: initializes model parameters 
+        
+            Args: 
+                predict : predict function
+                params : hyperparameters of the model
+                update : update function
+        '''
         assert type(predict) == type(lambda x: None) # class function
         assert type(update) == type(lambda x: None) # class function
 

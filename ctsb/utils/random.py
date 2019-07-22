@@ -9,8 +9,8 @@ import ctsb
 
 def set_key(key=None):
     '''
-    Descripton:
-        Fix global random key to ensure reproducibility of results.
+    Descripton: Fix global random key to ensure reproducibility of results.
+
     Args:
         key (int): key that determines reproducible output
     '''
@@ -21,8 +21,8 @@ def set_key(key=None):
 
 def generate_key():
     '''
-    Descripton:
-        Generate random key.
+    Descripton: Generate random key.
+
     Returns:
         Random random key
     '''
@@ -32,8 +32,8 @@ def generate_key():
 
 def get_global_key():
     '''
-    Descripton:
-        Get current global random key.
+    Descripton: Get current global random key.
+
     Returns:
         Current global random key
     '''

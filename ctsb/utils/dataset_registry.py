@@ -12,7 +12,8 @@ from ctsb.utils.download_tools import *
 
 
 def to_datetime(date, time):
-    r""" Description: Takes a date and a time and converts it to a datetime object.
+    """ 
+    Description: Takes a date and a time and converts it to a datetime object.
     Args:
         date (string): Date in DD/MM/YYYY format
         time (string): Time in hh:mm format
@@ -32,6 +33,7 @@ def datetime_to_daysElapsed(cur_datetime, base_datetime):
     """
     Description:
         Computes the number of days elapsed since 'base' date.
+
     Args:
         cur_datetime (datetime): Current date and time
         base_datetime (datetime): Base date and time
@@ -42,14 +44,15 @@ def datetime_to_daysElapsed(cur_datetime, base_datetime):
     time_to_days = (time_delta.seconds)/(24 * 60 * 60)
     return time_delta.days + time_to_days
 
+# Dataset credits: https://fred.stlouisfed.org/series/UNRATE, 
+# Federal Reserve Bank of St. Louis.
 
 def unemployment(verbose=True):
-    """
-    Description:
-        Checks if unemployment data exists, downloads if not.
-
+    """ 
+    Description: Checks if unemployment data exists, downloads if not.
         Dataset credits: https://fred.stlouisfed.org/series/UNRATE, 
         Federal Reserve Bank of St. Louis.
+
     Args:
         verbose (boolean): Specifies if download progress should be printed
     Returns:
@@ -91,12 +94,11 @@ def unemployment(verbose=True):
 
 def uci_indoor(verbose=True):
     """
-    Description:
-        Checks if uci_indoor data exists, downloads if not.
-
+    Description: Checks if uci_indoor data exists, downloads if not. 
         Dataset credits: F. Zamora-Martínez, P. Romeu, P. Botella-Rocamora, J. Pardo, 
         On-line learning of indoor temperature forecasting models towards energy efficiency,
         Energy and Buildings, Volume 83, November 2014, Pages 162-172, ISSN 0378-7788
+
     Args:
         verbose (boolean): Specifies if download progress should be printed
     Returns:
@@ -151,8 +153,8 @@ def uci_indoor(verbose=True):
 
 def sp500(verbose=True):
     """
-    Description:
-        Checks if S&P500 data exists, downloads if not.
+    Description: Checks if S&P500 data exists, downloads if not.
+
     Args:
         verbose (boolean): Specifies if download progress should be printed
     Returns:
@@ -190,8 +192,8 @@ def sp500(verbose=True):
 
 def crypto():
     """
-    Description:
-        Checks if cryptocurrency data exists, downloads if not.
+    Description: Checks if cryptocurrency data exists, downloads if not.
+
     Args:
         None
     Returns:
@@ -210,8 +212,8 @@ def crypto():
 
 def ctrl_indices(input_signals, include_month, output_signals, history, timeline):
     """
-    Description:
-        Transforms the ctrl_indices dataset into a format suitable for online learning.
+    Description: Transforms the ctrl_indices dataset into a format suitable for online learning.
+
     Args:
         input_signals (list of strings): signals used for prediction
         include_month (boolean): True if the month should be used as a feature,

@@ -13,7 +13,7 @@ from ctsb.models.optimizers.losses import mse
 
 class RNN(TimeSeriesModel):
     """
-    Produces outputs from a randomly initialized recurrent neural network.
+    Description: Produces outputs from a randomly initialized recurrent neural network.
     """
 
     compatibles = set(['TimeSeries'])
@@ -24,8 +24,7 @@ class RNN(TimeSeriesModel):
 
     def initialize(self, n, m, l = 32, h = 64, optimizer = SGD, loss = mse, lr = 0.003):
         """
-        Description:
-            Randomly initialize the RNN.
+        Description: Randomly initialize the RNN.
         Args:
             n (int): Input dimension.
             m (int): Observation/output dimension.
@@ -76,8 +75,7 @@ class RNN(TimeSeriesModel):
 
     def predict(self, x):
         """
-        Description:
-            Predict next value given observation
+        Description: Predict next value given observation
         Args:
             x (int/numpy.ndarray): Observation
         Returns:
@@ -92,8 +90,7 @@ class RNN(TimeSeriesModel):
 
     def update(self, y):
         """
-        Description:
-            Updates parameters
+        Description: Updates parameters
         Args:
             y (int/numpy.ndarray): True value at current time-step
         Returns:
@@ -104,8 +101,7 @@ class RNN(TimeSeriesModel):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
         Args:
             None
         Returns:

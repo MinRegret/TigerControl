@@ -7,7 +7,7 @@ from ctsb.models.optimizers.losses import mse
 
 class ArmaAdaGrad(ctsb.CustomModel):
     """
-    Implements the equivalent of an AR(p) model - predicts a linear
+    Description: Implements the equivalent of an AR(p) model - predicts a linear
     combination of the previous p observed values in a time-series
     """
 
@@ -19,8 +19,7 @@ class ArmaAdaGrad(ctsb.CustomModel):
 
     def initialize(self, p = 3, optimizer=None, optimizer_params_dict=None, loss=None):
         """
-        Description:
-            Initializes autoregressive model parameters
+        Description: Initializes autoregressive model parameters
         Args:
             p (int): Length of history used for prediction
         """
@@ -38,8 +37,7 @@ class ArmaAdaGrad(ctsb.CustomModel):
 
     def predict(self, x):
         """
-        Description:
-            Predict next value given present value
+        Description: Predict next value given present value
         Args:
             x (int/numpy.ndarray):  Value at current time-step
         Returns:

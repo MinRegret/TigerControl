@@ -8,7 +8,7 @@ from ctsb.models.time_series import TimeSeriesModel
 
 class LastValue(TimeSeriesModel):
     """
-    Predicts the last value in the time series, i.e. x(t) = x(t-1)
+    Description: Predicts the last value in the time series, i.e. x(t) = x(t-1)
     """
 
     compatibles = set(['TimeSeries'])
@@ -19,8 +19,7 @@ class LastValue(TimeSeriesModel):
 
     def initialize(self):
         """
-        Description:
-            Initialize the (non-existent) hidden dynamics of the model
+        Description: Initialize the (non-existent) hidden dynamics of the model
         Args:
             None
         Returns:
@@ -31,8 +30,7 @@ class LastValue(TimeSeriesModel):
 
     def predict(self, x):
         """
-        Description:
-            Takes input observation and returns next prediction value
+        Description: Takes input observation and returns next prediction value
         Args:
             x (float/numpy.ndarray): value at current time-step
         Returns:
@@ -42,8 +40,7 @@ class LastValue(TimeSeriesModel):
 
     def update(self, y):
         """
-        Description:
-            Takes update rule and adjusts internal parameters
+        Description: Takes update rule and adjusts internal parameters
         Args:
             rule (function): rule with which to alter parameters
         Returns:
@@ -53,8 +50,7 @@ class LastValue(TimeSeriesModel):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods
+        Description: Prints information about this class and its methods
         Args:
             None
         Returns:

@@ -13,10 +13,10 @@ from ctsb.problems.time_series import TimeSeriesProblem
 class ENSO(TimeSeriesProblem):
     """
     Description: Collection of monthly values of control indices useful for predicting
-                 La Nina/El Nino. More specifically, the user can choose any of pna, ea,
-                 wa, wp, eu, soi, esoi, nino12, nino34, nino4, oni of nino34 (useful for
-                 La Nino/El Nino identification) to be used as input and/or output in
-                 the problem instance.
+    La Nina/El Nino. More specifically, the user can choose any of pna, ea,
+    wa, wp, eu, soi, esoi, nino12, nino34, nino4, oni of nino34 (useful for
+    La Nino/El Nino identification) to be used as input and/or output in
+    the problem instance.
     """
 
     def __init__(self):
@@ -25,10 +25,8 @@ class ENSO(TimeSeriesProblem):
 
     def initialize(self, input_signals = ['pna', 'ea', 'wa', 'wp', 'eu', 'soi', 'esoi', 'nino12', 'nino34', 'nino4'], include_month = False, output_signals = ['oni'], history = 1, timeline = 1):
         """
-        Description:
-            Initializes the ctrl_indices dataset to a format suited to the online learning setting.
-            By default, the current values of all available signals are used to predict the next
-            value of nino34's oni. 
+        Description: Initializes the ctrl_indices dataset to a format suited to the online learning setting.
+        By default, the current values of all available signals are used to predict the next value of nino34's oni. 
         Args:
             input_signals (list of strings): signals used for prediction
             include_month (boolean): True if the month should be used as a feature,
@@ -51,8 +49,7 @@ class ENSO(TimeSeriesProblem):
 
     def step(self):
         """
-        Description:
-            Moves time forward by one month and returns the corresponding observation and label.
+        Description: Moves time forward by one month and returns the corresponding observation and label.
         Args:
             None
         Returns:
@@ -69,8 +66,7 @@ class ENSO(TimeSeriesProblem):
 
     def hidden(self):
         """
-        Description:
-            Return the timestep corresponding to the last (observation, label) pair returned.
+        Description: Return the timestep corresponding to the last (observation, label) pair returned.
         Args:
             None
         Returns:
@@ -88,8 +84,7 @@ class ENSO(TimeSeriesProblem):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
         Args:
             None
         Returns:

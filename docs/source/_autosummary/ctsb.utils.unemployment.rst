@@ -1,6 +1,6 @@
-ctsb.utils.to\_datetime
+ctsb.utils.unemployment
 =======================
 
 .. currentmodule:: ctsb.utils
 
-.. autofunction:: to_datetime
+.. autofunction:: unemployment

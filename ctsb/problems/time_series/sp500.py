@@ -13,7 +13,7 @@ from ctsb.problems.time_series import TimeSeriesProblem
 class SP500(TimeSeriesProblem):
     """
     Description: Outputs the daily opening price of the S&P 500 stock market index 
-        from January 3, 1986 to June 29, 2018.
+    from January 3, 1986 to June 29, 2018.
     """
 
     compatibles = set(['SP500-v0', 'TimeSeries'])
@@ -25,8 +25,7 @@ class SP500(TimeSeriesProblem):
 
     def initialize(self):
         """
-        Description:
-            Check if data exists, else download, clean, and setup.
+        Description: Check if data exists, else download, clean, and setup.
         Args:
             None
         Returns:
@@ -42,8 +41,7 @@ class SP500(TimeSeriesProblem):
 
     def step(self):
         """
-        Description:
-            Moves time forward by one day and returns value of the stock index
+        Description: Moves time forward by one day and returns value of the stock index
         Args:
             None
         Returns:
@@ -57,8 +55,7 @@ class SP500(TimeSeriesProblem):
 
     def hidden(self):
         """
-        Description:
-            Return the date corresponding to the last value of the S&P 500 that was returned
+        Description: Return the date corresponding to the last value of the S&P 500 that was returned
         Args:
             None
         Returns:
@@ -75,8 +72,7 @@ class SP500(TimeSeriesProblem):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
         Args:
             None
         Returns:

@@ -8,7 +8,7 @@ from ctsb.models.control import ControlModel
 
 class KalmanFilter(ControlModel):
     """
-    Kalman Filter adjusts measurements of a signal based on prior states and
+    Description: Kalman Filter adjusts measurements of a signal based on prior states and
     knowledge of intrinsic equations of the system.
 
     More precisely, we know that the signal at time t is a linear combination
@@ -43,9 +43,8 @@ class KalmanFilter(ControlModel):
 
     def to_ndarray(self, x):
         """
-        Description:
-            If x is a scalar, transform it to a (1, 1) numpy.ndarray;
-            otherwise, leave it unchanged.
+        Description: If x is a scalar, transform it to a (1, 1) numpy.ndarray;
+        otherwise, leave it unchanged.
         Args:
             x (float/numpy.ndarray)
         Returns:

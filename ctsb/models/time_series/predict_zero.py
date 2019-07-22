@@ -8,7 +8,7 @@ from ctsb.models.time_series import TimeSeriesModel
 
 class PredictZero(TimeSeriesModel):
     """
-    Predicts the next value in the time series to be 0, i.e. x(t) = 0
+    Description: Predicts the next value in the time series to be 0, i.e. x(t) = 0
     """
 
     compatibles = set(['TimeSeries'])
@@ -19,8 +19,7 @@ class PredictZero(TimeSeriesModel):
 
     def initialize(self):
         """
-        Description:
-            Initialize the (non-existent) hidden dynamics of the model
+        Description: Initialize the (non-existent) hidden dynamics of the model
         Args:
             None
         Returns:
@@ -30,8 +29,7 @@ class PredictZero(TimeSeriesModel):
 
     def predict(self, x):
         """
-        Description:
-            Takes input observation and returns next prediction value
+        Description: Takes input observation and returns next prediction value
         Args:
             x (float/numpy.ndarray): value at current time-step
         Returns:
@@ -41,8 +39,7 @@ class PredictZero(TimeSeriesModel):
 
     def update(self, rule=None):
         """
-        Description:
-            Takes update rule and adjusts internal parameters
+        Description: Takes update rule and adjusts internal parameters
         Args:
             rule (function): rule with which to alter parameters
         Returns:
@@ -52,8 +49,7 @@ class PredictZero(TimeSeriesModel):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods
+        Description: Prints information about this class and its methods
         Args:
             None
         Returns:

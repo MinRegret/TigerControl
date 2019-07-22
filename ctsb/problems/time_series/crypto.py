@@ -14,8 +14,7 @@ from ctsb.problems.time_series import TimeSeriesProblem
 
 class Crypto(TimeSeriesProblem):
     """
-    Description: Outputs the daily price of bitcoin
-        from 2013-04-28 to 2018-02-10
+    Description: Outputs the daily price of bitcoin from 2013-04-28 to 2018-02-10
     """
     
     compatibles = set(['Crypto-v0', 'TimeSeries'])
@@ -26,8 +25,7 @@ class Crypto(TimeSeriesProblem):
 
     def initialize(self):
         """
-        Description:
-            Check if data exists, else download, clean, and setup.
+        Description: Check if data exists, else download, clean, and setup.
         Args:
             None
         Returns:
@@ -42,8 +40,7 @@ class Crypto(TimeSeriesProblem):
 
     def step(self):
         """
-        Description:
-            Moves time forward by one day and returns price of the bitcoin
+        Description: Moves time forward by one day and returns price of the bitcoin
         Args:
             None
         Returns:
@@ -57,8 +54,7 @@ class Crypto(TimeSeriesProblem):
 
     def hidden(self):
         """
-        Description:
-            Return the date corresponding to the last price of bitcoin that was returned
+        Description: Return the date corresponding to the last price of bitcoin that was returned
         Args:
             None
         Returns:
@@ -77,8 +73,7 @@ class Crypto(TimeSeriesProblem):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
         Args:
             None
         Returns:
