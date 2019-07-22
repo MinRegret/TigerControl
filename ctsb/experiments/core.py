@@ -49,7 +49,7 @@ def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100):
         init = problem.initialize(problem_params)
 
     # get first x and y    
-    if(type(init) is tuple):
+    if(problem.has_regressors):
         x, y = init
     else:
         x, y = init, problem.step()
@@ -60,6 +60,9 @@ def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100):
         model.initialize()
     else:
         model.initialize(model_params)
+
+    if(problem.has_regressors and not model.uses_regressors):
+        print("WARNING: Problem has regressors but model only uses output signal.")
 
     # check problem and model are of the same type
     is_ts_problem = (inspect.getmro(problem.__class__))[1] == TimeSeriesProblem
@@ -78,7 +81,7 @@ def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100):
         model.update(y)
         # get new pair of observation and label
         new = problem.step()
-        if(type(new) is tuple):
+        if(problem.has_regressors):
             x, y = new
         else:
             x, y = y, new

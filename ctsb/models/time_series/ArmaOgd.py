@@ -9,8 +9,11 @@ class ArmaOgd(ctsb.CustomModel):
     Implements the ARMA-OGD algorithm for time series prediction
     """
 
+    compatibles = set(['TimeSeries'])
+
     def __init__(self):
         self.initialized = False
+        self.uses_regressors = False
 
     def initialize(self, p = 3):
         """
@@ -37,12 +40,8 @@ class ArmaOgd(ctsb.CustomModel):
             Predicted value for the next time-step
         """
         assert self.initialized
-        """ update the indices of the past """
-        temp = np.zeros(self.order + 1)
-        temp[0:self.order] = self.past[1:self.order + 1]
-        temp[self.order] = x
-        self.past = temp
-        """ and predict"""
+
+        """ predict"""
         return np.dot(self.params, self.past)
 
     def update(self, y, loss = None):
@@ -55,8 +54,9 @@ class ArmaOgd(ctsb.CustomModel):
             lr (float): specifies learning rate; defaults to 0.001.
         Returns:
             None
-
         """
+
+        """ first update the internal parameters """
         grad = (np.dot(self.params, self.past) - y) * self.past 
         if np.linalg.norm(grad) > self.max_norm:
             self.max_norm = np.linalg.norm(grad)
@@ -64,6 +64,13 @@ class ArmaOgd(ctsb.CustomModel):
         self.t = self.t + 1
         self.lr = 1 / (self.max_norm * np.sqrt(self.t))
         self.params = self.params - self.lr * grad 
+
+        """ and then update the indices of the past """
+        temp = np.zeros(self.order + 1)
+        temp[0:self.order] = self.past[1:self.order + 1]
+        temp[self.order] = y
+        self.past = temp
+
         return
 
 

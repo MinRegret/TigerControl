@@ -16,6 +16,8 @@ class ARMA(TimeSeriesProblem):
     Simulates an autoregressive moving-average time-series.
     """
 
+    compatibles = set(['ARMA-v0', 'TimeSeries'])
+
     def __init__(self):
         self.initialized = False
         self.has_regressors = False

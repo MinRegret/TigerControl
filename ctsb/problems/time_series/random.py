@@ -12,6 +12,8 @@ class Random(TimeSeriesProblem):
     A random sequence of scalar values taken from an i.i.d. normal distribution.
     """
 
+    compatibles = set(['Random-v0', 'TimeSeries'])
+
     def __init__(self):
         self.initialized = False
         self.has_regressors = False

@@ -8,6 +8,7 @@ import ctsb.experiments.precomputed as precomputed
 from statistics import mean
 import csv
 import numpy as np
+import matplotlib.pyplot as plt
 from prettytable import PrettyTable
 
 class Experiment(object):
@@ -86,6 +87,7 @@ class Experiment(object):
         if(self.use_precomputed and metric == 'time' and self.new_models):
             print("WARNING: Time comparison between precomputed models and any added model may be irrelevant due to hardware differences.")
 
+        print("Scoreboard for " + metric + ":")
         table = PrettyTable()
         table_dict = {}
 
@@ -108,7 +110,6 @@ class Experiment(object):
             table_dict[problem_id] = problem_scores[1:]
 
         print(table)
-        print(table_dict)
 
         ''' Save to csv file '''
         if(save_as is not None):
@@ -116,7 +117,7 @@ class Experiment(object):
                 for key in table_dict.keys():
                     f.write("%s,%s\n" % (key, table_dict[key]))
 
-    def graph(self, save_as = None, metric = None, time = 5):
+    def graph(self, save_as = None, metric = 'mse', time = 5):
         '''
         Description:
             Initializes the experiment instance. 
@@ -134,18 +135,23 @@ class Experiment(object):
             n_problems = len(self.problems)
 
         all_problem_info = []
-        for problem, model_to_loss in self.prob_model_to_loss[metric].items():
-            problem_loss_plus_model = []
+
+        problem_ids = get_ids(self.problems)
+        model_ids = get_ids(self.models)
+
+        for problem_id in problem_ids:
+            model_ids = get_ids(self.models)
+            problem_result_plus_model = []
             model_list = []
-            for model, loss in model_to_loss.items():
-                model_list.append(model)
-                problem_loss_plus_model.append((loss, model))
-            all_problem_info.append((problem, problem_loss_plus_model, model_list))
+            for model_id in model_ids:
+                model_list.append(model_id)
+                problem_result_plus_model.append((self.prob_model_to_result[(metric, problem_id, model_id)], model_id))
+            all_problem_info.append((problem_id, problem_result_plus_model, model_list))
 
         fig, ax = plt.subplots(nrows=n_problems, ncols=1)
         if n_problems == 1:
-            (problem, problem_loss_plus_model, model_list) = all_problem_info[0]
-            for (loss,model) in problem_loss_plus_model:
+            (problem, problem_result_plus_model, model_list) = all_problem_info[0]
+            for (loss, model) in problem_result_plus_model:
                 ax.plot(loss, label=str(model))
                 ax.legend(loc="upper left")
             ax.set_title("Problem:" + str(problem))
@@ -153,8 +159,8 @@ class Experiment(object):
             ax.set_ylabel("loss")
         else:
             for i in range(n_problems):
-                (problem, problem_loss_plus_model, model_list) = all_problem_info[i]
-                for (loss, model) in problem_loss_plus_model:
+                (problem, problem_result_plus_model, model_list) = all_problem_info[i]
+                for (loss, model) in problem_result_plus_model:
                     ax[i].plot(loss, label=str(model))
                 ax[i].set_title("Problem:" + str(problem), size=10)
                 ax[i].legend(loc="upper left")

@@ -17,6 +17,8 @@ class Crypto(TimeSeriesProblem):
     Description: Outputs the daily price of bitcoin
         from 2013-04-28 to 2018-02-10
     """
+    
+    compatibles = set(['Crypto-v0', 'TimeSeries'])
 
     def __init__(self):
         self.initialized = False

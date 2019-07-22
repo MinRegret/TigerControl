@@ -11,6 +11,7 @@ class CartPoleDouble(PyBulletProblem):
     """
     Simulates a pendulum balanced on a cartpole.
     """
+    
     def __init__(self):
         self.initialized = False
 

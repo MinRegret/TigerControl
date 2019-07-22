@@ -21,6 +21,7 @@ class CtrlIndices(TimeSeriesProblem):
 
     def __init__(self):
         self.initialized = False
+        self.has_regressors = True
 
     def initialize(self, input_signals = ['pna', 'ea', 'wa', 'wp', 'eu', 'soi', 'esoi', 'nino12', 'nino34', 'nino4'], include_month = False, output_signals = ['oni'], history = 1, timeline = 1):
         """
