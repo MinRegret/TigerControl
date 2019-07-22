@@ -16,13 +16,13 @@ class CartPoleSwingup(PyBulletProblem):
 
     def initialize(self, render=False):
         self.initialized = True
-        self.env = gym.make("InvertedPendulumSwingupBulletEnv-v0")
+        self._env = gym.make("InvertedPendulumSwingupBulletEnv-v0")
         if render:
-            self.env.render(mode="human")
-        self.sim = SimulatorWrapper(self.env)
-        self.observation_space = self.env.observation_space
-        self.action_space = self.env.action_space
-        initial_obs = self.env.reset()
+            self._env.render(mode="human")
+        self.sim = SimulatorWrapper(self._env)
+        self.observation_space = self._env.observation_space.shape
+        self.action_space = self._env.action_space.shape
+        initial_obs = self._env.reset()
         return initial_obs
 
     def step(self, a):

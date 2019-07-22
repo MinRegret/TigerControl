@@ -5,6 +5,8 @@ from ctsb.models.control.cartpole_weights import *
 class CartPoleNN(ControlModel):
     ''' Description: Simple multi-layer perceptron policy, no internal state '''
 
+    compatibles = set(['CartPole-v0', 'CartPoleSwingup-v0'])
+
     def __init__(self):
         self.initialized = False
 

@@ -11,8 +11,11 @@ class PredictZero(TimeSeriesModel):
     Description: Predicts the next value in the time series to be 0, i.e. x(t) = 0
     """
 
+    compatibles = set(['TimeSeries'])
+    
     def __init__(self):
         self.initialized = False
+        self.uses_regressors = False
 
     def initialize(self):
         """

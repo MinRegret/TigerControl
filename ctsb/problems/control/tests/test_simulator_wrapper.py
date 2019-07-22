@@ -4,7 +4,6 @@ Test for PyBullet cartpole problem
 import time
 import ctsb
 import jax.numpy as np
-from ctsb.models.control.control_model import ControlModel
 from ctsb.problems.control.pybullet.simulator_wrapper import SimulatorWrapper
 
 # cartpole test
@@ -36,17 +35,18 @@ def test_simulator_wrapper(verbose=False):
         print("save_state_ID: " + str(save_to_mem_ID))
 
     # run simulator for 4 seconds
-    simulator = SimulatorWrapper(problem)
-    simulator.loadState(simulator.getState())
+    problem.loadState(problem.getState())
+    sim = problem.fork()
+
     if verbose:
-        print("simulator.loadState worked")
+        print("problem.loadState worked")
     sim_score = score
     sim_frame = frame
     while time.time() - t_start < 3:
         if verbose:
             time.sleep(1. / 60.)
         a = model.predict(obs)
-        obs, r, done, _ = simulator.step(a)
+        obs, r, done, _ = problem.step(a)
         sim_score += r
         sim_frame += 1
 

@@ -1,7 +1,7 @@
 # problems init file
 
 from ctsb.problems.core import Problem
-from ctsb.problems.registration import problem_registry, problem_register, problem, problem_spec
+from ctsb.problems.registration import problem_registry, problem_register, problem
 from ctsb.problems.time_series import TimeSeriesProblem
 from ctsb.problems.control import ControlProblem
 from ctsb.problems.custom import register_custom_problem, CustomProblem
@@ -33,6 +33,26 @@ problem_register(
 problem_register(
     id='KukaDiverse-v0',
     entry_point='ctsb.problems.control.pybullet:KukaDiverse'
+)
+
+problem_register(
+    id='Minitaur-v0',
+    entry_point='ctsb.problems.control.pybullet:Minitaur'
+)
+
+problem_register(
+    id='HalfCheetah-v0',
+    entry_point='ctsb.problems.control.pybullet:HalfCheetah'
+)
+
+problem_register(
+    id='Ant-v0',
+    entry_point='ctsb.problems.control.pybullet:Ant'
+)
+
+problem_register(
+    id='Humanoid-v0',
+    entry_point='ctsb.problems.control.pybullet:Humanoid'
 )
 
 

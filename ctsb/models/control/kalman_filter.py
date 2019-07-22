@@ -36,6 +36,8 @@ class KalmanFilter(ControlModel):
     estimates for x(0) and P(0).
     """
 
+    compatibles = set([])
+
     def __init__(self):
         self.initialized = False
 

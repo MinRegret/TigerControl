@@ -14,6 +14,8 @@ class ODEShootingMethod(ControlModel):
     equations.
     """
 
+    compatibles = set([])
+
     def __init__(self):
         self.initialized = False
 

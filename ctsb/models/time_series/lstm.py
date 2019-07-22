@@ -16,8 +16,11 @@ class LSTM(TimeSeriesModel):
     Description: Produces outputs from a randomly initialized LSTM neural network.
     """
 
+    compatibles = set(['TimeSeries'])
+
     def __init__(self):
         self.initialized = False
+        self.uses_regressors = True
 
     def initialize(self, n, m, l = 32, h = 64, optimizer = SGD, optimizer_params_dict = None, loss = mse, lr = 0.0001):
         """

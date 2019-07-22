@@ -1,28 +1,20 @@
 """
-PyBullet Pendulum enviornment
+PyBullet Humanoid enviornment
 """
 
-from pybullet_envs.bullet.kukaGymEnv import KukaGymEnv
+from pybullet_envs.gym_locomotion_envs import HumanoidBulletEnv
 from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
 
 
-class Kuka(PyBulletProblem):
+class Humanoid(PyBulletProblem):
     """
-    Simulates a kuka arm picking up diverse objects
+    Simulates a minitaur environment
     """
-    def __init__(self):
-        self.initialized = False
-
-    def initialize(self):
+    def initialize(self, render=False):
         self.initialized = True
-        self._env = KukaGymEnv()
+        self._env = HumanoidBulletEnv(render=render)
         self.observation_space = self._env.observation_space.shape
         self.action_space = self._env.action_space.shape
         self.state = {}
         initial_obs = self.reset()
         return initial_obs
-
-
-
-
-

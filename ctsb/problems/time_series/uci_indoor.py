@@ -15,6 +15,8 @@ class UCI_Indoor(TimeSeriesProblem):
     Description: Outputs various weather metrics from a UCI dataset from 13/3/2012 to 11/4/2012
     """
 
+    compatibles = set(['UCIIndoor-v0', 'TimeSeries'])
+
     def __init__(self):
         self.initialized = False
         # self.data_path = os.path.join(get_ctsb_dir(), "data/uci_indoor_cleaned.csv")
@@ -31,7 +33,8 @@ class UCI_Indoor(TimeSeriesProblem):
         """
         self.initialized = True
         self.T = 0
-        self.df = uci_indoor() # get data
+        self.df_full = uci_indoor() # get data
+        self.df = self.df_full.drop(['1:Date','2:Time'],axis=1)
         self.max_T = self.df.shape[0]
         self.pred_indices = pred_indices
         
@@ -62,7 +65,7 @@ class UCI_Indoor(TimeSeriesProblem):
             Date (string)
         """
         assert self.initialized
-        return "Timestep: {} out of {}".format(self.T+1, self.max_T) + '\n' + str(self.df.iloc[self.T][['1:Date','2:Time','24:Day_Of_Week']])
+        return "Timestep: {} out of {}".format(self.T+1, self.max_T) + '\n' + str(self.df_full.iloc[self.T][['1:Date','2:Time','24:Day_Of_Week']])
 
     def close(self):
         """

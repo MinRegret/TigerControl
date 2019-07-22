@@ -70,6 +70,16 @@ class Spec(object):
         obj.spec = self
         return obj
 
+    def get_class(self):
+        """Returns the class object"""
+        if self._entry_point is None:
+            raise error.Error('Attempting to make deprecated {} with ID: {}. (HINT: is there a newer registered version of this object?)'.format(self, self.id))
+        if callable(self._entry_point):
+            obj = self._entry_point
+        else:
+            obj = load(self._entry_point)
+        return obj
+
     def __repr__(self):
         return "{} Spec({})".format(str(self), self.id)
 
@@ -105,8 +115,12 @@ class Registry(object):
         if path in self.custom:
             return self.custom[path]()
 
-        spec = self.spec(path)
-        obj = spec.make(**kwargs)
+        try:
+            spec = self.spec(path)
+            obj = spec.make(**kwargs)
+        except ModuleNotFoundError as e:
+            s = "Not all dependencies have been installed. Please check for missing packages. \nFull error: {}".format(path, e)
+            raise error.DependencyNotInstalled(s)
         return obj
 
     def list_ids(self):
@@ -163,9 +177,23 @@ class Registry(object):
                     raise error.UnregisteredObject('No registered {} with ID: {}, did you mean {}?'.format(self, id, closest[0]))
                 raise error.UnregisteredObject('No registered {} with ID: {}'.format(self, id))
 
+    def get_class(self, path):
+        """
+        Description: returns the object class corresponding to id.
+
+        Args:
+            path(string): id of object in registry
+        """
+        if path in self.custom:
+            return self.custom[path]
+
+        spec = self.spec(path)
+        return spec.get_class()
+
     def register(self, id, **kwargs):
         """
-        Populates the specs dict with a map from id to the object instance
+        Description: Populates the specs dict with a map from id to the object instance
+
         Args:
             id(string): id of object in registry
             kwargs(dict): The kwargs to pass to the object class

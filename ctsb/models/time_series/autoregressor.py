@@ -15,11 +15,14 @@ class AutoRegressor(TimeSeriesModel):
     Description: Implements the equivalent of an AR(p) model - predicts a linear
     combination of the previous p observed values in a time-series
     """
+    
+    compatibles = set(['TimeSeries'])
 
     def __init__(self):
         self.initialized = False
+        self.uses_regressors = False
 
-    def initialize(self, p, optimizer = SGD, loss = mse, lr = 0.001):
+    def initialize(self, p = 3, optimizer = SGD, loss = mse, lr = 0.001):
         """
         Description: Initializes autoregressive model parameters
         Args:
@@ -58,8 +61,6 @@ class AutoRegressor(TimeSeriesModel):
         
         assert self.initialized
 
-        self.past = self._update_past(self.past, x)
-
         return self._predict(self.params, self.past)
 
     def update(self, y):
@@ -70,8 +71,12 @@ class AutoRegressor(TimeSeriesModel):
         Returns:
             None
         """
+        
+        assert self.initialized
 
         self.params = self.optimizer.update(self.params, self.past, y)
+        self.past = self._update_past(self.past, y)
+
         return
 
     def help(self):
