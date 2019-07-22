@@ -1,211 +1,92 @@
-# Experiment class
-# Author: Alex Yu
+# core class
 
 import ctsb
 from ctsb import error
-from ctsb.problems.control.control_problem import ControlProblem
-from ctsb.models.control import ControlModel
-import jax.numpy as np
+from ctsb.problems.time_series import TimeSeriesProblem
+from ctsb.models.time_series import TimeSeriesModel
 from tqdm import tqdm
-import matplotlib.pyplot as plt
+import ctsb.experiments.metrics as metrics
 import inspect
-from jax import jit
 import time
+from ctsb.utils.random import set_key
 
-# class for implementing algorithms with enforced modularity
-class Experiment(object):
+############## TO MAKE AUTOMATIC !!! #################
+metrics = {'mse': metrics.mse, 'cross_entropy': metrics.cross_entropy}
 
-    def __init__(self, problem_id=None, problem_params=None, model_list=None, loss_fn=None, problem_to_param_models=None):
-        self.initialized = False
-        
-    def initialize(self, loss_fn, problem_to_params, model_to_params, problem_to_models=None):
-        '''
-            Description:
-                Initializes the experiment instance. 
-            Args:
-                loss_fn (function): function mapping (predict_value, true_value) -> loss
-                problem_to_param (dict): map of the form problem_id -> hyperparameters for problem
-                model_to_param (dict): map of the form model_id -> hyperparameters for model
-                problem_to_models (dict) : map of the form problem_id -> list of model_id. If None, then we assume that the
-                user wants to test every model in model_to_params against every problem in problem_to_params
-        '''
-        self.intialized = True
-        self.T = 0
-        self.loss = loss_fn
-        self.pom_ls = [] # (problem, initial observation (x,y), model) list
-        self.prob_model_to_loss = {} # map of the form [problem][model] -> loss series
-        self.prob_model_to_time = {} # map of the form [problem][model] -> time
+def get_ids(x):
+    if(x is dict):
+        return list(x.keys())
+    else:
+        return x
 
-        for problem_id, problem_params in problem_to_params.items():
-            problem = ctsb.problem(problem_id)
-            x_0, y_0 = None, None
-            if problem.has_regressors:
-                x_0, y_0 = problem.initialize(**problem_params)
-            else:
-                x_0 = problem.initialize(**problem_params)
-            initialized_models = []
-            model_list = problem_to_models[problem_id] if problem_to_models != None else list(model_to_params.keys())
-            for model_id in model_list:
-                model = ctsb.model(model_id)
-                model.initialize(**model_to_params[model_id])
-                initialized_models.append(model)
-            if problem.has_regressors:
-                self.pom_ls.append((problem, (x_0, y_0), initialized_models))
-            else:
-                self.pom_ls.append((problem, x_0, initialized_models))
+def create_full_problem_to_models(problems_ids, model_ids):
+    full_problem_to_models = {}
+    for problem_id in problems_ids:
+        for model_id in model_ids:
+            full_problem_to_models[problem_id] = model_id
 
-    def run_all_experiments(self, time_steps=100):
-        '''
-        Descripton:
-            Runs all experiments for specified number of timesteps.
-        Args:
-            time_steps (int): number of time steps 
-        '''
-        self.T = time_steps
-        for (problem, obs, models) in self.pom_ls:
-            self.prob_model_to_loss[problem] = {}
-            self.prob_model_to_time[problem] = {}
-            for model in models:
-                # print("model:" + str(model))
-                time_start = time.time()
-                if problem.has_regressors:
-                    self.prob_model_to_loss[problem][model] = self.run_exp_regressor(problem, obs, model)
-                else: 
-                    self.prob_model_to_loss[problem][model] = self.run_exp_not_regressor(problem,obs,model)
-                self.prob_model_to_time[problem][model] = time.time() - time_start
-        return        
+    return full_problem_to_models
 
-    def run_exp_regressor(self, problem, obs, model):
-        is_control_problem = (inspect.getmro(problem.__class__))[1] == ControlProblem
-        is_control_model = (inspect.getmro(model.__class__))[1] == ControlModel
-        assert ((is_control_problem and is_control_model) or (not is_control_problem and not is_control_model))
-        (cur_x, cur_y) = obs
-        # print(cur_x)
-        # print(type(cur_x))
-        '''print(cur_y)
-        print(type(cur_y))
-        print(cur_x)
-        print(type(cur_x))
-        print(model.predict(cur_x))
-        print(type(model.predict(cur_x)))'''
-        cur_loss = self.loss(cur_y, model.predict(cur_x))
-        loss = [cur_loss]
-        for i in tqdm(range(0,self.T)):
-            if is_control_problem:
-                cur_x, cur_y = problem.step(model_output)
-            else:
-                cur_x, cur_y = problem.step()
+##### CURRENTLY ONLY WORKS WITH TS #######
+def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100):
+    '''
+    Description:
+        Initializes the experiment instance. 
+    Args:
+    '''
+    set_key(key)
 
-            cur_loss = self.loss(cur_y, model.predict(cur_x))
-            loss.append(cur_loss)
-            model.update(cur_y)        
-        return loss
+    # extract specifications
+    (problem_id, problem_params) = problem
+    (model_id, model_params) = model
+    loss_fn = metrics[metric]
 
-    def run_exp_not_regressor(self, problem, obs, model):
-        is_control_problem = (inspect.getmro(problem.__class__))[1] == ControlProblem
-        is_control_model = (inspect.getmro(model.__class__))[1] == ControlModel
-        assert ((is_control_problem and is_control_model) or (not is_control_problem and not is_control_model))
-        cur_x = obs
-        loss = []
-        for i in tqdm(range(0,self.T)):
-            cur_y_true = None
-            if is_control_problem:
-                cur_y = problem.step(model_output)
-            else:
-                cur_y = problem.step()
-            cur_loss = self.loss(cur_y, model.predict(cur_x))
-            loss.append(cur_loss)
-            cur_x = cur_y
-            model.update(cur_y)        
-        return loss
-    
-    def run_experiment(self, problem, obs, model):
-        '''
-        Descripton:
-            Runs all experiments for specified number of timesteps.
-        Args:
-            problem (instance of ctsb.Problem): initialized problem
-            obs (initial observation): initial observation
-            model (instance of ctsb.Model): initialized model
-        '''
-        is_control_problem = (inspect.getmro(problem.__class__))[1] == ControlProblem
-        is_control_model = (inspect.getmro(model.__class__))[1] == ControlModel
-        assert ((is_control_problem and is_control_model) or (not is_control_problem and not is_control_model))
-        (cur_x, cur_y) = obs
-        cur_loss = self.loss(cur_y, model.predict(cur_x)) if problem.has_regressors else self.lo
-        loss = [cur_loss]
-        for i in tqdm(range(0,self.T)):
-            cur_y_true = None
-            if is_control_problem and problem.has_regressors:
-                cur_x, cur_y = problem.step(model_output)
-            elif is_control_problem and not problem.has_regressors:
-                cur_y, _ = problem.step(model_output)
-                cur_x = cur_y
-            elif not is_control_problem and problem.has_regressors:
-                cur_x, cur_y = problem.step()
-            else:
-                cur_y = problem.step()
-                cur_x = cur_y
-            cur_loss = self.loss(cur_y, model.predict(cur_x))
-            loss.append(cur_loss)
-            model.update(cur_y)        
-        return loss
+    # initialize problem
+    problem = ctsb.problem(problem_id)
+    if(problem_params is None):
+        init = problem.initialize()
+    else:
+        init = problem.initialize(problem_params)
 
-    def plot_all_problem_results(self, time=None):
-        all_problem_info = []
-        for problem, model_to_loss in self.prob_model_to_loss.items():
-            # print(problem)
-            problem_loss_plus_model = []
-            model_list = []
-            for model, loss in model_to_loss.items():
-                # print(model)
-                model_list.append(model)
-                problem_loss_plus_model.append((loss, model))
-            all_problem_info.append((problem, problem_loss_plus_model, model_list))
+    # get first x and y    
+    if(type(init) is tuple):
+        x, y = init
+    else:
+        x, y = init, problem.step()
 
-        fig, ax = plt.subplots(nrows=len(self.pom_ls), ncols=1)
-        if len(self.pom_ls) == 1:
-            (problem, problem_loss_plus_model, model_list) = all_problem_info[0]
-            for (loss,model) in problem_loss_plus_model:
-                # print("LOSS:")
-                # print(loss)
-                ax.plot(loss, label=str(model))
-                ax.legend(loc="upper left")
-            ax.set_title("Problem:" + str(problem))
-            ax.set_xlabel("timesteps")
-            ax.set_ylabel("loss")
+    # initialize model
+    model = ctsb.model(model_id)
+    if(model_params is None):
+        model.initialize()
+    else:
+        model.initialize(model_params)
+
+    # check problem and model are of the same type
+    is_ts_problem = (inspect.getmro(problem.__class__))[1] == TimeSeriesProblem
+    is_ts_model = (inspect.getmro(model.__class__))[1] == TimeSeriesModel
+    # assert (is_ts_problem and is_ts_model), "ERROR: Currently Experiment only supports Time Series Problems and Models."
+
+    loss = []
+    time_start = time.time()
+    memory = 0
+
+    # get loss series
+    for i in tqdm(range(timesteps)):
+        # get loss and update model
+        cur_loss = loss_fn(y, model.predict(x))
+        loss.append(cur_loss)
+        model.update(y)
+        # get new pair of observation and label
+        new = problem.step()
+        if(type(new) is tuple):
+            x, y = new
         else:
-            for i in range(len(self.pom_ls)):
-                (problem, problem_loss_plus_model, model_list) = all_problem_info[i]
-                for (loss, model) in problem_loss_plus_model:
-                    ax[i].plot(loss, label=str(model))
-                ax[i].set_title("Problem:" + str(problem), size=10)
-                ax[i].legend(loc="upper left")
-                ax[i].set_xlabel("timesteps")
-                ax[i].set_ylabel("loss")
+            x, y = y, new
 
-        fig.tight_layout()
-        if time:
-            plt.show(block=False)
-            plt.pause(time)
-            plt.close()
-        else:
-            plt.show()
-
-    def get_prob_model_to_loss(self):
-        return self.prob_model_to_loss
-
-    def get_performance_metrics(self):
-        print("=============== Time Elapsed ================")
-        for problem, model_time in self.prob_model_to_time.items():
-            print(problem)
-            for model, time in model_time.items():
-                print(str(model) + " : " + str(time))
-
-        print("=============== Memory Consumed ================")
+    return loss, time.time() - time_start, memory
 
 
-    def help(self):
+def help(self):
         # prints information about this class and its methods
         raise NotImplementedError
 

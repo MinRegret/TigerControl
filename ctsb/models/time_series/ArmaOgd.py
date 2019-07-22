@@ -12,7 +12,7 @@ class ArmaOgd(ctsb.CustomModel):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, p):
+    def initialize(self, p = 3):
         """
         Description:
             Initializes autoregressive model parameters

@@ -15,7 +15,7 @@ class ArmaAdaGrad(ctsb.CustomModel):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, p, optimizer=None, optimizer_params_dict=None, loss=None):
+    def initialize(self, p = 3, optimizer=None, optimizer_params_dict=None, loss=None):
         """
         Description:
             Initializes autoregressive model parameters

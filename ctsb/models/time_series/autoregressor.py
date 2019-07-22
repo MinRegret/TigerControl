@@ -19,7 +19,7 @@ class AutoRegressor(TimeSeriesModel):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, p, optimizer = SGD, loss = mse, lr = 0.001):
+    def initialize(self, p = 3, optimizer = SGD, loss = mse, lr = 0.001):
         """
         Description:
             Initializes autoregressive model parameters
