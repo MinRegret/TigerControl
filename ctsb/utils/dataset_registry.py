@@ -116,21 +116,17 @@ def uci_indoor(verbose=True):
     # check if files have been downloaded before, else download
     if not os.path.exists(path_uci_indoor_cleaned):
         download(path_uci_indoor_zip, url_uci_indoor, verbose) # get files from online URL
-        #unzip(path_uci_indoor_zip, True)
-        print("\nchanged path_uci_indoor_zip dir?\n")
-        print(path_uci_indoor_zip)
         unzip(path_uci_indoor_zip)
+        os.remove(path_uci_indoor_zip) # clean up - remove unnecessary files
         
         with open(path_uci_indoor_txt1, 'r') as txt_file:
             list_of_vecs = [line.split() for line in txt_file] # clean downloaded data
-        list_of_vecs[0] = list_of_vecs[0][1:]
-
+            list_of_vecs[0] = list_of_vecs[0][1:]
         with open(path_uci_indoor_csv, "w") as csv_file:
             writer = csv.writer(csv_file)
-        writer.writerows(list_of_vecs)
+            writer.writerows(list_of_vecs)
+        shutil.rmtree(path_uci_indoor_unzip) # clean up - remove unnecessary files
 
-        os.remove(path_uci_indoor_zip) # clean up - remove unnecessary files
-        shutil.rmtree(path_uci_indoor_unzip)
         df = pd.read_csv(path_uci_indoor_csv)
         base_datetime = to_datetime(df['1:Date'].iloc[0], df['2:Time'].iloc[0])
 
@@ -149,9 +145,10 @@ def uci_indoor(verbose=True):
                     appended_csv.append(row)
                     r += 1
                 writer.writerows(appended_csv)
-
-    df = pd.read_csv(path_uci_indoor_cleaned)
-    return df.drop(['1:Date','2:Time'],axis=1)
+        os.remove(path_uci_indoor_csv)
+        
+    df = pd.read_csv(path_uci_indoor_cleaned) # clean up - remove unnecessary files
+    return df
 
 
 def sp500(verbose=True):

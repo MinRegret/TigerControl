@@ -13,7 +13,7 @@ def test_uci_indoor(steps=1000, show_plot=False, verbose=False):
 
     test_output = []
     for t in range(T):
-        test_output.append(problem.step())
+        test_output.append(problem.step()[1])
 
     assert problem.T == T
     if verbose:
@@ -22,7 +22,7 @@ def test_uci_indoor(steps=1000, show_plot=False, verbose=False):
         plt.plot(test_output)
         plt.title("UCI Indoor")
         plt.show(block=False)
-        plt.pause(10)
+        plt.pause(5)
         plt.close()
     print("test_uci_indoor passed")
     return
