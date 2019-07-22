@@ -1,0 +1,510 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ctsb.utils.dataset_registry &mdash; ctsb 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> ctsb
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ctsb.html">ctsb package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../help.html">help</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html#contact">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ctsb</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ctsb.utils.dataset_registry</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ctsb.utils.dataset_registry</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">xlrd</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ctsb.utils.download_tools</span> <span class="k">import</span> <span class="o">*</span>
+
+
+<span class="k">def</span> <span class="nf">to_datetime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    Description: Takes a date and a time and converts it to a datetime object.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        date (string): Date in DD/MM/YYYY format</span>
+<span class="sd">        time (string): Time in hh:mm format</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Datetime object containing date and time information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">day_month_year</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">date</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)]</span>
+    <span class="n">hour_min</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">time</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">day_month_year</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> 
+                             <span class="n">day_month_year</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
+                             <span class="n">day_month_year</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> 
+                             <span class="n">hour_min</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> 
+                             <span class="n">hour_min</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">datetime_to_daysElapsed</span><span class="p">(</span><span class="n">cur_datetime</span><span class="p">,</span> <span class="n">base_datetime</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description:</span>
+<span class="sd">        Computes the number of days elapsed since &#39;base&#39; date.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cur_datetime (datetime): Current date and time</span>
+<span class="sd">        base_datetime (datetime): Base date and time</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Datetime object containing number of days elapsed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">time_delta</span> <span class="o">=</span> <span class="n">cur_datetime</span> <span class="o">-</span> <span class="n">base_datetime</span>
+    <span class="n">time_to_days</span> <span class="o">=</span> <span class="p">(</span><span class="n">time_delta</span><span class="o">.</span><span class="n">seconds</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">time_delta</span><span class="o">.</span><span class="n">days</span> <span class="o">+</span> <span class="n">time_to_days</span>
+
+<span class="c1"># Dataset credits: https://fred.stlouisfed.org/series/UNRATE, </span>
+<span class="c1"># Federal Reserve Bank of St. Louis.</span>
+
+<div class="viewcode-block" id="unemployment"><a class="viewcode-back" href="../../../_autosummary/ctsb.utils.unemployment.html#ctsb.utils.unemployment">[docs]</a><span class="k">def</span> <span class="nf">unemployment</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    Description: Checks if unemployment data exists, downloads if not.</span>
+<span class="sd">        Dataset credits: https://fred.stlouisfed.org/series/UNRATE, </span>
+<span class="sd">        Federal Reserve Bank of St. Louis.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        verbose (boolean): Specifies if download progress should be printed</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Dataframe containing Unemployment data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">import</span> <span class="nn">datetime</span>
+    <span class="kn">from</span> <span class="nn">urllib.request</span> <span class="k">import</span> <span class="n">urlretrieve</span>
+    <span class="n">ctsb_dir</span> <span class="o">=</span> <span class="n">get_ctsb_dir</span><span class="p">()</span>
+    <span class="n">path_csv</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctsb_dir</span><span class="p">,</span> <span class="s1">&#39;data/unemployment.csv&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path_csv</span><span class="p">):</span> <span class="c1"># if file exists return csv</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_csv</span><span class="p">)</span>
+
+
+    <span class="n">day</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span> <span class="c1"># try downloading 10 times</span>
+        <span class="n">day_string</span> <span class="o">=</span> <span class="n">day</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="n">url_core</span> <span class="o">=</span> <span class="s2">&quot;https://fred.stlouisfed.org/graph/fredgraph.csv?bgcolor=</span><span class="si">%23e</span><span class="s2">1e9f0&amp;chart_type=line&amp;drp=0&amp;fo=open</span><span class="si">%20s</span><span class="s2">ans&amp;graph_bgcolor=</span><span class="si">%23f</span><span class="s2">fffff&amp;height=450&amp;mode=fred&amp;recession_bars=on&amp;txtcolor=%23444444&amp;ts=12&amp;tts=12&amp;width=1168&amp;nt=0&amp;thu=0&amp;trc=0&amp;show_legend=yes&amp;show_axis_titles=yes&amp;show_tooltip=yes&amp;id=UNRATE&amp;scale=left&amp;cosd=1948-01-01&amp;coed=2019-06-01&amp;line_color=</span><span class="si">%234572a</span><span class="s2">7&amp;link_values=false&amp;line_style=solid&amp;mark_type=none&amp;mw=3&amp;lw=2&amp;ost=-99999&amp;oet=99999&amp;mma=0&amp;fml=a&amp;fq=Monthly&amp;fam=avg&amp;fgst=lin&amp;fgsnd=2009-06-01&amp;line_index=1&amp;transformation=lin&amp;vintage_date=</span><span class="si">{}</span><span class="s2">&amp;revision_date=</span><span class="si">{}</span><span class="s2">&amp;nd=1948-01-01&quot;</span>
+        <span class="n">url_csv</span> <span class="o">=</span> <span class="n">url_core</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">day_string</span><span class="p">,</span> <span class="n">day_string</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">urlretrieve</span><span class="p">(</span><span class="n">url_csv</span><span class="p">,</span> <span class="n">path_csv</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_csv</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;date </span><span class="si">{}</span><span class="s2"> download failed: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">day</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+
+        <span class="n">day</span> <span class="o">=</span> <span class="n">day</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># try with previous day</span>
+
+    <span class="c1"># final attempt</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">url_csv</span> <span class="o">=</span> <span class="s2">&quot;https://fred.stlouisfed.org/graph/fredgraph.csv?bgcolor=</span><span class="si">%23e</span><span class="s2">1e9f0&amp;chart_type=line&amp;drp=0&amp;fo=open</span><span class="si">%20s</span><span class="s2">ans&amp;graph_bgcolor=</span><span class="si">%23f</span><span class="s2">fffff&amp;height=450&amp;mode=fred&amp;recession_bars=on&amp;txtcolor=%23444444&amp;ts=12&amp;tts=12&amp;width=1168&amp;nt=0&amp;thu=0&amp;trc=0&amp;show_legend=yes&amp;show_axis_titles=yes&amp;show_tooltip=yes&amp;id=UNRATE&amp;scale=left&amp;cosd=1948-01-01&amp;coed=2019-06-01&amp;line_color=</span><span class="si">%234572a</span><span class="s2">7&amp;link_values=false&amp;line_style=solid&amp;mark_type=none&amp;mw=3&amp;lw=2&amp;ost=-99999&amp;oet=99999&amp;mma=0&amp;fml=a&amp;fq=Monthly&amp;fam=avg&amp;fgst=lin&amp;fgsnd=2009-06-01&amp;line_index=1&amp;transformation=lin&amp;vintage_date=2019-07-19&amp;revision_date=2019-07-19&amp;nd=1948-01-01&quot;</span>
+
+        <span class="n">urlretrieve</span><span class="p">(</span><span class="n">url_csv</span><span class="p">,</span> <span class="n">path_csv</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_csv</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Error downloading URL: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="uci_indoor"><a class="viewcode-back" href="../../../_autosummary/ctsb.utils.uci_indoor.html#ctsb.utils.uci_indoor">[docs]</a><span class="k">def</span> <span class="nf">uci_indoor</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Checks if uci_indoor data exists, downloads if not. </span>
+<span class="sd">        Dataset credits: F. Zamora-Martínez, P. Romeu, P. Botella-Rocamora, J. Pardo, </span>
+<span class="sd">        On-line learning of indoor temperature forecasting models towards energy efficiency,</span>
+<span class="sd">        Energy and Buildings, Volume 83, November 2014, Pages 162-172, ISSN 0378-7788</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        verbose (boolean): Specifies if download progress should be printed</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Dataframe containing uci_indoor data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ctsb_dir</span> <span class="o">=</span> <span class="n">get_ctsb_dir</span><span class="p">()</span>
+    <span class="n">url_population_csv</span> <span class="o">=</span> <span class="s1">&#39;https://archive.ics.uci.edu/ml/machine-learning-databases/00274/NEW-DATA.zip&#39;</span>
+    <span class="n">path_population_csv</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctsb_dir</span><span class="p">,</span> <span class="s1">&#39;data/uci_indoor.zip&#39;</span><span class="p">)</span>
+    <span class="n">path_uci_indoor_txt1</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctsb_dir</span><span class="p">,</span> <span class="s1">&#39;data/uci_indoor/NEW-DATA-1.T15.txt&#39;</span><span class="p">)</span>
+    <span class="n">path_uci_indoor_csv</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctsb_dir</span><span class="p">,</span> <span class="s1">&#39;data/uci_indoor.csv&#39;</span><span class="p">)</span>
+    <span class="n">path_population_cleaned_csv</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctsb_dir</span><span class="p">,</span> <span class="s1">&#39;data/uci_indoor_cleaned.csv&#39;</span><span class="p">)</span>
+    <span class="n">path_uci_indoor_unzip</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctsb_dir</span><span class="p">,</span> <span class="s1">&#39;data/uci_indoor&#39;</span><span class="p">)</span>
+
+    <span class="c1"># check if files have been downloaded before, else download</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path_population_cleaned_csv</span><span class="p">):</span>
+        <span class="n">download</span><span class="p">(</span><span class="n">path_population_csv</span><span class="p">,</span> <span class="n">url_population_csv</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span> <span class="c1"># get files from online URL</span>
+        <span class="n">unzip</span><span class="p">(</span><span class="n">path_population_csv</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_uci_indoor_txt1</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+
+        <span class="n">list_of_vecs</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span> <span class="c1"># clean downloaded data</span>
+        <span class="n">list_of_vecs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">list_of_vecs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_uci_indoor_csv</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">c</span><span class="p">:</span>
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">list_of_vecs</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path_population_csv</span><span class="p">)</span> <span class="c1"># clean up - remove unnecessary files</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">path_uci_indoor_unzip</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_uci_indoor_csv</span><span class="p">)</span>
+        <span class="n">base_datetime</span> <span class="o">=</span> <span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;1:Date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;2:Time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">def</span> <span class="nf">uci_datetime_converter</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">datetime_to_daysElapsed</span><span class="p">(</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;1:Date&#39;</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;2:Time&#39;</span><span class="p">]),</span> <span class="n">base_datetime</span><span class="p">)</span>
+        
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;24:Day_Of_Week&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">uci_datetime_converter</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_uci_indoor_csv</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvinput</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_population_cleaned_csv</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvoutput</span><span class="p">:</span>
+                <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">csvoutput</span><span class="p">,</span> <span class="n">lineterminator</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">csvinput</span><span class="p">)</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">appended_csv</span> <span class="o">=</span> <span class="p">[</span><span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;25:Days_Elapsed&#39;</span><span class="p">]]</span>
+                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+                    <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;24:Day_Of_Week&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">r</span><span class="p">])</span>
+                    <span class="n">appended_csv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+                    <span class="n">r</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">appended_csv</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_population_cleaned_csv</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;1:Date&#39;</span><span class="p">,</span><span class="s1">&#39;2:Time&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sp500"><a class="viewcode-back" href="../../../_autosummary/ctsb.utils.sp500.html#ctsb.utils.sp500">[docs]</a><span class="k">def</span> <span class="nf">sp500</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Checks if S&amp;P500 data exists, downloads if not.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        verbose (boolean): Specifies if download progress should be printed</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Dataframe containing S&amp;P500 data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ctsb_dir</span> <span class="o">=</span> <span class="n">get_ctsb_dir</span><span class="p">()</span>
+    <span class="n">url_sp500_xls</span> <span class="o">=</span> <span class="s1">&#39;http://www.cboe.com/micro/buywrite/dailypricehistory.xls&#39;</span>
+    <span class="n">path_sp500_xls</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctsb_dir</span><span class="p">,</span> <span class="s1">&#39;data/sp500_xls.xls&#39;</span><span class="p">)</span>
+    <span class="n">path_sp500_txt</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctsb_dir</span><span class="p">,</span> <span class="s1">&#39;data/sp500_col.txt&#39;</span><span class="p">)</span>
+    <span class="n">path_sp500_csv</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctsb_dir</span><span class="p">,</span> <span class="s1">&#39;data/sp500.csv&#39;</span><span class="p">)</span>
+
+    <span class="c1"># check if files have been downloaded before, else download</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path_sp500_csv</span><span class="p">):</span>
+        <span class="n">download</span><span class="p">(</span><span class="n">path_sp500_xls</span><span class="p">,</span> <span class="n">url_sp500_xls</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span> <span class="c1"># get files from online URL</span>
+        <span class="n">book</span> <span class="o">=</span> <span class="n">xlrd</span><span class="o">.</span><span class="n">open_workbook</span><span class="p">(</span><span class="n">path_sp500_xls</span><span class="p">)</span>
+        <span class="n">sh</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="n">sheet_by_index</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">sp500_col</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_sp500_txt</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8197</span><span class="p">):</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="o">*</span><span class="n">xlrd</span><span class="o">.</span><span class="n">xldate_as_tuple</span><span class="p">(</span><span class="n">sh</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">book</span><span class="o">.</span><span class="n">datemode</span><span class="p">))</span>
+            <span class="n">sp500_col</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sh</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sp500_col</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_sp500_txt</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> <span class="c1"># clean downloaded data</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_sp500_csv</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+                <span class="n">csv_out</span><span class="o">=</span><span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+                <span class="n">csv_out</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s1">&#39;date&#39;</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+                    <span class="n">date_val_list</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                    <span class="n">date_val_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">date_val_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">csv_out</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">date_val_list</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path_sp500_xls</span><span class="p">)</span> <span class="c1"># clean up - remove unnecessary files</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path_sp500_txt</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_sp500_csv</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="crypto"><a class="viewcode-back" href="../../../_autosummary/ctsb.utils.crypto.html#ctsb.utils.crypto">[docs]</a><span class="k">def</span> <span class="nf">crypto</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Checks if cryptocurrency data exists, downloads if not.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Dataframe containing cryptocurrency data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ctsb_dir</span> <span class="o">=</span> <span class="n">get_ctsb_dir</span><span class="p">()</span>
+    <span class="n">path_crypto_csv</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctsb_dir</span><span class="p">,</span> <span class="s1">&#39;data/crypto.csv&#39;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path_crypto_csv</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://query.data.world/s/43quzwdjeh2zmghpdcgvgkppo6bvg7&#39;</span><span class="p">)</span>
+        <span class="n">dict_of_currency_dfs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Currency&#39;</span><span class="p">)}</span>
+        <span class="n">bdf</span> <span class="o">=</span> <span class="n">dict_of_currency_dfs</span><span class="p">[</span><span class="s1">&#39;bitcoin&#39;</span><span class="p">]</span>
+        <span class="n">bdf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">path_crypto_csv</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_crypto_csv</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ctrl_indices"><a class="viewcode-back" href="../../../_autosummary/ctsb.utils.ctrl_indices.html#ctsb.utils.ctrl_indices">[docs]</a><span class="k">def</span> <span class="nf">ctrl_indices</span><span class="p">(</span><span class="n">input_signals</span><span class="p">,</span> <span class="n">include_month</span><span class="p">,</span> <span class="n">output_signals</span><span class="p">,</span> <span class="n">history</span><span class="p">,</span> <span class="n">timeline</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Transforms the ctrl_indices dataset into a format suitable for online learning.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_signals (list of strings): signals used for prediction</span>
+<span class="sd">        include_month (boolean): True if the month should be used as a feature,</span>
+<span class="sd">                                 False otherwise</span>
+<span class="sd">        output_signals (list of strings): signals we are trying to predict</span>
+<span class="sd">        history (int): number of past observations used for prediction</span>
+<span class="sd">        timeline (int/list of ints): the forecasting timeline(s)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        X (numpy.ndarray): Input Observations</span>
+<span class="sd">        y (numpy.ndarray): Labels</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">############################## GET DATA ###################################</span>
+
+    <span class="n">ctsb_dir</span> <span class="o">=</span> <span class="n">get_ctsb_dir</span><span class="p">()</span>
+    <span class="n">datapath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctsb_dir</span><span class="p">,</span> <span class="s1">&#39;data/ctrl_indices.csv&#39;</span><span class="p">)</span>
+    <span class="n">signals_pd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">datapath</span><span class="p">)</span>
+
+    <span class="n">signal_length</span> <span class="o">=</span> <span class="n">signals_pd</span><span class="p">[</span><span class="s1">&#39;nino34&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># make timeline into np.array</span>
+    <span class="k">if</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">timeline</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">timeline</span> <span class="o">=</span> <span class="p">[</span><span class="n">timeline</span><span class="p">]</span>
+
+    <span class="n">timeline</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">timeline</span><span class="p">)</span>
+
+    <span class="c1">################################ GET ONI ###################################</span>
+
+    <span class="sd">&#39;&#39;&#39; 0. Get nino34 signal for ONI&#39;&#39;&#39;</span>
+    <span class="n">nino34</span> <span class="o">=</span> <span class="n">signals_pd</span><span class="p">[</span><span class="s1">&#39;nino34&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="sd">&#39;&#39;&#39; 1. Get climatology &#39;&#39;&#39;</span>
+    <span class="n">clm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">):</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="p">[</span><span class="mi">12</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="n">month</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">signal_length</span> <span class="o">//</span> <span class="mi">12</span><span class="p">)]</span>
+        <span class="n">clm</span><span class="p">[</span><span class="n">month</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">nino34</span><span class="p">[</span><span class="n">section</span><span class="p">])</span>
+
+
+    <span class="sd">&#39;&#39;&#39; 2. Compute anomaly &#39;&#39;&#39;</span>
+    <span class="n">anm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nino34</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">signal_length</span><span class="p">):</span>
+        <span class="n">anm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nino34</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">clm</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="mi">12</span><span class="p">]</span>
+
+    <span class="sd">&#39;&#39;&#39; 3. Get ONI &#39;&#39;&#39;</span>
+    <span class="n">oni</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">anm</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">signal_length</span><span class="p">):</span>
+        <span class="n">oni</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">anm</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="p">:</span> <span class="nb">min</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">signal_length</span><span class="p">)])</span>
+
+    <span class="c1">########################## PREPARE INPUT/ OUTPUT SIGNALS ############################</span>
+
+    <span class="c1"># input signals</span>
+    <span class="n">X_signals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">signal_length</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">signal</span> <span class="ow">in</span> <span class="n">input_signals</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">signal</span> <span class="o">==</span> <span class="s1">&#39;oni&#39;</span><span class="p">):</span>
+            <span class="n">new_signal</span> <span class="o">=</span> <span class="n">oni</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">signal_length</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_signal</span> <span class="o">=</span> <span class="p">(</span><span class="n">signals_pd</span><span class="p">[</span><span class="n">signal</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">signal_length</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">X_signals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X_signals</span><span class="p">,</span> <span class="n">new_signal</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">include_month</span><span class="p">):</span>
+        <span class="n">new_signal</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">signal_length</span><span class="p">)</span> <span class="o">%</span> <span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">signal_length</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">X_signals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X_signals</span><span class="p">,</span> <span class="n">new_signal</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># output signals</span>
+    <span class="n">y_signals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">signal_length</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">signal</span> <span class="ow">in</span> <span class="n">output_signals</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">signal</span> <span class="o">==</span> <span class="s1">&#39;oni&#39;</span><span class="p">):</span>
+            <span class="n">new_signal</span> <span class="o">=</span> <span class="n">oni</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">signal_length</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_signal</span> <span class="o">=</span> <span class="p">(</span><span class="n">signals_pd</span><span class="p">[</span><span class="n">signal</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">signal_length</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">y_signals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_signals</span><span class="p">,</span> <span class="n">new_signal</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1">########################## CONVERT SIGNALS TO (X, y) #############################</span>
+
+    <span class="n">effective_length</span> <span class="o">=</span> <span class="n">signal_length</span> <span class="o">-</span> <span class="n">history</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">timeline</span><span class="p">)</span>
+
+    <span class="c1"># Observations</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="n">effective_length</span><span class="p">,</span> <span class="n">history</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">input_signals</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">include_month</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">effective_length</span><span class="p">):</span>
+        <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">history</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">X_signals</span><span class="p">[</span><span class="n">i</span><span class="p">:(</span><span class="n">i</span> <span class="o">+</span> <span class="n">history</span><span class="p">)]</span>
+
+    <span class="c1"># if we use only one observation</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">history</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">rehshape</span><span class="p">((</span><span class="n">effective_length</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">input_signals</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">include_month</span><span class="p">))</span>
+
+    <span class="c1"># Labels</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="n">effective_length</span><span class="p">,</span> <span class="n">timeline</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">output_signals</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="n">n_t</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">timeline</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">effective_length</span><span class="p">):</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n_t</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">y_signals</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">history</span> <span class="o">+</span> <span class="n">t</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">n_t</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># if we predict only one timeline</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">timeline</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">effective_length</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">output_signals</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div>
+    
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, alexjyu
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

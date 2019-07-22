@@ -4,15 +4,14 @@
 from ctsb import error
 from ctsb.problems import Problem
 
-# class for online control tests
 class TimeSeriesProblem(Problem):
-
+    ''' Description: class for online control tests '''
     def initialize(self, **kwargs):
-        # resets problem to time 0
+        ''' Description: resets problem to time 0 '''
         self.has_regressors = None
         raise NotImplementedError
 
     def step(self, action=None):
-        #Run one timestep of the problem's dynamics. 
+        ''' Description: Run one timestep of the problem's dynamics. '''
         raise NotImplementedError
 

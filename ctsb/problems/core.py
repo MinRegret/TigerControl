@@ -11,19 +11,19 @@ class Problem(object):
         self.initialized = False
 
     def initialize(self, **kwargs):
-        # resets problem to time 0
+        ''' Description: resets problem to time 0 '''
         raise NotImplementedError
 
     def step(self, action=None):
-        #Run one timestep of the problem's dynamics. 
+        ''' Description: run one timestep of the problem's dynamics. '''
         raise NotImplementedError
 
     def close(self):
-        # closes the problem and returns used memory
+        ''' Description: closes the problem and returns used memory '''
         pass
 
     def help(self):
-        # prints information about this class and its methods
+        ''' Description: prints information about this class and its methods '''
         raise NotImplementedError
 
     def __str__(self):

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 class ArmaOgd(ctsb.CustomModel):
     """
-    Implements the ARMA-OGD algorithm for time series prediction
+    Description: Implements the ARMA-OGD algorithm for time series prediction
     """
 
     def __init__(self):
@@ -14,8 +14,7 @@ class ArmaOgd(ctsb.CustomModel):
 
     def initialize(self, p, optimizer=None, optimizer_params_dict=None, loss=None):
         """
-        Description:
-            Initializes autoregressive model parameters
+        Description: Initializes autoregressive model parameters
         Args:
             p (int): Length of history used for prediction
         """
@@ -33,8 +32,7 @@ class ArmaOgd(ctsb.CustomModel):
 
     def predict(self, x):
         """
-        Description:
-            Predict next value given present value
+        Description: Predict next value given present value
         Args:
             x (int/numpy.ndarray):  Value at current time-step
         Returns:

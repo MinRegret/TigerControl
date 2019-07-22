@@ -10,7 +10,7 @@ from ctsb.problems.control import ControlProblem
 
 class LSTM_Output(ControlProblem):
     """
-    Produces outputs from a randomly initialized recurrent neural network.
+    Description: Produces outputs from a randomly initialized recurrent neural network.
     """
 
     def __init__(self):
@@ -18,8 +18,7 @@ class LSTM_Output(ControlProblem):
 
     def initialize(self, n, m, h=64):
         """
-        Description:
-            Randomly initialize the RNN.
+        Description: Randomly initialize the RNN.
         Args:
             n (int): Input dimension.
             m (int): Observation/output dimension.
@@ -55,8 +54,7 @@ class LSTM_Output(ControlProblem):
         
     def step(self, x):
         """
-        Description:
-            Takes an input and produces the next output of the RNN.
+        Description: Takes an input and produces the next output of the RNN.
         Args:
             x (numpy.ndarray): RNN input, an n-dimensional real-valued vector.
         Returns:
@@ -71,8 +69,7 @@ class LSTM_Output(ControlProblem):
 
     def hidden(self):
         """
-        Description:
-            Return the hidden state of the RNN when computed on the last l inputs.
+        Description: Return the hidden state of the RNN when computed on the last l inputs.
         Args:
             None
         Returns:
@@ -83,8 +80,7 @@ class LSTM_Output(ControlProblem):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
         Args:
             None
         Returns:

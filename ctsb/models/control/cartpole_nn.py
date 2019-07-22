@@ -3,12 +3,17 @@ from ctsb.models.control.control_model import ControlModel
 from ctsb.models.control.cartpole_weights import *
 
 class CartPoleNN(ControlModel):
-    "Simple multi-layer perceptron policy, no internal state"
+    ''' Description: Simple multi-layer perceptron policy, no internal state '''
 
     def __init__(self):
         self.initialized = False
 
     def initialize(self, observation_space, action_space):
+        ''' Description: initialize the NN 
+            Args:
+                observation_space:
+                action_space:
+        '''
         self.initialized = True
         assert weights_dense1_w.shape == (observation_space.shape[0], 64.0)
         assert weights_dense2_w.shape == (64.0, 32.0)

@@ -13,7 +13,7 @@ from ctsb.problems.time_series import TimeSeriesProblem
 
 class ARMA(TimeSeriesProblem):
     """
-    Simulates an autoregressive moving-average time-series.
+    Description: Simulates an autoregressive moving-average time-series.
     """
 
     def __init__(self):
@@ -22,8 +22,7 @@ class ARMA(TimeSeriesProblem):
 
     def initialize(self, p, q, c=None, noise_magnitude=1.0):
         """
-        Description:
-            Randomly initialize the hidden dynamics of the system.
+        Description: Randomly initialize the hidden dynamics of the system.
         Args:
             p (int/numpy.ndarray): Autoregressive dynamics. If type int then randomly
                 initializes a Gaussian length-p vector with L1-norm bounded by 1.0. 
@@ -75,8 +74,7 @@ class ARMA(TimeSeriesProblem):
 
     def step(self):
         """
-        Description:
-            Moves the system dynamics one time-step forward.
+        Description: Moves the system dynamics one time-step forward.
         Args:
             None
         Returns:
@@ -89,8 +87,7 @@ class ARMA(TimeSeriesProblem):
 
     def hidden(self):
         """
-        Description:
-            Return the hidden state of the system.
+        Description: Return the hidden state of the system.
         Args:
             None
         Returns:
@@ -102,8 +99,7 @@ class ARMA(TimeSeriesProblem):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
         Args:
             None
         Returns:

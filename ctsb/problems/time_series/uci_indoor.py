@@ -23,8 +23,7 @@ class UCI_Indoor(TimeSeriesProblem):
 
     def initialize(self, pred_indices=['5:Weather_Temperature']):
         """
-        Description:
-            Check if data exists, else download, clean, and setup.
+        Description: Check if data exists, else download, clean, and setup.
         Args:
             None
         Returns:
@@ -41,8 +40,7 @@ class UCI_Indoor(TimeSeriesProblem):
 
     def step(self):
         """
-        Description:
-            Moves time forward by fifteen minutes and returns weather metrics
+        Description: Moves time forward by fifteen minutes and returns weather metrics
         Args:
             None
         Returns:
@@ -57,8 +55,7 @@ class UCI_Indoor(TimeSeriesProblem):
 
     def hidden(self):
         """
-        Description:
-            Return the date corresponding to the last value of the uci_indoor that was returned
+        Description: Return the date corresponding to the last value of the uci_indoor that was returned
         Args:
             None
         Returns:
@@ -75,8 +72,7 @@ class UCI_Indoor(TimeSeriesProblem):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
         Args:
             None
         Returns:

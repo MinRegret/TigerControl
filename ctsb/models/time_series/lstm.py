@@ -13,7 +13,7 @@ from ctsb.models.optimizers.losses import mse
 
 class LSTM(TimeSeriesModel):
     """
-    Produces outputs from a randomly initialized LSTM neural network.
+    Description: Produces outputs from a randomly initialized LSTM neural network.
     """
 
     def __init__(self):
@@ -21,8 +21,7 @@ class LSTM(TimeSeriesModel):
 
     def initialize(self, n, m, l = 32, h = 64, optimizer = SGD, optimizer_params_dict = None, loss = mse, lr = 0.0001):
         """
-        Description:
-            Randomly initialize the LSTM.
+        Description: Randomly initialize the LSTM.
         Args:
             n (int): Input dimension.
             m (int): Observation/output dimension.
@@ -86,9 +85,8 @@ class LSTM(TimeSeriesModel):
 
     def to_ndarray(self, x):
         """
-        Description:
-            If x is a scalar, transform it to a (1, 1) numpy.ndarray;
-            otherwise, leave it unchanged.
+        Description: If x is a scalar, transform it to a (1, 1) numpy.ndarray;
+        otherwise, leave it unchanged.
         Args:
             x (float/numpy.ndarray)
         Returns:
@@ -101,8 +99,7 @@ class LSTM(TimeSeriesModel):
 
     def predict(self, x):
         """
-        Description:
-            Predict next value given observation
+        Description: Predict next value given observation
         Args:
             x (int/numpy.ndarray): Observation
         Returns:
@@ -117,8 +114,7 @@ class LSTM(TimeSeriesModel):
 
     def update(self, y):
         """
-        Description:
-            Updates parameters
+        Description: Updates parameters
         Args:
             y (int/numpy.ndarray): True value at current time-step
         Returns:
@@ -130,8 +126,7 @@ class LSTM(TimeSeriesModel):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
         Args:
             None
         Returns:

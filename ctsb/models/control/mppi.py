@@ -11,7 +11,7 @@ from ctsb.models.control import ControlModel
 
 class MPPI(ControlModel):
     """
-    Implements Model Predictive Path Integral Control to compute optimal control sequence.
+    Description: Implements Model Predictive Path Integral Control to compute optimal control sequence.
     """
 
     def __init__(self):
@@ -19,8 +19,7 @@ class MPPI(ControlModel):
 
     def initialize(self, env, K, T, U, lambda_=1.0, noise_mu=0, noise_sigma=1, u_init=1):
         """
-        Description:
-            Initialize the dynamics of the model.
+        Description: Initialize the dynamics of the model.
         Args:
             env (problem): The problem instance
             K (non-negative int): Number of trajectory samples
@@ -88,8 +87,7 @@ class MPPI(ControlModel):
 
     def step(self, n = 100):
         """
-        Description: Updates internal parameters and then returns the
-            estimated optimal set of actions
+        Description: Updates internal parameters and then returns the estimated optimal set of actions
         Args:
             n (non-negative int): Number of updates
         Returns:
@@ -103,8 +101,7 @@ class MPPI(ControlModel):
 
     def predict(self):
         """
-        Description:
-            Returns estimated optimal set of actions
+        Description: Returns estimated optimal set of actions
         Args:
             None
         Returns:
@@ -115,8 +112,7 @@ class MPPI(ControlModel):
 
     def update(self, n = 100):
         """
-        Description:
-            Updates internal parameters
+        Description: Updates internal parameters
         Args:
             n (non-negative int): Number of updates
         """
@@ -126,8 +122,7 @@ class MPPI(ControlModel):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
         Args:
             None
         Returns:

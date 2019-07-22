@@ -8,7 +8,7 @@ from ctsb.models.control import ControlModel
 
 class LQR(ControlModel):
     """
-    Computes optimal set of actions using the Linear Quadratic Regulator
+    Description: Computes optimal set of actions using the Linear Quadratic Regulator
     algorithm.
     """
 
@@ -17,9 +17,8 @@ class LQR(ControlModel):
 
     def to_ndarray(self, x):
         """
-        Description:
-            If x is a scalar, transform it to a (1, 1) numpy.ndarray;
-            otherwise, leave it unchanged.
+        Description: If x is a scalar, transform it to a (1, 1) numpy.ndarray;
+        otherwise, leave it unchanged.
         Args:
             x (float/numpy.ndarray)
         Returns:
@@ -32,8 +31,7 @@ class LQR(ControlModel):
 
     def extend(self, x, T):
         """
-        Description:
-        	If x is not in the correct form, convert it; otherwise, leave it unchanged.
+        Description: If x is not in the correct form, convert it; otherwise, leave it unchanged.
         Args:
             x (float/numpy.ndarray)
             T (postive int): number of timesteps
@@ -45,8 +43,7 @@ class LQR(ControlModel):
 
     def initialize(self, F, f, C, c, T, x):
         """
-        Description:
-            Initialize the dynamics of the model
+        Description: Initialize the dynamics of the model
         Args:
             F (float/numpy.ndarray): past value contribution coefficients
             f (float/numpy.ndarray): bias coefficients
@@ -66,8 +63,7 @@ class LQR(ControlModel):
 
     def step(self):
         """
-        Description: Updates internal parameters and then returns the
-        	estimated optimal set of actions
+        Description: Updates internal parameters and then returns the estimated optimal set of actions
         Args:
             None
         Returns:
@@ -101,8 +97,7 @@ class LQR(ControlModel):
 
     def predict(self):
         """
-        Description:
-            Returns estimated optimal set of actions
+        Description: Returns estimated optimal set of actions
         Args:
             None
         Returns:
@@ -113,8 +108,7 @@ class LQR(ControlModel):
 
     def update(self):
         """
-        Description:
-        	Updates internal parameters
+        Description: Updates internal parameters
         Args:
             None
         """
@@ -146,8 +140,7 @@ class LQR(ControlModel):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
         Args:
             None
         Returns:

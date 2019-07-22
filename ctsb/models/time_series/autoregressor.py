@@ -12,7 +12,7 @@ from ctsb.models.optimizers.losses import mse
 
 class AutoRegressor(TimeSeriesModel):
     """
-    Implements the equivalent of an AR(p) model - predicts a linear
+    Description: Implements the equivalent of an AR(p) model - predicts a linear
     combination of the previous p observed values in a time-series
     """
 
@@ -21,8 +21,7 @@ class AutoRegressor(TimeSeriesModel):
 
     def initialize(self, p, optimizer = SGD, loss = mse, lr = 0.001):
         """
-        Description:
-            Initializes autoregressive model parameters
+        Description: Initializes autoregressive model parameters
         Args:
             p (int): Length of history used for prediction
             optimizer (class): optimizer choice
@@ -50,8 +49,7 @@ class AutoRegressor(TimeSeriesModel):
 
     def predict(self, x):
         """
-        Description:
-            Predict next value given present value
+        Description: Predict next value given present value
         Args:
             x (int/numpy.ndarray):  Value at current time-step
         Returns:
@@ -66,8 +64,7 @@ class AutoRegressor(TimeSeriesModel):
 
     def update(self, y):
         """
-        Description:
-            Updates parameters using the specified optimizer
+        Description: Updates parameters using the specified optimizer
         Args:
             y (int/numpy.ndarray): True value at current time-step
         Returns:
@@ -79,8 +76,7 @@ class AutoRegressor(TimeSeriesModel):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
         Args:
             None
         Returns:

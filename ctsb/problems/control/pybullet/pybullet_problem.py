@@ -6,13 +6,13 @@ from ctsb.problems import Problem
 import pybullet as p
 from ctsb.problems.control.pybullet.simulator_wrapper import SimulatorWrapper
 
-# class for online control tests
 class PyBulletProblem(Problem):
+    ''' Description: class for online control tests '''
     
     def __init__(self):
         self.initialized = False
 
-    def initiliaze(self):
+    def initialize(self):
         self.initialized = True
         self.sim = None
         self.env = None

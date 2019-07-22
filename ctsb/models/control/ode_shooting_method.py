@@ -8,7 +8,7 @@ from ctsb.models.control import ControlModel
 
 class ODEShootingMethod(ControlModel):
     """
-    Implements the shooting method to solve second order boundary value
+    Description: Implements the shooting method to solve second order boundary value
     problems with conditions y(0) = a and y(L) = b. Assumes that the
     second order BVP has been converted to a first order system of two
     equations.
@@ -19,8 +19,7 @@ class ODEShootingMethod(ControlModel):
 
     def euler(self, f, a, z, t, dt = 0.1):
         """
-        Description:
-            Solve corresponding initial value problem.
+        Description: Solve corresponding initial value problem.
         Args:
             f (function): describes dy/dt = f(y,t)
             a (float): value of y(0)
@@ -44,8 +43,7 @@ class ODEShootingMethod(ControlModel):
 
     def initialize(self, f, a, b, z1, z2, t):
         """
-        Description:
-            Initialize the dynamics of the model.
+        Description: Initialize the dynamics of the model.
         Args:
             f (function): describes dy/dt = f(y,t)
             a (float): value of y(0)
@@ -64,9 +62,8 @@ class ODEShootingMethod(ControlModel):
 
     def step(self, n = 1):
         """
-        Description:
-            Updates internal parameters for n iterations and then returns
-            current solution estimation.
+        Description: Updates internal parameters for n iterations and then returns
+        current solution estimation.
         Args:
             n (non-negative int): number of updates
         Returns:
@@ -86,8 +83,7 @@ class ODEShootingMethod(ControlModel):
 
     def predict(self):
         """
-        Description:
-            Returns current solution estimation.
+        Description: Returns current solution estimation.
         Args:
             None
         Returns:
@@ -110,8 +106,7 @@ class ODEShootingMethod(ControlModel):
 
     def help(self):
         """
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
         Args:
             None
         Returns:
