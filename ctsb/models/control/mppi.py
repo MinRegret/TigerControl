@@ -14,6 +14,8 @@ class MPPI(ControlModel):
     Implements Model Predictive Path Integral Control to compute optimal control sequence.
     """
 
+    compatibles = set(['PyBullet'])
+
     def __init__(self):
         self.initialized = False
 

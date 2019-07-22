@@ -16,11 +16,13 @@ class ARMA(TimeSeriesProblem):
     Simulates an autoregressive moving-average time-series.
     """
 
+    compatibles = set(['ARMA-v0', 'TimeSeries'])
+
     def __init__(self):
         self.initialized = False
         self.has_regressors = False
 
-    def initialize(self, p, q, c=None, noise_magnitude=1.0):
+    def initialize(self, p=3, q=3, c=None, noise_magnitude=1.0):
         """
         Description:
             Randomly initialize the hidden dynamics of the system.

@@ -15,6 +15,8 @@ class UCI_Indoor(TimeSeriesProblem):
     Description: Outputs various weather metrics from a UCI dataset from 13/3/2012 to 11/4/2012
     """
 
+    compatibles = set(['UCIIndoor-v0', 'TimeSeries'])
+
     def __init__(self):
         self.initialized = False
         # self.data_path = os.path.join(get_ctsb_dir(), "data/uci_indoor_cleaned.csv")

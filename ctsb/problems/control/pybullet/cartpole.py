@@ -11,6 +11,9 @@ class CartPole(PyBulletProblem):
     """
     Simulates a pendulum balanced on a cartpole.
     """
+
+    compatibles = set(['CartPole-v0', 'PyBullet'])
+    
     def __init__(self):
         self.initialized = False
 
