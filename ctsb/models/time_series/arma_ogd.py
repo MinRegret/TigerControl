@@ -44,12 +44,17 @@ class ArmaOgd(ctsb.CustomModel):
             Predicted value for the next time-step
         """
         assert self.initialized
-
         """ predict"""
         return np.dot(self.params, self.past)
 
     def update(self, y, loss=None):
         self.params = self.optimizer.update(self.params, None, y, {'past': self.past})
+        """ update the indices of the past """
+        temp = np.zeros(self.order + 1)
+        temp[0:self.order] = self.past[1:self.order + 1]
+        temp[self.order] = y
+        self.past = temp
+
     '''
     def update(self, y, loss = None):
         """
