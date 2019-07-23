@@ -11,4 +11,4 @@ def run_all_tests(steps=1000, show=False):
     print("\nall problems tests passed\n")
   
 if __name__ == "__main__":
-    run_all_tests(show=True)
+    run_all_tests(show=False)

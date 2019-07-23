@@ -46,6 +46,9 @@ def test_kuka_diverse(show=False):
             obs, rew, done, _ = problem.step(act)
             episode_rew += rew
 
+    problem.close()
+    print("test_kuka_diverse passed")
+
 
 if __name__ == '__main__':
     test_kuka_diverse()

@@ -25,6 +25,8 @@ def test_humanoid(steps=1000, show=False):
         sum_reward += reward
         if done:
             problem.reset()
+            
+    problem.close()
     print("test_humanoid passed")
 
 
