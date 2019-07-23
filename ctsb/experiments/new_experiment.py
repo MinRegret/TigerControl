@@ -5,7 +5,7 @@ from ctsb import error
 from ctsb.experiments.core import run_experiment, create_full_problem_to_models
 
 class NewExperiment(object):
-
+    ''' Description: class for implementing algorithms with enforced modularity '''
     def __init__(self):
         self.initialized = False
 

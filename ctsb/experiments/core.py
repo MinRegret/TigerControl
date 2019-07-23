@@ -16,6 +16,7 @@ metrics = {'mse': metrics.mse, 'cross_entropy': metrics.cross_entropy}
 def get_ids(x):
     '''
     Description: Gets the ids of problems/models
+
     Args:
         x (list / dict): list of ids of problems/models or dictionary of problems/models and parameters
     Returns:
@@ -29,6 +30,7 @@ def get_ids(x):
 def create_full_problem_to_models(problems_ids, model_ids):
     '''
     Description: Associate all given problems to all given models.
+
     Args:
         problem_ids (list): list of problem names
         model_ids (list): list of model names
@@ -48,6 +50,7 @@ def create_full_problem_to_models(problems_ids, model_ids):
 def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100, verbose = True, load_bar = True):
     '''
     Description: Initializes the experiment instance.
+    
     Args:
         problem (tuple): problem id and parameters to initialize the specific problem instance with
         model (tuple): model id and parameters to initialize the specific model instance with

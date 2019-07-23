@@ -8,7 +8,6 @@ from ctsb.models.optimizers.losses import mse
 from ctsb import error
 
 class Optimizer():
-
     """
     Description: Core class for model optimizers
     Args:

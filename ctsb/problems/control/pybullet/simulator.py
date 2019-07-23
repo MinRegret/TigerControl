@@ -1,8 +1,8 @@
 # from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
 import pybullet as p
 
-class Simulator(object):
 
+class Simulator(object):
     def __init__(self, env=None):
         self.initialized = (env != None)
         self._env = env

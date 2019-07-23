@@ -8,7 +8,7 @@ from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
 
 class CartPoleDouble(PyBulletProblem):
     """
-    Simulates a pendulum balanced on a cartpole.
+    Descrtion: Simulates a pendulum balanced on a cartpole.
     """
 
     compatibles = set(['CartPoleDouble-v0', 'PyBullet'])

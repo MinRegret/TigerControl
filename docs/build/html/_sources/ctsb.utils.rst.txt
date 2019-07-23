@@ -1,0 +1,25 @@
+ctsb.utils package
+==================
+
+.. automodule:: ctsb.utils
+
+dataset_registry
+----------------
+
+.. autosummary::
+  :toctree: _autosummary
+
+   unemployment
+   uci_indoor
+   sp500
+   crypto
+   ctrl_indices
+
+random
+------
+.. autosummary::
+  :toctree: _autosummary
+
+   set_key
+   generate_key
+   get_global_key

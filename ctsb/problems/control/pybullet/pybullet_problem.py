@@ -6,6 +6,7 @@ from ctsb.problems import Problem
 import pybullet as p
 from ctsb.problems.control.pybullet.simulator import Simulator
 
+
 class PyBulletProblem(Simulator):
     ''' Description: class for online control tests '''
   

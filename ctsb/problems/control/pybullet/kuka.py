@@ -8,7 +8,7 @@ from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
 
 class Kuka(PyBulletProblem):
     """
-    Simulates a kuka arm picking up diverse objects
+    Description: Simulates a kuka arm picking up diverse objects
     """
     def __init__(self):
         self.initialized = False

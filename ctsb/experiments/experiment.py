@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from prettytable import PrettyTable
 
 class Experiment(object):
-
+    ''' Description: Experiment class '''
     def __init__(self):
         self.initialized = False
         
@@ -157,7 +157,7 @@ class Experiment(object):
     def graph(self, save_as = None, metric = 'mse', time = 5):
         '''
         Description: Show a graph for the results of the experiments for specified metric.
-
+        
         Args:
             save_as (string): If not None, datapath to save the figure containing the plots
             metric (string): Metric to compare results
