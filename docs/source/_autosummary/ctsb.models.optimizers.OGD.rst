@@ -1,20 +1,19 @@
-ctsb.models.optimizers.OGD
+ctsb.models.optimizers.ogd
 ==========================
 
-.. currentmodule:: ctsb.models.optimizers
-
-.. autoclass:: OGD
+.. automodule:: ctsb.models.optimizers.ogd
 
    
-   .. automethod:: __init__
+   
+   
 
    
-   .. rubric:: Methods
+   
+   .. rubric:: Classes
 
    .. autosummary::
    
-      ~OGD.__init__
-      ~OGD.update
+      OGD
    
    
 

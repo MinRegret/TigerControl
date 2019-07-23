@@ -1,5 +1,5 @@
-ctsb.problems.control.pybullet package
-======================================
+ctsb.problems.control.pybullet
+==============================
 
 .. automodule:: ctsb.problems.control.pybullet
 
