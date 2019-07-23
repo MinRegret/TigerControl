@@ -4,10 +4,9 @@ import ctsb
 from ctsb import error
 from ctsb.experiments.core import run_experiment, get_ids
 from ctsb.experiments.new_experiment import NewExperiment
-import ctsb.experiments.precomputed as precomputed
-from statistics import mean
+from ctsb.experiments import precomputed
 import csv
-import numpy as np
+import jax.numpy as np
 import matplotlib.pyplot as plt
 from prettytable import PrettyTable
 

@@ -2,7 +2,8 @@
 PyBullet Pendulum enviornment
 """
 
-from pybullet_envs.bullet.kukaGymEnv import KukaGymEnv
+import gym
+import pybullet_envs
 from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
 
 
@@ -15,7 +16,7 @@ class Kuka(PyBulletProblem):
 
     def initialize(self):
         self.initialized = True
-        self._env = KukaGymEnv()
+        self._env = gym.make("KukaBulletEnv-v0")
         self.observation_space = self._env.observation_space.shape
         self.action_space = self._env.action_space.shape
         self.state = {}

@@ -14,15 +14,15 @@ def test_ctsb_functionality(show_results=False):
 
 # test ctsb.help() method
 def test_help():
-	ctsb.help()
+    ctsb.help()
 
 
 def test_error():
-	try:
-    	from ctsb.error import Unregistered
-    	raise Unregistered()
-    except Unregistered:
-    	pass
+    try:
+        from ctsb.error import Error
+        raise Error()
+    except Error:
+        pass
 
 if __name__ == "__main__":
     test_ctsb_functionality(show_results=False)

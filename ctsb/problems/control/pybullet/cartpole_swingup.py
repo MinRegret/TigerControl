@@ -1,6 +1,7 @@
 """
 PyBullet Swingup Pendulum enviornment
 """
+
 import gym
 import pybullet_envs
 from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
