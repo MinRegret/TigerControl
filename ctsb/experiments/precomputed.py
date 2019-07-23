@@ -32,7 +32,7 @@ def get_timesteps():
 def get_key():
     return keys
 
-def recompute():
+def recompute(verbose = False, load_bar = False):
     '''
     Description: Initializes the experiment instance. 
     Args:
@@ -49,10 +49,9 @@ def recompute():
             with open(datapath, 'w') as csvfile:
                 writer = csv.writer(csvfile)
                 for model_id in all_models:
-                    print("Getting %s: Running %s on %s" % (metric, problem_id[:-3], model_id))
-                    #loss, time, memory = run_experiment((problem_id, None), (model_id, None), metric, key = key, timesteps = timesteps)
                     try:
-                        loss, time, memory = run_experiment((problem_id, None), (model_id, None), metric, key = key, timesteps = timesteps)
+                        loss, time, memory = run_experiment((problem_id, None), (model_id, None), metric, \
+                                                             key = key, timesteps = timesteps)
                     except:
                         loss = np.zeros(timesteps)
                     # save results for current problem #
@@ -69,9 +68,9 @@ def recompute():
         with open(datapath, 'w') as csvfile:
             writer = csv.writer(csvfile)
             for model_id in all_models:
-                print("Getting Performance: Running %s on %s" % (problem_id[:-3], model_id))
                 try:
-                    _, time, memory = run_experiment((problem_id, None), (model_id, None), metric, key = key, timesteps = timesteps)
+                    _, time, memory = run_experiment((problem_id, None), (model_id, None), \
+                        metric, key = key, timesteps = timesteps, verbose = verbose, load_bar = load_bar)
                 except:
                     time, memory = -1, -1
                 # save results for current problem #
