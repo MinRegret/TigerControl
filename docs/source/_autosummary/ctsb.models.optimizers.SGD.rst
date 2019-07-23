@@ -1,20 +1,19 @@
-ctsb.models.optimizers.SGD
+ctsb.models.optimizers.sgd
 ==========================
 
-.. currentmodule:: ctsb.models.optimizers
-
-.. autoclass:: SGD
+.. automodule:: ctsb.models.optimizers.sgd
 
    
-   .. automethod:: __init__
+   
+   
 
    
-   .. rubric:: Methods
+   
+   .. rubric:: Classes
 
    .. autosummary::
    
-      ~SGD.__init__
-      ~SGD.update
+      SGD
    
    
 

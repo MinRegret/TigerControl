@@ -5,6 +5,9 @@ ctsb.problems package
 
 core
 ----
+
+This is a core
+
 .. autosummary::
   :toctree: _autosummary
 

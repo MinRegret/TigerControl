@@ -34,8 +34,6 @@ time_series
    ctsb.models.time_series.AutoRegressor
    ctsb.models.time_series.LastValue
    ctsb.models.time_series.PredictZero
-   ctsb.models.time_series.ArmaOgd
-   ctsb.models.time_series.ArmaAdaGrad
    ctsb.models.time_series.rnn.RNN
    ctsb.models.time_series.lstm.LSTM
 
@@ -46,8 +44,8 @@ optimizers
   :toctree: _autosummary
 
    ctsb.models.optimizers.Optimizer
-   ctsb.models.optimizers.Adagrad
-   ctsb.models.optimizers.SGD
-   ctsb.models.optimizers.OGD
+   ctsb.models.optimizers.adagrad
+   ctsb.models.optimizers.sgd
+   ctsb.models.optimizers.ogd
    ctsb.models.optimizers.mse
    ctsb.models.optimizers.cross_entropy
