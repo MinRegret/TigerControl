@@ -4,10 +4,10 @@
 from ctsb import error
 from ctsb.problems import Problem
 import pybullet as p
-from ctsb.problems.control.pybullet.simulator_wrapper import SimulatorWrapper
+from ctsb.problems.control.pybullet.simulator import Simulator
 
-class PyBulletProblem(SimulatorWrapper):
-  ''' Description: class for online control tests '''
+class PyBulletProblem(Simulator):
+    ''' Description: class for online control tests '''
   
     def get_simulator(self): # same as calling fork()
         return self.fork()

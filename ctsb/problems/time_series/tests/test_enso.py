@@ -5,7 +5,7 @@ import jax.numpy as np
 import matplotlib.pyplot as plt
 
 
-def test_ctrl_indices(steps=1000, show_plot=False, verbose=False):
+def test_enso(steps=1000, show_plot=False, verbose=False):
     T = steps
     problem = ctsb.problem("ENSO-v0")
     problem.initialize()
@@ -23,13 +23,13 @@ def test_ctrl_indices(steps=1000, show_plot=False, verbose=False):
         print(info)
     if show_plot:
         plt.plot(test_output)
-        plt.title("ONI")
+        plt.title("ENSO")
         plt.show(block=False)
         plt.pause(1)
         plt.close()
-    print("test_ctrl_indices passed")
+    print("test_enso passed")
     return
 
 
 if __name__=="__main__":
-    test_ctrl_indices(show_plot=True)
+    test_enso(show_plot=True)

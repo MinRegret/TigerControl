@@ -1,7 +1,7 @@
 # from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
 import pybullet as p
 
-class SimulatorWrapper(object):
+class Simulator(object):
 
     def __init__(self):
         self.initialized = False
@@ -45,4 +45,4 @@ class SimulatorWrapper(object):
 
     # return clone of simulator
     def fork(self):
-        return SimulatorWrapper(self._env)
+        return Simulator(self._env)
