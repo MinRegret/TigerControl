@@ -8,6 +8,10 @@ class InvalidInput(Error):
     """
     pass
 
+class ObjectNotInitialized(Error):
+    """Raised when the user calls class method before initializing
+    """
+    pass
 # Local errors
 
 class StepOutOfBounds(Error):

@@ -4,10 +4,10 @@ Test for PyBullet cartpole problem
 import time
 import ctsb
 import jax.numpy as np
-from ctsb.problems.control.pybullet.simulator_wrapper import SimulatorWrapper
+from ctsb.problems.control.pybullet.simulator import Simulator
 
 # cartpole test
-def test_simulator_wrapper(verbose=False):
+def test_simulator(verbose=False):
     problem = ctsb.problem("CartPole-v0")
     obs = problem.initialize(render=verbose)
 
@@ -62,9 +62,9 @@ def test_simulator_wrapper(verbose=False):
         if verbose:
             time.sleep(1. / 60.)
 
-    print("test_simulator_wrapper passed")
+    print("test_simulator passed")
 
 
 if __name__ == "__main__":
-    test_simulator_wrapper(verbose=True)
+    test_simulator(verbose=True)
 

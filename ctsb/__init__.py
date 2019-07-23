@@ -10,7 +10,7 @@ from ctsb.problems import problem, CustomProblem, problem_registry, register_cus
 from ctsb.models import model, CustomModel, model_registry, register_custom_model
 from ctsb.help import help
 from ctsb.utils import set_key
-#from ctsb.experiments import Experiment
+from ctsb.experiments.experiment import Experiment
 
 # initialize global random key by seeding the jax random number generator
 # note: numpy is necessary because jax RNG is deterministic

@@ -2,9 +2,7 @@
 SGD optimizer
 '''
 from ctsb.models.optimizers.core import Optimizer
-import jax
-import jax.numpy as np
-import jax.experimental.stax as stax
+from ctsb.models.optimizers.losses import mse
 
 class SGD(Optimizer):
     """
@@ -16,28 +14,28 @@ class SGD(Optimizer):
     Returns:
         None
     """
-    def __init__(self, pred, loss, learning_rate):
+    def __init__(self, pred=None, loss=mse, learning_rate=0.01, hyperparameters={}):
         self.lr = learning_rate
-        self.pred = pred
-        loss_fn = lambda model_params, a, b : loss(pred(model_params, a), b)
-        self.grad_fn = jax.jit(jax.grad(loss_fn))
+        self.hyperparameters = hyperparameters
+        if self._is_valid_pred(pred, raise_error=False):
+            self.set_predict(pred, loss=loss)
+        else:
+            self.initialized = False
 
-    def update(self, model_params, x, y_true):
+
+    def update(self, params, x, y, loss=None):
         """
         Description: Updates parameters based on correct value, loss and learning rate.
         Args:
-            y (int/numpy.ndarray): True value at current time-step
-            loss (function): specifies loss function to be used; defaults to MSE
-            lr (float): specifies learning rate; defaults to 0.001.
+            params (list/numpy.ndarray): Parameters of model pred method
+            x (float): input to model
+            y (float): true label
+            loss (function): loss function. defaults to input value.
         Returns:
-            None
+            Updated parameters in same shape as input
         """
-        grad = self.grad_fn(model_params, x, y_true)
-        
-        if(type(model_params) is list):
-            return [w - self.lr * dw for (w, dw) in zip(model_params, grad)]
-        else:
-            return model_params - self.lr * grad
-        
-
-
+        assert self.initialized
+        grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
+        if (type(params) is list):
+            return [w - self.lr * dw for (w, dw) in zip(params, grad)]
+        return params - self.lr * grad

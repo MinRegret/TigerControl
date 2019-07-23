@@ -4,7 +4,7 @@ PyBullet Pendulum enviornment
 import gym
 import pybullet_envs
 from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
-from ctsb.problems.control.pybullet.simulator_wrapper import SimulatorWrapper
+from ctsb.problems.control.pybullet.simulator import Simulator
 
 
 class CartPole(PyBulletProblem):
@@ -22,7 +22,7 @@ class CartPole(PyBulletProblem):
         self._env = gym.make("InvertedPendulumBulletEnv-v0")
         if render:
             self._env.render(mode="human")
-        self.sim = SimulatorWrapper(self._env)
+        self.sim = Simulator(self._env)
         self.observation_space = self._env.observation_space.shape
         self.action_space = self._env.action_space.shape
         initial_obs = self._env.reset()

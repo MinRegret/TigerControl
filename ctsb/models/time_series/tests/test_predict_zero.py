@@ -19,7 +19,7 @@ def test_predict_zero(steps=1000, show_plot=True):
         cur_y_true = problem.step()
         cur_loss = loss(cur_y_true, cur_y_pred)
         results.append(cur_loss)
-        model.update(cur_loss)
+        model.update(cur_y_true)
         cur_x = cur_y_true
 
     if show_plot:

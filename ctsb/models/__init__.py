@@ -32,16 +32,6 @@ model_register(
 )
 
 model_register(
-    id='ArmaOgd',
-    entry_point='ctsb.models.time_series:ArmaOgd',
-)
-
-model_register(
-    id='ArmaAdaGrad',
-    entry_point='ctsb.models.time_series:ArmaAdaGrad',
-)
-
-model_register(
     id='KalmanFilter',
     entry_point='ctsb.models.control:KalmanFilter',
 )
