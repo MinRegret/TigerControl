@@ -1,17 +1,17 @@
-# core class
+# experiments core class
 
 import ctsb
+from ctsb.experiments import metrics as metrics_module
 from ctsb import error
 from ctsb.problems.time_series import TimeSeriesProblem
 from ctsb.models.time_series import TimeSeriesModel
+from ctsb.utils.random import set_key
 from tqdm import tqdm
-import ctsb.experiments.metrics as metrics
 import inspect
 import time
-from ctsb.utils.random import set_key
 
 ############## TO MAKE AUTOMATIC !!! #################
-metrics = {'mse': metrics.mse, 'cross_entropy': metrics.cross_entropy}
+metrics = {'mse': metrics_module.mse, 'cross_entropy': metrics_module.cross_entropy}
 
 def get_ids(x):
     '''
