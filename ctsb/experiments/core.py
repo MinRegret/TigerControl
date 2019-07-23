@@ -36,14 +36,16 @@ def create_full_problem_to_models(problems_ids, model_ids):
         full_problem_to_models (dict): association problem -> model
     '''
     full_problem_to_models = {}
+
     for problem_id in problems_ids:
+        full_problem_to_models[problem_id] = []
         for model_id in model_ids:
-            full_problem_to_models[problem_id] = model_id
+            full_problem_to_models[problem_id].append(model_id)
 
     return full_problem_to_models
 
 ##### CURRENTLY ONLY WORKS WITH TIME SERIES #######
-def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100):
+def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100, verbose = True, load_bar = True):
     '''
     Description: Initializes the experiment instance.
     Args:
@@ -92,12 +94,15 @@ def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100):
     is_ts_model = (inspect.getmro(model.__class__))[1] == TimeSeriesModel
     # assert (is_ts_problem and is_ts_model), "ERROR: Currently Experiment only supports Time Series Problems and Models."
 
+    if(verbose):
+        print("Running %s on %s..." % (model_id, problem_id))
+
     loss = []
     time_start = time.time()
     memory = 0
 
     # get loss series
-    for i in tqdm(range(timesteps)):
+    for i in tqdm(range(timesteps), disable = (not load_bar)):
         # get loss and update model
         cur_loss = loss_fn(y, model.predict(x))
         loss.append(cur_loss)

@@ -16,18 +16,22 @@ class Experiment(object):
     def __init__(self):
         self.initialized = False
         
-    def initialize(self, problems = None, models = None, problem_to_models=None, metrics = ['mse'], use_precomputed = True, timesteps = 100):
+    def initialize(self, problems = None, models = None, problem_to_models = None, metrics = ['mse'], \
+                         use_precomputed = True, timesteps = 100, verbose = True, load_bar = True):
         '''
-            Description:
-                Initializes the experiment instance. 
+            Description: Initializes the experiment instance. 
             Args:
                 problems (dict): map of the form problem_id -> hyperparameters for problem
                 models (dict): map of the form model_id -> hyperparameters for model
-                problem_to_models (dict) : map of the form problem_id -> list of model_id. If None, then we assume that the
-                user wants to test every model in model_to_params against every problem in problem_to_params
+                problem_to_models (dict) : map of the form problem_id -> list of model_id.
+                                           If None, then we assume that the user wants to
+                                           test every model in model_to_params against every
+                                           problem in problem_to_params
         '''
 
-        self.problems, self.models, self.problem_to_models, self.metrics, self.use_precomputed, self.timesteps = problems, models, problem_to_models, metrics, use_precomputed, timesteps
+        self.problems, self.models, self.problem_to_models, self.metrics = problems, models, problem_to_models, metrics
+        self.use_precomputed, self.timesteps, self.verbose, self.load_bar = use_precomputed, timesteps, verbose, load_bar
+
         self.new_models = 0
 
         if(use_precomputed and timesteps != precomputed.get_timesteps()):
@@ -37,19 +41,22 @@ class Experiment(object):
 
             # ensure problems and models don't have specified hyperparameters
             if(problems is dict):
-                print("WARNING: when using precomputed results, any specified problem hyperparameters will be disregarded and default ones will be used instead.")
+                print("WARNING: when using precomputed results, " + \
+                      "any specified problem hyperparameters will be disregarded and default ones will be used instead.")
                 self.problems = list(problems.keys())
             if(models is dict):
-                print("WARNING: when using precomputed results, any specified model hyperparameters will be disregarded and default ones will be used instead.")
+                print("WARNING: when using precomputed results, " + \
+                      "any specified model hyperparameters will be disregarded and default ones will be used instead.")
                 self.models = list(models.keys())
 
             # map of the form [metric][problem][model] -> loss series + time + memory
-            self.prob_model_to_result = precomputed.load_prob_model_to_result(problem_ids = problems, model_ids = models, problem_to_models = problem_to_models, metrics = metrics)
+            self.prob_model_to_result = precomputed.load_prob_model_to_result(problem_ids = problems, model_ids = models, \
+                                                                problem_to_models = problem_to_models, metrics = metrics)
 
         else:
 
-            new_experiment = NewExperiment()
-            new_experiment.initialize(problems, models, problem_to_params, metrics)
+            self.new_experiment = NewExperiment()
+            self.new_experiment.initialize(problems, models, problem_to_models, metrics, timesteps, verbose, load_bar)
 
             # map of the form [metric][problem][model] -> loss series + time + memory
             self.prob_model_to_result = {}
@@ -60,11 +67,12 @@ class Experiment(object):
             ''' Evaluate performance of new model on all problems '''
             for metric in metrics:
                 for problem_id, problem_params in self.problems:
-                    loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, key = precomputed.get_key(), timesteps = precomputed.get_timesteps()) # in core
+                    loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), \
+                                            metric, key = precomputed.get_key(), timesteps = precomputed.get_timesteps(), \
+                                            verbose = self.verbose, load_bar = self.load_bar)
                     self.prob_model_to_result[metric][model_id][problem_id] = loss
                     self.prob_model_to_result['time'][problem][model] = time
                     self.prob_model_to_result['memory'][problem][model] = memory
-
         else:
             self.models[model_id] = parameters
 
@@ -74,7 +82,7 @@ class Experiment(object):
         if(self.use_precomputed):
             print("We are in precomputed mode, so everything has already been run.")
         else:
-            self.prob_model_to_result = new_experiment.compute_prob_model_to_loss(self.problems, self.models, self.timesteps)
+            self.prob_model_to_result = self.new_experiment.run_all_experiments()
 
     def scoreboard(self, save_as = None, metric = 'mse'):
         '''
@@ -85,7 +93,8 @@ class Experiment(object):
         '''
 
         if(self.use_precomputed and metric == 'time' and self.new_models):
-            print("WARNING: Time comparison between precomputed models and any added model may be irrelevant due to hardware differences.")
+            print("WARNING: Time comparison between precomputed models and" + \
+                  "any added model may be irrelevant due to hardware differences.")
 
         print("Scoreboard for " + metric + ":")
         table = PrettyTable()
@@ -182,5 +191,7 @@ class Experiment(object):
     def help(self):
         # prints information about this class and its methods
         raise NotImplementedError
+
+
 
 
