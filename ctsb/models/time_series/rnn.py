@@ -1,5 +1,5 @@
 """
-Recurrent neural network output
+Recurrent neural network model
 """
 
 import jax
@@ -8,7 +8,7 @@ import jax.experimental.stax as stax
 import ctsb
 from ctsb.utils.random import generate_key
 from ctsb.models.time_series import TimeSeriesModel
-from ctsb.models.optimizers.SGD import SGD
+from ctsb.models.optimizers import SGD
 from ctsb.models.optimizers.losses import mse
 
 class RNN(TimeSeriesModel):
@@ -48,7 +48,12 @@ class RNN(TimeSeriesModel):
         self.hid = np.zeros(h)
         self.x = np.zeros((l, n))
 
-        # initialize jax.jitted predict and update functions
+        def _update_x(self_x, x):
+            new_x = np.roll(self_x, self.n)
+            new_x = jax.ops.index_update(new_x, jax.ops.index[0,:], x)
+            return new_x
+        self._update_x = jax.jit(_update_x)
+
         def _fast_predict(params, x, hid):
             W_h, W_x, W_out, b_h = params
             next_hid = np.tanh(np.dot(W_h, hid) + np.dot(W_x, x) + b_h)
@@ -56,22 +61,15 @@ class RNN(TimeSeriesModel):
             return (y, next_hid)
         self._fast_predict = jax.jit(_fast_predict)
 
-        def _slow_predict(params, x_list):
+        def _predict(params, x):
             W_h, W_x, W_out, b_h = params
             next_hid = np.zeros(self.h)
-            for x in x_list:
-                next_hid = np.tanh(np.dot(W_h, next_hid) + np.dot(W_x, x) + b_h)
+            for x_t in x:
+                next_hid = np.tanh(np.dot(W_h, next_hid) + np.dot(W_x, x_t) + b_h)
             y = np.dot(W_out, next_hid)
             return y
-        self._slow_predict = jax.jit(_slow_predict)
-
-        def _update_x(self_x, x):
-            new_x = np.roll(self_x, self.n)
-            new_x = jax.ops.index_update(new_x, jax.ops.index[0,:], x)
-            return new_x
-        self._update_x = jax.jit(_update_x)
-
-        self.optimizer = optimizer(pred = self._slow_predict, loss = loss, learning_rate = lr)
+        self._predict = jax.jit(_predict)
+        self.store_optimizer(optimizer, self._predict)
 
     def predict(self, x):
         """

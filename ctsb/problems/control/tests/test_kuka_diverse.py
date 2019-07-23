@@ -29,7 +29,7 @@ class ContinuousDownwardBiasPolicy(object):
         return [dx, dy, dz, da, 0.5]
 
 
-def test_kuka_diverse(show=False):
+def test_kuka_diverse(verbose=False):
 
     problem = ctsb.problem("KukaDiverse-v0")
     obs = problem.initialize()
@@ -40,11 +40,14 @@ def test_kuka_diverse(show=False):
         done =  False
         episode_rew = 0
         while not done:
-            if show:
+            if verbose:
                 problem.render(mode='human')
             act = policy.sample_action(obs, .1)
             obs, rew, done, _ = problem.step(act)
             episode_rew += rew
+
+    problem.close()
+    print("test_kuka_diverse passed")
 
 
 if __name__ == '__main__':

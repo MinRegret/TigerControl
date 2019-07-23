@@ -1,21 +1,37 @@
 import ctsb
+from ctsb.models.optimizers.adagrad import Adagrad
 from ctsb.models.optimizers.losses import mse
-from ctsb.models.optimizers.Adagrad import Adagrad
-from ctsb.experiments import Experiment
+import matplotlib.pyplot as plt
 
-
-def test_adagrad(time=1, show=False):
+def test_adagrad(show=False):
     problem = ctsb.problem('ARMA-v0')
-    problem.initialize(p=2,q=0)
-    exp = Experiment()
-    # MSE = lambda y_true, y_pred: (y_true - y_pred)**2
-    problem_to_params = {'ARMA-v0' : {'p':2, 'q':0}} 
-    model_to_params = {'ArmaAdaGrad': {'p':3, 'optimizer': Adagrad, 'loss': mse}}
-    exp.initialize(mse, problem_to_params, model_to_params)
-    exp.run_all_experiments(time_steps=3000)
+    x = problem.initialize(p=2,q=0)
+
+    model = ctsb.model('LSTM')
+    model.initialize(n=1, m=1, l=3, h=10, optimizer=Adagrad) # initialize with class
+    model.predict(1.0) # call methods to verify it works
+    model.update(1.0)
+
+    optimizer = Adagrad(learning_rate=0.1)
+    model = ctsb.model('LSTM')
+    model.initialize(n=1, m=1, l=3, h=10, optimizer=optimizer) # reinitialize with instance
+
+    loss = []
+    for t in range(1000):
+        y_pred = model.predict(x)
+        y_true = problem.step()
+        loss.append(mse(y_pred, y_true))
+        model.update(y_true)
+        x = y_true
+
     if show:
-        exp.plot_all_problem_results(time=time)
+        plt.plot(loss)
+        plt.show(block=False)
+        plt.pause(3)
+        plt.close()
     print("test_adagrad passed")
 
+
+
 if __name__ == "__main__":
-    test_adagrad(time=3)
+    test_adagrad(show=True)

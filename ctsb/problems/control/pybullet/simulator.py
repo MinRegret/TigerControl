@@ -1,14 +1,17 @@
 # from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
 import pybullet as p
 
-class SimulatorWrapper(object):
-    def __init__(self):
-        self.initialized = False
-        self._env = None
+
+class Simulator(object):
+    def __init__(self, env=None):
+        self.initialized = (env != None)
+        self._env = env
 
     def initialize(self, env):
         self.initialized = True
         self._env = env
+        initial_obs = self._env.reset()
+        return initial_obs
 
     # state saving and loading methods
     def saveFile(self, filename):
@@ -44,4 +47,10 @@ class SimulatorWrapper(object):
 
     # return clone of simulator
     def fork(self):
-        return SimulatorWrapper(self._env)
+        return Simulator(self._env)
+
+    # necessary to disconnect from pybullet server and allow other problems to connect
+    def close(self):
+        self._env.close()
+
+

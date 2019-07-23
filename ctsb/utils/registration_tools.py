@@ -119,7 +119,7 @@ class Registry(object):
             spec = self.spec(path)
             obj = spec.make(**kwargs)
         except ModuleNotFoundError as e:
-            s = "Not all dependencies have been installed. Please check for missing packages. \nFull error: {}".format(path, e)
+            s = "Not all dependencies have been installed.\nFull error: {}".format(path, e)
             raise error.DependencyNotInstalled(s)
         return obj
 

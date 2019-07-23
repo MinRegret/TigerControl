@@ -5,9 +5,8 @@ AR(p): Linear combination of previous values
 import ctsb
 import jax
 import jax.numpy as np
-from jax import grad, jit, vmap
 from ctsb.models.time_series import TimeSeriesModel
-from ctsb.models.optimizers.SGD import SGD
+from ctsb.models.optimizers import SGD
 from ctsb.models.optimizers.losses import mse
 
 class AutoRegressor(TimeSeriesModel):
@@ -22,7 +21,7 @@ class AutoRegressor(TimeSeriesModel):
         self.initialized = False
         self.uses_regressors = False
 
-    def initialize(self, p = 3, optimizer = SGD, loss = mse, lr = 0.001):
+    def initialize(self, p = 3, optimizer = SGD):
         """
         Description: Initializes autoregressive model parameters
         Args:
@@ -32,23 +31,20 @@ class AutoRegressor(TimeSeriesModel):
             lr (float): learning rate for update
         """
         self.initialized = True
-
-        self.past = np.zeros(p + 1)
-        self.past = jax.ops.index_update(self.past, 0, 1)
-
+        self.past = np.zeros(p)
         self.params = np.zeros(p + 1)
 
-        def _predict(params, inputs):
-            return np.dot(params, inputs)
-        self._predict = jax.jit(_predict)
-
         def _update_past(self_past, x):
-            new_past = np.roll(self_past, -1)
-            new_past = jax.ops.index_update(new_past, new_past.shape[0] - 1, x)
+            new_past = np.roll(self_past, 1)
+            new_past = jax.ops.index_update(new_past, 0, x)
             return new_past
         self._update_past = jax.jit(_update_past)
 
-        self.optimizer = optimizer(pred = self._predict, loss = loss, learning_rate = lr)
+        def _predict(params, x):
+            return np.dot(params, np.append(1.0, x))
+        self._predict = jax.jit(_predict)
+
+        self._store_optimizer(optimizer, self._predict)
 
     def predict(self, x):
         """
@@ -58,9 +54,7 @@ class AutoRegressor(TimeSeriesModel):
         Returns:
             Predicted value for the next time-step
         """
-        
         assert self.initialized
-
         return self._predict(self.params, self.past)
 
     def update(self, y):
@@ -71,13 +65,9 @@ class AutoRegressor(TimeSeriesModel):
         Returns:
             None
         """
-        
         assert self.initialized
-
         self.params = self.optimizer.update(self.params, self.past, y)
         self.past = self._update_past(self.past, y)
-
-        return
 
     def help(self):
         """

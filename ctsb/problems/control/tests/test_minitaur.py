@@ -6,9 +6,9 @@ import ctsb
 import numpy as np
 import time
 
-def test_minitaur(steps=1000, show=False):
+def test_minitaur(steps=1000, verbose=False):
     problem = ctsb.problem("Minitaur-v0")
-    problem.initialize(render=show)
+    problem.initialize(render=verbose)
 
     sum_reward = 0
     amplitude1 = 0.5
@@ -29,10 +29,12 @@ def test_minitaur(steps=1000, show=False):
         sum_reward += reward
         if done:
             problem.reset()
+
+    problem.close()
     print("test_minitaur passed")
 
 
 if __name__ == '__main__':
-    test_minitaur(show=True)
+    test_minitaur(verbose=True)
 
 

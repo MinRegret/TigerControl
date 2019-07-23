@@ -17,9 +17,9 @@ class CartPoleNN(ControlModel):
                 action_space:
         '''
         self.initialized = True
-        assert weights_dense1_w.shape == (observation_space.shape[0], 64.0)
+        assert weights_dense1_w.shape == (observation_space[0], 64.0)
         assert weights_dense2_w.shape == (64.0, 32.0)
-        assert weights_final_w.shape == (32.0, action_space.shape[0])
+        assert weights_final_w.shape == (32.0, action_space[0])
 
     def predict(self, ob): # weights can be fount at the end of the file
         x = ob
