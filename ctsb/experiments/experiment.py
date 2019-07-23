@@ -218,7 +218,7 @@ class Experiment(object):
         if(save_as is not None):
             plt.savefig(save_as)
 
-     def help(self):
+    def help(self):
         '''
         Description: Prints information about this class and its methods.
         '''
