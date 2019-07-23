@@ -2,6 +2,7 @@
 # Author: John Hallman
 
 from ctsb import error
+from ctsb.models.optimizers import Optimizer
 
 # class for implementing algorithms with enforced modularity
 class Model(object):
@@ -19,6 +20,16 @@ class Model(object):
         # update parameters according to given loss and update rule
         raise NotImplementedError
 
+    def _store_optimizer(self, optimizer, pred):
+        if isinstance(optimizer, Optimizer):
+            optimizer.set_predict(pred)
+            self.optimizer = optimizer
+            return
+        if issubclass(optimizer, Optimizer):
+            self.optimizer = optimizer(pred=pred)
+            return
+        raise error.InvalidInput("Optimizer input cannot be stored")
+
     def help(self):
         # prints information about this class and its methods
         raise NotImplementedError
@@ -31,11 +42,4 @@ class Model(object):
 
     def __enter__(self):
         return self
-
-    def __exit__(self, *args):
-        self.close()
-        # propagate exception
-        return False
-
-
 

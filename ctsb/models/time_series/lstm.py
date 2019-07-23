@@ -1,5 +1,5 @@
 """
-LSTM neural network output
+LSTM neural network model
 """
 import jax
 import jax.numpy as np
@@ -7,8 +7,7 @@ import jax.experimental.stax as stax
 import ctsb
 from ctsb.utils.random import generate_key
 from ctsb.models.time_series import TimeSeriesModel
-from ctsb.models.optimizers.SGD import SGD
-from ctsb.models.optimizers.losses import mse
+from ctsb.models.optimizers import SGD
 
 
 class LSTM(TimeSeriesModel):
@@ -22,7 +21,7 @@ class LSTM(TimeSeriesModel):
         self.initialized = False
         self.uses_regressors = True
 
-    def initialize(self, n, m, l = 32, h = 64, optimizer = SGD, optimizer_params_dict = None, loss = mse, lr = 0.0001):
+    def initialize(self, n, m, l = 32, h = 64, optimizer = SGD):
         """
         Description: Randomly initialize the LSTM.
         Args:
@@ -50,7 +49,12 @@ class LSTM(TimeSeriesModel):
         self.cell = np.zeros(h)
         self.x = np.zeros((l, n))
 
-        # initialize jax.jitted predict and update functions
+        def _update_x(self_x, x):
+            new_x = np.roll(self_x, self.n)
+            new_x = jax.ops.index_update(new_x, jax.ops.index[0,:], x)
+            return new_x
+        self._update_x = jax.jit(_update_x)
+
         def _fast_predict(params, x, hid, cell):
             W_hh, W_xh, W_out, b_h = params
             sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
@@ -60,31 +64,22 @@ class LSTM(TimeSeriesModel):
             next_hid = sigmoid(o) * np.tanh(next_cell)
             y = np.dot(W_out, next_hid)
             return (y, next_hid, next_cell)
-
         self._fast_predict = jax.jit(_fast_predict)
 
-        def _slow_predict(params, x_list):
+        def _predict(params, x):
             W_hh, W_xh, W_out, b_h = params
             sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
             next_hid = np.zeros(self.h)
             next_cell = np.zeros(self.h)
-            for x in x_list:
-                gate = np.dot(W_hh, next_hid) + np.dot(W_xh, x) + b_h 
+            for x_t in x:
+                gate = np.dot(W_hh, next_hid) + np.dot(W_xh, x_t) + b_h 
                 i, f, g, o = np.split(gate, 4) # order: input, forget, cell, output
                 next_cell =  sigmoid(f) * next_cell + sigmoid(i) * np.tanh(g)
                 next_hid = sigmoid(o) * np.tanh(next_cell)
             y = np.dot(W_out, next_hid)
             return y
-        self._slow_predict = jax.jit(_slow_predict)
-
-        def _update_x(self_x, x):
-            new_x = np.roll(self_x, self.n)
-            new_x = jax.ops.index_update(new_x, jax.ops.index[0,:], x)
-            return new_x
-        self._update_x = jax.jit(_update_x)
-        self.loss = loss
-        self.optimizer = optimizer(pred=self._slow_predict, loss=self.loss, learning_rate=lr, params_dict=optimizer_params_dict)
-        return
+        self._predict = jax.jit(_predict)
+        self._store_optimizer(optimizer, self._predict)
 
     def to_ndarray(self, x):
         """

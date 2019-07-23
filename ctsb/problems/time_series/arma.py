@@ -22,7 +22,7 @@ class ARMA(TimeSeriesProblem):
         self.initialized = False
         self.has_regressors = False
 
-    def initialize(self, p=3, q=3, c=None, noise_magnitude=1.0):
+    def initialize(self, p=3, q=3, c=None, noise_magnitude=0.1):
         """
         Description: Randomly initialize the hidden dynamics of the system.
         Args:
@@ -42,7 +42,7 @@ class ARMA(TimeSeriesProblem):
         self.T = 0
         if type(p) == int:
             phi = random.normal(generate_key(), shape=(p,))
-            self.phi = 1.0 * phi / np.linalg.norm(phi, ord=1)
+            self.phi = 0.99 * phi / np.linalg.norm(phi, ord=1)
         else:
             assert len(p.shape) == 1
             self.phi = p

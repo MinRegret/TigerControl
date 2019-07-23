@@ -1,44 +1,55 @@
 '''
 OGD optimizer
 '''
-from ctsb.models.optimizers.core import Optimizer
-import jax
 import jax.numpy as np
-import jax.experimental.stax as stax
+from ctsb.models.optimizers.core import Optimizer
+from ctsb.models.optimizers.losses import mse
 
 class OGD(Optimizer):
     """
-    Description: Updates parameters based on correct value, loss and learning rate.
+    Description: Ordinary Gradient Descent optimizer.
     Args:
-        y (int/numpy.ndarray): True value at current time-step
+        pred (function): a prediction function implemented with jax.numpy 
         loss (function): specifies loss function to be used; defaults to MSE
-        lr (float): specifies learning rate; defaults to 0.001.
+        learning_rate (float): learning rate
     Returns:
         None
     """
-    def __init__(self, pred, loss, learning_rate, params_dict):
+    def __init__(self, pred=None, loss=mse, learning_rate=1.0, hyperparameters={}):
         self.lr = learning_rate
-        loss_fn = lambda model_params, a, b : loss(pred(model_params, a), b)
-        self.grad_fn = jax.jit(jax.grad(loss_fn))
-        self.t = params_dict['t']
-        self.past = params_dict['past']
-        self.max_norm = params_dict['max_norm']
+        self.hyperparameters = {'T':0, 'max_norm':1.0}
+        self.hyperparameters.update(hyperparameters)
+        self.T = self.hyperparameters['T']
+        self.max_norm = self.hyperparameters['max_norm']
+        if self._is_valid_pred(pred, raise_error=False):
+            self.set_predict(pred, loss=loss)
+        else:
+            self.initialized = False
 
-    def update(self, params, x, y, metadata_dict = None):
+
+    def update(self, params, x, y, loss=None):
         """
         Description: Updates parameters based on correct value, loss and learning rate.
         Args:
-            y (int/numpy.ndarray): True value at current time-step
-            loss (function): specifies loss function to be used; defaults to MSE
-            lr (float): specifies learning rate; defaults to 0.001.
+            params (list/numpy.ndarray): Parameters of model pred method
+            x (float): input to model
+            y (float): true label
+            loss (function): loss function. defaults to input value.
         Returns:
-            None
+            Updated parameters in same shape as input
         """
-        grad = (np.dot(params, metadata_dict['past']) - y) * metadata_dict['past'] 
-        if np.linalg.norm(grad) > self.max_norm:
-            self.max_norm = np.linalg.norm(grad)
+        assert self.initialized
+        self.T = self.T + 1
+        grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
 
-        self.t = self.t + 1
-        self.lr = 1 / (self.max_norm * np.sqrt(self.t))
-        params = params - self.lr * grad 
-        return params
+        if (type(params) is list):
+            self.max_norm = np.maximum(self.max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad]))
+            lr = self.lr / (self.max_norm * np.sqrt(self.T))
+            return [w - lr * dw for (w, dw) in zip(params, grad)]
+
+        self.max_norm = np.maximum(self.max_norm, np.linalg.norm(grad))
+        lr = self.lr / (self.max_norm * np.sqrt(self.T))
+        return params - lr * grad
+
+
+
