@@ -19,14 +19,22 @@ class Experiment(object):
     def initialize(self, problems = None, models = None, problem_to_models = None, metrics = ['mse'], \
                          use_precomputed = True, timesteps = 100, verbose = True, load_bar = True):
         '''
-            Description: Initializes the experiment instance. 
-            Args:
-                problems (dict): map of the form problem_id -> hyperparameters for problem
-                models (dict): map of the form model_id -> hyperparameters for model
-                problem_to_models (dict) : map of the form problem_id -> list of model_id.
-                                           If None, then we assume that the user wants to
-                                           test every model in model_to_params against every
-                                           problem in problem_to_params
+        Description: Initializes the experiment instance. 
+
+        Args:
+            problems (dict/list): map of the form problem_id -> hyperparameters for problem or list of problem ids;
+                                  in the latter case, default parameters will be used for initialization
+            models (dict/list): map of the form model_id -> hyperparameters for model or list of model ids;
+                                in the latter case, default parameters will be used for initialization
+            problem_to_models (dict) : map of the form problem_id -> list of model_id.
+                                       If None, then we assume that the user wants to
+                                       test every model in model_to_params against every
+                                       problem in problem_to_params
+            metrics (list): Specifies metrics we are interested in evaluating.
+            use_precomputed (boolean): Specifies whether to use precomputed results.
+            timesteps (int): Number of time steps to run experiment for
+            verbose (boolean): Specifies whether to print what experiment is currently running.
+            load_bar (boolean): Specifies whether to show a loading bar while the experiments are running.
         '''
 
         self.problems, self.models, self.problem_to_models, self.metrics = problems, models, problem_to_models, metrics
@@ -54,22 +62,35 @@ class Experiment(object):
                                                                 problem_to_models = problem_to_models, metrics = metrics)
 
         else:
-
             self.new_experiment = NewExperiment()
             self.new_experiment.initialize(problems, models, problem_to_models, metrics, timesteps, verbose, load_bar)
-
             # map of the form [metric][problem][model] -> loss series + time + memory
             self.prob_model_to_result = {}
 
-    def add_model(self, model_id = None, model_params = None):
+    def add_model(self, model_id, model_params):
+        '''
+        Description: Add a new model to the experiment instance.
+        
+        Args:
+            model_id (string): ID of new model.
+            model_params: Parameters to use for initialization of new model.
+        '''
+        assert model_id is not None
+
         if(self.use_precomputed):
-            print("Running new model on all problems...")
             ''' Evaluate performance of new model on all problems '''
             for metric in metrics:
                 for problem_id, problem_params in self.problems:
-                    loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), \
-                                            metric, key = precomputed.get_key(), timesteps = precomputed.get_timesteps(), \
-                                            verbose = self.verbose, load_bar = self.load_bar)
+                    ''' If model is compatible with problem, run experiment and store results. '''
+                    try:
+                        loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), \
+                                                metric, key = precomputed.get_key(), timesteps = precomputed.get_timesteps(), \
+                                                verbose = self.verbose, load_bar = self.load_bar)
+                    except:
+                        print("ERROR: Could not run %s on %s. " + \
+                                     "Please make sure model and problem are compatible." % (problem_id, model_id))
+                        loss, time, memory = 0, -1, -1
+
                     self.prob_model_to_result[metric][model_id][problem_id] = loss
                     self.prob_model_to_result['time'][problem][model] = time
                     self.prob_model_to_result['memory'][problem][model] = memory
@@ -79,6 +100,12 @@ class Experiment(object):
         self.new_models += 1
 
     def run(self):
+        '''
+        Description: Run all problem-model associations in the current experiment instance.
+        
+        Args:
+            None
+        '''
         if(self.use_precomputed):
             print("We are in precomputed mode, so everything has already been run.")
         else:
@@ -86,10 +113,11 @@ class Experiment(object):
 
     def scoreboard(self, save_as = None, metric = 'mse'):
         '''
-        Description:
-            Initializes the experiment instance. 
+        Description: Show a scoreboard for the results of the experiments for specified metric.
+
         Args:
-            metric (string): 
+            save_as (string): If not None, datapath to save results as csv file.
+            metric (string): Metric to compare results
         '''
 
         if(self.use_precomputed and metric == 'time' and self.new_models):
@@ -128,10 +156,12 @@ class Experiment(object):
 
     def graph(self, save_as = None, metric = 'mse', time = 5):
         '''
-        Description:
-            Initializes the experiment instance. 
+        Description: Show a graph for the results of the experiments for specified metric.
+
         Args:
-            metric (string): 
+            save_as (string): If not None, datapath to save the figure containing the plots
+            metric (string): Metric to compare results
+            time (float): Specifies how long the graph should display for
         '''
 
         # check metric exists
@@ -188,10 +218,98 @@ class Experiment(object):
         if(save_as is not None):
             plt.savefig(save_as)
 
-    def help(self):
-        # prints information about this class and its methods
-        raise NotImplementedError
+     def help(self):
+        '''
+        Description: Prints information about this class and its methods.
+        '''
+        print(Experiment_help)
+
+    def __str__(self):
+        return "<Experiment Model>"
+
+# string to print when calling help() method
+Experiment_help = """
+
+-------------------- *** --------------------
+
+Description: Streamlines the process of performing experiments and comparing results of models across
+             a range of problems.
+
+Methods:
+
+    initialize(problems = None, models = None, problem_to_models = None, metrics = ['mse'],
+               use_precomputed = True, timesteps = 100, verbose = True, load_bar = True):
+
+        Description: Initializes the experiment instance. 
+
+        Args:
+            problems (dict/list): map of the form problem_id -> hyperparameters for problem or list of problem ids;
+                                  in the latter case, default parameters will be used for initialization
+
+            models (dict/list): map of the form model_id -> hyperparameters for model or list of model ids;
+                                in the latter case, default parameters will be used for initialization
+
+            problem_to_models (dict) : map of the form problem_id -> list of model_id.
+                                       If None, then we assume that the user wants to
+                                       test every model in model_to_params against every
+                                       problem in problem_to_params
+
+            metrics (list): Specifies metrics we are interested in evaluating.
+
+            use_precomputed (boolean): Specifies whether to use precomputed results.
+
+            timesteps (int): Number of time steps to run experiment for
+
+            verbose (boolean): Specifies whether to print what experiment is currently running.
+
+            load_bar (boolean): Specifies whether to show a loading bar while the experiments are running.
 
 
+    add_model(model_id, model_params):
+
+        Description: Add a new model to the experiment instance.
+        
+        Args:
+            model_id (string): ID of new model.
+
+            model_params: Parameters to use for initialization of new model.
 
 
+    run():
+        Description: Run all problem-model associations in the current experiment instance.
+        
+        Args:
+            None
+
+    scoreboard(save_as = None, metric = 'mse'):
+
+        Description: Show a scoreboard for the results of the experiments for specified metric.
+
+        Args:
+            save_as (string): If not None, datapath to save results as csv file.
+
+            metric (string): Metric to compare results
+
+
+    graph(save_as = None, metric = 'mse', time = 5):
+
+        Description: Show a graph for the results of the experiments for specified metric.
+
+        Args:
+            save_as (string): If not None, datapath to save the figure containing the plots
+
+            metric (string): Metric to compare results
+            
+            time (float): Specifies how long the graph should display for
+
+    help()
+        Description:
+            Prints information about this class and its methods
+        Args:
+            None
+        Returns:
+            None
+
+-------------------- *** --------------------
+
+"""

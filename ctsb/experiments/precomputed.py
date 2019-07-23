@@ -27,15 +27,36 @@ set_key(key)
 
 ''' Functions '''
 def get_timesteps():
+    '''
+    Description: Returns number of timesteps used when obtaining precomputed results.
+
+    Args:
+        None
+
+    Returns:
+        timesteps used for obtaining precomputed results
+    '''
     return timesteps
 
 def get_key():
+    '''
+    Description: Returns key used when obtaining precomputed results.
+
+    Args:
+        None
+
+    Returns:
+        key used for obtaining precomputed results
+    '''
     return keys
 
 def recompute(verbose = False, load_bar = False):
     '''
     Description: Initializes the experiment instance. 
+
     Args:
+        verbose (boolean): Specifies whether to print what experiment is currently running.
+        load_bar (boolean): Specifies whether to show a loading bar while the experiments are running.
     '''
 
     ''' Store loss series first '''
@@ -81,9 +102,20 @@ def recompute(verbose = False, load_bar = False):
 
 def load_prob_model_to_result(problem_ids = all_problems, model_ids = all_models, problem_to_models = None, metrics = 'mse'):
     '''
-    Description:
-        Initializes the experiment instance. 
+    Description: Initializes the experiment instance. 
+
     Args:
+        problem_ids (list): ids of problems to evaluate on
+        model_ids (list): ids of models to use
+        problem_to_models (dict): map of the form problem_id -> list of model_id. If None,
+                                  then we assume that the user wants to test every model
+                                  in model_to_params against every problem in problem_to_params
+        metrics (list): metrics to load
+
+     Returns:
+        prob_model_to_result (dict): Dictionary containing results for all specified metrics and
+                                     performance (time and memory usage) for all problem-model
+                                     associations.
     '''
 
     if(problem_to_models is None):
