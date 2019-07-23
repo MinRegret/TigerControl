@@ -1,0 +1,28 @@
+ctsb.experiments.Experiment
+===========================
+
+.. currentmodule:: ctsb.experiments
+
+.. autoclass:: Experiment
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Experiment.__init__
+      ~Experiment.add_model
+      ~Experiment.graph
+      ~Experiment.help
+      ~Experiment.initialize
+      ~Experiment.run
+      ~Experiment.scoreboard
+   
+   
+
+   
+   
+   

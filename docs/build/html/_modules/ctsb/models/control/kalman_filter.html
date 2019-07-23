@@ -1,0 +1,446 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ctsb.models.control.kalman_filter &mdash; ctsb 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> ctsb
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../ctsb.html">ctsb package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../help.html">help</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html#contact">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ctsb</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ctsb.models.control.kalman_filter</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ctsb.models.control.kalman_filter</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Kalman Filter</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">ctsb</span>
+<span class="kn">from</span> <span class="nn">ctsb.models.control</span> <span class="k">import</span> <span class="n">ControlModel</span>
+
+<div class="viewcode-block" id="KalmanFilter"><a class="viewcode-back" href="../../../../_autosummary/ctsb.models.control.KalmanFilter.html#ctsb.models.control.KalmanFilter">[docs]</a><span class="k">class</span> <span class="nc">KalmanFilter</span><span class="p">(</span><span class="n">ControlModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Kalman Filter adjusts measurements of a signal based on prior states and</span>
+<span class="sd">    knowledge of intrinsic equations of the system.</span>
+
+<span class="sd">    More precisely, we know that the signal at time t is a linear combination</span>
+<span class="sd">    of its previous value plus a control signal u(t) and a process noise</span>
+<span class="sd">    w(t - 1), i.e. x(t) = A x(t - 1) + B u(t) + w(t), and that the</span>
+<span class="sd">    measurement at time t is a linear combination of the signal value and</span>
+<span class="sd">    the measurement noise v(t), i.e. z(t) = H x(t) + v(t).</span>
+
+<span class="sd">    Based on these, the model can advance by itself in time using a &#39;time&#39;</span>
+<span class="sd">    update and/or incorporate and correct a measurement using a &#39;measurement&#39;</span>
+<span class="sd">    update:</span>
+
+<span class="sd">    a. Time Update (prediction)</span>
+<span class="sd">    - Project state ahead: x(t) = A x(t - 1) + B u(t)</span>
+<span class="sd">    - Project error covariance ahead: P(t) = A P(t - 1) A^T + Q</span>
+
+<span class="sd">    b. Measurement Update</span>
+<span class="sd">    - Compute Kalman Gain: K(t) = P(t) H^T (H P(t) H^T + R)^{-1}</span>
+<span class="sd">    - Update estimate based on measurement: x(t) = x(t) + K(t) (z(t) - H x(t))</span>
+<span class="sd">    - Update error covariance: P(t) = (I - K(t) H) P(t)</span>
+
+<span class="sd">    where we assume w(t) ~ N(0, Q) and v(t) ~ N(0, R).</span>
+
+<span class="sd">    The user must provides estimates for A, B, H, Q and R, as well as initial</span>
+<span class="sd">    estimates for x(0) and P(0).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([])</span>
+
+<div class="viewcode-block" id="KalmanFilter.__init__"><a class="viewcode-back" href="../../../../_autosummary/ctsb.models.control.KalmanFilter.html#ctsb.models.control.KalmanFilter.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+    <span class="k">def</span> <span class="nf">to_ndarray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description: If x is a scalar, transform it to a (1, 1) numpy.ndarray;</span>
+<span class="sd">        otherwise, leave it unchanged.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            x (float/numpy.ndarray)</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            A numpy.ndarray representation of x</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">x_2D</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">x_2D</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">R</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description:</span>
+<span class="sd">            Initialize the dynamics of the model.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            x (float/numpy.ndarray): estimate of x(0)</span>
+<span class="sd">            A (float/numpy.ndarray): past value contribution coefficient</span>
+<span class="sd">            B (float/numpy.ndarray): control signal contribution coefficient</span>
+<span class="sd">            H (float/numpy.ndarray): true signal contribution coefficient</span>
+<span class="sd">            P (float/numpy.ndarray): initial estimate of error covariance P(0)</span>
+<span class="sd">            Q (float/numpy.ndarray): covariance of model noise w(t)</span>
+<span class="sd">            R (float/numpy.ndarray): covariance of environment noise v(t)</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">x</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ndarray</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ndarray</span><span class="p">(</span><span class="n">A</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ndarray</span><span class="p">(</span><span class="n">B</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ndarray</span><span class="p">(</span><span class="n">H</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ndarray</span><span class="p">(</span><span class="n">P</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ndarray</span><span class="p">(</span><span class="n">Q</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ndarray</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span>  <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">R</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description:</span>
+<span class="sd">            Takes input measurement and control signal at current time-step,</span>
+<span class="sd">            updates internal parameters, then returns the corresponding</span>
+<span class="sd">            estimated true value.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            u (float/numpy.ndarray): control signal at current time-step</span>
+<span class="sd">            z (float/numpy.ndarray): measurement at current time-step</span>
+<span class="sd">            n (non-negative int): number of &#39;time&#39; updates before</span>
+<span class="sd">                                 &#39;measurement&#39; update</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Estimated true value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">u</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ndarray</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ndarray</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="c1"># time update</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">@</span> <span class="n">u</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span>
+
+        <span class="c1"># measurement update</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">@</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description:</span>
+<span class="sd">            Takes input measurement and control signal at current time-step,</span>
+<span class="sd">            and returns the corresponding estimated true value</span>
+<span class="sd">        Args:</span>
+<span class="sd">            u (float/numpy.ndarray): control signal at current time-step</span>
+<span class="sd">            z (float/numpy.ndarray): measurement at current time-step</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Estimated true value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">u</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ndarray</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_ndarray</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="c1"># time update</span>
+            <span class="n">x_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">@</span> <span class="n">u</span>
+            <span class="n">P_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span>
+
+        <span class="c1"># measurement update</span>
+        <span class="n">K_temp</span> <span class="o">=</span> <span class="n">P_temp</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">@</span> <span class="n">P_temp</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">)</span>
+        <span class="n">x_temp</span> <span class="o">=</span> <span class="n">x_temp</span> <span class="o">+</span> <span class="n">K_temp</span> <span class="o">@</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">@</span> <span class="n">x_temp</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">x_temp</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">x_temp</span>
+
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description:</span>
+<span class="sd">            Takes update rule and adjusts internal parameters</span>
+<span class="sd">        Args:</span>
+<span class="sd">            rule (function): rule with which to alter parameters</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description:</span>
+<span class="sd">            Prints information about this class and its methods.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            None</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">KalmanFilter_help</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;KalmanFilter Model&gt;&quot;</span></div>
+
+
+<span class="c1"># string to print when calling help() method</span>
+<span class="n">KalmanFilter_help</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">-------------------- *** --------------------</span>
+
+<span class="s2">Id: KalmanFilter</span>
+
+<span class="s2">Description:</span>
+
+<span class="s2">    Kalman Filter adjusts measurements of a signal based on prior states and</span>
+<span class="s2">    knowledge of intrinsic equations of the system.</span>
+
+<span class="s2">    More precisely, we know that the signal at time t is a linear combination</span>
+<span class="s2">    of its previous value plus a control signal u(t) and a process noise</span>
+<span class="s2">    w(t - 1), i.e. x(t) = A x(t - 1) + B u(t) + w(t), and that the</span>
+<span class="s2">    measurement at time t is a linear combination of the signal value and</span>
+<span class="s2">    the measurement noise v(t), i.e. z(t) = H x(t) + v(t).</span>
+
+<span class="s2">    Based on these, the model can advance by itself in time using a &#39;time&#39;</span>
+<span class="s2">    update and/or incorporate and correct a measurement using a &#39;measurement&#39;</span>
+<span class="s2">    update:</span>
+
+<span class="s2">    a. Time Update (prediction)</span>
+<span class="s2">    - Project state ahead: x(t) = A x(t - 1) + u(t)</span>
+<span class="s2">    - Project error covariance ahead: P(t) = A P(t - 1) A^T + Q</span>
+
+<span class="s2">    b. Measurement Update</span>
+<span class="s2">    - Compute Kalman Gain: K(t) = P(t) H^T (H P(t) H^T + R)^{-1}</span>
+<span class="s2">    - Update estimate based on measurement: x(t) = x(t) + K(t) (z(t) - H x(t))</span>
+<span class="s2">    - Update error covariance: P(t) = (I - K(t) H) P(t)</span>
+
+<span class="s2">    where we assume w(t) ~ N(0, Q) and v(t) ~ N(0, R).</span>
+
+<span class="s2">    The user must provides estimates for A, B, H, Q and R, as well as initial</span>
+<span class="s2">    estimates for x(0) and P(0).</span>
+
+<span class="s2">Methods:</span>
+
+<span class="s2">    initialize(x, A, B, H, P, Q, R)</span>
+<span class="s2">        Description:</span>
+<span class="s2">            Initialize the dynamics of the model.</span>
+<span class="s2">        Args:</span>
+<span class="s2">            x (float/numpy.ndarray): estimate of x(0)</span>
+<span class="s2">            A (float/numpy.ndarray): past value contribution coefficient</span>
+<span class="s2">            B (float/numpy.ndarray): control signal contribution coefficient</span>
+<span class="s2">            H (float/numpy.ndarray): true signal contribution coefficient</span>
+<span class="s2">            P (float/numpy.ndarray): initial estimate of error covariance P(0)</span>
+<span class="s2">            Q (float/numpy.ndarray): covariance of model noise w(t)</span>
+<span class="s2">            R (float/numpy.ndarray): covariance of environment noise v(t)</span>
+<span class="s2">        Returns:</span>
+<span class="s2">            None</span>
+
+<span class="s2">    step(x)</span>
+<span class="s2">        Description:</span>
+<span class="s2">            Takes input measurement and returns the corresponding estimated true value,</span>
+<span class="s2">            then updates internal parameters</span>
+<span class="s2">        Args:</span>
+<span class="s2">            z (float/numpy.ndarray): easurement at current time-step</span>
+<span class="s2">        Returns:</span>
+<span class="s2">            Estimated true value</span>
+
+<span class="s2">    predict(x)</span>
+<span class="s2">        Description:</span>
+<span class="s2">            Takes input measurement and returns the corresponding estimated true value</span>
+<span class="s2">        Args:</span>
+<span class="s2">            z (float/numpy.ndarray): measurement at current time-step</span>
+<span class="s2">        Returns:</span>
+<span class="s2">            Estimated true value</span>
+
+<span class="s2">    update(rule=None)</span>
+<span class="s2">        Description:</span>
+<span class="s2">            Takes update rule and adjusts internal parameters</span>
+<span class="s2">        Args:</span>
+<span class="s2">            rule (function): rule with which to alter parameters</span>
+<span class="s2">        Returns:</span>
+<span class="s2">            None</span>
+
+<span class="s2">    help()</span>
+<span class="s2">        Description:</span>
+<span class="s2">            Prints information about this class and its methods.</span>
+<span class="s2">        Args:</span>
+<span class="s2">            None</span>
+<span class="s2">        Returns:</span>
+<span class="s2">            None</span>
+
+<span class="s2">-------------------- *** --------------------</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, alexjyu
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

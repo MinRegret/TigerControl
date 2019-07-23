@@ -1,12 +1,11 @@
-'''
-AdaGrad optimizer
-'''
+
 from ctsb.models.optimizers.core import Optimizer
 import jax
 import jax.numpy as np
 import jax.experimental.stax as stax
 
 class Adagrad(Optimizer):
+    ''' Description: Adagrad optimizer '''
     def __init__(self, pred, loss, learning_rate, params_dict):
         self.lr = learning_rate
         loss_fn = lambda model_params, a, b : loss(pred(model_params, a), b)
@@ -18,8 +17,7 @@ class Adagrad(Optimizer):
 
     def update(self, params, x, y, metadata_dict=None):
         """
-        Description:
-            Updates parameters based on correct value, loss and learning rate.
+        Description: Updates parameters based on correct value, loss and learning rate.
         Args:
             y (int/numpy.ndarray): True value at current time-step
             params(list) : The model parameters

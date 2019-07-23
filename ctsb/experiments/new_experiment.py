@@ -4,9 +4,8 @@ import ctsb
 from ctsb import error
 from ctsb.experiments.core import run_experiment, create_full_problem_to_models
 
-# class for implementing algorithms with enforced modularity
 class NewExperiment(object):
-
+    ''' Description: class for implementing algorithms with enforced modularity '''
     def __init__(self):
         self.initialized = False
 
@@ -21,8 +20,8 @@ class NewExperiment(object):
         
     def initialize(self, problems, models, problem_to_models=None, metrics = 'mse'):
         '''
-            Description:
-                Initializes the experiment instance. 
+            Description: Initializes the experiment instance. 
+
             Args:
                 loss_fn (function): function mapping (predict_value, true_value) -> loss
                 problem_to_param (dict): map of the form problem_id -> hyperparameters for problem
@@ -43,8 +42,8 @@ class NewExperiment(object):
 
     def run_all_experiments(self, timesteps):
         '''
-        Descripton:
-            Runs all experiments for specified number of timesteps.
+        Descripton: Runs all experiments for specified number of timesteps.
+        
         Args:
             time_steps (int): number of time steps 
         '''

@@ -12,19 +12,19 @@ import matplotlib.pyplot as plt
 from prettytable import PrettyTable
 
 class Experiment(object):
-
+    ''' Description: Experiment class '''
     def __init__(self):
         self.initialized = False
         
     def initialize(self, problems = None, models = None, problem_to_models=None, metrics = ['mse'], use_precomputed = True, timesteps = 100):
         '''
-            Description:
-                Initializes the experiment instance. 
-            Args:
-                problems (dict): map of the form problem_id -> hyperparameters for problem
-                models (dict): map of the form model_id -> hyperparameters for model
-                problem_to_models (dict) : map of the form problem_id -> list of model_id. If None, then we assume that the
-                user wants to test every model in model_to_params against every problem in problem_to_params
+        Description: Initializes the experiment instance. 
+
+        Args:
+            problems (dict): map of the form problem_id -> hyperparameters for problem
+            models (dict): map of the form model_id -> hyperparameters for model
+            problem_to_models (dict) : map of the form problem_id -> list of model_id. If None, then we assume that the
+            user wants to test every model in model_to_params against every problem in problem_to_params
         '''
 
         self.problems, self.models, self.problem_to_models, self.metrics, self.use_precomputed, self.timesteps = problems, models, problem_to_models, metrics, use_precomputed, timesteps
@@ -78,8 +78,8 @@ class Experiment(object):
 
     def scoreboard(self, save_as = None, metric = 'mse'):
         '''
-        Description:
-            Initializes the experiment instance. 
+        Description: Initializes the experiment instance.
+
         Args:
             metric (string): 
         '''
@@ -119,8 +119,8 @@ class Experiment(object):
 
     def graph(self, save_as = None, metric = 'mse', time = 5):
         '''
-        Description:
-            Initializes the experiment instance. 
+        Description: Initializes the experiment instance. 
+        
         Args:
             metric (string): 
         '''

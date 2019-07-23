@@ -2,7 +2,6 @@
 import pybullet as p
 
 class SimulatorWrapper(object):
-
     def __init__(self):
         self.initialized = False
         self._env = None

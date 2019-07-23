@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ctsb.experiments.experiment &mdash; ctsb 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> ctsb
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ctsb.html">ctsb package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../help.html">help</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html#contact">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ctsb</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ctsb.experiments.experiment</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ctsb.experiments.experiment</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Experiment class</span>
+
+<span class="kn">import</span> <span class="nn">ctsb</span>
+<span class="kn">from</span> <span class="nn">ctsb</span> <span class="k">import</span> <span class="n">error</span>
+<span class="kn">from</span> <span class="nn">ctsb.experiments.core</span> <span class="k">import</span> <span class="n">run_experiment</span><span class="p">,</span> <span class="n">get_ids</span>
+<span class="kn">from</span> <span class="nn">ctsb.experiments.new_experiment</span> <span class="k">import</span> <span class="n">NewExperiment</span>
+<span class="kn">import</span> <span class="nn">ctsb.experiments.precomputed</span> <span class="k">as</span> <span class="nn">precomputed</span>
+<span class="kn">from</span> <span class="nn">statistics</span> <span class="k">import</span> <span class="n">mean</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">prettytable</span> <span class="k">import</span> <span class="n">PrettyTable</span>
+
+<div class="viewcode-block" id="Experiment"><a class="viewcode-back" href="../../../_autosummary/ctsb.experiments.Experiment.html#ctsb.experiments.Experiment">[docs]</a><span class="k">class</span> <span class="nc">Experiment</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Description: Experiment class &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="Experiment.__init__"><a class="viewcode-back" href="../../../_autosummary/ctsb.experiments.Experiment.html#ctsb.experiments.Experiment.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span></div>
+        
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problems</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">models</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">problem_to_models</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mse&#39;</span><span class="p">],</span> <span class="n">use_precomputed</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timesteps</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Description: Initializes the experiment instance. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            problems (dict): map of the form problem_id -&gt; hyperparameters for problem</span>
+<span class="sd">            models (dict): map of the form model_id -&gt; hyperparameters for model</span>
+<span class="sd">            problem_to_models (dict) : map of the form problem_id -&gt; list of model_id. If None, then we assume that the</span>
+<span class="sd">            user wants to test every model in model_to_params against every problem in problem_to_params</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">problems</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">problem_to_models</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_precomputed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesteps</span> <span class="o">=</span> <span class="n">problems</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">problem_to_models</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">use_precomputed</span><span class="p">,</span> <span class="n">timesteps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_models</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">use_precomputed</span> <span class="ow">and</span> <span class="n">timesteps</span> <span class="o">!=</span> <span class="n">precomputed</span><span class="o">.</span><span class="n">get_timesteps</span><span class="p">()):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: when using precomputed results, number of timesteps is fixed.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">use_precomputed</span><span class="p">):</span>
+
+            <span class="c1"># ensure problems and models don&#39;t have specified hyperparameters</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">problems</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: when using precomputed results, any specified problem hyperparameters will be disregarded and default ones will be used instead.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">problems</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">problems</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">models</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: when using precomputed results, any specified model hyperparameters will be disregarded and default ones will be used instead.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+            <span class="c1"># map of the form [metric][problem][model] -&gt; loss series + time + memory</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prob_model_to_result</span> <span class="o">=</span> <span class="n">precomputed</span><span class="o">.</span><span class="n">load_prob_model_to_result</span><span class="p">(</span><span class="n">problem_ids</span> <span class="o">=</span> <span class="n">problems</span><span class="p">,</span> <span class="n">model_ids</span> <span class="o">=</span> <span class="n">models</span><span class="p">,</span> <span class="n">problem_to_models</span> <span class="o">=</span> <span class="n">problem_to_models</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">new_experiment</span> <span class="o">=</span> <span class="n">NewExperiment</span><span class="p">()</span>
+            <span class="n">new_experiment</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">problems</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">problem_to_params</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+
+            <span class="c1"># map of the form [metric][problem][model] -&gt; loss series + time + memory</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prob_model_to_result</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">add_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_id</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">model_params</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_precomputed</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running new model on all problems...&quot;</span><span class="p">)</span>
+            <span class="sd">&#39;&#39;&#39; Evaluate performance of new model on all problems &#39;&#39;&#39;</span>
+            <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">problem_id</span><span class="p">,</span> <span class="n">problem_params</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">problems</span><span class="p">:</span>
+                    <span class="n">loss</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">((</span><span class="n">problem_id</span><span class="p">,</span> <span class="n">problem_params</span><span class="p">),</span> <span class="p">(</span><span class="n">model_id</span><span class="p">,</span> <span class="n">model_params</span><span class="p">),</span> <span class="n">metric</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="n">precomputed</span><span class="o">.</span><span class="n">get_key</span><span class="p">(),</span> <span class="n">timesteps</span> <span class="o">=</span> <span class="n">precomputed</span><span class="o">.</span><span class="n">get_timesteps</span><span class="p">())</span> <span class="c1"># in core</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">prob_model_to_result</span><span class="p">[</span><span class="n">metric</span><span class="p">][</span><span class="n">model_id</span><span class="p">][</span><span class="n">problem_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">loss</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">prob_model_to_result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">][</span><span class="n">problem</span><span class="p">][</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">prob_model_to_result</span><span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">][</span><span class="n">problem</span><span class="p">][</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="n">memory</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">[</span><span class="n">model_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameters</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_models</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_precomputed</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;We are in precomputed mode, so everything has already been run.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prob_model_to_result</span> <span class="o">=</span> <span class="n">new_experiment</span><span class="o">.</span><span class="n">compute_prob_model_to_loss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">problems</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesteps</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">scoreboard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_as</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">metric</span> <span class="o">=</span> <span class="s1">&#39;mse&#39;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Description: Initializes the experiment instance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            metric (string): </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_precomputed</span> <span class="ow">and</span> <span class="n">metric</span> <span class="o">==</span> <span class="s1">&#39;time&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_models</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: Time comparison between precomputed models and any added model may be irrelevant due to hardware differences.&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Scoreboard for &quot;</span> <span class="o">+</span> <span class="n">metric</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">()</span>
+        <span class="n">table_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">problem_ids</span> <span class="o">=</span> <span class="n">get_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">problems</span><span class="p">)</span>
+        <span class="n">model_ids</span> <span class="o">=</span> <span class="n">get_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span>
+
+        <span class="n">table_dict</span><span class="p">[</span><span class="s1">&#39;Models&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_ids</span>
+
+        <span class="n">field_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Problems\Models&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">model_id</span> <span class="ow">in</span> <span class="n">model_ids</span><span class="p">:</span>
+            <span class="n">field_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">field_names</span> <span class="o">=</span> <span class="n">field_names</span>
+
+        <span class="k">for</span> <span class="n">problem_id</span> <span class="ow">in</span> <span class="n">problem_ids</span><span class="p">:</span>
+            <span class="n">problem_scores</span> <span class="o">=</span> <span class="p">[</span><span class="n">problem_id</span><span class="p">]</span>
+            <span class="c1"># get scores for each model</span>
+            <span class="k">for</span> <span class="n">model_id</span> <span class="ow">in</span> <span class="n">model_ids</span><span class="p">:</span>
+                <span class="n">problem_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prob_model_to_result</span><span class="p">[(</span><span class="n">metric</span><span class="p">,</span> <span class="n">problem_id</span><span class="p">,</span> <span class="n">model_id</span><span class="p">)]))</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">problem_scores</span><span class="p">)</span>
+            <span class="n">table_dict</span><span class="p">[</span><span class="n">problem_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">problem_scores</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+        <span class="sd">&#39;&#39;&#39; Save to csv file &#39;&#39;&#39;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">save_as</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_as</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">table_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">,</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">table_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+
+    <span class="k">def</span> <span class="nf">graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_as</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">metric</span> <span class="o">=</span> <span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">time</span> <span class="o">=</span> <span class="mi">5</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Description: Initializes the experiment instance. </span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            metric (string): </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="c1"># check metric exists</span>
+        <span class="k">assert</span> <span class="n">metric</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span>
+
+        <span class="c1"># get number of problems</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">problems</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">n_problems</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">problems</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_problems</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">problems</span><span class="p">)</span>
+
+        <span class="n">all_problem_info</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">problem_ids</span> <span class="o">=</span> <span class="n">get_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">problems</span><span class="p">)</span>
+        <span class="n">model_ids</span> <span class="o">=</span> <span class="n">get_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">problem_id</span> <span class="ow">in</span> <span class="n">problem_ids</span><span class="p">:</span>
+            <span class="n">model_ids</span> <span class="o">=</span> <span class="n">get_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span>
+            <span class="n">problem_result_plus_model</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">model_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">model_id</span> <span class="ow">in</span> <span class="n">model_ids</span><span class="p">:</span>
+                <span class="n">model_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
+                <span class="n">problem_result_plus_model</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">prob_model_to_result</span><span class="p">[(</span><span class="n">metric</span><span class="p">,</span> <span class="n">problem_id</span><span class="p">,</span> <span class="n">model_id</span><span class="p">)],</span> <span class="n">model_id</span><span class="p">))</span>
+            <span class="n">all_problem_info</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">problem_id</span><span class="p">,</span> <span class="n">problem_result_plus_model</span><span class="p">,</span> <span class="n">model_list</span><span class="p">))</span>
+
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="n">n_problems</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_problems</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">problem_result_plus_model</span><span class="p">,</span> <span class="n">model_list</span><span class="p">)</span> <span class="o">=</span> <span class="n">all_problem_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="ow">in</span> <span class="n">problem_result_plus_model</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Problem:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">problem</span><span class="p">))</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;timesteps&quot;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;loss&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_problems</span><span class="p">):</span>
+                <span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">problem_result_plus_model</span><span class="p">,</span> <span class="n">model_list</span><span class="p">)</span> <span class="o">=</span> <span class="n">all_problem_info</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="ow">in</span> <span class="n">problem_result_plus_model</span><span class="p">:</span>
+                    <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Problem:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">problem</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;timesteps&quot;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;loss&quot;</span><span class="p">)</span>
+
+        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">time</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">save_as</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_as</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># prints information about this class and its methods</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, alexjyu
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

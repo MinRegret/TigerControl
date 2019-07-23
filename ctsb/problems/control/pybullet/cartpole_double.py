@@ -9,7 +9,7 @@ from ctsb.problems.control.pybullet.simulator_wrapper import SimulatorWrapper
 
 class CartPoleDouble(PyBulletProblem):
     """
-    Simulates a pendulum balanced on a cartpole.
+    Descrtion: Simulates a pendulum balanced on a cartpole.
     """
     
     def __init__(self):

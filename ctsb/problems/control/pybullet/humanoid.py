@@ -8,7 +8,7 @@ from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
 
 class Humanoid(PyBulletProblem):
     """
-    Simulates a minitaur environment
+    Description: Simulates a minitaur environment
     """
     def initialize(self, render=False):
         self.initialized = True
