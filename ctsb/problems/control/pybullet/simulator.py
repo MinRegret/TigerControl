@@ -3,13 +3,15 @@ import pybullet as p
 
 class Simulator(object):
 
-    def __init__(self):
-        self.initialized = False
-        self._env = None
+    def __init__(self, env=None):
+        self.initialized = (env != None)
+        self._env = env
 
     def initialize(self, env):
         self.initialized = True
         self._env = env
+        initial_obs = self._env.reset()
+        return initial_obs
 
     # state saving and loading methods
     def saveFile(self, filename):
@@ -46,3 +48,9 @@ class Simulator(object):
     # return clone of simulator
     def fork(self):
         return Simulator(self._env)
+
+    # necessary to disconnect from pybullet server and allow other problems to connect
+    def close(self):
+        self._env.close()
+
+

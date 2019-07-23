@@ -46,6 +46,8 @@ def test_kuka(show=False):
             obs, rew, done, _ = problem.step(act)
             episode_rew += rew
 
+    problem.close()
+    print("test_kuka passed")
 
 if __name__ == '__main__':
     test_kuka()

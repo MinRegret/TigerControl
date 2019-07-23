@@ -53,7 +53,8 @@ def test_cartpole(verbose=False):
             obs, r, done, _ = problem.step(a)
             score += r
             frame += 1
-
+            
+    problem.close()
     print("test_cartpole passed")
 
 

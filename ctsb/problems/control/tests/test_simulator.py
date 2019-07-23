@@ -62,6 +62,7 @@ def test_simulator(verbose=False):
         if verbose:
             time.sleep(1. / 60.)
 
+    problem.close()
     print("test_simulator passed")
 
 

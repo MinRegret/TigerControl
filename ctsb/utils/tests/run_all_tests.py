@@ -15,4 +15,4 @@ def run_all_tests(show=False):
     print("\nall utils tests passed\n")
 
 if __name__ == '__main__':
-    run_all_tests(show=True)
+    run_all_tests(show=False)

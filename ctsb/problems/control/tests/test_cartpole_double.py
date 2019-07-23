@@ -17,7 +17,7 @@ class SmallReactivePolicy(ControlModel):
 
     def initialize(self, observation_space, action_space):
         self.initialized = True
-        self.weights_dense_w = random.normal(generate_key(), shape=(action_space.shape[0], observation_space.shape[0]))
+        self.weights_dense_w = random.normal(generate_key(), shape=(action_space[0], observation_space[0]))
 
     def predict(self, ob): # weights can be fount at the end of the file
         return np.dot(self.weights_dense_w, ob)
@@ -39,7 +39,7 @@ def test_cartpole_double(verbose=False):
     score = 0
     restart_delay = 0
     saved = False
-    while time.time() - t_start < 5:
+    while time.time() - t_start < 3:
         time.sleep(1. / 60.)
         a = model.predict(obs)
         obs, r, done, _ = problem.step(a)
@@ -65,14 +65,15 @@ def test_cartpole_double(verbose=False):
         print("save_to_mem_ID: " + str(save_to_mem_ID))
     problem.loadState(save_to_mem_ID)
     if verbose:
-        print("loadFromMemory worked")
-        while time.time() - t_start < 6:
+        print("loadState worked")
+        while time.time() - t_start < 3:
             time.sleep(1. / 60.)
             a = model.predict(obs)
             obs, r, done, _ = problem.step(a)
             score += r
             frame += 1
-
+            
+    problem.close()
     print("test_cartpole_double passed")
 
 
