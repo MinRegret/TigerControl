@@ -1,6 +1,6 @@
-ctsb.utils.ctrl\_indices
+ctsb.utils.enso
 ========================
 
 .. currentmodule:: ctsb.utils
 
-.. autofunction:: ctrl_indices
+.. autofunction:: enso
