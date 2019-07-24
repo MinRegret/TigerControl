@@ -229,7 +229,7 @@ def ctrl_indices(input_signals, include_month, output_signals, history, timeline
     ############################## GET DATA ###################################
 
     ctsb_dir = get_ctsb_dir()
-    datapath = os.path.join(ctsb_dir, 'data/ctrl_indices.csv')
+    datapath = os.path.join(ctsb_dir, 'data/enso.csv')
     signals_pd = pd.read_csv(datapath)
 
     signal_length = signals_pd['nino34'].values.shape[0]
