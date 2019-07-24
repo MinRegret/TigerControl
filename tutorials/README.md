@@ -13,6 +13,5 @@ Below is a list of notebooks and a brief explanation of what they cover. If you 
 [NBViewer](https://nbviewer.jupyter.org/github/johnhallman/ctsb/blob/master/tutorials/notebooks/QuickStart.ipynb))
 - **Time-series problems** - ([Google Colab](https://colab.research.google.com/github/johnhallman/ctsb/blob/master/tutorials/notebooks/TimeSeries.ipynb), [NBViewer](https://nbviewer.jupyter.org/github/johnhallman/ctsb/blob/master/tutorials/notebooks/TimeSeries.ipynb))
 - **Control and PyBullet problems** - ([Google Colab](https://colab.research.google.com/github/johnhallman/ctsb/blob/master/tutorials/notebooks/Control.ipynb), [NBViewer](https://nbviewer.jupyter.org/github/johnhallman/ctsb/blob/master/tutorials/notebooks/Control.ipynb))
-- **Models, compatibility, and optimizers** - [google](https://www.google.com)
-- **Custom models and problems** - [google](https://www.google.com)
+- **Custom models and problems** - ([Google Colab](https://colab.research.google.com/github/johnhallman/ctsb/blob/master/tutorials/notebooks/Custom.ipynb), [NBViewer](https://nbviewer.jupyter.org/github/johnhallman/ctsb/blob/master/tutorials/notebooks/Custom.ipynb))
 - **Experiments and scoreboards** - [google](https://www.google.com)
