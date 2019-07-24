@@ -210,7 +210,7 @@ def crypto():
     return pd.read_csv(path_crypto_csv)
 
 
-def ctrl_indices(input_signals, include_month, output_signals, history, timeline):
+def enso(input_signals, include_month, output_signals, history, timeline):
     """
     Description: Transforms the ctrl_indices dataset into a format suitable for online learning.
 
