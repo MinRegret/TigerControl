@@ -3,6 +3,7 @@
 import ctsb
 from ctsb.experiments import metrics as metrics_module
 from ctsb import error
+import jax.numpy as np
 from ctsb.problems.time_series import TimeSeriesProblem
 from ctsb.models.time_series import TimeSeriesModel
 from ctsb.utils.random import set_key
@@ -107,7 +108,7 @@ def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100, 
     # get loss series
     for i in tqdm(range(timesteps), disable = (not load_bar)):
         # get loss and update model
-        cur_loss = loss_fn(y, model.predict(x))
+        cur_loss = float(loss_fn(y, model.predict(x)))
         loss.append(cur_loss)
         model.update(y)
         # get new pair of observation and label
@@ -117,6 +118,6 @@ def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100, 
         else:
             x, y = y, new
 
-    return loss, time.time() - time_start, memory
+    return np.array(loss), time.time() - time_start, memory
 
     
