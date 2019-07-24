@@ -15,7 +15,7 @@ all_problems = ['Random-v0', 'ARMA-v0', 'SP500-v0', 'Crypto-v0', 'ENSO-v0']
 
 ####### LSTM AND RNN NOT INCLUDED BECAUSE THEY NEED INPUT SHAPE ###############
 ####### and ArmaAdaGrad is not classified as timeseries & other problems ... ###########
-all_models = ['LastValue', 'AutoRegressor', 'PredictZero', 'ArmaOgd']
+all_models = ['PredictZero', 'LastValue', 'AutoRegressor']
 
 ####### NEED TO MAKE IT HARD TO CHANGE !!!!!! ########
 ''' Fix timesteps and key '''
@@ -136,7 +136,7 @@ def load_prob_model_to_result(problem_ids = all_problems, model_ids = all_models
                 model_no = 0
                 for row in reader:
                     if(all_models[model_no] in model_ids):
-                        prob_model_to_result[(metric, problem_id, all_models[model_no])] = row
+                        prob_model_to_result[(metric, problem_id, all_models[model_no])] = np.array(row)
                     model_no += 1
             csvfile.close()
 

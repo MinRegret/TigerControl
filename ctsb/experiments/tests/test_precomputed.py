@@ -3,7 +3,8 @@ from ctsb.experiments.experiment import Experiment
 
 def test_precomputed(steps=100, show=False):
     exp = Experiment()
-    exp.initialize(problems = ['Random-v0', 'ARMA-v0', 'SP500-v0', 'Crypto-v0', 'CtrlIndices-v0'], models =  ['LastValue', 'AutoRegressor', 'PredictZero', 'ArmaOgd'])
+    exp.initialize(problems = ['Random-v0', 'ARMA-v0', 'SP500-v0', 'Crypto-v0', 'ENSO-v0'], \
+    	models =  ['PredictZero', 'LastValue', 'AutoRegressor'], verbose = show, load_bar = show)
     exp.scoreboard()
     exp.graph()
 

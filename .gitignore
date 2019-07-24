@@ -4,11 +4,12 @@
 .DS_Store
 .cache
 .pytest_cache/
+*.zip
 __pycache__
-# ignore all csv files except for the ENSO dataset (ctrl_indices)
+# ignore all csv files except for the ENSO dataset (ctrl_indices) and precomputed results
 *.csv
 !ctsb/data/enso.csv
-*.zip
+!ctsb/data/precomputed_results/*.csv
 
 # Setuptools distribution and build folders.
 /dist/
