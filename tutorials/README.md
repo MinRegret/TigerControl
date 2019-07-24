@@ -1,7 +1,7 @@
 # CTSB Tutorials
 ****************
 
-Below you will find links to Google Colab notebooks that contain tutorials that should help you get going with CTSB. A good place to start for beginners is **QuickStart** ([Google Colab](https://colab.research.google.com/github/johnhallman/ctsb/blob/master/tutorials/notebooks/QuickStart.ipynb), [NBViewer](https://nbviewer.jupyter.org/github/johnhallman/ctsb/blob/master/tutorials/notebooks/QuickStart.ipynb)), which will guide you through the basics of the framework. Due to GitHub-Colab compatibility issues, we also provide links to our tutorials on [nbviewer.jupyter.org](https://nbviewer.jupyter.org/), an open-source tool for rendering notebooks.
+Below you will find links to Google Colab notebooks that contain tutorials that should help you get going with CTSB. A good place to start for beginners is **QuickStart** ([Google Colab](https://colab.research.google.com/github/johnhallman/ctsb/blob/master/tutorials/notebooks/QuickStart.ipynb), [NBViewer](https://nbviewer.jupyter.org/github/johnhallman/ctsb/blob/master/tutorials/notebooks/QuickStart.ipynb)), which will guide you through the basics of the framework. Due to occasional GitHub-Colab compatibility issues, we also provide links to our tutorials on [nbviewer.jupyter.org](https://nbviewer.jupyter.org/), an open-source tool for rendering notebooks.
 
 
 List of Tutorials
