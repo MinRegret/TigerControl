@@ -14,9 +14,9 @@ def run_all_tests(show_results=False):
     print("\n----- Running all CTSB tests! -----\n")
 
     utils_tests(show=show_results)
-    problems_tests(show=show_results)
-    models_tests(show=show_results)
     experiments_tests(show=show_results)
+    models_tests(show=show_results)
+    problems_tests(show=show_results)
     test_ctsb_functionality()
 
     print("\n----- Tests done -----\n")
