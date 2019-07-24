@@ -14,6 +14,25 @@ import time
 ############## TO MAKE AUTOMATIC !!! #################
 metrics = {'mse': metrics_module.mse, 'cross_entropy': metrics_module.cross_entropy}
 
+def to_dict(x):
+    '''
+    Description: If x is not a dictionary, transforms it to one by assigning None values to entries of x;
+                 otherwise, returns x.
+
+    Args:     
+        x (dict / list): either a dictionary or a list of keys for the dictionary
+
+    Returns:
+        A dictionary 'version' of x
+    '''
+    if(type(x) is not dict):
+        x_dict = {}
+        for key in x:
+            x_dict[key] = None
+        return x_dict
+    else:
+        return x
+
 def get_ids(x):
     '''
     Description: Gets the ids of problems/models
@@ -91,7 +110,7 @@ def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100, 
         model.initialize(model_params)
 
     if(problem.has_regressors and not model.uses_regressors):
-        print("WARNING: Problem has regressors but model only uses output signal.")
+        print("WARNING: %s has regressors but %s only uses output signal." % (problem_id, model_id))
 
     # check problem and model are of the same type
     is_ts_problem = (inspect.getmro(problem.__class__))[1] == TimeSeriesProblem
