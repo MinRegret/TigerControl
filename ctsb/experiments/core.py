@@ -94,7 +94,7 @@ def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100, 
     if(problem_params is None):
         init = problem.initialize()
     else:
-        init = problem.initialize(problem_params)
+        init = problem.initialize(**problem_params)
 
     # get first x and y
     if(problem.has_regressors):
@@ -107,7 +107,7 @@ def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100, 
     if(model_params is None):
         model.initialize()
     else:
-        model.initialize(model_params)
+        model.initialize(**model_params)
 
     if(problem.has_regressors and not model.uses_regressors):
         print("WARNING: %s has regressors but %s only uses output signal." % (problem_id, model_id))

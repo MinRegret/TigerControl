@@ -102,20 +102,22 @@ class Experiment(object):
                 self.prob_model_to_result[('time', problem_id, model_id)] = time
                 self.prob_model_to_result[('memory', problem_id, model_id)] = memory
 
-    def scoreboard(self, save_as = None, metric = 'mse'):
+    def scoreboard(self, save_as = None, metric = 'mse', verbose = True):
         '''
         Description: Show a scoreboard for the results of the experiments for specified metric.
 
         Args:
             save_as (string): If not None, datapath to save results as csv file.
             metric (string): Metric to compare results
+            verbose (boolean): Specifies whether to print the description of the scoreboard entries
         '''
 
         if(self.use_precomputed and metric == 'time' and self.new_models):
             print("WARNING: Time comparison between precomputed models and" + \
                   "any added model may be irrelevant due to hardware differences.")
 
-        print("Scoreboard for average " + metric + ":")
+        if(verbose):
+            print("Average " + metric + ":")
         table = PrettyTable()
         table_dict = {}
 
@@ -186,7 +188,7 @@ class Experiment(object):
                 ax.legend(loc="upper left")
             ax.set_title("Problem:" + str(problem))
             ax.set_xlabel("timesteps")
-            ax.set_ylabel("loss")
+            ax.set_ylabel(metric)
         else:
             for i in range(n_problems):
                 (problem, problem_result_plus_model, model_list) = all_problem_info[i]
@@ -195,7 +197,7 @@ class Experiment(object):
                 ax[i].set_title("Problem:" + str(problem), size=10)
                 ax[i].legend(loc="upper left")
                 ax[i].set_xlabel("timesteps")
-                ax[i].set_ylabel("loss")
+                ax[i].set_ylabel(metric)
 
         fig.tight_layout()
 
@@ -274,6 +276,8 @@ Methods:
             save_as (string): If not None, datapath to save results as csv file.
 
             metric (string): Metric to compare results
+
+            verbose (boolean): Specifies whether to print the description of the scoreboard entries
 
 
     graph(save_as = None, metric = 'mse', time = 5):
