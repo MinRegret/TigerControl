@@ -4,6 +4,11 @@ from ctsb.models.optimizers.losses import mse
 import matplotlib.pyplot as plt
 
 def test_sgd(show=False):
+    test_sgd_lstm(show=show)
+    test_sgd_autoregressor(show=show)
+    print("test_sgd passed")
+
+def test_sgd_lstm(show=False):
     problem = ctsb.problem('ARMA-v0')
     x = problem.initialize(p=2,q=0)
 
@@ -25,11 +30,34 @@ def test_sgd(show=False):
         x = y_true
 
     if show:
+        plt.title("Test SGD on ARMA(3) with LSTM model")
         plt.plot(loss)
         plt.show(block=False)
         plt.pause(3)
         plt.close()
-    print("test_sgd passed")
+
+def test_sgd_autoregressor(show=False):
+    problem = ctsb.problem('ARMA-v0')
+    x = problem.initialize(p=2,q=0)
+
+    optimizer = SGD(learning_rate=0.0003)
+    model = ctsb.model('AutoRegressor')
+    model.initialize(p=3, optimizer=optimizer) # reinitialize with instance
+
+    loss = []
+    for t in range(1000):
+        y_pred = model.predict(x)
+        y_true = problem.step()
+        loss.append(mse(y_pred, y_true))
+        model.update(y_true)
+        x = y_true
+
+    if show:
+        plt.title("Test SGD on ARMA(3) with AutoRegressor model")
+        plt.plot(loss)
+        plt.show(block=False)
+        plt.pause(3)
+        plt.close()
 
 
 

@@ -14,7 +14,7 @@ class SGD(Optimizer):
     Returns:
         None
     """
-    def __init__(self, pred=None, loss=mse, learning_rate=0.01, hyperparameters={}):
+    def __init__(self, pred=None, loss=mse, learning_rate=0.0001, hyperparameters={}):
         self.lr = learning_rate
         self.hyperparameters = hyperparameters
         if self._is_valid_pred(pred, raise_error=False):
