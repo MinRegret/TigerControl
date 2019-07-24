@@ -19,8 +19,7 @@ Clone the directory and use pip or pip3 to set up a minimal installation of CTSB
 
 ```
     git clone https://github.com/johnhallman/ctsb.git
-    cd ctsb
-    pip install -e .
+    pip install -e ctsb
 ```
 
 You can now use CTSB in your Python code by calling `import ctsb` in your files. 
@@ -39,8 +38,7 @@ Next, clone the GitHub repository and install the full package.
 
 ```
     git clone https://github.com/johnhallman/ctsb.git
-    cd ctsb
-    pip install -e '.[all]'
+    pip install -e 'ctsb[all]'
 ```
 
 Finally, run a demo to verify that the installation was successful!
