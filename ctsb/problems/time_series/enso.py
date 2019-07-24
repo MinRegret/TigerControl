@@ -6,7 +6,7 @@ import ctsb
 import os
 import jax.numpy as np
 import pandas as pd
-from ctsb.utils.dataset_registry import ctrl_indices, get_ctsb_dir
+from ctsb.utils.dataset_registry import enso, get_ctsb_dir
 from ctsb.error import StepOutOfBounds
 from ctsb.problems.time_series import TimeSeriesProblem
 
@@ -42,7 +42,7 @@ class ENSO(TimeSeriesProblem):
         self.initialized = True
         self.has_regressors = True
         self.T = 0
-        self.X, self.y = ctrl_indices(input_signals, include_month, output_signals, history, timeline) # get data
+        self.X, self.y = enso(input_signals, include_month, output_signals, history, timeline) # get data
         self.max_T = self.y.shape[0]
 
         return (self.X[0], self.y[0])

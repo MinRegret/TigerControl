@@ -23,7 +23,7 @@ def test_enso(steps=1000, show_plot=False, verbose=False):
         print(info)
     if show_plot:
         plt.plot(test_output)
-        plt.title("ENSO")
+        plt.title("ONI of Nino34")
         plt.show(block=False)
         plt.pause(1)
         plt.close()
