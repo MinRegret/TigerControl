@@ -66,23 +66,10 @@ def test_cartpole_double(verbose=False):
             if restart_delay > 0: continue
             break
 
-    ''' # doesn't work due to bug in PyBullet
-    if verbose:
-        print("save_to_mem_ID: " + str(save_to_mem_ID))
-    problem.loadState(save_to_mem_ID)
-    if verbose:
-        print("loadState worked")
-        while time.time() - t_start < 3:
-            time.sleep(1. / 60.)
-            a = model.predict(obs)
-            obs, r, done, _ = problem.step(a)
-            score += r
-            frame += 1
-    '''
     problem.close()
     print("test_cartpole_double passed")
 
 
 if __name__ == "__main__":
-    test_cartpole_double(verbose=False)
+    test_cartpole_double(verbose=True)
 

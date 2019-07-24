@@ -18,6 +18,8 @@ def test_half_cheetah(steps=1000, verbose=False):
     action = np.random.normal(size=problem.action_space)
 
     for step_counter in range(steps):
+        if verbose:
+            problem.render()
         action = 0.95 * action + np.random.normal(size=problem.action_space)
         _, reward, done, _ = problem.step(action)
         time.sleep(1. / 100.)

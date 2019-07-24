@@ -1,4 +1,6 @@
-# from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
+"""
+Core class for PyBullet environments
+"""
 import pybullet as p
 
 
