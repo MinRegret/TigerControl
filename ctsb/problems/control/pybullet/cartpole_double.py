@@ -2,8 +2,7 @@
 PyBullet Double Pendulum enviornment
 """
 
-import gym
-import pybullet_envs
+from pybullet_envs.gym_pendulum_envs import InvertedDoublePendulumBulletEnv
 from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
 
 
@@ -19,7 +18,7 @@ class CartPoleDouble(PyBulletProblem):
 
     def initialize(self, render=False):
         self.initialized = True
-        self._env = gym.make("InvertedDoublePendulumBulletEnv-v0")
+        self._env = InvertedDoublePendulumBulletEnv()
         if render:
             self._env.render(mode="human")
         self.observation_space = self._env.observation_space.shape

@@ -2,8 +2,7 @@
 PyBullet Ant enviornment
 """
 
-import gym
-import pybullet_envs
+from pybullet_envs.gym_locomotion_envs import AntBulletEnv
 from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
 
 
@@ -13,7 +12,7 @@ class Ant(PyBulletProblem):
     """
     def initialize(self, render=False):
         self.initialized = True
-        self._env = gym.make("AntBulletEnv-v0")
+        self._env = AntBulletEnv(render=render)
         self.observation_space = self._env.observation_space.shape
         self.action_space = self._env.action_space.shape
         self.state = {}

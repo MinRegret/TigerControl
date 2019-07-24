@@ -1,9 +1,7 @@
-# Problem class
-# Author: John Hallman
+# PyBullet Problems
 
 from ctsb import error
 from ctsb.problems import Problem
-import pybullet as p
 from ctsb.problems.control.pybullet.simulator import Simulator
 
 

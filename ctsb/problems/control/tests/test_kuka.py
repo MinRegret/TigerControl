@@ -32,7 +32,7 @@ class ContinuousDownwardBiasPolicy(object):
 def test_kuka(verbose=False):
 
     problem = ctsb.problem("Kuka-v0")
-    obs = problem.initialize()
+    obs = problem.initialize(render=verbose)
     policy = ContinuousDownwardBiasPolicy()
 
     t_start = time.time()
@@ -50,5 +50,5 @@ def test_kuka(verbose=False):
     print("test_kuka passed")
 
 if __name__ == '__main__':
-    test_kuka()
+    test_kuka(verbose=True)
 
