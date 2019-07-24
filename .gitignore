@@ -7,7 +7,7 @@
 __pycache__
 # ignore all csv files except for the ENSO dataset (ctrl_indices)
 *.csv
-!enso.csv
+!ctsb/data/enso.csv
 *.zip
 
 # Setuptools distribution and build folders.
