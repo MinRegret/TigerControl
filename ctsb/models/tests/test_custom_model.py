@@ -16,15 +16,16 @@ def test_custom_model(steps=1000, show_plot=True):
     # simple LastValue custom model implementation
     class Custom(ctsb.CustomModel):
         def initialize(self):
-            pass
+            self.x = 0.0
         def predict(self, x):
-            return x
-        def update(self):
-            pass
+            return self.x
+        def update(self, y):
+            self.x = y
 
     # try registering and calling the custom model
     ctsb.register_custom_model(Custom, "TestCustomModel")
     custom_model = ctsb.model("TestCustomModel")
+    custom_model.initialize()
 
     # regular LastValue model as sanity check
     reg_model = ctsb.model("LastValue")
@@ -36,9 +37,9 @@ def test_custom_model(steps=1000, show_plot=True):
         reg_y_pred = reg_model.predict(cur_x)
         assert cur_y_pred == reg_y_pred # check that CustomModel outputs the correct thing
         cur_y_true = problem.step()
-        cur_loss = loss(cur_y_true, cur_y_pred)
-        results.append(cur_loss)
-        custom_model.update()
+        custom_model.update(cur_y_true)
+        reg_model.update(cur_y_true)
+        results.append(loss(cur_y_true, cur_y_pred))
         cur_x = cur_y_true
 
     if show_plot:

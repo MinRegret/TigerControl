@@ -6,9 +6,9 @@ import ctsb
 import numpy as np
 import time
 
-def test_humanoid(steps=1000, show=False):
+def test_humanoid(steps=1000, verbose=False):
     problem = ctsb.problem("Humanoid-v0")
-    problem.initialize(render=show)
+    problem.initialize(render=verbose)
 
     sum_reward = 0
     amplitude1 = 0.5
@@ -31,6 +31,6 @@ def test_humanoid(steps=1000, show=False):
 
 
 if __name__ == '__main__':
-    test_humanoid(show=True)
+    test_humanoid(verbose=True)
 
 

@@ -69,7 +69,7 @@ class RNN(TimeSeriesModel):
             y = np.dot(W_out, next_hid)
             return y
         self._predict = jax.jit(_predict)
-        self.store_optimizer(optimizer, self._predict)
+        self._store_optimizer(optimizer, self._predict)
 
     def predict(self, x):
         """

@@ -5,7 +5,7 @@ import jax.numpy as np
 import matplotlib.pyplot as plt
 
 # test a simple CustomProblem that returns last value by storing a single param
-def test_custom_problem(steps=1000, show_plot=True):
+def test_custom_problem(steps=1000, show=True):
     # initial preparation
     T = steps
     loss = lambda y_true, y_pred: (y_true - y_pred)**2
@@ -33,7 +33,7 @@ def test_custom_problem(steps=1000, show_plot=True):
         results.append(loss(cur_y_true, cur_y_pred))
         cur_x = cur_y_true
 
-    if show_plot:
+    if show:
         plt.plot(results)
         plt.title("LastValue model on custom alternating problem")
         plt.show(block=False)
