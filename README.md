@@ -44,7 +44,7 @@ Next, clone the GitHub repository and install the full package.
 Finally, run a demo to verify that the installation was successful!
 
 ```
-    python ctsb/problems/tests/test_pendulum.py
+    python ctsb/problems/control/tests/test_minitaur.py
 ```
 
 
