@@ -4,12 +4,29 @@
 from ctsb import error
 from ctsb.models import Model
 from ctsb.models.registration import model_registry
+from ctsb.models.optimizers import Optimizer
 
 
 # class for implementing algorithms with enforced modularity
 class CustomModel(object):
     def __init__(self):
         pass
+    
+    def _store_optimizer(self, optimizer, pred):
+        if isinstance(optimizer, Optimizer):
+            optimizer.set_predict(pred)
+            self.optimizer = optimizer
+            return
+        if issubclass(optimizer, Optimizer):
+            self.optimizer = optimizer(pred=pred)
+            return
+        raise error.InvalidInput("Optimizer input cannot be stored")
+
+    def __str__(self):
+        if self.spec is None:
+            return '<{} instance>'.format(type(self).__name__)
+        else:
+            return '<{}<{}>>'.format(type(self).__name__, self.spec.id)
 
 # verifies that a given class has the necessary minimum model methods
 def verify_valid_model(model_class):
