@@ -8,6 +8,7 @@ import ctsb
 from ctsb import error
 from ctsb.problems import problem, CustomProblem, problem_registry, register_custom_problem
 from ctsb.models import model, CustomModel, model_registry, register_custom_model
+from ctsb.models.optimizers import losses
 from ctsb.help import help
 from ctsb.utils import set_key
 from ctsb.experiments import Experiment
