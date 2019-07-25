@@ -14,7 +14,7 @@ from ctsb.problems.time_series import TimeSeriesProblem
 
 class Unemployment(TimeSeriesProblem):
     """
-    Description: Outputs the daily price of bitcoin from 2013-04-28 to 2018-02-10
+    Description: Monthly unemployment rate since 1948.
     """
 
     def __init__(self):
@@ -87,8 +87,7 @@ Unemployment_help = """
 -------------------- *** --------------------
 
 Id: Unemployment-v0
-Description: Outputs the daily price of bitcoin
-        from 2013-04-28 to 2018-02-10
+Description: Outputs monthly unemployment rate from 1948 until today.
 
 Methods:
 
@@ -97,7 +96,7 @@ Methods:
         Args:
             None
         Returns:
-            The first bitcoin price
+            The first unemployment rate
 
     step()
         Description:
@@ -105,7 +104,7 @@ Methods:
         Args:
             None
         Returns:
-            The next bitcoin price
+            Next unemployment rate
 
     hidden()
         Description:
