@@ -15,10 +15,11 @@ Installation
 
 ### Quick install (excluding PyBullet)
 
-Use pip or pip3 to obtain a minimal installation of CTSB, which excludes all PyBullet control problems.
+Clone the directory and use pip or pip3 to set up a minimal installation of CTSB, which excludes PyBullet control problems.
 
 ```
-    pip install git+https://github.com/johnhallman/ctsb.git
+    git clone https://github.com/johnhallman/ctsb.git
+    pip install -e ctsb
 ```
 
 You can now use CTSB in your Python code by calling `import ctsb` in your files. 
@@ -37,8 +38,7 @@ Next, clone the GitHub repository and install the full package.
 
 ```
     git clone https://github.com/johnhallman/ctsb.git
-    cd ctsb
-    pip install -e '.[all]'
+    pip install -e 'ctsb[all]'
 ```
 
 Finally, run a demo to verify that the installation was successful!

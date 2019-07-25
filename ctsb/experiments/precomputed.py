@@ -48,7 +48,7 @@ def get_key():
     Returns:
         key used for obtaining precomputed results
     '''
-    return keys
+    return key
 
 def recompute(verbose = False, load_bar = False):
     '''

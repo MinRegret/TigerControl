@@ -2,31 +2,12 @@
 
 import ctsb
 from ctsb import error
-from ctsb.experiments.core import run_experiment, create_full_problem_to_models
+from ctsb.experiments.core import to_dict, run_experiment, create_full_problem_to_models
 
 class NewExperiment(object):
     ''' Description: class for implementing algorithms with enforced modularity '''
     def __init__(self):
         self.initialized = False
-
-    def to_dict(self, x):
-        '''
-        Description: If x is not a dictionary, transforms it to one by assigning None values to entries of x;
-                     otherwise, returns x.
-
-        Args:     
-            x (dict / list): either a dictionary or a list of keys for the dictionary
-
-        Returns:
-            A dictionary 'version' of x
-        '''
-        if(type(x) is not dict):
-            x_dict = {}
-            for key in x:
-                x_dict[key] = None
-            return x_dict
-        else:
-            return x
         
     def initialize(self, problems, models, problem_to_models=None, metrics = 'mse', timesteps = 1000,\
                          verbose = True, load_bar = True):
@@ -34,17 +15,15 @@ class NewExperiment(object):
         Description: Initializes the new experiment instance. 
 
         Args:     
-            problems (dict/list): map of the form problem_id -> hyperparameters for problem or list of problem ids;
-                                  in the latter case, default parameters will be used for initialization
-            models (dict/list): map of the form model_id -> hyperparameters for model or list of model ids;
-                                in the latter case, default parameters will be used for initialization
+            problems (dict): map of the form problem_id -> hyperparameters for problem 
+            models (dict): map of the form model_id -> hyperparameters for model
             problem_to_models (dict) : map of the form problem_id -> list of model_id.
                                        If None, then we assume that the user wants to
                                        test every model in model_to_params against every
                                        problem in problem_to_params
         '''
         self.intialized = True
-        self.problems, self.models = self.to_dict(problems), self.to_dict(models)
+        self.problems, self.models = problems, models
         self.metrics, self.timesteps, self.verbose, self.load_bar = metrics, timesteps, verbose, load_bar
 
         if(problem_to_models is None):
@@ -95,10 +74,8 @@ Methods:
         Description: Initializes the new experiment instance. 
 
         Args:     
-            problems (dict/list): map of the form problem_id -> hyperparameters for problem or list of problem ids;
-                                  in the latter case, default parameters will be used for initialization
-            models (dict/list): map of the form model_id -> hyperparameters for model or list of model ids;
-                                in the latter case, default parameters will be used for initialization
+            problems (dict): map of the form problem_id -> hyperparameters for problem 
+            models (dict): map of the form model_id -> hyperparameters for model
             problem_to_models (dict) : map of the form problem_id -> list of model_id.
                                        If None, then we assume that the user wants to
                                        test every model in model_to_params against every
@@ -117,12 +94,6 @@ Methods:
 
     help()
         Description: Prints information about this class and its methods
-
-        Args:
-            None
-
-        Returns:
-            None
 
 -------------------- *** --------------------
 

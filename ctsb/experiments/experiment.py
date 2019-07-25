@@ -2,7 +2,7 @@
 
 import ctsb
 from ctsb import error
-from ctsb.experiments.core import run_experiment, get_ids
+from ctsb.experiments.core import run_experiment, get_ids, to_dict
 from ctsb.experiments.new_experiment import NewExperiment
 from ctsb.experiments import precomputed
 import csv
@@ -36,10 +36,10 @@ class Experiment(object):
             load_bar (boolean): Specifies whether to show a loading bar while the experiments are running.
         '''
 
-        self.problems, self.models, self.problem_to_models, self.metrics = problems, models, problem_to_models, metrics
+        self.problems, self.models, self.problem_to_models, self.metrics = to_dict(problems), to_dict(models), problem_to_models, metrics
         self.use_precomputed, self.timesteps, self.verbose, self.load_bar = use_precomputed, timesteps, verbose, load_bar
 
-        self.new_models = 0
+        self.n_models = {}
 
         if(use_precomputed and timesteps != precomputed.get_timesteps()):
             print("WARNING: when using precomputed results, number of timesteps is fixed.")
@@ -50,23 +50,22 @@ class Experiment(object):
             if(problems is dict):
                 print("WARNING: when using precomputed results, " + \
                       "any specified problem hyperparameters will be disregarded and default ones will be used instead.")
-                self.problems = list(problems.keys())
+            
             if(models is dict):
                 print("WARNING: when using precomputed results, " + \
                       "any specified model hyperparameters will be disregarded and default ones will be used instead.")
-                self.models = list(models.keys())
 
             # map of the form [metric][problem][model] -> loss series + time + memory
-            self.prob_model_to_result = precomputed.load_prob_model_to_result(problem_ids = problems, model_ids = models, \
-                                                                problem_to_models = problem_to_models, metrics = metrics)
+            self.prob_model_to_result = precomputed.load_prob_model_to_result(problem_ids = list(self.problems.keys()), \
+                                            model_ids = list(self.models.keys()), problem_to_models = problem_to_models, metrics = metrics)
 
         else:
             self.new_experiment = NewExperiment()
-            self.new_experiment.initialize(problems, models, problem_to_models, metrics, timesteps, verbose, load_bar)
+            self.new_experiment.initialize(self.problems, self.models, problem_to_models, metrics, timesteps, verbose, load_bar)
             # map of the form [metric][problem][model] -> loss series + time + memory
-            self.prob_model_to_result = {}
+            self.prob_model_to_result = self.new_experiment.run_all_experiments()
 
-    def add_model(self, model_id, model_params):
+    def add_model(self, model_id, model_params = None):
         '''
         Description: Add a new model to the experiment instance.
         
@@ -74,56 +73,51 @@ class Experiment(object):
             model_id (string): ID of new model.
             model_params: Parameters to use for initialization of new model.
         '''
-        assert model_id is not None
+        assert model_id is not None, "ERROR: No Model ID given."
 
-        if(self.use_precomputed):
-            ''' Evaluate performance of new model on all problems '''
-            for metric in metrics:
-                for problem_id, problem_params in self.problems:
-                    ''' If model is compatible with problem, run experiment and store results. '''
-                    try:
-                        loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), \
-                                                metric, key = precomputed.get_key(), timesteps = precomputed.get_timesteps(), \
-                                                verbose = self.verbose, load_bar = self.load_bar)
-                    except:
-                        print("ERROR: Could not run %s on %s. " + \
-                                     "Please make sure model and problem are compatible." % (problem_id, model_id))
-                        loss, time, memory = 0, -1, -1
+        ''' Evaluate performance of new model on all problems '''
+        for metric in self.metrics:
+            for problem_id, problem_params in self.problems.items():
 
-                    self.prob_model_to_result[metric][model_id][problem_id] = loss
-                    self.prob_model_to_result['time'][problem][model] = time
-                    self.prob_model_to_result['memory'][problem][model] = memory
-        else:
-            self.models[model_id] = parameters
+                ''' If model is compatible with problem, run experiment and store results. '''
+                try:
+                    loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), \
+                                            metric, key = precomputed.get_key(), timesteps = precomputed.get_timesteps(), \
+                                            verbose = self.verbose, load_bar = self.load_bar)
+                except:
+                    print("ERROR: Could not run %s on %s. " + \
+                                 "Please make sure model and problem are compatible." % (problem_id, model_id))
+                    loss, time, memory = 0, -1, -1
 
-        self.new_models += 1
+                ####### TO DO: If already in models, add as new variant ! ######
+                '''if(model_id in self.models):
+                        if(model_id not in self.n_models):
+                            self.n_models[model_id] = 0
+                        self.n_models[model_id] += 1
+                        model_id += '-' + str(self.n_models[model_id])'''
 
-    def run(self):
-        '''
-        Description: Run all problem-model associations in the current experiment instance.
-        
-        Args:
-            None
-        '''
-        if(self.use_precomputed):
-            print("We are in precomputed mode, so everything has already been run.")
-        else:
-            self.prob_model_to_result = self.new_experiment.run_all_experiments()
+                self.models[model_id] = model_params
 
-    def scoreboard(self, save_as = None, metric = 'mse'):
+                self.prob_model_to_result[(metric, problem_id, model_id)] = loss
+                self.prob_model_to_result[('time', problem_id, model_id)] = time
+                self.prob_model_to_result[('memory', problem_id, model_id)] = memory
+
+    def scoreboard(self, save_as = None, metric = 'mse', verbose = True):
         '''
         Description: Show a scoreboard for the results of the experiments for specified metric.
 
         Args:
             save_as (string): If not None, datapath to save results as csv file.
             metric (string): Metric to compare results
+            verbose (boolean): Specifies whether to print the description of the scoreboard entries
         '''
 
         if(self.use_precomputed and metric == 'time' and self.new_models):
             print("WARNING: Time comparison between precomputed models and" + \
                   "any added model may be irrelevant due to hardware differences.")
 
-        print("Scoreboard for " + metric + ":")
+        if(verbose):
+            print("Average " + metric + ":")
         table = PrettyTable()
         table_dict = {}
 
@@ -194,7 +188,7 @@ class Experiment(object):
                 ax.legend(loc="upper left")
             ax.set_title("Problem:" + str(problem))
             ax.set_xlabel("timesteps")
-            ax.set_ylabel("loss")
+            ax.set_ylabel(metric)
         else:
             for i in range(n_problems):
                 (problem, problem_result_plus_model, model_list) = all_problem_info[i]
@@ -203,7 +197,7 @@ class Experiment(object):
                 ax[i].set_title("Problem:" + str(problem), size=10)
                 ax[i].legend(loc="upper left")
                 ax[i].set_xlabel("timesteps")
-                ax[i].set_ylabel("loss")
+                ax[i].set_ylabel(metric)
 
         fig.tight_layout()
 
@@ -264,7 +258,7 @@ Methods:
             load_bar (boolean): Specifies whether to show a loading bar while the experiments are running.
 
 
-    add_model(model_id, model_params):
+    add_model(model_id, model_params = None):
 
         Description: Add a new model to the experiment instance.
         
@@ -274,12 +268,6 @@ Methods:
             model_params: Parameters to use for initialization of new model.
 
 
-    run():
-        Description: Run all problem-model associations in the current experiment instance.
-        
-        Args:
-            None
-
     scoreboard(save_as = None, metric = 'mse'):
 
         Description: Show a scoreboard for the results of the experiments for specified metric.
@@ -288,6 +276,8 @@ Methods:
             save_as (string): If not None, datapath to save results as csv file.
 
             metric (string): Metric to compare results
+
+            verbose (boolean): Specifies whether to print the description of the scoreboard entries
 
 
     graph(save_as = None, metric = 'mse', time = 5):
@@ -302,12 +292,8 @@ Methods:
             time (float): Specifies how long the graph should display for
 
     help()
-        Description:
-            Prints information about this class and its methods
-        Args:
-            None
-        Returns:
-            None
+
+        Description: Prints information about this class and its methods
 
 -------------------- *** --------------------
 
