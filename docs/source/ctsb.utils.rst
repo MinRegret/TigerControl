@@ -13,7 +13,7 @@ dataset_registry
    uci_indoor
    sp500
    crypto
-   ctrl_indices
+   enso
 
 random
 ------

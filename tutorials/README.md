@@ -9,10 +9,9 @@ List of Tutorials
 
 Below is a list of notebooks and a brief explanation of what they cover. If you wish to implement custom models or problems you may want to read up on [Google JAX](https://github.com/google/jax) — a NumPy-based auto-differentiation package which CTSB depends heavily on.
 
-- **Quickstart** - ([Google Colab](https://colab.research.google.com/github/johnhallman/ctsb/blob/master/tutorials/notebooks/QuickStart.ipynb),
+- **Quickstart** - A brief overview of CTSB ([Google Colab](https://colab.research.google.com/github/johnhallman/ctsb/blob/master/tutorials/notebooks/QuickStart.ipynb),
 [NBViewer](https://nbviewer.jupyter.org/github/johnhallman/ctsb/blob/master/tutorials/notebooks/QuickStart.ipynb))
-- **Time-series problems** - ([Google Colab](https://colab.research.google.com/github/johnhallman/ctsb/blob/master/tutorials/notebooks/TimeSeries.ipynb), [NBViewer](https://nbviewer.jupyter.org/github/johnhallman/ctsb/blob/master/tutorials/notebooks/TimeSeries.ipynb))
-- **Control and PyBullet problems** - ([Google Colab](https://colab.research.google.com/github/johnhallman/ctsb/blob/master/tutorials/notebooks/Control.ipynb), [NBViewer](https://nbviewer.jupyter.org/github/johnhallman/ctsb/blob/master/tutorials/notebooks/Control.ipynb))
-- **Models, compatibility, and optimizers** - [google](https://www.google.com)
-- **Custom models and problems** - [google](https://www.google.com)
-- **Experiments and scoreboards** - [google](https://www.google.com)
+- **Problems** - Load different tasks ([Google Colab](https://colab.research.google.com/github/johnhallman/ctsb/blob/master/tutorials/notebooks/Problems.ipynb), [NBViewer](https://nbviewer.jupyter.org/github/johnhallman/ctsb/blob/master/tutorials/notebooks/Problems.ipynb))
+- **Models** - Pre-implemented algorithms for solving problems ([Google Colab](https://colab.research.google.com/github/johnhallman/ctsb/blob/master/tutorials/notebooks/Models.ipynb), [NBViewer](https://nbviewer.jupyter.org/github/johnhallman/ctsb/blob/master/tutorials/notebooks/Models.ipynb))
+- **Custom** - Add your own models and problems ([Google Colab](https://colab.research.google.com/github/johnhallman/ctsb/blob/master/tutorials/notebooks/Custom.ipynb), [NBViewer](https://nbviewer.jupyter.org/github/johnhallman/ctsb/blob/master/tutorials/notebooks/Custom.ipynb))
+- **Experiments** - Evaluate models automatically ([Google Colab](https://colab.research.google.com/github/johnhallman/ctsb/blob/master/tutorials/notebooks/Experiments.ipynb), [NBViewer](https://nbviewer.jupyter.org/github/johnhallman/ctsb/blob/master/tutorials/notebooks/Experiments.ipynb))
