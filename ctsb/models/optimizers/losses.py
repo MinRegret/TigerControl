@@ -9,7 +9,7 @@ def mse(y_pred, y_true):
             y_true : ground truth value
             eps: some scalar
     '''
-    return np.sum((y_pred - y_true)**2)
+    return np.mean((y_pred - y_true)**2)
     
 def cross_entropy(y_pred, y_true, eps=1e-9):
     ''' Description: cross entropy loss, y_pred is equivalent to logits and y_true to labels
@@ -18,4 +18,4 @@ def cross_entropy(y_pred, y_true, eps=1e-9):
             y_true : ground truth value
             eps: some scalar
     '''
-    return - np.dot(y_true, np.log(y_pred + eps))
+    return - np.mean(y_true * np.log(y_pred + eps))

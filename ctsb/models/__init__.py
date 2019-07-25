@@ -3,6 +3,7 @@
 from ctsb.models.registration import model_registry, model_register, model
 from ctsb.models.core import Model
 from ctsb.models.custom import CustomModel, register_custom_model
+from ctsb.models.optimizers import losses
 
 # ---------- Models ----------
 
