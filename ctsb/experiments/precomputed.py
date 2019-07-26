@@ -52,7 +52,7 @@ def get_key():
 
 def recompute(verbose = False, load_bar = False):
     '''
-    Description: Initializes the experiment instance. 
+    Description: Recomputes all the results.
 
     Args:
         verbose (boolean): Specifies whether to print what experiment is currently running.

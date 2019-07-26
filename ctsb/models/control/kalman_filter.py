@@ -32,7 +32,7 @@ class KalmanFilter(ControlModel):
 
     where we assume w(t) ~ N(0, Q) and v(t) ~ N(0, R).
 
-    The user must provides estimates for A, B, H, Q and R, as well as initial
+    The user must provide estimates for A, B, H, Q and R, as well as initial
     estimates for x(0) and P(0).
     """
 
