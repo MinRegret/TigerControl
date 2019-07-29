@@ -20,6 +20,7 @@ class OGD(Optimizer):
         self.hyperparameters = {'T':0, 'max_norm':1.0}
         self.hyperparameters.update(hyperparameters)
         self.T = self.hyperparameters['T']
+        self.loss = loss
         self.max_norm = self.hyperparameters['max_norm']
         if self._is_valid_pred(pred, raise_error=False):
             self.set_predict(pred, loss=loss)

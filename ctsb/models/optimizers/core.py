@@ -25,14 +25,20 @@ class Optimizer():
             self.set_predict(pred, loss=loss)
         else:
             self.initialized = False
+        self.loss = loss
 
-    def set_predict(self, pred, loss=mse):
+    def set_loss(self, new_loss):
+        self.loss = new_loss
+
+    def set_predict(self, pred, loss=None):
         """
         Description: Updates internally stored pred and loss functions
         Args:
             pred (function): predict function, must take params and x as input
             loss (function): loss function. defaults to mse.
         """
+        if(loss is None):
+            loss = self.loss
         self._is_valid_pred(pred, raise_error=True)
         _loss = lambda params, x, y: loss(pred(params=params, x=x), y)
         _custom_loss = lambda params, x, y, custom_loss: custom_loss(pred(params=params, x=x), y)
@@ -52,6 +58,8 @@ class Optimizer():
         Returns:
             Updated parameters in same shape as input
         """
+        if(loss is None):
+            loss = self.loss
         assert self.initialized
         grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
         if (type(params) is list):
