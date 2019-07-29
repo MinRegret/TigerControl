@@ -35,4 +35,4 @@ def test_lds(steps=1000, show_plot=False, verbose=False):
 
 
 if __name__=="__main__":
-    test_lds()
+    test_lds(show_plot=True)

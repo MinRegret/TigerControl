@@ -51,5 +51,5 @@ Finally, run a demo to verify that the installation was successful!
 For more information
 ====================
 
-To learn more about CTSB and how to incorporate it into your research, check out the Quickstart guide in the ```ctsb/notebooks``` folder. Alternatively, check out our [readthedocs](https://ctsb.readthedocs.io/en/latest/) guide for more information and full APIs.
+To learn more about CTSB and how to incorporate it into your research, check out the Quickstart guide in the ```ctsb/tutorials``` folder. Alternatively, check out our [readthedocs](https://ctsb.readthedocs.io/en/latest/) page for more documentation and APIs.
 
