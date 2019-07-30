@@ -9,6 +9,10 @@ from ctsb.problems.custom import register_custom_problem, CustomProblem
 
 # ---------- PyBullet ----------
 
+problem_register(
+    id ='Obstacles-v0',
+    entry_point='ctsb.problems.control.pybullet:Obstacles'
+)
 
 problem_register(
     id='CartPole-v0',

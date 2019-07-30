@@ -10,6 +10,7 @@ from ctsb import error
 class Optimizer():
     """
     Description: Core class for model optimizers
+    
     Args:
         pred (function): a prediction function implemented with jax.numpy 
         loss (function): specifies loss function to be used; defaults to MSE
