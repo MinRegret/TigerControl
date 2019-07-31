@@ -6,13 +6,13 @@ import numpy as np
 def get_parameters():
     
     params = {} # Initialize parameter dictionary
-    params['numRays'] = 101 # number of rays for sensor measurements
-    params['senseRadius'] = 5.0 # sensing radius
+    params['numRays'] = 401 # number of rays for sensor measurements
+    params['senseRadius'] = 6.0 # sensing radius
     params['robotRadius'] = 0.27 # radius of robot
     params['robotHeight'] = 0.15/2 # rough height of COM of robot
     params['th_min'] = -np.pi/2 # sensing angle minimum 
     params['th_max'] = np.pi/2 # sensing angle maximum
-    params['T_horizon'] = 100 # time horizon over which to evaluate everything   
+    params['T_horizon'] = 200 # time horizon over which to evaluate everything   
     
     # precompute vector of angles for sensor
     params['thetas_nominal'] = np.reshape(np.linspace(params['th_min'], params['th_max'], params['numRays']), (params['numRays'],1))
@@ -60,9 +60,12 @@ def generate_obstacles(p, heightObs, robotRadius):
     
     # First create bounding obstacles
     x_lim = [-5.0, 5.0]
-    y_lim = [0.0, 10.0]
+    y_lim = [0.0, 24.0]
         
-    numObs = 10+np.random.randint(0,10) # 30 
+    #numObs = 10 + np.random.randint(0,5)
+    # NUMBER OF OBJECTS
+    numObs = 45
+
     # radiusObs = 0.15
     massObs = 0
     visualShapeId = -1
@@ -91,11 +94,11 @@ def generate_obstacles(p, heightObs, robotRadius):
         
         posObs_obs = np.array([None]*3)
         posObs_obs[0] = x_lim[0] + (x_lim[1] - x_lim[0])*np.random.random_sample(1) 
-        posObs_obs[1] = 2.0 + y_lim[0] + (y_lim[1] - y_lim[0] - 2.0)*np.random.random_sample(1) # Push up a bit
+        posObs_obs[1] = 4.0 + y_lim[0] + (y_lim[1] - y_lim[0] - 2.0)*np.random.random_sample(1) # Push up a bit (by 4.0)
         posObs_obs[2] = 0 # set z at ground level
         posObs[obs] = posObs_obs # .tolist()
         orientObs[obs] = [0,0,0,1]
-        colIdxs[obs] = p.createCollisionShape(p.GEOM_CYLINDER,radius=(0.3)*np.random.random_sample(1)+0.05,height=heightObs)
+        colIdxs[obs] = p.createCollisionShape(p.GEOM_CYLINDER,radius=(0.2)*np.random.random_sample(1)+0.05,height=heightObs)
         # colIdxs[obs] = p.createCollisionShape(p.GEOM_CYLINDER,radius=radiusObs,height=heightObs)
 
     # Create bounding objects
