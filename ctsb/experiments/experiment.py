@@ -65,7 +65,7 @@ class Experiment(object):
             # map of the form [metric][problem][model] -> loss series + time + memory
             self.prob_model_to_result = self.new_experiment.run_all_experiments()
 
-    def add_model(self, model_id, model_params = None):
+    def add_model(self, model_id, model_params = None, name = None):
         '''
         Description: Add a new model to the experiment instance.
         
@@ -74,6 +74,20 @@ class Experiment(object):
             model_params: Parameters to use for initialization of new model.
         '''
         assert model_id is not None, "ERROR: No Model ID given."
+
+        ### IS THIS USEFUL OR BAD ? ###
+        if name is None and 'optimizer' in model_params:
+            name = model_params['optimizer'].__name__
+
+        new_id = ''
+        if(model_id in self.models):
+            if(model_id not in self.n_models):
+                self.n_models[model_id] = 0
+            if(name is not None):
+                new_id = model_id + '-' + name
+            else:
+                self.n_models[model_id] += 1
+                new_id = model_id + '-' + str(self.n_models[model_id])
 
         ''' Evaluate performance of new model on all problems '''
         for metric in self.metrics:
@@ -89,18 +103,11 @@ class Experiment(object):
                                  "Please make sure model and problem are compatible." % (problem_id, model_id))
                     loss, time, memory = 0, -1, -1
 
-                ####### TO DO: If already in models, add as new variant ! ######
-                '''if(model_id in self.models):
-                        if(model_id not in self.n_models):
-                            self.n_models[model_id] = 0
-                        self.n_models[model_id] += 1
-                        model_id += '-' + str(self.n_models[model_id])'''
+                self.models[new_id] = model_params
 
-                self.models[model_id] = model_params
-
-                self.prob_model_to_result[(metric, problem_id, model_id)] = loss
-                self.prob_model_to_result[('time', problem_id, model_id)] = time
-                self.prob_model_to_result[('memory', problem_id, model_id)] = memory
+                self.prob_model_to_result[(metric, problem_id, new_id)] = loss
+                self.prob_model_to_result[('time', problem_id, new_id)] = time
+                self.prob_model_to_result[('memory', problem_id, new_id)] = memory
 
     def scoreboard(self, save_as = None, metric = 'mse', verbose = True):
         '''
@@ -147,7 +154,7 @@ class Experiment(object):
                 for key in table_dict.keys():
                     f.write("%s,%s\n" % (key, table_dict[key]))
 
-    def graph(self, save_as = None, metric = 'mse', time = 5):
+    def graph(self, problem_ids = None, save_as = None, metric = 'mse', time = None):
         '''
         Description: Show a graph for the results of the experiments for specified metric.
         
@@ -160,19 +167,17 @@ class Experiment(object):
         # check metric exists
         assert metric in self.metrics
 
+        # get problem and model ids
+        if(problem_ids is None):
+            problem_ids = get_ids(self.problems)
+        model_ids = get_ids(self.models)
+
         # get number of problems
-        if(type(self.problems) is dict):
-            n_problems = len(self.problems.keys())
-        else:
-            n_problems = len(self.problems)
+        n_problems = len(problem_ids)
 
         all_problem_info = []
 
-        problem_ids = get_ids(self.problems)
-        model_ids = get_ids(self.models)
-
         for problem_id in problem_ids:
-            model_ids = get_ids(self.models)
             problem_result_plus_model = []
             model_list = []
             for model_id in model_ids:
@@ -180,7 +185,7 @@ class Experiment(object):
                 problem_result_plus_model.append((self.prob_model_to_result[(metric, problem_id, model_id)], model_id))
             all_problem_info.append((problem_id, problem_result_plus_model, model_list))
 
-        fig, ax = plt.subplots(nrows=n_problems, ncols=1)
+        fig, ax = plt.subplots(nrows=max(n_problems // 2, 1), ncols=n_problems // 2 + n_problems % 2)
         if n_problems == 1:
             (problem, problem_result_plus_model, model_list) = all_problem_info[0]
             for (loss, model) in problem_result_plus_model:
@@ -190,14 +195,21 @@ class Experiment(object):
             ax.set_xlabel("timesteps")
             ax.set_ylabel(metric)
         else:
-            for i in range(n_problems):
-                (problem, problem_result_plus_model, model_list) = all_problem_info[i]
-                for (loss, model) in problem_result_plus_model:
-                    ax[i].plot(loss, label=str(model))
-                ax[i].set_title("Problem:" + str(problem), size=10)
-                ax[i].legend(loc="upper left")
-                ax[i].set_xlabel("timesteps")
-                ax[i].set_ylabel(metric)
+            cur_pb = 0
+            for i in range(max(n_problems // 2, 1)):
+                for j in range(n_problems // 2 + n_problems % 2):
+                    if(cur_pb == n_problems):
+                        ax[i, j].plot(0, 'x', 'red', label="NO MORE \n MODELS")
+                        ax[i, j].legend(loc="center", fontsize=8 + 10//n_problems)
+                        break
+                    (problem, problem_result_plus_model, model_list) = all_problem_info[cur_pb]
+                    cur_pb += 1
+                    for (loss, model) in problem_result_plus_model:
+                        ax[i, j].plot(loss, label=str(model))
+                    ax[i, j].set_title("Problem:" + str(problem), size=10)
+                    ax[i, j].legend(loc="upper left", fontsize=3 + 10//n_problems)
+                    ax[i, j].set_xlabel("timesteps")
+                    ax[i, j].set_ylabel(metric)
 
         fig.tight_layout()
 
