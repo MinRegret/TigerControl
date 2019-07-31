@@ -112,10 +112,9 @@ def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100, 
     if(problem.has_regressors and not model.uses_regressors):
         print("WARNING: %s has regressors but %s only uses output signal." % (problem_id, model_id))
 
-    # check problem and model are of the same type
-    is_ts_problem = (inspect.getmro(problem.__class__))[1] == TimeSeriesProblem
-    is_ts_model = (inspect.getmro(model.__class__))[1] == TimeSeriesModel
-    # assert (is_ts_problem and is_ts_model), "ERROR: Currently Experiment only supports Time Series Problems and Models."
+    if(model.compatibles.isdisjoint(problem.compatibles)): 
+        print("ERROR: %s and %s are incompatible!" % (problem_id, model_id))
+        return np.zeros(timesteps), -1, -1
 
     if(verbose):
         print("Running %s on %s..." % (model_id, problem_id))

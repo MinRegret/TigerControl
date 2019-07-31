@@ -19,6 +19,8 @@ class ENSO(TimeSeriesProblem):
     the problem instance.
     """
 
+    compatibles = set(['ENSO-v0', 'TimeSeries'])
+
     def __init__(self):
         self.initialized = False
         self.has_regressors = True
