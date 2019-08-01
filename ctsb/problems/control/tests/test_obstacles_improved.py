@@ -110,7 +110,7 @@ def precompute_environment_costs(numEnvs, K, L, params, husky, sphere, GUI, seed
             for t in range(0, T_horizon):
 
                 # Get sensor measurement
-                y = getDistances(pybullet, state, robotHeight, numRays, senseRadius, thetas_nominal)
+                y = problem.getDistances(pybullet)
 
                 # Compute control input
                 # u = compute_control(y, K[l])
