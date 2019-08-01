@@ -6,7 +6,7 @@ import ctsb
 import jax
 import jax.numpy as np
 from ctsb.models.time_series import TimeSeriesModel
-from ctsb.models.optimizers import SGD
+from ctsb.models.optimizers import OGD
 from ctsb.models.optimizers.losses import mse
 
 class AutoRegressor(TimeSeriesModel):
@@ -21,7 +21,7 @@ class AutoRegressor(TimeSeriesModel):
         self.initialized = False
         self.uses_regressors = False
 
-    def initialize(self, p = 3, optimizer = SGD):
+    def initialize(self, p = 3, optimizer = OGD):
         """
         Description: Initializes autoregressive model parameters
         Args:
