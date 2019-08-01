@@ -4,6 +4,8 @@ import numpy as np
 import pybullet as pybullet
 import gym.spaces as spaces
 from ctsb.problems.control.pybullet.obstacle_utils import *
+from ctsb.utils import get_ctsb_dir
+import os
 
 class ObstaclesEnv(gym.Env):
     def __init__(self, renders=True):
@@ -15,7 +17,7 @@ class ObstaclesEnv(gym.Env):
           pybullet.connect(pybullet.DIRECT)
 
         self.observation_space = spaces.Dict({"x_position": spaces.Box(low=-5.0, high=5.0, shape=(1,)), 
-                                              "y_position": spaces.Box(low=0.0, high=10.0, shape=(1,)),
+                                              "y_position": spaces.Box(low=0.0, high=26.0, shape=(1,)),
                                               "theta": spaces.Box(low=-np.pi/2, high=np.pi/2, shape=(1,))})
 
         self.action_space = spaces.Box(low=-np.inf, high=np.inf, shape=(1,))
@@ -114,8 +116,8 @@ class ObstaclesEnv(gym.Env):
                 or self.state[0] > 5 \
                 or self.state[1] < 0 \
                 or self.state[1] > 10 \
-                or self.state[2] < -np.pi/3 \
-                or self.state[2] > np.pi/3 \
+                or self.state[2] < -np.pi/2 \
+                or self.state[2] > np.pi/2 \
         
         done = bool(done)
         return self.state, cost, done, {}
@@ -131,10 +133,11 @@ class ObstaclesEnv(gym.Env):
         self.robotHeight = params['robotHeight']
 
         # Ground plane
-        pybullet.loadURDF("./../pybullet/URDFs/plane.urdf")
+        ctsb_dir = get_ctsb_dir()
+        pybullet.loadURDF(os.path.join(ctsb_dir, "problems/control/pybullet/URDFs/plane.urdf"))
 
         # Load robot from URDF
-        self.husky = pybullet.loadURDF("./../pybullet/URDFs/husky.urdf", globalScaling=0.5)
+        self.husky = pybullet.loadURDF(os.path.join(ctsb_dir, "problems/control/pybullet/URDFs/husky.urdf"), globalScaling=0.5)
 
         # Sphere
         colSphereId = pybullet.createCollisionShape(pybullet.GEOM_SPHERE, radius=robotRadius)
@@ -161,3 +164,4 @@ class ObstaclesEnv(gym.Env):
 
     def render(self, mode='human', close=False):
         return
+

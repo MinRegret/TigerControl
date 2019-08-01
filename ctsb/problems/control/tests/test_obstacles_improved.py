@@ -23,39 +23,47 @@ def compute_control(y, K):
        
     return u_diff
 
-def compute_fgm_angle(y, thetas_nominal, cur_angle):
+def compute_fgm_angle(y_bad, thetas_nominal_bad, state):
     print(" ---------------- compute_fgm_angle ----------------")
-    threshold = 5.0 # 0.7 * np.max(y[0])
-    y_filter = [x >= threshold for x in y[0]] + [False]
-    run, best_run = 0, 0
-    left, right = None, None
-    best_gaps = []
-    for i in range(len(y_filter)):
-        if y_filter[i]:
-            if run == 0:
-                left = i
-            run += 1
-        else:
-            if run > best_run:
-                right = i - 1
-                best_run = run
-                best_gaps = [(left, right)]
-            elif run == best_run and best_run > 0:
-                right = i - 1
-                best_gaps.append((left, right))
-            run = 0
 
-    avg_depth_mapper = lambda l_r: np.mean([x for x in y[0][range(l_r[0], l_r[1]+1)]])
-    avg_depth = list(map(avg_depth_mapper, best_gaps))
-    angle_mapper = lambda l_r : (thetas_nominal[l_r[0]][0] + thetas_nominal[l_r[1]][0])/2.0
-    best_angles = list(map(angle_mapper, best_gaps))
+    # fix bad list
+    y = 1.0 / np.flip(y_bad[0])
+    thetas_nominal = [t[0] for t in thetas_nominal_bad]
+    x_coord, y_coord, curr_angle = state[0], state[1], state[2]
 
-    print("best_angles : " + str(best_angles))
-    print("avg_depth : " + str(avg_depth))
-    
-    opt_angle = best_angles[np.argmax(avg_depth)]
+    car_width = 1.2 * (2 * 0.27) # safety threshold * width of car
+    d_min = 3.0
+    threshold = 1.0 / d_min # inverse of distance
+    theta_delta = (2.0 * np.pi / 3) / 401 # 401 rays of observation
+    theta_min = 2 * np.tan(car_width / (2 * d_min))
+    ind_min_width = 2.0 * int(np.ceil(theta_min / theta_delta)) # increase min width
+    half_ind_min = int(ind_min_width / 2)
 
-    print("opt_angle: " + str(opt_angle))
+    valid_gaps = []
+    gap_costs = []
+    left, curr_gap = 0, 0
+    for i in range(half_ind_min, len(y) - half_ind_min):
+        mean_cost = np.mean(y[i-half_ind_min:i+half_ind_min])
+        max_cost = np.mean(y[i-half_ind_min:i+half_ind_min])
+        cost = max_cost
+        if cost < threshold:
+            valid_gaps.append(i)
+            gap_costs.append(cost)
+
+    if valid_gaps == []:
+        return 0.95 * curr_angle # slowly moves toward center
+
+    target_angle = x_coord / 10.0 # 10 is width of field
+    angles = [thetas_nominal[i] for i in valid_gaps]
+    angle_diff = [np.abs(ang - target_angle) for ang in angles]
+    curr_angle_diff = [np.abs(ang - curr_angle) for ang in angles]
+
+    a,b,c = 10 / np.mean(gap_costs), 2 / np.mean(angle_diff), 4 / np.mean(curr_angle_diff) # learned parameter
+    total_cost = [a * d + b * t + c * p for d,t,p in zip(gap_costs, angle_diff, curr_angle_diff)]
+
+    opt_angle = angles[np.argmin(np.array(total_cost))]
+    print("\ncosts: " + str(gap_costs))
+    print("\naction: " + str(opt_angle))
     return opt_angle
 
 
@@ -106,12 +114,16 @@ def precompute_environment_costs(numEnvs, K, L, params, husky, sphere, GUI, seed
 
                 # Compute control input
                 # u = compute_control(y, K[l])
-                angle = compute_fgm_angle(y, thetas_nominal, state[2])
+                angle = compute_fgm_angle(y, thetas_nominal, state)
                 all_angles.append(angle)
 
                 # Update state
                 # state = robot_update_state(state, u)
                 state, cost_env_l, done, _ = problem.step_fgm(angle)
+
+                if cost_env_l == 1.0:
+                    print(state)
+                    print("\nwoops\n")
 
                 # Update position of pybullet object
                 # quat = pybullet.getQuaternionFromEuler([0.0, 0.0, state[2]+np.pi/2]) # pi/2 since Husky visualization is rotated by pi/2
