@@ -2,6 +2,18 @@
 
 import jax.numpy as np 
 
+L_D = 100
+
+def boost_mse(y_pred, y_true):
+    ''' Description: mean-square-error loss
+        Args:
+            y_pred : value predicted by model
+            y_true : ground truth value
+            eps: some scalar
+    '''
+
+    return 1. / L_D * np.dot(2 * y_pred - 2 * y_true, y_true)
+
 def mse(y_pred, y_true):
     ''' Description: mean-square-error loss
         Args:
