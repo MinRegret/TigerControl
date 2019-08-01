@@ -15,12 +15,13 @@ class SGD(Optimizer):
         None
     """
     def __init__(self, pred=None, loss=mse, learning_rate=0.0001, hyperparameters={}):
+        self.initialized = False
         self.lr = learning_rate
         self.hyperparameters = hyperparameters
-        if self._is_valid_pred(pred, raise_error=False):
+        self.pred = pred
+        self.loss = loss
+        if self._is_valid_pred(pred, raise_error=False) and self._is_valid_loss(loss, raise_error=False):
             self.set_predict(pred, loss=loss)
-        else:
-            self.initialized = False
 
 
     def update(self, params, x, y, loss=None):

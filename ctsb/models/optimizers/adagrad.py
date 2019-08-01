@@ -18,15 +18,16 @@ class Adagrad(Optimizer):
         None
     """
     def __init__(self, pred=None, loss=mse, learning_rate=1.0, hyperparameters={}):
+        self.initialized = False
         self.lr = learning_rate
         self.hyperparameters = {'max_norm':10.0}
         self.hyperparameters.update(hyperparameters)
         self.max_norm = self.hyperparameters['max_norm']
         self.G = None
-        if self._is_valid_pred(pred, raise_error=False):
+        self.pred = pred
+        self.loss = loss
+        if self._is_valid_pred(pred, raise_error=False) and self._is_valid_loss(loss, raise_error=False):
             self.set_predict(pred, loss=loss)
-        else:
-            self.initialized = False
 
     def set_predict(self, pred, loss=mse):
         """
