@@ -69,6 +69,11 @@ problem_register(
 )
 
 problem_register(
+    id='CartPole-v0',
+    entry_point='ctsb.problems.control:CartPole',
+)
+
+problem_register(
     id='RNN-v0',
     entry_point='ctsb.problems.control:RNN_Output',
 )

@@ -9,3 +9,4 @@ pandas
 xlrd
 tqdm
 PrettyTable
+gym
