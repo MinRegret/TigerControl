@@ -11,4 +11,4 @@ from ctsb.problems.control.pybullet.half_cheetah import HalfCheetah
 from ctsb.problems.control.pybullet.ant import Ant
 from ctsb.problems.control.pybullet.humanoid import Humanoid
 from ctsb.problems.control.pybullet.obstacles import Obstacles
-from ctsb.problems.control.pybullet.obstacles_env import ObstaclesEnv
+# from ctsb.problems.control.pybullet.obstacles_env import ObstaclesEnv
