@@ -41,10 +41,12 @@ class Experiment(object):
 
         self.n_models = {}
 
-        if(use_precomputed and timesteps != precomputed.get_timesteps()):
-            print("WARNING: when using precomputed results, number of timesteps is fixed.")
-
         if(use_precomputed):
+
+            if(timesteps > precomputed.get_timesteps()):
+                print("WARNING: when using precomputed results, the maximum number of timesteps is fixed. " + \
+                    "Will use %d instead of the specified %d" % (precomputed.get_timesteps(), timesteps))
+                self.timesteps = precomputed.get_timesteps()
 
             # ensure problems and models don't have specified hyperparameters
             if(problems is dict):
@@ -90,6 +92,8 @@ class Experiment(object):
                 new_id = model_id + '-' + str(self.n_models[model_id])
         else:
             new_id = model_id
+            if(name is not None):
+                new_id += '-' + name
 
         ''' Evaluate performance of new model on all problems '''
         for metric in self.metrics:
@@ -97,12 +101,16 @@ class Experiment(object):
 
                 ''' If model is compatible with problem, run experiment and store results. '''
                 try:
-                    loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), \
-                                            metric, key = precomputed.get_key(), timesteps = precomputed.get_timesteps(), \
-                                            verbose = self.verbose, load_bar = self.load_bar)
+                    if(self.use_precomputed):
+                        print("WARNING: In precomputed mode, experiments for a new model will run for the predetermined key.")
+                        key = precomputed.get_key()
+                    else:
+                        key = None
+
+                    loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, \
+                                    key = key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
                 except:
-                    print("ERROR: Could not run %s on %s. " + \
-                                 "Please make sure model and problem are compatible." % (problem_id, model_id))
+                    print("ERROR: Could not run %s on %s. Please make sure model and problem are compatible." % (model_id, problem_id))
                     loss, time, memory = 0, -1, -1
 
                 self.models[new_id] = model_params
@@ -125,8 +133,11 @@ class Experiment(object):
             print("WARNING: Time comparison between precomputed models and" + \
                   "any added model may be irrelevant due to hardware differences.")
 
-        if(verbose):
+        if(verbose and metric in self.metrics):
             print("Average " + metric + ":")
+        else:
+            print(metric + ":")
+            
         table = PrettyTable()
         table_dict = {}
 
@@ -187,7 +198,10 @@ class Experiment(object):
                 problem_result_plus_model.append((self.prob_model_to_result[(metric, problem_id, model_id)], model_id))
             all_problem_info.append((problem_id, problem_result_plus_model, model_list))
 
-        fig, ax = plt.subplots(nrows=max(n_problems // 2, 1), ncols=n_problems // 2 + n_problems % 2)
+        nrows = max(int(np.sqrt(n_problems)), 1)
+        ncols = n_problems // nrows + n_problems % nrows
+
+        fig, ax = plt.subplots(nrows=nrows, ncols=ncols)
         if n_problems == 1:
             (problem, problem_result_plus_model, model_list) = all_problem_info[0]
             for (loss, model) in problem_result_plus_model:
@@ -198,8 +212,8 @@ class Experiment(object):
             ax.set_ylabel(metric)
         else:
             cur_pb = 0
-            for i in range(max(n_problems // 2, 1)):
-                for j in range(n_problems // 2 + n_problems % 2):
+            for i in range(nrows):
+                for j in range(ncols):
                     if(cur_pb == n_problems):
                         ax[i, j].plot(0, 'x', 'red', label="NO MORE \n MODELS")
                         ax[i, j].legend(loc="center", fontsize=8 + 10//n_problems)
