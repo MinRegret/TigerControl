@@ -16,16 +16,17 @@ class OGD(Optimizer):
         None
     """
     def __init__(self, pred=None, loss=mse, learning_rate=1.0, hyperparameters={}):
+        self.initialized = False
         self.lr = learning_rate
         self.hyperparameters = {'T':0, 'max_norm':1.0}
         self.hyperparameters.update(hyperparameters)
         self.T = self.hyperparameters['T']
         self.max_norm = self.hyperparameters['max_norm']
-        if self._is_valid_pred(pred, raise_error=False):
+        self.G = None
+        self.pred = pred
+        self.loss = loss
+        if self._is_valid_pred(pred, raise_error=False) and self._is_valid_loss(loss, raise_error=False):
             self.set_predict(pred, loss=loss)
-        else:
-            self.initialized = False
-
 
     def update(self, params, x, y, loss=None):
         """

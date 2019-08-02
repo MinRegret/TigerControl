@@ -5,7 +5,9 @@ from ctsb.models.core import Model
 from ctsb.models.custom import CustomModel, register_custom_model
 from ctsb.models.optimizers import losses
 
-# ---------- Models ----------
+
+# ---------- Time-Series Models ----------
+
 
 model_register(
     id='LastValue',
@@ -31,6 +33,19 @@ model_register(
     id='LSTM',
     entry_point='ctsb.models.time_series:LSTM',
 )
+
+
+# ---------- Boosting Models ----------
+
+
+model_register(
+    id='SimpleBoost',
+    entry_point='ctsb.models.boosting:SimpleBoost',
+)
+
+
+# ---------- Control Models ----------
+
 
 model_register(
     id='KalmanFilter',

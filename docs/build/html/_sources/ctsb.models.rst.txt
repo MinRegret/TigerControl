@@ -1,0 +1,51 @@
+ctsb.models package
+=====================
+
+.. automodule:: ctsb.models
+
+core
+----
+.. autosummary::
+  :toctree: _autosummary
+
+   Model
+
+control
+-------
+
+.. autosummary::
+  :toctree: _autosummary
+
+   ctsb.models.control.ControlModel
+   ctsb.models.control.KalmanFilter
+   ctsb.models.control.ODEShootingMethod
+   ctsb.models.control.LQR
+   ctsb.models.control.MPPI
+   ctsb.models.control.CartPoleNN
+
+
+time_series
+-----------
+
+.. autosummary::
+  :toctree: _autosummary
+
+   ctsb.models.time_series.TimeSeriesModel
+   ctsb.models.time_series.AutoRegressor
+   ctsb.models.time_series.LastValue
+   ctsb.models.time_series.PredictZero
+   ctsb.models.time_series.rnn.RNN
+   ctsb.models.time_series.lstm.LSTM
+
+optimizers
+----------
+
+.. autosummary::
+  :toctree: _autosummary
+
+   ctsb.models.optimizers.Optimizer
+   ctsb.models.optimizers.adagrad
+   ctsb.models.optimizers.sgd
+   ctsb.models.optimizers.ogd
+   ctsb.models.optimizers.mse
+   ctsb.models.optimizers.cross_entropy
