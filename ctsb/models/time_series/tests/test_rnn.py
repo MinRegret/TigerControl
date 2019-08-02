@@ -1,4 +1,4 @@
-# test the PredictZero model class
+# test the RNN model class
 
 import ctsb
 import jax.numpy as np
@@ -6,7 +6,7 @@ import jax.random as random
 import matplotlib.pyplot as plt
 from ctsb.utils import generate_key
 
-def test_rnn(steps=1000, show_plot=True):
+def test_rnn(steps=100, show_plot=True):
     T = steps 
     n, m, l, d = 4, 5, 10, 10
     problem = ctsb.problem("LDS-v0")

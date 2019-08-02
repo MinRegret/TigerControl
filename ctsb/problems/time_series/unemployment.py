@@ -17,6 +17,8 @@ class Unemployment(TimeSeriesProblem):
     Description: Monthly unemployment rate since 1948.
     """
 
+    compatibles = set(['Unemployment-v0', 'TimeSeries'])
+
     def __init__(self):
         self.initialized = False
         self.has_regressors = False

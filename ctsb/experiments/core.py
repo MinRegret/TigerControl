@@ -110,7 +110,8 @@ def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100, 
         model.initialize(**model_params)
 
     if(problem.has_regressors and not model.uses_regressors):
-        print("WARNING: %s has regressors but %s only uses output signal." % (problem_id, model_id))
+        print("ERROR: %s has regressors but %s only uses output signal." % (problem_id, model_id))
+        return np.zeros(timesteps), -1, -1
 
     if(model.compatibles.isdisjoint(problem.compatibles)): 
         print("ERROR: %s and %s are incompatible!" % (problem_id, model_id))

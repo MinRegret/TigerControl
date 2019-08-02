@@ -16,6 +16,7 @@ def test_last_value(steps=1000, show_plot=True):
     results = []
     for i in range(T):
         cur_y_pred = model.predict(cur_x)
+        #print(model.forecast(cur_x, 3))
         cur_y_true = problem.step()
         cur_loss = loss(cur_y_true, cur_y_pred)
         results.append(cur_loss)

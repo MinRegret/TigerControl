@@ -7,7 +7,7 @@ import jax.experimental.stax as stax
 import ctsb
 from ctsb.utils.random import generate_key
 from ctsb.models.time_series import TimeSeriesModel
-from ctsb.models.optimizers import SGD
+from ctsb.models.optimizers import *
 
 
 class LSTM(TimeSeriesModel):
@@ -21,7 +21,7 @@ class LSTM(TimeSeriesModel):
         self.initialized = False
         self.uses_regressors = True
 
-    def initialize(self, n, m, l = 32, h = 64, optimizer = SGD):
+    def initialize(self, n, m, l = 32, h = 64, optimizer = OGD):
         """
         Description: Randomly initialize the LSTM.
         Args:
@@ -109,6 +109,36 @@ class LSTM(TimeSeriesModel):
         y, self.hid, self.cell = self._fast_predict(self.params, self.to_ndarray(x), self.hid, self.cell)
 
         return y
+
+    def forecast(self, x, timeline = 1):
+        """
+        Description: Forecast values 'timeline' timesteps in the future
+        Args:
+            x (int/numpy.ndarray):  Value at current time-step
+            timeline (int): timeline for forecast
+        Returns:
+            Forecasted values 'timeline' timesteps in the future
+        """
+        assert self.initialized
+
+        self.x = self._update_x(self.x, self.to_ndarray(x))
+        x, self.hid, self.cell = self._fast_predict(self.params, self.to_ndarray(x), self.hid, self.cell)
+
+        hid, cell = self.hid, self.cell
+
+        if(self.m == 1):
+            pred = [float(x)]
+        else:
+            pred = [x]
+
+        for t in range(timeline - 1):
+            x, hid, cell = self._fast_predict(self.params, self.to_ndarray(x), hid, cell)
+            if(self.m == 1):
+                pred.append(float(x))
+            else:
+                pred.append(x)
+
+        return pred
 
     def update(self, y):
         """
