@@ -3,9 +3,9 @@ import pybullet as pybullet
 import numpy as np
 import pybullet as pybullet
 import gym.spaces as spaces
-# from ctsb.problems.control.pybullet.obstacle_utils import *
+# from ctsb.problems.pybullet.obstacle_utils import *
 from ctsb.utils import get_ctsb_dir
-from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
+from ctsb.problems.pybullet.pybullet_problem import PyBulletProblem
 import os
 
 class ObstaclesEnv(gym.Env):

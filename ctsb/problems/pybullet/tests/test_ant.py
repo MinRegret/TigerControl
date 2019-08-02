@@ -7,7 +7,7 @@ import numpy as np
 import time
 
 def test_ant(steps=1000, verbose=False):
-    problem = ctsb.problem("Ant-v0")
+    problem = ctsb.problem("PyBullet-Ant-v0")
     problem.initialize(render=verbose)
 
     sum_reward = 0

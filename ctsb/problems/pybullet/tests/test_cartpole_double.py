@@ -27,11 +27,11 @@ class SmallReactivePolicy(ControlModel):
 # cartpole test
 def test_cartpole_double(verbose=False):
     # try to break this test
-    problem = ctsb.problem("CartPoleSwingup-v0")
+    problem = ctsb.problem("PyBullet-CartPoleSwingup-v0")
     obs = problem.initialize(render=False)
     #problem.close()
 
-    problem = ctsb.problem("CartPoleDouble-v0")
+    problem = ctsb.problem("PyBullet-CartPoleDouble-v0")
     obs = problem.initialize(render=verbose)
 
     model = SmallReactivePolicy()

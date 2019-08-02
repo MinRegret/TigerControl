@@ -3,7 +3,7 @@ PyBullet Pendulum enviornment
 """
 
 from pybullet_envs.gym_pendulum_envs import InvertedPendulumBulletEnv
-from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
+from ctsb.problems.pybullet.pybullet_problem import PyBulletProblem
 
 
 class CartPole(PyBulletProblem):

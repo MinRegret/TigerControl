@@ -10,53 +10,53 @@ from ctsb.problems.custom import register_custom_problem, CustomProblem
 # ---------- PyBullet ----------
 
 problem_register(
-    id ='Obstacles-v0',
-    entry_point='ctsb.problems.control.pybullet:Obstacles'
+    id='PyBullet-Obstacles-v0',
+    entry_point='ctsb.problems.pybullet:Obstacles'
 )
 
 problem_register(
-    id='CartPole-v0',
-    entry_point='ctsb.problems.control.pybullet:CartPole'
+    id='PyBullet-CartPole-v0',
+    entry_point='ctsb.problems.pybullet:CartPole'
 )
 
 problem_register(
-    id='CartPoleSwingup-v0',
-    entry_point='ctsb.problems.control.pybullet:CartPoleSwingup'
+    id='PyBullet-CartPoleSwingup-v0',
+    entry_point='ctsb.problems.pybullet:CartPoleSwingup'
 )
 
 problem_register(
-    id='CartPoleDouble-v0',
-    entry_point='ctsb.problems.control.pybullet:CartPoleDouble'
+    id='PyBullet-CartPoleDouble-v0',
+    entry_point='ctsb.problems.pybullet:CartPoleDouble'
 )
 
 problem_register(
-    id='Kuka-v0',
-    entry_point='ctsb.problems.control.pybullet:Kuka'
+    id='PyBullet-Kuka-v0',
+    entry_point='ctsb.problems.pybullet:Kuka'
 )
 
 problem_register(
-    id='KukaDiverse-v0',
-    entry_point='ctsb.problems.control.pybullet:KukaDiverse'
+    id='PyBullet-KukaDiverse-v0',
+    entry_point='ctsb.problems.pybullet:KukaDiverse'
 )
 
 problem_register(
-    id='Minitaur-v0',
-    entry_point='ctsb.problems.control.pybullet:Minitaur'
+    id='PyBullet-Minitaur-v0',
+    entry_point='ctsb.problems.pybullet:Minitaur'
 )
 
 problem_register(
-    id='HalfCheetah-v0',
-    entry_point='ctsb.problems.control.pybullet:HalfCheetah'
+    id='PyBullet-HalfCheetah-v0',
+    entry_point='ctsb.problems.pybullet:HalfCheetah'
 )
 
 problem_register(
-    id='Ant-v0',
-    entry_point='ctsb.problems.control.pybullet:Ant'
+    id='PyBullet-Ant-v0',
+    entry_point='ctsb.problems.pybullet:Ant'
 )
 
 problem_register(
-    id='Humanoid-v0',
-    entry_point='ctsb.problems.control.pybullet:Humanoid'
+    id='PyBullet-Humanoid-v0',
+    entry_point='ctsb.problems.pybullet:Humanoid'
 )
 
 
@@ -98,7 +98,7 @@ problem_register(
 )
 
 problem_register(
-    id='UCIIndoor-v0',
+    id='UCI-Indoor-v0',
     entry_point='ctsb.problems.time_series:UCI_Indoor',
 )
 

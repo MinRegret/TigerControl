@@ -2,7 +2,7 @@
 
 from ctsb import error
 from ctsb.problems import Problem
-from ctsb.problems.control.pybullet.simulator import Simulator
+from ctsb.problems.pybullet.simulator import Simulator
 
 
 class PyBulletProblem(Simulator):

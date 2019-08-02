@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 def test_uci_indoor(steps=1000, show_plot=False, verbose=False):
     T = steps
-    problem = ctsb.problem("UCIIndoor-v0")
+    problem = ctsb.problem("UCI-Indoor-v0")
     problem.initialize()
     assert problem.T == 0
 
