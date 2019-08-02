@@ -7,7 +7,7 @@ import numpy as np
 import time
 
 def test_half_cheetah(steps=1000, verbose=False):
-    problem = ctsb.problem("HalfCheetah-v0")
+    problem = ctsb.problem("PyBullet-HalfCheetah-v0")
     problem.initialize(render=verbose)
 
     sum_reward = 0

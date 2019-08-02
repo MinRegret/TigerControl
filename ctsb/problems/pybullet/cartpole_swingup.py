@@ -3,7 +3,7 @@ PyBullet Swingup Pendulum enviornment
 """
 
 from pybullet_envs.gym_pendulum_envs import InvertedPendulumSwingupBulletEnv
-from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
+from ctsb.problems.pybullet.pybullet_problem import PyBulletProblem
 
 
 class CartPoleSwingup(PyBulletProblem):

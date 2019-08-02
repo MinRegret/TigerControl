@@ -15,7 +15,7 @@ class UCI_Indoor(TimeSeriesProblem):
     Description: Outputs various weather metrics from a UCI dataset from 13/3/2012 to 11/4/2012
     """
 
-    compatibles = set(['UCIIndoor-v0', 'TimeSeries'])
+    compatibles = set(['UCI-Indoor-v0', 'TimeSeries'])
 
     def __init__(self):
         self.initialized = False
@@ -89,7 +89,7 @@ uci_indoor_help = """
 
 -------------------- *** --------------------
 
-Id: UCIIndoor-v0
+Id: UCI-Indoor-v0
 Description: Outputs various weather metrics from a UCI dataset from 13/3/2012 to 11/4/2012
 
 Methods:

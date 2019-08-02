@@ -3,7 +3,7 @@ PyBullet Pendulum enviornment
 """
 
 from pybullet_envs.bullet.kuka_diverse_object_gym_env import KukaDiverseObjectEnv
-from ctsb.problems.control.pybullet.pybullet_problem import PyBulletProblem
+from ctsb.problems.pybullet.pybullet_problem import PyBulletProblem
 
 
 class KukaDiverse(PyBulletProblem):

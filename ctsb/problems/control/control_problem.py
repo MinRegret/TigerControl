@@ -1,11 +1,11 @@
 # Problem class
 # Author: John Hallman
 
-from ctsb import error
 from ctsb.problems import Problem
 
 class ControlProblem(Problem):
     ''' Description: class for online control tests '''
+
     def initialize(self, **kwargs):
         ''' Description: resets problem to time 0 '''
         raise NotImplementedError

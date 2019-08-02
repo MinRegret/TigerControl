@@ -7,7 +7,7 @@ import numpy as np
 import time
 
 def test_humanoid(steps=1000, verbose=False):
-    problem = ctsb.problem("Humanoid-v0")
+    problem = ctsb.problem("PyBullet-Humanoid-v0")
     problem.initialize(render=verbose)
 
     sum_reward = 0

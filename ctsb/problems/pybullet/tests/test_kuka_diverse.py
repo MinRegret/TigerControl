@@ -31,7 +31,7 @@ class ContinuousDownwardBiasPolicy(object):
 
 def test_kuka_diverse(verbose=False):
 
-    problem = ctsb.problem("KukaDiverse-v0")
+    problem = ctsb.problem("PyBullet-KukaDiverse-v0")
     obs = problem.initialize(render=verbose)
     policy = ContinuousDownwardBiasPolicy()
 

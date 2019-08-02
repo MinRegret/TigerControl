@@ -7,7 +7,7 @@ import jax.numpy as np
 import jax.random as random
 from ctsb.utils import generate_key
 import pybullet as pybullet
-from ctsb.problems.control.pybullet.obstacle_utils import *
+from ctsb.problems.pybullet.obstacle_utils import *
 import os.path
 from os import path
 from pathlib import Path
@@ -156,7 +156,7 @@ def precompute_environment_costs(numEnvs, K, L, params, husky, sphere, GUI, seed
 
 # cartpole test
 def test_obstacles(verbose=False):
-    problem = ctsb.problem("Obstacles-v0")
+    problem = ctsb.problem("PyBullet-Obstacles-v0")
     # obs = problem.initialize(render=verbose)
 
     # model = ctsb.model("CartPoleNN")

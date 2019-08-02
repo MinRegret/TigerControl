@@ -7,7 +7,7 @@ import jax.numpy as np
 
 # cartpole test
 def test_cartpole(verbose=False):
-    problem = ctsb.problem("CartPole-v0")
+    problem = ctsb.problem("PyBullet-CartPole-v0")
     obs = problem.initialize(render=verbose)
 
     model = ctsb.model("CartPoleNN")
