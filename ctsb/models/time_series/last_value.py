@@ -26,7 +26,6 @@ class LastValue(TimeSeriesModel):
             None
         """
         self.initialized = True
-        self.x = 0
 
     def predict(self, x):
         """
@@ -36,17 +35,28 @@ class LastValue(TimeSeriesModel):
         Returns:
             Predicted value for the next time-step
         """
-        return self.x
+        return x
+
+    def forecast(self, x, timeline = 1):
+        """
+        Description: Forecast values 'timeline' timesteps in the future
+        Args:
+            x (int/numpy.ndarray):  Value at current time-step
+            timeline (int): timeline for forecast
+        Returns:
+            Forecasted values 'timeline' timesteps in the future
+        """
+        return np.ones(timeline) * x
 
     def update(self, y):
         """
         Description: Takes update rule and adjusts internal parameters
         Args:
-            rule (function): rule with which to alter parameters
+            y (float/np.ndarray): true value
         Returns:
             None
         """
-        self.x = y
+        return
 
     def help(self):
         """

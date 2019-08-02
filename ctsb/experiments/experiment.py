@@ -88,6 +88,8 @@ class Experiment(object):
             else:
                 self.n_models[model_id] += 1
                 new_id = model_id + '-' + str(self.n_models[model_id])
+        else:
+            new_id = model_id
 
         ''' Evaluate performance of new model on all problems '''
         for metric in self.metrics:

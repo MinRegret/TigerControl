@@ -37,6 +37,17 @@ class PredictZero(TimeSeriesModel):
         """
         return 0
 
+    def forecast(self, x, timeline = 1):
+        """
+        Description: Forecast values 'timeline' timesteps in the future
+        Args:
+            x (int/numpy.ndarray):  Value at current time-step
+            timeline (int): timeline for forecast
+        Returns:
+            Forecasted values 'timeline' timesteps in the future
+        """
+        return np.zeros(timeline)
+
     def update(self, rule=None):
         """
         Description: Takes update rule and adjusts internal parameters

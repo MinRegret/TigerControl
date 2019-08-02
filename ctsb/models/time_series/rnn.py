@@ -8,7 +8,7 @@ import jax.experimental.stax as stax
 import ctsb
 from ctsb.utils.random import generate_key
 from ctsb.models.time_series import TimeSeriesModel
-from ctsb.models.optimizers import SGD
+from ctsb.models.optimizers import *
 from ctsb.models.optimizers.losses import mse
 
 class RNN(TimeSeriesModel):
@@ -22,7 +22,7 @@ class RNN(TimeSeriesModel):
         self.initialized = False
         self.uses_regressors = True
 
-    def initialize(self, n, m, l = 32, h = 64, optimizer = SGD, loss = mse, lr = 0.003):
+    def initialize(self, n, m, l = 32, h = 64, optimizer = OGD, loss = mse, lr = 0.003):
         """
         Description: Randomly initialize the RNN.
         Args:
@@ -71,20 +71,67 @@ class RNN(TimeSeriesModel):
         self._predict = jax.jit(_predict)
         self._store_optimizer(optimizer, self._predict)
 
-    def predict(self, x):
+    def to_ndarray(self, x):
+        """
+        Description: If x is a scalar, transform it to a (1, 1) numpy.ndarray;
+        otherwise, leave it unchanged.
+        Args:
+            x (float/numpy.ndarray)
+        Returns:
+            A numpy.ndarray representation of x
+        """
+        x = np.asarray(x)
+        if np.ndim(x) == 0:
+            x = x[None]
+        return x
+
+    def predict(self, x, timeline = 1):
         """
         Description: Predict next value given observation
         Args:
-            x (int/numpy.ndarray): Observation
+            x (float/numpy.ndarray): Observation
         Returns:
             Predicted value for the next time-step
         """
         assert self.initialized
+        
+        x = self.to_ndarray(x)
 
         self.x = self._update_x(self.x, x)
         y, self.hid = self._fast_predict(self.params, x, self.hid)
 
         return y
+
+    def forecast(self, x, timeline = 1):
+        """
+        Description: Forecast values 'timeline' timesteps in the future
+        Args:
+            x (float/numpy.ndarray):  Value at current time-step
+            timeline (int): timeline for forecast
+        Returns:
+            Forecasted values 'timeline' timesteps in the future
+        """
+        assert self.initialized
+
+        x = self.to_ndarray(x)
+
+        self.x = self._update_x(self.x, x)
+        x, self.hid = self._fast_predict(self.params, x, self.hid)
+        hid = self.hid
+
+        if(self.m == 1):
+            pred = [float(x)]
+        else:
+            pred = [x]
+
+        for t in range(timeline - 1):
+            x, hid = self._fast_predict(self.params, x, hid)
+            if(self.m == 1):
+                pred.append(float(x))
+            else:
+                pred.append(x)
+
+        return pred
 
     def update(self, y):
         """

@@ -6,7 +6,7 @@ import ctsb
 import jax
 import jax.numpy as np
 from ctsb.models.time_series import TimeSeriesModel
-from ctsb.models.optimizers import OGD
+from ctsb.models.optimizers import *
 from ctsb.models.optimizers.losses import mse
 
 class AutoRegressor(TimeSeriesModel):
@@ -48,14 +48,38 @@ class AutoRegressor(TimeSeriesModel):
 
     def predict(self, x):
         """
-        Description: Predict next value given present value
+        Description: Predict next value given observation
         Args:
-            x (int/numpy.ndarray):  Value at current time-step
+            x (int/numpy.ndarray): Observation
         Returns:
             Predicted value for the next time-step
         """
-        assert self.initialized
+        assert self.initialized, "ERROR: Model not initialized!"
+
+        self.past = self._update_past(self.past, x)
         return self._predict(self.params, self.past)
+
+    def forecast(self, x, timeline = 1):
+        """
+        Description: Forecast values 'timeline' timesteps in the future
+        Args:
+            x (int/numpy.ndarray):  Value at current time-step
+            timeline (int): timeline for forecast
+        Returns:
+            Forecasted values 'timeline' timesteps in the future
+        """
+        assert self.initialized, "ERROR: Model not initialized!"
+
+        self.past = self._update_past(self.past, x)
+        past = self.past.copy()
+        pred = []
+
+        for t in range(timeline):
+            x = self._predict(self.params, past)
+            pred.append(x)
+            past = self._update_past(past, x) 
+
+        return np.array(pred)
 
     def update(self, y):
         """
@@ -65,9 +89,9 @@ class AutoRegressor(TimeSeriesModel):
         Returns:
             None
         """
-        assert self.initialized
+        assert self.initialized, "ERROR: Model not initialized!"
+
         self.params = self.optimizer.update(self.params, self.past, y)
-        self.past = self._update_past(self.past, y)
 
     def help(self):
         """
