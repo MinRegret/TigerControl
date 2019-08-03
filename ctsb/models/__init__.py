@@ -63,6 +63,10 @@ model_register(
 )
 
 model_register(
+    id='ILQR',
+    entry_point='ctsb.models.control:iLQR')
+
+model_register(
     id='MPPI',
     entry_point='ctsb.models.control:MPPI',
 )
