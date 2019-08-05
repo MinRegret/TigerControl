@@ -136,8 +136,12 @@ class iLQR(ControlModel):
                 break
 
             print("\ncount = " + str(count))
-            print("x = " + str(x[:3]))
-            print("u = " + str(u[:3]))
+            print("F[0]: " + str(F[0]))
+            print("C[0]: " + str(C[0]))
+            print("c[0]: " + str(c[0]))
+            break
+            #print("x: " + str(x[:3]))
+            #print("u: " + str(u[:3]))
 
         return u
 
