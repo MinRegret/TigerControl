@@ -76,12 +76,6 @@ class iLQR(ControlModel):
                 K[t] = K_t
                 k[t] = k_t
 
-            print("K[0]: " + str(K[0]))
-            print("k[0]: " + str(k[0]))
-
-            print("K[T-1]: " + str(K[T-1]))
-            print("k[T-1]: " + str(k[T-1]))
-
             x_stack, u_stack = [], []
             x_t = x[0]
             for t in range(T): # forward pass
@@ -99,7 +93,7 @@ class iLQR(ControlModel):
         def linearization_iteration(x_t, u_t):
             block = lambda A: np.vstack([np.hstack([A[0][0], A[0][1]]), np.hstack([A[1][0], A[1][1]])]) # np.block not yet implemented
             F_t = np.hstack(dyn_jacobian(x_t, u_t))
-            f_t = dyn(x_t, u_t) - F_t @ np.hstack((x_t, u_t)) # temporary change
+            f_t = dyn(x_t, u_t)
             C_t = block(L_hessian(x_t, u_t))
             c_t = np.hstack(L_grad(x_t, u_t))
             return F_t, f_t, C_t, c_t
@@ -112,10 +106,23 @@ class iLQR(ControlModel):
                 f.append(f_t)
                 C.append(C_t)
                 c.append(c_t)
+            """
+            F = [jax.jacrev(dyn, argnums=(0,1))(x[t],u[t]) for t in range(T)]
+            F = [np.hstack([F_x, F_u]) for (F_x, F_u) in F]
             print("F[0]: " + str(F[0]))
+
+            #f = [dyn(x[t],u[t]) - F[t] @ np.concatenate((x[t], u[t])) for t in range(T)]
+            f = [dyn(x[t],u[t]) for t in range(T)]
             print("f[0]: " + str(f[0]))
+
+            C = [jax.hessian(L, argnums=(0,1))(x[t], u[t]) for t in range(T)]
+            C = [np.vstack([np.hstack([C_x[0],C_x[1]]), np.hstack([C_u[0],C_u[1]])]) for (C_x, C_u) in C]
             print("C[0]: " + str(C[0]))
-            print("c[0]: " + str(c[0]))
+
+            c = [jax.grad(L, argnums=(0,1))(x[t], u[t]) for t in range(T)]
+            c = [np.hstack([c_t[0], c_t[1]]) for c_t in c]
+            print("c[0]: " +str(c[0]))
+            """
             return F, f, C, c
         self._linearization = linearization
 
@@ -133,8 +140,6 @@ class iLQR(ControlModel):
         count = 0
         while count < max_iterations:
             count += 1
-            print("\ncount = " + str(count))
-            
             F, f, C, c = self._linearization(T, x, u)
             x_new, u_new = self._lqr(T, x, u, F, f, C, c, lamb)
 
@@ -147,9 +152,9 @@ class iLQR(ControlModel):
             if np.abs(new_cost - old_cost) / old_cost < threshold:
                 break;
                 
-            niceify = lambda x: str([[round(float(v),3) for v in arr] for arr in x[:6]])
-            print("first 6 x: " + niceify(x))
-            print("first 6 u: " + niceify(u))
+            print("count = " + str(count))
+            print("first 10 x: " + str(x[:10]))
+            print("first 10 u: " + str(u[:10]))
         return u
 
 
