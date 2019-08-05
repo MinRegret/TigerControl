@@ -11,10 +11,6 @@ import jax.numpy as np
 class ONS(Optimizer):
     """
     Online newton step algorithm.
-    Reference:
-        A.Agarwal, E.Hazan, S.Kale, R.E.Schapire.
-        Algorithms for Portfolio Management based on the Newton Method, 2006.
-        http://www.cs.princeton.edu/~ehazan/papers/icml.pdf
     """
 
     def __init__(self, pred=None, loss=mse, learning_rate=1.0, hyperparameters={}):
