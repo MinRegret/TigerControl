@@ -111,18 +111,6 @@ class iLQR(ControlModel):
                 V = Q_xx + Q_ux.T @ K[t] + K[t].T @ Q_ux + K[t].T @ Q_uu @ K[t]
                 v = q_x + Q_ux.T @ k[t] + K[t].T @ q_u + K[t].T @ Q_uu @ k[t]
 
-                """
-                if t > T-5:
-                    print("t: " + str(t))
-                    print("K: " + str(K[t]))
-                    print("k: " + str(k[t]))
-                    print("V: " + str(V))
-                    print("v: " + str(v))
-                    print("Q: " + str(Q))
-                    print("Q_uu_inv: " + str(Q_uu_inv))
-                    print("q: " + str(q))
-                """
-
             ## Forward Recursion ##
             x_new = [x[0]]
             u_new = [0 for i in range(T)]
@@ -197,7 +185,7 @@ class iLQR(ControlModel):
         count = 0
         while count < max_iterations:
             count += 1
-            if count > 12: break
+            if count > 20: break
             print("\ncount = " + str(count))
         
             #F, C, c = self._linearization(T, x, u)
@@ -213,12 +201,12 @@ class iLQR(ControlModel):
             if new_cost < old_cost:
                 old_cost = new_cost
                 x, u = x_new, u_new
-                lamb *= 2.0 # this is the opposite of the regular iLQR algorithm, but seems to work much better
+                lamb /= 2.0 # this is the opposite of the regular iLQR algorithm, but seems to work much better
                 #if np.abs(new_cost - old_cost) / old_cost < threshold:
                 #    break
             else:
-                lamb /= 2.0
-
+                lamb *= 2.0
+            print("lamb: " + str(lamb))
         return u
 
 
