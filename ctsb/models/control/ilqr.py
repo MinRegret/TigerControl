@@ -38,9 +38,9 @@ class iLQR(ControlModel):
         self.L = L
         self.dim_x = dim_x
         self.dim_u = dim_u
-        dyn_jacobian = jax.jit(jax.jacrev(dyn, argnums=(0,1)))
-        L_grad = jax.jit(jax.grad(L, argnums=(0,1)))
-        L_hessian = jax.jit(jax.hessian(L, argnums=(0,1)))
+        self.dyn_jacobian = jax.jit(jax.jacrev(dyn, argnums=(0,1)))
+        self.L_grad = jax.jit(jax.grad(L, argnums=(0,1)))
+        self.L_hessian = jax.jit(jax.hessian(L, argnums=(0,1)))
         self.total_cost = jax.jit(lambda x, u: np.sum([self.L(x_t, u_t) for x_t, u_t in zip(x, u)])) # computes total cost over trajectory
 
         """ 
@@ -200,7 +200,13 @@ class iLQR(ControlModel):
             if count > 10: break
             print("\ncount = " + str(count))
         
-            F, C, c = self._linearization(T, x, u)
+            #F, C, c = self._linearization(T, x, u)
+            F = [np.hstack(self.dyn_jacobian(x[t],u[t])) for t in range(T)]
+            C = [self.L_hessian(x[t],u[t]) for t in range(T)]
+            C = [np.vstack([np.hstack([C_x[0],C_x[1]]), np.hstack([C_u[0],C_u[1]])]) for (C_x, C_u) in C]
+            c = [self.L_grad(x[t],u[t]) for t in range(T)]
+            c = [np.hstack([c_t[0], c_t[1]]) for c_t in c]
+
             x_new, u_new = self._lqr(T, x, u, F, C, c, lamb)
 
             new_cost = self.total_cost(x_new, u_new)
