@@ -7,12 +7,12 @@ from ctsb.models.optimizers import *
 
 def test_autoregressor(steps=1000, show_plot=True):
     T = steps 
-    p, q = 3, 0
+    p, q = 3, 3
     problem = ctsb.problem("ARMA-v0")
     cur_x = problem.initialize(p, q)
 
     model = ctsb.model("AutoRegressor")
-    model.initialize(p)
+    model.initialize(p, optimizer = Adam)
     loss = lambda y_true, y_pred: np.sum((y_true - y_pred)**2)
  
     results = []
