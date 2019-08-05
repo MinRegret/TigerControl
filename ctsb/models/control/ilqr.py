@@ -106,23 +106,10 @@ class iLQR(ControlModel):
                 f.append(f_t)
                 C.append(C_t)
                 c.append(c_t)
-            """
-            F = [jax.jacrev(dyn, argnums=(0,1))(x[t],u[t]) for t in range(T)]
-            F = [np.hstack([F_x, F_u]) for (F_x, F_u) in F]
             print("F[0]: " + str(F[0]))
-
-            #f = [dyn(x[t],u[t]) - F[t] @ np.concatenate((x[t], u[t])) for t in range(T)]
-            f = [dyn(x[t],u[t]) for t in range(T)]
             print("f[0]: " + str(f[0]))
-
-            C = [jax.hessian(L, argnums=(0,1))(x[t], u[t]) for t in range(T)]
-            C = [np.vstack([np.hstack([C_x[0],C_x[1]]), np.hstack([C_u[0],C_u[1]])]) for (C_x, C_u) in C]
             print("C[0]: " + str(C[0]))
-
-            c = [jax.grad(L, argnums=(0,1))(x[t], u[t]) for t in range(T)]
-            c = [np.hstack([c_t[0], c_t[1]]) for c_t in c]
-            print("c[0]: " +str(c[0]))
-            """
+            print("c[0]: " + str(c[0]))
             return F, f, C, c
         self._linearization = linearization
 
@@ -140,6 +127,8 @@ class iLQR(ControlModel):
         count = 0
         while count < max_iterations:
             count += 1
+            print("\ncount = " + str(count))
+            
             F, f, C, c = self._linearization(T, x, u)
             x_new, u_new = self._lqr(T, x, u, F, f, C, c, lamb)
 
@@ -152,7 +141,6 @@ class iLQR(ControlModel):
             if np.abs(new_cost - old_cost) / old_cost < threshold:
                 break;
                 
-            print("\ncount = " + str(count))
             niceify = lambda x: str([[round(float(v),3) for v in arr] for arr in x[:6]])
             print("first 6 x: " + niceify(x))
             print("first 6 u: " + niceify(u))
