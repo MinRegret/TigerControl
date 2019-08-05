@@ -16,8 +16,8 @@ def test_cartpole(verbose=False):
     model = ctsb.model("ILQR")
     model.initialize(problem, L, dim_x, dim_u)
     H = 100 # horizon
-    threshold = 0.1
-    lamb = 1.0
+    threshold = 0.05
+    lamb = 0.1
     max_iterations = 10
 
     if verbose:
