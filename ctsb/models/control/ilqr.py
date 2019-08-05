@@ -48,7 +48,7 @@ class iLQR(ControlModel):
         dyn: dynamics, T: number of time steps to plan, x: current states, u: current actions
         F, f: dynamics linearization, C,c: cost linearization
         """
-        @jax.jit
+        #@jax.jit
         def lqr_iteration(F_t, C_t, c_t, V_t, v_t, lamb):
             dim_x, dim_u = self.dim_x, self.dim_u
 
@@ -153,12 +153,20 @@ class iLQR(ControlModel):
             return F_t, C_t, c_t
 
         def linearization(T, x, u):
+            """
             F, C, c = [], [], [] # list appending is faster than matrix index update
             for t in range(T):
                 F_t, C_t, c_t = linearization_iteration(x[t], u[t])
                 F.append(F_t)
                 C.append(C_t)
                 c.append(c_t)
+            return F, C, c
+            """
+            F = [np.hstack(dyn_jacobian(x[t],u[t])) for t in range(T)]
+            C = [L_hessian(x[t],u[t]) for t in range(T)]
+            C = [np.vstack([np.hstack([C_x[0],C_x[1]]), np.hstack([C_u[0],C_u[1]])]) for (C_x, C_u) in C]
+            c = [L_grad(x[t],u[t]) for t in range(T)]
+            c = [np.hstack([c_t[0], c_t[1]]) for c_t in c]
             return F, C, c
         self._linearization = linearization
 
@@ -176,9 +184,11 @@ class iLQR(ControlModel):
         count = 0
         while count < max_iterations:
             count += 1
+            if count > 1: break
         
             F, C, c = self._linearization(T, x, u)
             x_new, u_new = self._lqr(T, x, u, F, C, c, lamb)
+
             new_cost = self.total_cost(x_new, u_new)
             if new_cost < old_cost:
                 x, u = x_new, u_new
@@ -189,11 +199,11 @@ class iLQR(ControlModel):
                 break
 
             print("\ncount = " + str(count))
-            #print("F[0]: " + str(F[0]))
-            #print("C[0]: " + str(C[0]))
-            #print("c[0]: " + str(c[0]))
-            #print("x: " + str(x[:3]))
-            #print("u: " + str(u[:3]))
+            print("F: " + str(F[:2]))
+            print("C: " + str(C[:2]))
+            print("c: " + str(c[:2]))
+            print("x: " + str(x[:2]))
+            print("u: " + str(u[:2]))
 
         return u
 

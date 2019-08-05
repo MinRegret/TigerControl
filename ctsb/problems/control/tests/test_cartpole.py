@@ -37,7 +37,7 @@ def test_cartpole(verbose=False):
         obs, r, done, _ = problem.step(u[cur_index])
 
         if done:
-            #break
+            break
 
             # alternatively, continue
             print("done! problem resetting...")
