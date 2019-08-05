@@ -111,13 +111,17 @@ class iLQR(ControlModel):
                 V = Q_xx + Q_ux.T @ K[t] + K[t].T @ Q_ux + K[t].T @ Q_uu @ K[t]
                 v = q_x + Q_ux.T @ k[t] + K[t].T @ q_u + K[t].T @ Q_uu @ k[t]
 
+                if t > T-5:
+                    print("t: " + str(t))
+                    print("K: " + str(K[t]))
+                    print("k: " + str(k[t]))
+                    print("V: " + str(V))
+                    print("v: " + str(v))
+
             ## Forward Recursion ##
             x_new = [x[0]]
             u_new = [0 for i in range(T)]
             for t in range(T):
-                print("t: " + str(t))
-                print("K: " + str(K[t]))
-                print("k: " + str(k[t]))
                 u_new[t] = u[t] + k[t] + K[t] @ (x_new[t] - x[t])            
                 if t < T-1:
                     x_new.append(self.dyn(x_new[t], u_new[t]))
@@ -189,6 +193,7 @@ class iLQR(ControlModel):
         while count < max_iterations:
             count += 1
             if count > 2: break
+            print("\ncount = " + str(count))
         
             F, C, c = self._linearization(T, x, u)
             x_new, u_new = self._lqr(T, x, u, F, C, c, lamb)
@@ -201,13 +206,6 @@ class iLQR(ControlModel):
                 lamb /= 2.0
             if np.abs(new_cost - old_cost) / old_cost < threshold:
                 break
-
-            print("\ncount = " + str(count))
-            #print("F: " + str(F[:2]))
-            #print("C: " + str(C[:2]))
-            #print("c: " + str(c[:2]))
-            #print("x: " + str(x[:2]))
-            #print("u: " + str(u[:2]))
 
         return u
 
