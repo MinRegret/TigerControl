@@ -70,16 +70,25 @@ class iLQR(ControlModel):
         def lqr(T, x, u, F, f, C, c, lamb):
             V_t, v_t = np.zeros((self.dim_x, self.dim_x)), np.zeros((self.dim_x,))
             K, k = T*[None], T*[None]
+
+            
+            V, v = T*[None], T*[None] # store only temporarily for debugging
             
             for t in reversed(range(T)): # backward pass
                 K_t, k_t, V_t, v_t = lqr_iteration(F[t], f[t], C[t], c[t], V_t, v_t, lamb)
                 K[t] = K_t
                 k[t] = k_t
 
+                # debugging
+                V[t] = V_t
+                v[t] = v_t
+
 
             for t in range(T-10, T):
                 print("K[{}]: ".format(t) + str(K[t]))
                 print("k[{}]: ".format(t) + str(k[t]))
+                print("V[{}]: ".format(t) + str(V[t]))
+                print("v[{}]: ".format(t) + str(v[t]))
 
 
             x_stack, u_stack = [], []
