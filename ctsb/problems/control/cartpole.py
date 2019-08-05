@@ -51,8 +51,8 @@ class CartPole(ControlProblem):
         @jax.jit
         def dynamics(x_0, u):
             x, x_dot, theta, theta_dot = np.split(x_0, 4)
-            #force = self.force_mag * np.clip(u, -1.0, 1.0) # iLQR struggles with clipping due to lack of gradients
-            force = self.force_mag * u
+            force = self.force_mag * np.clip(u, -1.0, 1.0)[0] # iLQR struggles with clipping due to lack of gradients
+            #force = self.force_mag * u
             costh = np.cos(theta)
             sinth = np.sin(theta)
             temp = (force + self.polemass_length * theta_dot * theta_dot * sinth) / self.total_mass
