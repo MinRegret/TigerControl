@@ -111,7 +111,7 @@ class iLQR(ControlModel):
                 V = Q_xx + Q_ux.T @ K[t] + K[t].T @ Q_ux + K[t].T @ Q_uu @ K[t]
                 v = q_x + Q_ux.T @ k[t] + K[t].T @ q_u + K[t].T @ Q_uu @ k[t]
 
-                #"""
+                """
                 if t > T-5:
                     print("t: " + str(t))
                     print("K: " + str(K[t]))
@@ -121,7 +121,7 @@ class iLQR(ControlModel):
                     print("Q: " + str(Q))
                     print("Q_uu_inv: " + str(Q_uu_inv))
                     print("q: " + str(q))
-                #"""
+                """
 
             ## Forward Recursion ##
             x_new = [x[0]]
@@ -197,7 +197,7 @@ class iLQR(ControlModel):
         count = 0
         while count < max_iterations:
             count += 1
-            if count > 2: break
+            if count > 5: break
             print("\ncount = " + str(count))
         
             F, C, c = self._linearization(T, x, u)

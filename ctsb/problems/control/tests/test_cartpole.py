@@ -22,19 +22,16 @@ def test_cartpole(verbose=False):
 
     if verbose:
         print("Running iLQR...")
-    T = 1000
+    #T = 1000
     u = model.ilqr(obs, H, threshold, lamb, max_iterations)
-    cur_index = 0
-    for t in range(T):
+
+    print("u: " + str([float(u_t) for u_t in u]))
+    for t in range(H):
         if verbose: 
             problem.render()
 
-        if cur_index == H:
-            u = model.ilqr(obs, H, threshold, lamb, max_iterations)
-            cur_index = 0
-
-        time.sleep(1. / 60.)
-        obs, r, done, _ = problem.step(u[cur_index])
+        time.sleep(2. / 60.)
+        obs, r, done, _ = problem.step(u[t])
 
         if done:
             break
@@ -43,7 +40,6 @@ def test_cartpole(verbose=False):
             print("done! problem resetting...")
             obs = problem.initialize()
             u = model.ilqr(obs, H, threshold, lamb, max_iterations)
-            cur_index = 0
 
     problem.close()
     print("test_cartpole passed")
