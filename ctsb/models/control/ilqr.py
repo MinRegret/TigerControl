@@ -197,7 +197,7 @@ class iLQR(ControlModel):
         count = 0
         while count < max_iterations:
             count += 1
-            if count > 5: break
+            if count > 10: break
             print("\ncount = " + str(count))
         
             F, C, c = self._linearization(T, x, u)
