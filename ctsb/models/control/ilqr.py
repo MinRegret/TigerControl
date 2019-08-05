@@ -48,7 +48,7 @@ class iLQR(ControlModel):
         dyn: dynamics, T: number of time steps to plan, x: current states, u: current actions
         F, f: dynamics linearization, C,c: cost linearization
         """
-        #@jax.jit
+        @jax.jit
         def lqr_iteration(F_t, C_t, c_t, V_t, v_t, lamb):
             dim_x, dim_u = self.dim_x, self.dim_u
 
@@ -59,7 +59,6 @@ class iLQR(ControlModel):
             Q_xx, Q_ux, Q_uu = Q[:dim_x, :dim_x], Q[dim_x:, :dim_x], Q[dim_x:, dim_x:]
             Q_uu_evals, Q_uu_evecs = np.linalg.eigh(Q_uu)
             Q_uu_evals = lamb + np.maximum(Q_uu_evals, 0)
-            Q_uu = Q_uu_evecs @ np.diag(Q_uu_evals) @ Q_uu_evecs.T
             Q_uu_inv = Q_uu_evecs @ np.diag(1. / Q_uu_evals) @ Q_uu_evecs.T
 
             K_t = -Q_uu_inv @ Q_ux # shape (dim_u, dim_x)
@@ -69,16 +68,30 @@ class iLQR(ControlModel):
             return K_t, k_t, V_t, v_t
 
         def lqr(T, x, u, F, C, c, lamb):
+            def to_ndarray(x):
+                x = np.asarray(x)
+                if(np.ndim(x) == 0):
+                    x = x[None, None]
+                return x
+            self.extend = lambda x, T: [to_ndarray(x) for i in range(T)]
 
-            #""" old version by Alex
             dim_x, dim_u = self.dim_x, self.dim_u
-            K = T * [None]
-            k = T * [None]
-            ## Initialize V and Q Functions ##
+
+            u = self.extend(np.zeros((dim_u, )), T)
+            K = self.extend(np.zeros((dim_u, dim_x)), T)
+            k = u.copy()
             V = np.zeros((dim_x, dim_x))
             v = np.zeros((dim_x, ))
             Q = np.zeros((dim_x + dim_u, dim_x + dim_u))
             q = np.zeros((dim_x + dim_u, ))
+            """
+            K = T * [None]
+            k = T * [None]
+            V = np.zeros((dim_x, dim_x))
+            v = np.zeros((dim_x, ))
+            Q = np.zeros((dim_x + dim_u, dim_x + dim_u))
+            q = np.zeros((dim_x + dim_u, ))
+            """
 
             ## Backward Recursion ##
             for t in reversed(range(T)):
@@ -99,20 +112,12 @@ class iLQR(ControlModel):
                 v = q_x + Q_ux.T @ k[t] + K[t].T @ q_u + K[t].T @ Q_uu @ k[t]
 
             ## Forward Recursion ##
-            """
-            x_stack, u_stack = [], []
-            x_t = x[0]
-            for t in range(T): # forward pass
-                u_t = u[t] + K[t] @ (x_t - x[t]) + k[t] # d_x_t = x_t - x[t] # maybe we should just ignore k[t]?
-                x_stack.append(x_t)
-                u_stack.append(u_t)
-                x_t = dyn(x_t, u_t)
-            return x_stack, u_stack
-            """
-
             x_new = [x[0]]
             u_new = [0 for i in range(T)]
             for t in range(T):
+                print("t: " + str(t))
+                print("K: " + str(K[t]))
+                print("k: " + str(k[t]))
                 u_new[t] = u[t] + k[t] + K[t] @ (x_new[t] - x[t])            
                 if t < T-1:
                     x_new.append(self.dyn(x_new[t], u_new[t]))
@@ -147,7 +152,6 @@ class iLQR(ControlModel):
         def linearization_iteration(x_t, u_t):
             block = lambda A: np.vstack([np.hstack([A[0][0], A[0][1]]), np.hstack([A[1][0], A[1][1]])]) # np.block not yet implemented
             F_t = np.hstack(dyn_jacobian(x_t, u_t))
-            # f_t = dyn(x_t, u_t) # f_t only used in LQR, not in iLQR!
             C_t = block(L_hessian(x_t, u_t))
             c_t = np.hstack(L_grad(x_t, u_t))
             return F_t, C_t, c_t
@@ -184,7 +188,7 @@ class iLQR(ControlModel):
         count = 0
         while count < max_iterations:
             count += 1
-            if count > 1: break
+            if count > 2: break
         
             F, C, c = self._linearization(T, x, u)
             x_new, u_new = self._lqr(T, x, u, F, C, c, lamb)
@@ -199,11 +203,11 @@ class iLQR(ControlModel):
                 break
 
             print("\ncount = " + str(count))
-            print("F: " + str(F[:2]))
-            print("C: " + str(C[:2]))
-            print("c: " + str(c[:2]))
-            print("x: " + str(x[:2]))
-            print("u: " + str(u[:2]))
+            #print("F: " + str(F[:2]))
+            #print("C: " + str(C[:2]))
+            #print("c: " + str(c[:2]))
+            #print("x: " + str(x[:2]))
+            #print("u: " + str(u[:2]))
 
         return u
 
