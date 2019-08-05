@@ -49,11 +49,11 @@ class iLQR(ControlModel):
         F, f: dynamics linearization, C,c: cost linearization
         """
         @jax.jit
-        def lqr_iteration(F_t, f_t, C_t, c_t, V_t, v_t, lamb):
+        def lqr_iteration(F_t, C_t, c_t, V_t, v_t, lamb):
             dim_x, dim_u = self.dim_x, self.dim_u
 
             Q = C_t + F_t.T @ V_t @ F_t
-            q = c_t + F_t.T @ V_t @ f_t + F_t.T @ v_t
+            q = c_t + F_t.T @ v_t
 
             q_x, q_u = q[:dim_x], q[dim_x:]
             Q_xx, Q_ux, Q_uu = Q[:dim_x, :dim_x], Q[dim_x:, :dim_x], Q[dim_x:, dim_x:]
@@ -68,19 +68,19 @@ class iLQR(ControlModel):
             v_t = q_x + Q_ux.T @ k_t + K_t.T @ q_u + K_t.T @ Q_uu @ k_t
             return K_t, k_t, V_t, v_t
 
-        def lqr(T, x, u, F, f, C, c, lamb):
+        def lqr(T, x, u, F, C, c, lamb):
             V_t, v_t = np.zeros((self.dim_x, self.dim_x)), np.zeros((self.dim_x,))
             K, k = T*[None], T*[None]
 
             for t in reversed(range(T)): # backward pass
-                K_t, k_t, V_t, v_t = lqr_iteration(F[t], f[t], C[t], c[t], V_t, v_t, lamb)
+                K_t, k_t, V_t, v_t = lqr_iteration(F[t], C[t], c[t], V_t, v_t, lamb)
                 K[t] = K_t
                 k[t] = k_t
 
             x_stack, u_stack = [], []
             x_t = x[0]
             for t in range(T): # forward pass
-                u_t = u[t] + K[t] @ (x_t - x[t]) + k[t] # d_x_t = x_t - x[t]
+                u_t = u[t] + K[t] @ (x_t - x[t]) + k[t] # d_x_t = x_t - x[t] # maybe we should just ignore k[t]?
                 x_stack.append(x_t)
                 u_stack.append(u_t)
                 x_t = dyn(x_t, u_t)
@@ -94,20 +94,19 @@ class iLQR(ControlModel):
         def linearization_iteration(x_t, u_t):
             block = lambda A: np.vstack([np.hstack([A[0][0], A[0][1]]), np.hstack([A[1][0], A[1][1]])]) # np.block not yet implemented
             F_t = np.hstack(dyn_jacobian(x_t, u_t))
-            f_t = dyn(x_t, u_t) # - F_t @ np.hstack((x_t, u_t)) # temporary change to match Alex's implementation
+            # f_t = dyn(x_t, u_t) # f_t only used in LQR, not in iLQR!
             C_t = block(L_hessian(x_t, u_t))
             c_t = np.hstack(L_grad(x_t, u_t))
-            return F_t, f_t, C_t, c_t
+            return F_t, C_t, c_t
 
         def linearization(T, x, u):
-            F, f, C, c = [], [], [], [] # list appending is faster than matrix index update
+            F, C, c = [], [], [] # list appending is faster than matrix index update
             for t in range(T):
-                F_t, f_t, C_t, c_t = linearization_iteration(x[t], u[t])
+                F_t, C_t, c_t = linearization_iteration(x[t], u[t])
                 F.append(F_t)
-                f.append(f_t)
                 C.append(C_t)
                 c.append(c_t)
-            return F, f, C, c
+            return F, C, c
         self._linearization = linearization
 
 
@@ -124,10 +123,9 @@ class iLQR(ControlModel):
         count = 0
         while count < max_iterations:
             count += 1
-            
-            F, f, C, c = self._linearization(T, x, u)
-            x_new, u_new = self._lqr(T, x, u, F, f, C, c, lamb)
-
+        
+            F, C, c = self._linearization(T, x, u)
+            x_new, u_new = self._lqr(T, x, u, F, C, c, lamb)
             new_cost = self.total_cost(x_new, u_new)
             if new_cost < old_cost:
                 x, u = x_new, u_new
@@ -135,7 +133,12 @@ class iLQR(ControlModel):
             else:
                 lamb /= 2.0
             if np.abs(new_cost - old_cost) / old_cost < threshold:
-                break;
+                break
+
+            print("\ncount = " + str(count))
+            print("x = " + str(x[:3]))
+            print("u = " + str(u[:3]))
+
         return u
 
 

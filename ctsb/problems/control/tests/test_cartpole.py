@@ -17,8 +17,8 @@ def test_cartpole(verbose=False):
     model.initialize(problem, L, dim_x, dim_u)
     H = 100 # horizon
     threshold = 0.1
-    lamb = 0.1
-    max_iterations = 3
+    lamb = 1.0
+    max_iterations = 25
 
     if verbose:
         print("Running iLQR...")
@@ -36,8 +36,6 @@ def test_cartpole(verbose=False):
         time.sleep(1. / 60.)
         obs, r, done, _ = problem.step(u[cur_index])
 
-        break
-        
         if done:
             #break
 
