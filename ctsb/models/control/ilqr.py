@@ -205,12 +205,13 @@ class iLQR(ControlModel):
 
             new_cost = self.total_cost(x_new, u_new)
             if new_cost < old_cost:
+                old_cost = new_cost
                 x, u = x_new, u_new
                 lamb *= 2.0 # this is the opposite of the regular iLQR algorithm, but seems to work much better
+                #if np.abs(new_cost - old_cost) / old_cost < threshold:
+                #    break
             else:
                 lamb /= 2.0
-            if np.abs(new_cost - old_cost) / old_cost < threshold:
-                break
 
         return u
 
