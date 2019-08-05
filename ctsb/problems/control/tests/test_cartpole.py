@@ -36,6 +36,8 @@ def test_cartpole(verbose=False):
         time.sleep(1. / 60.)
         obs, r, done, _ = problem.step(u[cur_index])
 
+        break
+        
         if done:
             #break
 

@@ -152,9 +152,10 @@ class iLQR(ControlModel):
             if np.abs(new_cost - old_cost) / old_cost < threshold:
                 break;
                 
-            print("count = " + str(count))
-            print("first 10 x: " + str(x[:10]))
-            print("first 10 u: " + str(u[:10]))
+            print("\ncount = " + str(count))
+            niceify = lambda x: str([[round(float(v),3) for v in arr] for arr in x[:6]])
+            print("first 6 x: " + niceify(x))
+            print("first 6 u: " + niceify(u))
         return u
 
 
