@@ -9,7 +9,7 @@ import jax.numpy as np
 # cartpole test
 def test_cartpole(verbose=False):
     problem = ctsb.problem("CartPole-v0")
-    L = lambda x, u: np.sum(x**2) + 0.1 * np.sum(u**2)
+    L = lambda x, u: x[2]**2
     dim_x, dim_u = 4, 1
     obs = problem.initialize()
 
@@ -37,7 +37,7 @@ def test_cartpole(verbose=False):
         obs, r, done, _ = problem.step(u[cur_index])
 
         if done:
-            break
+            #break
 
             # alternatively, continue
             print("done! problem resetting...")

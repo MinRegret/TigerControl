@@ -41,13 +41,14 @@ class iLQR(ControlModel):
         dyn_jacobian = jax.jit(jax.jacrev(dyn, argnums=(0,1)))
         L_grad = jax.jit(jax.grad(L, argnums=(0,1)))
         L_hessian = jax.jit(jax.hessian(L, argnums=(0,1)))
+        self.total_cost = jax.jit(lambda x, u: np.sum([self.L(x_t, u_t) for x_t, u_t in zip(x, u)])) # computes total cost over trajectory
 
         """ 
         Description: run LQR on provided matrices (this version computes delta-x and delta-u).
         dyn: dynamics, T: number of time steps to plan, x: current states, u: current actions
         F, f: dynamics linearization, C,c: cost linearization
         """
-        #@jax.jit
+        @jax.jit
         def lqr_iteration(F_t, f_t, C_t, c_t, V_t, v_t, lamb):
             dim_x, dim_u = self.dim_x, self.dim_u
             Q = C_t + F_t.T @ V_t @ F_t
@@ -64,35 +65,16 @@ class iLQR(ControlModel):
             k_t = -Q_uu_inv @ q_u # shape (dim_u,)
             V_t = Q_xx + (Q_ux @ K_t.T + K_t.T @ Q_ux) + K_t.T @ Q_uu @ K_t
             v_t = q_x + Q_ux.T @ k_t + K_t.T @ q_u + K_t.T @ Q_uu @ k_t
-            """
-            print("\n something is fishy...")
-            print("C_t " + str(C_t))
-            print("c_t " + str(c_t))
-            print("F_t " + str(F_t))
-            print("f_t " + str(f_t))
-            print("Q " + str(Q))
-            print("q " + str(q))
-            print("Q_uu_inv " + str(Q_uu_inv))
-            print("Q_uu_evals " + str(Q_uu_evals))
-            print("Q_uu_evecs " + str(Q_uu_evecs))
-            print("K_t " + str(K_t))
-            print("k_t " + str(k_t))
-            print("V_t " + str(V_t))
-            print("v_t " + str(v_t))
-            """
             return K_t, k_t, V_t, v_t
 
         def lqr(T, x, u, F, f, C, c, lamb):
-            V_t = np.zeros((self.dim_x, self.dim_x))
-            v_t = np.zeros((self.dim_x,))
-            K, k = [], []
+            V_t, v_t = np.zeros((self.dim_x, self.dim_x)), np.zeros((self.dim_x,))
+            K, k = T*[None], T*[None]
             
             for t in reversed(range(T)): # backward pass
                 K_t, k_t, V_t, v_t = lqr_iteration(F[t], f[t], C[t], c[t], V_t, v_t, lamb)
-                K.append(K_t)
-                k.append(k_t)
-                #if t < T - 10:
-                #    break
+                K[t] = K_t
+                k[t] = k_t
 
             x_stack, u_stack = [], []
             x_t = x[0]
@@ -124,44 +106,44 @@ class iLQR(ControlModel):
                 f.append(f_t)
                 C.append(C_t)
                 c.append(c_t)
+            """
+            F = [jax.jacrev(dyn, argnums=(0,1))(x[t],u[t]) for t in range(T)]
+            F = [np.hstack([F_x, F_u]) for (F_x, F_u) in F]
+            print("F[0]: " + str(F[0]))
+
+            #f = [dyn(x[t],u[t]) - F[t] @ np.concatenate((x[t], u[t])) for t in range(T)]
+            f = [dyn(x[t],u[t]) for t in range(T)]
+            print("f[0]: " + str(f[0]))
+
+            C = [jax.hessian(L, argnums=(0,1))(x[t], u[t]) for t in range(T)]
+            C = [np.vstack([np.hstack([C_x[0],C_x[1]]), np.hstack([C_u[0],C_u[1]])]) for (C_x, C_u) in C]
+            print("C[0]: " + str(C[0]))
+
+            c = [jax.grad(L, argnums=(0,1))(x[t], u[t]) for t in range(T)]
+            c = [np.hstack([c_t[0], c_t[1]]) for c_t in c]
+            print("c[0]: " +str(c[0]))
+            """
             return F, f, C, c
         self._linearization = linearization
 
 
     def ilqr(self, x_0, T, threshold=0.1, lamb=0.1, max_iterations=50):
-
-        ti = time.time()
         dim_x, dim_u = self.dim_x, self.dim_u
-        total_cost = jax.jit(lambda x, u: np.sum([self.L(x[t],u[t]) for t in range(T)])) # computes total cost over trajectory
-
-        # initial actions, states, and matrices
-        x = np.zeros((T, dim_x))
-        u = np.zeros((T, dim_u))
-
+        x = [x_0]
+        u = [np.zeros((dim_u,)) for t in range(T)]
         x_t = x_0
-        for t, u_t in enumerate(u):
-            x = jax.ops.index_update(x, t, x_t)
+        for u_t in u:
+            x.append(x_t)
             x_t = self.dyn(x_t, u_t)
 
-        # update actions until satisfied
-        old_cost = total_cost(x, u)
+        old_cost = self.total_cost(x, u)
         count = 0
-
-        print("load time = " + str(time.time() - ti))
         while count < max_iterations:
-            print("count: " + str(count))
             count += 1
-
-            t = time.time()
             F, f, C, c = self._linearization(T, x, u)
-            print("linearization time = " + str(time.time() - t))
-
-            t = time.time()
             x_new, u_new = self._lqr(T, x, u, F, f, C, c, lamb)
-            print("lqr time = " + str(time.time() - t))
 
-            t = time.time()
-            new_cost = total_cost(x_new, u_new)
+            new_cost = self.total_cost(x_new, u_new)
             if new_cost < old_cost:
                 x, u = x_new, u_new
                 lamb *= 2.0 # this is the opposite of the regular iLQR algorithm, but seems to work much better
@@ -169,9 +151,10 @@ class iLQR(ControlModel):
                 lamb /= 2.0
             if np.abs(new_cost - old_cost) / old_cost < threshold:
                 break;
-            print("cost comparison time = " + str(time.time() - t))
-            print("u = " + str([u_t[0] for u_t in u]))
-
+                
+            print("count = " + str(count))
+            print("first 10 x: " + str(x[:10]))
+            print("first 10 u: " + str(u[:10]))
         return u
 
 
