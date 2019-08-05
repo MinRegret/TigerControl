@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 def test_enso(steps=1000, show_plot=False, verbose=False):
     T = steps
     problem = ctsb.problem("ENSO-v0")
-    problem.initialize()
+    problem.initialize(input_signals = ['oni'])
     assert problem.T == 0
 
     test_output = []

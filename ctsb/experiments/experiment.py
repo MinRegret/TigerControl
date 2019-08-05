@@ -39,7 +39,7 @@ class Experiment(object):
         self.problems, self.models, self.problem_to_models, self.metrics = to_dict(problems), to_dict(models), problem_to_models, metrics
         self.use_precomputed, self.timesteps, self.verbose, self.load_bar = use_precomputed, timesteps, verbose, load_bar
 
-        self.n_models = {}
+        self.n_problems, self.n_models = {}, {}
 
         if(use_precomputed):
 
@@ -73,7 +73,7 @@ class Experiment(object):
         
         Args:
             model_id (string): ID of new model.
-            model_params: Parameters to use for initialization of new model.
+            model_params (dict): Parameters to use for initialization of new model.
         '''
         assert model_id is not None, "ERROR: No Model ID given."
 
@@ -90,36 +90,86 @@ class Experiment(object):
             else:
                 self.n_models[model_id] += 1
                 new_id = model_id + '-' + str(self.n_models[model_id])
+            self.models[model_id].append((new_id, model_params))
         else:
             new_id = model_id
             if(name is not None):
                 new_id += '-' + name
+            self.models[model_id] = [(new_id, model_params)]
 
         ''' Evaluate performance of new model on all problems '''
         for metric in self.metrics:
-            for problem_id, problem_params in self.problems.items():
+            for problem_id in self.problems.keys():
+                for (new_problem_id, problem_params) in self.problems[problem_id]:
 
-                ''' If model is compatible with problem, run experiment and store results. '''
-                try:
-                    if(self.use_precomputed):
-                        print("WARNING: In precomputed mode, experiments for a new model will run for the predetermined key.")
-                        key = precomputed.get_key()
-                    else:
-                        key = None
+                    ''' If model is compatible with problem, run experiment and store results. '''
+                    try:
+                        if(self.use_precomputed):
+                            print("WARNING: In precomputed mode, experiments for a new model will run for the predetermined key.")
+                            key = precomputed.get_key()
+                        else:
+                            key = None
 
-                    loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, \
-                                    key = key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
-                except:
-                    print("ERROR: Could not run %s on %s. Please make sure model and problem are compatible." % (model_id, problem_id))
-                    loss, time, memory = 0, -1, -1
+                        loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, \
+                                        key = key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
+                    except:
+                        print("ERROR: Could not run %s on %s. Please make sure model and problem are compatible." % (model_id, problem_id))
+                        loss, time, memory = 0, 0.0, 0.0
 
-                self.models[new_id] = model_params
+                    self.prob_model_to_result[(metric, new_problem_id, new_id)] = loss
+                    self.prob_model_to_result[('time', new_problem_id, new_id)] = time
+                    self.prob_model_to_result[('memory', new_problem_id, new_id)] = memory
 
-                self.prob_model_to_result[(metric, problem_id, new_id)] = loss
-                self.prob_model_to_result[('time', problem_id, new_id)] = time
-                self.prob_model_to_result[('memory', problem_id, new_id)] = memory
+    def add_problem(self, problem_id, problem_params = None, name = None):
+        '''
+        Description: Add a new problem to the experiment instance.
+        
+        Args:
+            problem_id (string): ID of new model.
+            problem_params (dict): Parameters to use for initialization of new model.
+        '''
+        assert problem_id is not None, "ERROR: No Problem ID given."
 
-    def scoreboard(self, save_as = None, metric = 'mse', verbose = True):
+        new_id = ''
+        if(problem_id in self.problems):
+            if(problem_id not in self.n_problems):
+                self.n_problems[problem_id] = 0
+            if(name is not None):
+                new_id = problem_id[:-2] + name
+            else:
+                self.n_problems[problem_id] += 1
+                new_id = problem_id + '-' + str(self.n_problems[problem_id])
+            self.problems[problem_id].append((new_id, problem_params))
+        else:
+            new_id = problem_id[:-2]
+            if(name is not None):
+                new_id += name
+            self.problems[problem_id] = [(new_id, problem_params)]
+
+        ''' Evaluate performance of new model on all problems '''
+        for metric in self.metrics:
+            for model_id in self.models.keys():
+                for (new_model_id, model_params) in self.models[model_id]:
+
+                    ''' If model is compatible with problem, run experiment and store results. '''
+                    try:
+                        if(self.use_precomputed):
+                            print("WARNING: In precomputed mode, experiments for a new model will run for the predetermined key.")
+                            key = precomputed.get_key()
+                        else:
+                            key = None
+
+                        loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, \
+                                        key = key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
+                    except:
+                        print("ERROR: Could not run %s on %s. Please make sure model and problem are compatible." % (model_id, problem_id))
+                        loss, time, memory = 0.0, 0.0, 0.0
+
+                    self.prob_model_to_result[(metric, new_id, new_model_id)] = loss
+                    self.prob_model_to_result[('time', new_id, new_model_id)] = time
+                    self.prob_model_to_result[('memory', new_id, new_model_id)] = memory
+
+    def scoreboard(self, save_as = None, metric = 'mse', n_digits = 3, verbose = True):
         '''
         Description: Show a scoreboard for the results of the experiments for specified metric.
 
@@ -155,9 +205,65 @@ class Experiment(object):
             problem_scores = [problem_id]
             # get scores for each model
             for model_id in model_ids:
-                problem_scores.append(np.mean(self.prob_model_to_result[(metric, problem_id, model_id)]))
+                score = np.mean(self.prob_model_to_result[(metric, problem_id, model_id)])
+                score = round(float(score), n_digits)
+                if(score == 0.0):
+                    score = '—'
+                problem_scores.append(score)
             table.add_row(problem_scores)
             table_dict[problem_id] = problem_scores[1:]
+
+        print(table)
+
+        ''' Save to csv file '''
+        if(save_as is not None):
+            with open(save_as, 'w') as f:
+                for key in table_dict.keys():
+                    f.write("%s,%s\n" % (key, table_dict[key]))
+
+    def scoreboard2(self, save_as = None, metric = 'mse', n_digits = 3, verbose = True):
+        '''
+        Description: Show a scoreboard for the results of the experiments for specified metric.
+
+        Args:
+            save_as (string): If not None, datapath to save results as csv file.
+            metric (string): Metric to compare results
+            verbose (boolean): Specifies whether to print the description of the scoreboard entries
+        '''
+
+        if(self.use_precomputed and metric == 'time' and self.new_models):
+            print("WARNING: Time comparison between precomputed models and" + \
+                  "any added model may be irrelevant due to hardware differences.")
+
+        if(verbose and metric in self.metrics):
+            print("Average " + metric + ":")
+        else:
+            print(metric + ":")
+            
+        table = PrettyTable()
+        table_dict = {}
+
+        problem_ids = get_ids(self.problems)
+        model_ids = get_ids(self.models)
+
+        table_dict['Problems'] = problem_ids
+
+        field_names = ['Model\Problems']
+        for problem_id in problem_ids:
+            field_names.append(problem_id)
+        table.field_names = field_names
+
+        for model_id in model_ids:
+            model_scores = [model_id]
+            # get scores for each problem
+            for problem_id in problem_ids:
+                score = np.mean(self.prob_model_to_result[(metric, problem_id, model_id)])
+                score = round(float(score), n_digits)
+                if(score == 0.0):
+                    score = '—'
+                model_scores.append(score)
+            table.add_row(model_scores)
+            table_dict[model_id] = model_scores[1:]
 
         print(table)
 

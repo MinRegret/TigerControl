@@ -23,7 +23,7 @@ class ENSO(TimeSeriesProblem):
 
     def __init__(self):
         self.initialized = False
-        self.has_regressors = True
+        self.has_regressors = False
 
     def initialize(self, input_signals = ['pna', 'ea', 'wa', 'wp', 'eu', 'soi', 'esoi', 'nino12', 'nino34', 'nino4'], include_month = False, output_signals = ['oni'], history = 1, timeline = 1):
         """
@@ -47,7 +47,7 @@ class ENSO(TimeSeriesProblem):
         self.X, self.y = enso(input_signals, include_month, output_signals, history, timeline) # get data
         self.max_T = self.y.shape[0]
 
-        return (self.X[0], self.y[0])
+        return (float(self.X[0]), float(self.y[0]))
 
     def step(self):
         """
@@ -64,7 +64,7 @@ class ENSO(TimeSeriesProblem):
         if self.T == self.max_T: 
             raise StepOutOfBounds("Number of steps exceeded length of dataset ({})".format(self.max_T))
 
-        return (self.X[self.T], self.y[self.T])
+        return (float(self.X[self.T]), float(self.y[self.T]))
 
     def hidden(self):
         """

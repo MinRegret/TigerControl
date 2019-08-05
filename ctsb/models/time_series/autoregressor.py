@@ -24,6 +24,7 @@ class AutoRegressor(TimeSeriesModel):
     def initialize(self, p = 3, optimizer = OGD):
         """
         Description: Initializes autoregressive model parameters
+
         Args:
             p (int): Length of history used for prediction
             optimizer (class): optimizer choice
@@ -117,40 +118,31 @@ Description: Implements the equivalent of an AR(p) model - predicts a linear
 Methods:
 
     initialize()
-        Description:
-            Initializes autoregressive model parameters
+        Description: Initializes autoregressive model parameters
+
         Args:
             p (int): Length of history used for prediction
-
-    step(x)
-        Description:
-            Run one timestep of the model in its environment then update internal parameters
-        Args:
-            x (int/numpy.ndarray):  Value at current time-step
-        Returns:
-            Predicted value for the next time-step
+            optimizer (class): optimizer choice
 
     predict(x)
-        Description:
-            Predict next value given present value
+        Description: Predict next value given present value
+
         Args:
             x (int/numpy.ndarray):  Value at current time-step
         Returns:
             Predicted value for the next time-step
 
-    update(y, loss, lr)
-        Description:
-            Updates parameters based on correct value, loss and learning rate.
+    update(y)
+        Description: Updates parameters based on correct value.
+
         Args:
             y (int/numpy.ndarray): True value at current time-step
-            loss (function): (optional)
-            lr (float):
         Returns:
             None
 
     help()
-        Description:
-            Prints information about this class and its methods.
+        Description: Prints information about this class and its methods.
+
         Args:
             None
         Returns:
