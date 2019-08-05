@@ -18,7 +18,7 @@ def test_cartpole(verbose=False):
     H = 100 # horizon
     threshold = 0.1
     lamb = 1.0
-    max_iterations = 25
+    max_iterations = 10
 
     if verbose:
         print("Running iLQR...")

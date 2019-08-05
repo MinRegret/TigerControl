@@ -69,8 +69,60 @@ class iLQR(ControlModel):
             return K_t, k_t, V_t, v_t
 
         def lqr(T, x, u, F, C, c, lamb):
-            V_t, v_t = np.zeros((self.dim_x, self.dim_x)), np.zeros((self.dim_x,))
-            K, k = T*[None], T*[None]
+
+            #""" old version by Alex
+            dim_x, dim_u = self.dim_x, self.dim_u
+            K = T * [None]
+            k = T * [None]
+            ## Initialize V and Q Functions ##
+            V = np.zeros((dim_x, dim_x))
+            v = np.zeros((dim_x, ))
+            Q = np.zeros((dim_x + dim_u, dim_x + dim_u))
+            q = np.zeros((dim_x + dim_u, ))
+
+            ## Backward Recursion ##
+            for t in reversed(range(T)):
+
+                Q = C[t] + F[t].T @ V @ F[t]
+                q = c[t] + F[t].T @ v  # get rid of + F[t].T @ V @ f[t] in iLQR
+
+                Q_uu, Q_ux, Q_xx = Q[dim_x:, dim_x:], Q[dim_x:, :dim_x], Q[:dim_x, :dim_x]
+                q_u, q_x = q[dim_x:], q[:dim_x]
+                Q_uu_evals, Q_uu_evecs = np.linalg.eigh(Q_uu)
+                Q_uu_evals = lamb + np.maximum(Q_uu_evals, 0.0)
+                Q_uu_inv = Q_uu_evecs @ np.diag(1. / Q_uu_evals) @ Q_uu_evecs.T
+
+                K[t] = -Q_uu_inv @ Q_ux
+                k[t] = -Q_uu_inv @ q_u
+
+                V = Q_xx + Q_ux.T @ K[t] + K[t].T @ Q_ux + K[t].T @ Q_uu @ K[t]
+                v = q_x + Q_ux.T @ k[t] + K[t].T @ q_u + K[t].T @ Q_uu @ k[t]
+
+            ## Forward Recursion ##
+            """
+            x_stack, u_stack = [], []
+            x_t = x[0]
+            for t in range(T): # forward pass
+                u_t = u[t] + K[t] @ (x_t - x[t]) + k[t] # d_x_t = x_t - x[t] # maybe we should just ignore k[t]?
+                x_stack.append(x_t)
+                u_stack.append(u_t)
+                x_t = dyn(x_t, u_t)
+            return x_stack, u_stack
+            """
+
+            x_new = [x[0]]
+            u_new = [0 for i in range(T)]
+            for t in range(T):
+                u_new[t] = u[t] + k[t] + K[t] @ (x_new[t] - x[t])            
+                if t < T-1:
+                    x_new.append(self.dyn(x_new[t], u_new[t]))
+
+            return x_new, u_new
+
+            """
+            dim_x, dim_u = self.dim_x, self.dim_u
+            V_t, v_t = np.zeros((dim_x, dim_x)), np.zeros((dim_x,))
+            K, k = T * [None], T * [None]
 
             for t in reversed(range(T)): # backward pass
                 K_t, k_t, V_t, v_t = lqr_iteration(F[t], C[t], c[t], V_t, v_t, lamb)
@@ -85,6 +137,7 @@ class iLQR(ControlModel):
                 u_stack.append(u_t)
                 x_t = dyn(x_t, u_t)
             return x_stack, u_stack
+            """
         self._lqr = lqr
 
         """ 
@@ -136,10 +189,9 @@ class iLQR(ControlModel):
                 break
 
             print("\ncount = " + str(count))
-            print("F[0]: " + str(F[0]))
-            print("C[0]: " + str(C[0]))
-            print("c[0]: " + str(c[0]))
-            break
+            #print("F[0]: " + str(F[0]))
+            #print("C[0]: " + str(C[0]))
+            #print("c[0]: " + str(c[0]))
             #print("x: " + str(x[:3]))
             #print("u: " + str(u[:3]))
 
