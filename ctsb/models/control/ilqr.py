@@ -77,7 +77,7 @@ class iLQR(ControlModel):
 
             dim_x, dim_u = self.dim_x, self.dim_u
 
-            u = self.extend(np.zeros((dim_u, )), T)
+            #u = self.extend(np.zeros((dim_u, )), T)
             K = self.extend(np.zeros((dim_u, dim_x)), T)
             k = u.copy()
             V = np.zeros((dim_x, dim_x))
@@ -197,7 +197,7 @@ class iLQR(ControlModel):
         count = 0
         while count < max_iterations:
             count += 1
-            if count > 10: break
+            if count > 12: break
             print("\ncount = " + str(count))
         
             #F, C, c = self._linearization(T, x, u)
