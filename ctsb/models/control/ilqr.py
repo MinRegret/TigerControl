@@ -6,6 +6,9 @@ import jax.numpy as np
 import ctsb
 from ctsb.models.control import ControlModel
 
+# for testing
+import time
+
 class iLQR(ControlModel):
     """
     Description: Computes optimal set of actions using the Linear Quadratic Regulator
@@ -17,212 +20,162 @@ class iLQR(ControlModel):
     def __init__(self):
         self.initialized = False
 
-    def to_ndarray(self, x):
-        """
-        Description: If x is a scalar, transform it to a (1, 1) numpy.ndarray;
-        otherwise, leave it unchanged.
-        Args:
-            x (float/numpy.ndarray)
-        Returns:
-            A numpy.ndarray representation of x
-        """
-        x = np.asarray(x)
-        if(np.ndim(x) == 0):
-            x = x[None, None]
-        return x
 
-    def extend(self, x, T):
-        """
-        Description: If x is not in the correct form, convert it; otherwise, leave it unchanged.
-        Args:
-            x (float/numpy.ndarray)
-            T (postive int): number of timesteps
-        Returns:
-            A numpy.ndarray representation of x
-        """
-        x = self.to_ndarray(x)
-        return [x for i in range(T)]
-
-    def initialize(self, F, f, C, c, T, x):
+    def initialize(self, problem, L, dim_x, dim_u):
         """
         Description: Initialize the dynamics of the model
         Args:
-            F (float/numpy.ndarray): past value contribution coefficients
-            f (float/numpy.ndarray): bias coefficients
-            C (float/numpy.ndarray): quadratic cost coefficients
-            c (float/numpy.ndarray): linear cost coefficients
-            T (postive int): number of timesteps
-            x (float/numpy.ndarray): initial state
+            dyn (function): dynamics of problem
+            L (function): loss function
+            dim_x (int): state_space dimension
+            dim_u (int): action_space dimension
         """
         self.initialized = True
-        
-        self.F, self.f, self.C, self.c, self.T, self.x = self.extend(F, T), self.extend(f, T), self.extend(C, T), self.extend(c, T), T, self.to_ndarray(x)
-        
-        self.u = self.extend(np.zeros((self.F[0].shape[1] - self.x.shape[0], 1)), T)
-        
-        self.K = self.extend(np.zeros((self.u[0].shape[0], self.x.shape[0])), T)
-        self.k = self.u.copy()
 
-    def ilqr(self, u_shape, dyn, L, x_0, T, threshold, lamb=0.1):
-        # initialize
-        u = self.extend(np.zeros((u_shape, 1)), T)
-        # print("u.shape : " + str(u[0].shape))
+        # initialize dynamics, loss, and derivatives
+        dyn = problem.dynamics
+        self.dyn = dyn
+        self.L = L
+        self.dim_x = dim_x
+        self.dim_u = dim_u
+        dyn_jacobian = jax.jit(jax.jacrev(dyn, argnums=(0,1)))
+        L_grad = jax.jit(jax.grad(L, argnums=(0,1)))
+        L_hessian = jax.jit(jax.hessian(L, argnums=(0,1)))
 
+        """ 
+        Description: run LQR on provided matrices (this version computes delta-x and delta-u).
+        dyn: dynamics, T: number of time steps to plan, x: current states, u: current actions
+        F, f: dynamics linearization, C,c: cost linearization
+        """
+        #@jax.jit
+        def lqr_iteration(F_t, f_t, C_t, c_t, V_t, v_t, lamb):
+            dim_x, dim_u = self.dim_x, self.dim_u
+            Q = C_t + F_t.T @ V_t @ F_t
+            q = c_t + F_t.T @ V_t @ f_t + F_t.T @ v_t
+
+            q_x, q_u = q[:dim_x], q[dim_x:]
+            Q_xx, Q_ux, Q_uu = Q[:dim_x, :dim_x], Q[dim_x:, :dim_x], Q[dim_x:, dim_x:]
+            Q_uu_evals, Q_uu_evecs = np.linalg.eigh(Q_uu)
+            Q_uu_evals = lamb + np.maximum(Q_uu_evals, 0)
+            Q_uu = Q_uu_evecs @ np.diag(Q_uu_evals) @ Q_uu_evecs.T
+            Q_uu_inv = Q_uu_evecs @ np.diag(1. / Q_uu_evals) @ Q_uu_evecs.T
+
+            K_t = -Q_uu_inv @ Q_ux # shape (dim_u, dim_x)
+            k_t = -Q_uu_inv @ q_u # shape (dim_u,)
+            V_t = Q_xx + (Q_ux @ K_t.T + K_t.T @ Q_ux) + K_t.T @ Q_uu @ K_t
+            v_t = q_x + Q_ux.T @ k_t + K_t.T @ q_u + K_t.T @ Q_uu @ k_t
+            """
+            print("\n something is fishy...")
+            print("C_t " + str(C_t))
+            print("c_t " + str(c_t))
+            print("F_t " + str(F_t))
+            print("f_t " + str(f_t))
+            print("Q " + str(Q))
+            print("q " + str(q))
+            print("Q_uu_inv " + str(Q_uu_inv))
+            print("Q_uu_evals " + str(Q_uu_evals))
+            print("Q_uu_evecs " + str(Q_uu_evecs))
+            print("K_t " + str(K_t))
+            print("k_t " + str(k_t))
+            print("V_t " + str(V_t))
+            print("v_t " + str(v_t))
+            """
+            return K_t, k_t, V_t, v_t
+
+        def lqr(T, x, u, F, f, C, c, lamb):
+            V_t = np.zeros((self.dim_x, self.dim_x))
+            v_t = np.zeros((self.dim_x,))
+            K, k = [], []
+            
+            for t in reversed(range(T)): # backward pass
+                K_t, k_t, V_t, v_t = lqr_iteration(F[t], f[t], C[t], c[t], V_t, v_t, lamb)
+                K.append(K_t)
+                k.append(k_t)
+                #if t < T - 10:
+                #    break
+
+            x_stack, u_stack = [], []
+            x_t = x[0]
+            for t in range(T): # forward pass
+                u_t = u[t] + K[t] @ (x_t - x[t]) + k[t] # d_x_t = x_t - x[t]
+                x_stack.append(x_t)
+                u_stack.append(u_t)
+                x_t = dyn(x_t, u_t)
+            return x_stack, u_stack
+        self._lqr = lqr
+
+        """ 
+        Description: linearize provided system dynamics and loss, given initial state and actions. 
+        """
+        @jax.jit
+        def linearization_iteration(x_t, u_t):
+            block = lambda A: np.vstack([np.hstack([A[0][0], A[0][1]]), np.hstack([A[1][0], A[1][1]])]) # np.block not yet implemented
+            F_t = np.hstack(dyn_jacobian(x_t, u_t))
+            f_t = dyn(x_t, u_t)
+            C_t = block(L_hessian(x_t, u_t))
+            c_t = np.hstack(L_grad(x_t, u_t))
+            return F_t, f_t, C_t, c_t
+
+        def linearization(T, x, u):
+            F, f, C, c = [], [], [], [] # list appending is faster than matrix index update
+            for t in range(T):
+                F_t, f_t, C_t, c_t = linearization_iteration(x[t], u[t])
+                F.append(F_t)
+                f.append(f_t)
+                C.append(C_t)
+                c.append(c_t)
+            return F, f, C, c
+        self._linearization = linearization
+
+
+    def ilqr(self, x_0, T, threshold=0.1, lamb=0.1, max_iterations=50):
+
+        ti = time.time()
+        dim_x, dim_u = self.dim_x, self.dim_u
+        total_cost = jax.jit(lambda x, u: np.sum([self.L(x[t],u[t]) for t in range(T)])) # computes total cost over trajectory
+
+        # initial actions, states, and matrices
+        x = np.zeros((T, dim_x))
+        u = np.zeros((T, dim_u))
+
+        x_t = x_0
+        for t, u_t in enumerate(u):
+            x = jax.ops.index_update(x, t, x_t)
+            x_t = self.dyn(x_t, u_t)
+
+        # update actions until satisfied
+        old_cost = total_cost(x, u)
         count = 0
-        while True:
+
+        print("load time = " + str(time.time() - ti))
+        while count < max_iterations:
+            print("count: " + str(count))
             count += 1
-            # print(str(u))
-            x = [x_0]
-            # print("x_0 : " + str(x_0))
-            # print("u: " + str(u))
-            for i in range(T):
-                # print("i = " + str(i))
-                # print("x : " + str(x))
-                # print("x[-1] : " + str(x[-1]))
-                x.append(dyn(x[-1],u[i]))
-            # print("x[-1] : " + str(x[-1]))
-            F = [jax.jacrev(dyn, argnums=(0,1))(x[t],u[t][0]) for t in range(T)]
-            # print("F[0] : " + str(F[0]))
-            F = [np.hstack([F_x, F_u]) for (F_x, F_u) in F]
-            # print("self.to_ndarray(x[0] : " + str(self.to_ndarray(x[0])))
-            # print("self.to_ndarray(u[0] : " + str(u[0]))
 
-            # print("F[0]: " + str(F[0]))
-            # print("F[0].shape : " + str(F[0].shape))
-            # print("np.concatenate((self.to_ndarray(x[0]), u[0][0])).shape : " + str(np.concatenate((self.to_ndarray(x[0]), u[0][0])).shape))
-            f = [dyn(x[t],u[t]) - F[t] @ np.concatenate((self.to_ndarray(x[t]), u[t][0])) for t in range(T)]
-            f = [np.asarray([[y] for y in f_i]) for f_i in f]
-            # print("dyn(x[t],u[t]) : " + str(dyn(x[0],u[0])))
-            # print("dyn(x[t],u[t]).T : " + str(dyn(x[0],u[0]).T))
-            # print("f[0] : " + str(f[0]))
+            t = time.time()
+            F, f, C, c = self._linearization(T, x, u)
+            print("linearization time = " + str(time.time() - t))
 
-            C = [jax.hessian(L, argnums=(0,1))(x[t],u[t][0]) for t in range(T)]
-            # print("C[0]:" + str(C[0]))
-            C = [np.vstack([np.hstack([C_x[0],C_x[1]]), np.hstack([C_u[0],C_u[1]])]) for (C_x, C_u) in C]
-            # print("C[0]:" + str(C[0]))
-            c = [jax.grad(L, argnums=(0,1))(x[t],u[t][0]) for t in range(T)]
-            # print("c[0] before : " +str(c[0]))
-            c = [np.vstack([np.asarray([[y] for y in c_t[0]]), np.asarray(c_t[1])]) for c_t in c]
-            
-            # print("c[0] after : " +str(c[0]))
+            t = time.time()
+            x_new, u_new = self._lqr(T, x, u, F, f, C, c, lamb)
+            print("lqr time = " + str(time.time() - t))
 
-            x_0_col = np.asarray([[y] for y in x_0])
-            u_new = self.lqr(F, f, C, c, x_0_col, x, T, lamb)
-            # print("u_new = " + str(u_new))
-
-            x_new = [x_0]
-            for i in range(T):
-                x_new.append(dyn(x_new[-1], u_new[i]))
-            # print("len(x_new) : " + str(len(x_new)))
-
-            old_cost = np.sum([L(x[t],u[t]) for t in range(T)])
-            new_cost = np.sum([L(x_new[t],u_new[t]) for t in range(T)])
-            # print("u_new : " + str(u_new))
-            print("old_cost : " + str(old_cost))
-            print("new_cost : " + str(new_cost))
-            print("lamb : " + str(lamb))
-
+            t = time.time()
+            new_cost = total_cost(x_new, u_new)
             if new_cost < old_cost:
-                u = u_new
-                lamb = 2.0 * lamb
+                x, u = x_new, u_new
+                lamb *= 2.0 # this is the opposite of the regular iLQR algorithm, but seems to work much better
             else:
-                lamb = 0.5 *lamb
-            
-            if abs(new_cost - old_cost) < threshold:
+                lamb /= 2.0
+            if np.abs(new_cost - old_cost) / old_cost < threshold:
                 break;
+            print("cost comparison time = " + str(time.time() - t))
+            print("u = " + str([u_t[0] for u_t in u]))
 
         return u
 
-    def lqr(self, F, f, C, c, x, xs, T, lamb):
-        """
-        Description: Updates internal parameters and then returns the estimated optimal set of actions
-        Args:
-            None
-        Returns:
-            Estimated optimal set of actions
-        """
-        u = self.extend(np.zeros((F[0].shape[1] - x.shape[0], 1)), T)
-        K = self.extend(np.zeros((u[0].shape[0], x.shape[0])), T)
-        k = u.copy()
-        ## Initialize V and Q Functions ##
-        V = np.zeros((F[0].shape[0], F[0].shape[0]))
-        v = np.zeros((F[0].shape[0], 1))
-        Q = np.zeros((C[0].shape[0], C[0].shape[1]))
-        q = np.zeros((c[0].shape[0], 1))
 
-        # print("V : " + str(V))
-        # print("C[0] : " + str(C[0]))
-        # print("q : " + str(q))
-        # print("c[4]: " + str(c[4]))
-        # print("F[4].T : " + str(F[4].T))
-        # print("f[4] : " + str(f[4]))
-        # print("F[4].T @ V @ f[4] : " + str(F[4].T @ V @ f[4]))
-        # print("F[4].T @ v: " + str(F[4].T @ v))
-        ## Backward Recursion ##
-        for t in range(T - 1, -1, -1):
-            # print ("--------------------------------------------- t : " + str(t))
-
-            Q = C[t] + F[t].T @ V @ F[t]
-            q = c[t] + F[t].T @ V @ f[t] + F[t].T @ v
-
-            # print("C[t] : " + str(C[t]))
-            # print("F[t] : " + str(F[t]))
-            # print("V : " + str(V))
-            Q_uu = Q[x.shape[0] :, x.shape[0] :]
-            # print("Q_uu : " + str(Q_uu))
-            Q_uu_evals, Q_uu_evecs = np.linalg.eig(Q_uu)
-            if t == 0: print("Q_uu_evals before: " + str(Q_uu_evals))
-            Q_uu_evals = [(ev if ev > 0 else 0) + lamb for ev in Q_uu_evals]
-            if t == 0: print("Q_uu_evals after: " + str(Q_uu_evals))
-            Q_uu_inv = Q_uu_evecs @ np.diag(np.asarray([1./ev for ev in Q_uu_evals])) @ Q_uu_evecs.T
-            Q_uu = Q_uu_evecs @ np.diag(np.asarray([ev for ev in Q_uu_evals])) @ Q_uu_evecs.T
-
-            K[t] = -Q_uu_inv @ Q[x.shape[0] :, : x.shape[0]]
-            k[t] = -Q_uu_inv @ q[x.shape[0] :]
-
-            # print("Q_uu_inv : " + str(Q_uu_inv))
-            # print("q: " + str(q))
-            # print("c[t]: " + str(c[t]))
-            # print("c[t].shape : " + str(c[t].shape))
-            # print("F[t].T.shape : " + str(F[t].T.shape))
-            # print("V.shape : " + str(V.shape))
-            # print("f[t].shape : " +str(f[t].shape))
-
-            # print("v.shape: " + str(v.shape))
-            # print("q[x.shape[0] :] : " + str(q[x.shape[0] :]))
-            # print("x.shape[0] : " + str(x.shape[0]))
-
-            K[t] = K[t].astype(float)
-            k[t] = k[t].astype(float)
-
-            # print("K[t] : " + str(K[t]))
-            # print("type(K[t]) : "  + str(K[t].dtype))
-            # print("type(V) : " + str(V.dtype))
-            # print("k[t] : " + str(k[t]))
-
-            V = Q[: x.shape[0], : x.shape[0]] + Q[: x.shape[0], x.shape[0] :] @ K[t] + K[t].T @ Q[x.shape[0] :, : x.shape[0]] + K[t].T @ Q[x.shape[0] :, x.shape[0] :] @ K[t]
-            v = q[: x.shape[0]] + Q[: x.shape[0], x.shape[0] :] @ k[t] + K[t].T @ q[x.shape[0] :] + K[t].T @ Q[x.shape[0] :, x.shape[0] :] @ k[t]
-
-            # V = Q[: x.shape[0], : x.shape[0]] + Q[: x.shape[0], x.shape[0] :] @ K[t] + K[t].T @ Q[x.shape[0] :, : x.shape[0]] + K[t].T @ Q_uu @ K[t]
-            # v = q[: x.shape[0]] + Q[: x.shape[0], x.shape[0] :] @ k[t] + K[t].T @ q[x.shape[0] :] + K[t].T @ Q_uu @ k[t]
-
-        ## Forward Recursion ##
-        xs = [np.asarray([[y] for y in x]) for x in xs]
-        x_new = [xs[0]] + [None for i in range(T-1)]
-        u_new = [0 for i in range(T)]
-        for t in range(T):
-            # print("xs[t] = " + str(xs[t]))
-            # print("x_new[t] = " + str(x_new[t]))
-            # print("K[t] : " + str(K[t]))
-            # print("k[t] : " + str(k[t]))
-            # print("u[t] = " + str(u[t]))
-            u_new[t] = u[t] + k[t] + K[t] @ (x_new[t] - xs[t])            
-            if t < T-1:
-                x_new[t+1]= F[t] @ np.vstack((x_new[t], u_new[t])) + f[t]
-
-        return u_new
-
-    def predict(self):
+    def predict(self, x_0, T, threshold=0.1, lamb=0.1, max_iterations=10):
         """
         Description: Returns estimated optimal set of actions
         Args:
@@ -230,40 +183,7 @@ class iLQR(ControlModel):
         Returns:
             Estimated optimal set of actions
         """
-        return self.u
-
-
-    def update(self):
-        """
-        Description: Updates internal parameters
-        Args:
-            None
-        """
-
-        ## Initialize V and Q Functions ##
-        V = np.zeros((self.F[0].shape[0], self.F[0].shape[0]))
-        v = np.zeros((self.F[0].shape[0], 1))
-        Q = np.zeros((self.C[0].shape[0], self.C[0].shape[1]))
-        q = np.zeros((self.c[0].shape[0], 1))
-
-        ## Backward Recursion ##
-        for t in range(self.T - 1, -1, -1):
-
-            Q = self.C[t] + self.F[t].T @ V @ self.F[t]
-            q = self.c[t] + self.F[t].T @ V @ self.f[t] + self.F[t].T @ v
-
-            self.K[t] = -np.linalg.inv(Q[self.x.shape[0] :, self.x.shape[0] :]) @ Q[self.x.shape[0] :, : self.x.shape[0]]
-            self.k[t] = -np.linalg.inv(Q[self.x.shape[0] :, self.x.shape[0] :]) @ q[self.x.shape[0] :]
-
-            V = Q[: self.x.shape[0], : self.x.shape[0]] + Q[: self.x.shape[0], self.x.shape[0] :] @ self.K[t] + self.K[t].T @ Q[self.x.shape[0] :, : self.x.shape[0]] + self.K[t].T @ Q[self.x.shape[0] :, self.x.shape[0] :] @ self.K[t]
-            v = q[: self.x.shape[0]] + Q[: self.x.shape[0], self.x.shape[0] :] @ self.k[t] + self.K[t].T @ q[self.x.shape[0] :] + self.K[t].T @ Q[self.x.shape[0] :, self.x.shape[0] :] @ self.k[t]
-
-        ## Forward Recursion ##
-        for t in range(self.T):
-            self.u[t] = self.K[t] @ self.x + self.k[t]
-            self.x = self.F[t] @ np.vstack((self.x, self.u[t])) + self.f[t]
-
-        return
+        return self.ilqr(x_0, T, threshold, lamb, max_iterations)
 
     def help(self):
         """
@@ -276,7 +196,7 @@ class iLQR(ControlModel):
         print(LQR_help)
 
     def __str__(self):
-        return "<LQR Model>"
+        return "<iLQR Model>"
 
 
 # string to print when calling help() method

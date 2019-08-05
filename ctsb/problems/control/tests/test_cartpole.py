@@ -9,42 +9,43 @@ import jax.numpy as np
 # cartpole test
 def test_cartpole(verbose=False):
     problem = ctsb.problem("CartPole-v0")
+    L = lambda x, u: np.sum(x**2) + 0.1 * np.sum(u**2)
+    dim_x, dim_u = 4, 1
     obs = problem.initialize()
-    print(obs)
 
     model = ctsb.model("ILQR")
-    loss = lambda obs, a : obs[2]**2
-    dyn = problem.dynamics
-    x_0 = obs
-    T = 100
+    model.initialize(problem, L, dim_x, dim_u)
+    H = 100 # horizon
+    threshold = 0.1
     lamb = 0.1
+    max_iterations = 10
 
-    u = model.ilqr(1, dyn, loss, x_0, T, 0.05, lamb)
-
-    # t_start = time.time()
-    # save_to_mem_ID = -1
-
-    frame = 0
-    score = 0
-    restart_delay = 0
-    saved = False
-    # while time.time() - t_start < 3:
+    if verbose:
+        print("Running iLQR...")
+    T = 1000
+    u = model.ilqr(obs, H, threshold, lamb, max_iterations)
+    cur_index = 0
     for t in range(T):
-        if verbose:
+        if verbose: 
             problem.render()
-        time.sleep(1. / 6.)
-        a = u[t] # no action
-        obs, r, done, _ = problem.step(a)
-        # print(obs)
-        print(a)
 
-        score += r
-        frame += 1
-        '''
+        if cur_index == H:
+            u = model.ilqr(obs, H, threshold, lamb, max_iterations)
+            cur_index = 0
+
+        time.sleep(1. / 60.)
+        obs, r, done, _ = problem.step(u[cur_index])
+
         if done:
-            obs, r, done, _ = problem.initialize()
-        '''
-            
+            break
+
+            # alternatively, continue
+            print("done! problem resetting...")
+            obs = problem.initialize()
+            u = model.ilqr(obs, H, threshold, lamb, max_iterations)
+            cur_index = 0
+
+    problem.close()
     print("test_cartpole passed")
 
 

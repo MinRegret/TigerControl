@@ -47,32 +47,21 @@ class CartPole(ControlProblem):
         self.viewer = None
         self.state = None
         self.steps_beyond_done = None
+
+        @jax.jit
         def dynamics(x_0, u):
-            # print("x_0 : " + str(x_0))
             x, x_dot, theta, theta_dot = np.split(x_0, 4)
-            # print("-----------------------")
-            # print("x: " + str(x))
-            # print("x_dot : " + str(x_dot))
-            force = self.force_mag * np.clip(u, -1.0, 1.0)[0]
-            # print("force : " + str(force))
+            force = self.force_mag * np.clip(u, -1.0, 1.0)
             costh = np.cos(theta)
             sinth = np.sin(theta)
             temp = (force + self.polemass_length * theta_dot * theta_dot * sinth) / self.total_mass
-            thetaacc = (self.gravity * sinth - costh* temp) / (self.length * (4.0/3.0 - self.masspole * costh * costh / self.total_mass))
-            # print("thetaacc : " + str(thetaacc))
+            thetaacc = (self.gravity*sinth - costh*temp) / (self.length * (4.0/3.0 - self.masspole*costh*costh / self.total_mass))
             xacc  = temp - self.polemass_length * thetaacc * costh / self.total_mass
-            # print("temp : " + str(temp))
-            # print("xacc : " + str(xacc))
             x  = x + self.tau * x_dot # use euler integration by default
             x_dot = x_dot + self.tau * xacc
             theta = theta + self.tau * theta_dot
             theta_dot = theta_dot + self.tau * thetaacc
-            # print("=======================")
-            # print("x: " + str(x))
-            # print("x_dot : " + str(x_dot))
             state = np.concatenate((x, x_dot, theta, theta_dot))
-            # state = np.concatenate((np.asarray([x]), np.asarray([x_dot]), np.asarray([theta]), np.asarray([theta_dot])))
-            # print("state = " + str(state))
             return state
         self.dynamics = dynamics
 
