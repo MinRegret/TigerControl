@@ -74,6 +74,16 @@ problem_register(
 )
 
 problem_register(
+    id='Pendulum-v0',
+    entry_point='ctsb.problems.control:Pendulum',
+)
+
+problem_register(
+    id='DoublePendulum-v0',
+    entry_point='ctsb.problems.control:DoublePendulum',
+)
+
+problem_register(
     id='RNN-v0',
     entry_point='ctsb.problems.control:RNN_Output',
 )

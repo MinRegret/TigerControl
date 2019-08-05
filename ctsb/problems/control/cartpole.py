@@ -52,7 +52,6 @@ class CartPole(ControlProblem):
         def dynamics(x_0, u):
             x, x_dot, theta, theta_dot = np.split(x_0, 4)
             force = self.force_mag * np.clip(u, -1.0, 1.0)[0] # iLQR may struggle with clipping due to lack of gradient
-            #force = self.force_mag * u
             costh = np.cos(theta)
             sinth = np.sin(theta)
             temp = (force + self.polemass_length * theta_dot * theta_dot * sinth) / self.total_mass
@@ -98,8 +97,7 @@ class CartPole(ControlProblem):
 
 
     def reset(self):
-        #self.state = random.uniform(generate_key(),shape=(4,), minval=-0.05, maxval=0.05)
-        self.state = np.array([0.00, -0.04, 0.04, 0.04]) # reasonably difficult initialization
+        self.state = random.uniform(generate_key(),shape=(4,), minval=-0.05, maxval=0.05)
         self.steps_beyond_done = None
         return self.state
 
