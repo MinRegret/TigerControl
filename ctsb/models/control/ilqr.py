@@ -99,7 +99,7 @@ class iLQR(ControlModel):
         def linearization_iteration(x_t, u_t):
             block = lambda A: np.vstack([np.hstack([A[0][0], A[0][1]]), np.hstack([A[1][0], A[1][1]])]) # np.block not yet implemented
             F_t = np.hstack(dyn_jacobian(x_t, u_t))
-            f_t = dyn(x_t, u_t) - F_t @ np.hstack((x_t, u_t)) # temporary change
+            f_t = dyn(x_t, u_t) # - F_t @ np.hstack((x_t, u_t)) # temporary change
             C_t = block(L_hessian(x_t, u_t))
             c_t = np.hstack(L_grad(x_t, u_t))
             return F_t, f_t, C_t, c_t
