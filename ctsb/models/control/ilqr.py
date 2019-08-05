@@ -76,11 +76,11 @@ class iLQR(ControlModel):
                 K[t] = K_t
                 k[t] = k_t
 
-            print("K[0]: " + str(K[0]))
-            print("k[0]: " + str(k[0]))
 
-            print("K[T-1]: " + str(K[T-1]))
-            print("k[T-1]: " + str(k[T-1]))
+            for t in range(T):
+                print("K[{}]: ".format(t) + str(K[t]))
+                print("k[{}]: ".format(t) + str(k[t]))
+
 
             x_stack, u_stack = [], []
             x_t = x[0]
