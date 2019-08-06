@@ -15,6 +15,11 @@ model_register(
 )
 
 model_register(
+    id='LeastSquares',
+    entry_point='ctsb.models.time_series:LeastSquares',
+)
+
+model_register(
     id='AutoRegressor',
     entry_point='ctsb.models.time_series:AutoRegressor',
 )

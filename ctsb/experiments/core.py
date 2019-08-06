@@ -28,7 +28,7 @@ def to_dict(x):
     if(type(x) is not dict):
         x_dict = {}
         for key in x:
-            x_dict[key] = None
+            x_dict[key] = [(key, None)]
         return x_dict
     else:
         return x
@@ -42,8 +42,12 @@ def get_ids(x):
     Returns:
         x (list): list of problem/models ids
     '''
-    if(x is dict):
-        return list(x.keys())
+    if(type(x) is dict):
+        ids = []
+        for main_id in x.keys():
+            for (custom_id, _) in x[main_id]:
+                ids.append(custom_id)
+        return ids
     else:
         return x
 
@@ -110,13 +114,13 @@ def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100, 
     else:
         model.initialize(**model_params)
 
-    if(problem.has_regressors and not model.uses_regressors):
-        print("ERROR: %s has regressors but %s only uses output signal." % (problem_id, model_id))
-        return np.zeros(timesteps), -1, -1
+    '''if(problem.has_regressors and not model.uses_regressors):
+                    print("ERROR: %s has regressors but %s only uses output signal." % (problem_id, model_id))
+                    return np.zeros(timesteps), 0.0, 0.0'''
 
     if(model.compatibles.isdisjoint(problem.compatibles)): 
         print("ERROR: %s and %s are incompatible!" % (problem_id, model_id))
-        return np.zeros(timesteps), -1, -1
+        return np.zeros(timesteps), 0.0, 0.0
 
     if(verbose):
         print("Running %s on %s..." % (model_id, problem_id))

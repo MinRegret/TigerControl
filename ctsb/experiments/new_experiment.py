@@ -43,13 +43,14 @@ class NewExperiment(object):
         '''
         prob_model_to_result = {}
         for metric in self.metrics:
-            for problem_id, problem_params in self.problems.items():
-                for model_id in self.problem_to_models[problem_id]:
-                    model_params = self.models[model_id]
-                    loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
-                    prob_model_to_result[(metric, problem_id, model_id)] = loss
-                    prob_model_to_result[('time', problem_id, model_id)] = time
-                    prob_model_to_result[('memory', problem_id, model_id)] = memory
+            for problem_id in self.problems.keys():
+                for (new_problem_id, problem_params) in self.problems[problem_id]:
+                    for model_id in self.problem_to_models[problem_id]:
+                        for (new_model_id, model_params) in self.models[model_id]:
+                            loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
+                            prob_model_to_result[(metric, problem_id, model_id)] = loss
+                            prob_model_to_result[('time', problem_id, model_id)] = time
+                            prob_model_to_result[('memory', problem_id, model_id)] = memory
 
         return prob_model_to_result
 

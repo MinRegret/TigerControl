@@ -93,7 +93,7 @@ def recompute(verbose = False, load_bar = False):
                     _, time, memory = run_experiment((problem_id, None), (model_id, None), \
                         metric, key = key, timesteps = timesteps, verbose = verbose, load_bar = load_bar)
                 except:
-                    time, memory = -1, -1
+                    time, memory = 0.0, 0.0
                 # save results for current problem #
                 writer.writerow([time, memory])
         csvfile.close()

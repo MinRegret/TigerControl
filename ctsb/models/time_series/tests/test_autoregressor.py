@@ -12,7 +12,7 @@ def test_autoregressor(steps=1000, show_plot=True):
     cur_x = problem.initialize(p, q)
 
     model = ctsb.model("AutoRegressor")
-    model.initialize(p, optimizer = Adam)
+    model.initialize(p, optimizer = ONS)
     loss = lambda y_true, y_pred: np.sum((y_true - y_pred)**2)
  
     results = []

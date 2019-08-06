@@ -36,6 +36,20 @@ class Adam(Optimizer):
         if self._is_valid_pred(pred, raise_error=False) and self._is_valid_loss(loss, raise_error=False):
             self.set_predict(pred, loss=loss)
 
+    def to_ndarray(self, x):
+        """
+        Description: If x is a scalar, transform it to a (1, 1) numpy.ndarray;
+        otherwise, leave it unchanged.
+        Args:
+            x (float/numpy.ndarray)
+        Returns:
+            A numpy.ndarray representation of x
+        """
+        x = np.asarray(x)
+        if np.ndim(x) == 0:
+            x = x[None]
+        return x
+
     def update(self, params, x, y, loss=None):
         """
         Description: Updates parameters based on correct value, loss and learning rate.
@@ -52,20 +66,34 @@ class Adam(Optimizer):
         grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
 
         if(self.m is None):
-            self.m = np.zeros(grad.shape[0])
-            self.v = 0
+            if(type(params) is list):
+                self.m = [np.zeros(dw.shape) for dw in grad]
+                self.v = [np.zeros((dw.T @ dw).shape) for dw in grad]
+            else:    
+                self.m = np.zeros(grad.shape)
+                self.v = np.zeros((grad.T @ grad).shape)
 
-        self.m = self.beta_1 * self.m + (1. - self.beta_1) * grad
-        self.v = self.beta_2 * self.m + (1. - self.beta_1) * grad.T @ grad
-
-        # bias-corrected estimates
-        m_t = self.m / (1 - self.beta_1_t)
-        v_t = self.v / (1 - self.beta_2_t)
+        if(type(params) is list):
+            self.m = [self.beta_1 * m + (1. - self.beta_1) * dw for (m, dw) in zip(self.m, grad)]
+            self.v = [self.beta_2 * v + (1. - self.beta_2) * dw.T @ dw for (v, dw) in zip(self.v, grad)]
+            # bias-corrected estimates
+            m_t = [m / (1 - self.beta_1_t) for m in self.m]
+            v_t = [v / (1 - self.beta_2_t) for v in self.v]
+        else:
+            self.m = self.beta_1 * self.m + (1. - self.beta_1) * grad
+            self.v = self.beta_2 * self.v + (1. - self.beta_2) * grad.T @ grad
+            # bias-corrected estimates
+            m_t = self.m / (1 - self.beta_1_t)
+            v_t = self.v / (1 - self.beta_2_t)
 
         # maintain current power of betas
         self.beta_1_t, self.beta_2_t = self.beta_1_t * self.beta_1, self.beta_2_t * self.beta_2
 
-        self.max_norm = np.maximum(self.max_norm, np.linalg.norm(grad))
-        lr = self.lr / self.max_norm
-
-        return params - lr / (np.sqrt(v_t) + self.eps) * m_t
+        if(type(params) is list):
+            self.max_norm = np.maximum(self.max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad]))
+            lr = self.lr / self.max_norm
+            return [w - lr / (np.sqrt(np.linalg.norm(self.to_ndarray(v))) + self.eps) * m for (w, v, m) in zip(params, v_t, m_t)]
+        else:
+            self.max_norm = np.maximum(self.max_norm, np.linalg.norm(grad))
+            lr = self.lr / self.max_norm
+            return params - lr / (np.sqrt(np.linalg.norm(self.to_ndarray(v_t))) + self.eps) * m_t
