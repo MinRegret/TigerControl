@@ -40,9 +40,10 @@ class OGD(Optimizer):
             Updated parameters in same shape as input
         """
         assert self.initialized
+
         self.T = self.T + 1
         grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
-
+        
         if (type(params) is list):
             self.max_norm = np.maximum(self.max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad]))
             lr = self.lr / (self.max_norm * np.sqrt(self.T))

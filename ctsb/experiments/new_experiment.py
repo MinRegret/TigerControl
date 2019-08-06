@@ -1,6 +1,5 @@
 # NewExperiment class
 
-import ctsb
 from ctsb import error
 from ctsb.experiments.core import to_dict, run_experiment, create_full_problem_to_models
 
