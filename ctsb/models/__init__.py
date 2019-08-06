@@ -64,7 +64,13 @@ model_register(
 
 model_register(
     id='ILQR',
-    entry_point='ctsb.models.control:iLQR')
+    entry_point='ctsb.models.control:ILQR',
+)
+
+model_register(
+    id='AdversarialDisturbances',
+    entry_point='ctsb.models.control:AdversarialDisturbances',
+)
 
 model_register(
     id='MPPI',

@@ -63,7 +63,7 @@ class LQR(ControlModel):
         self.K = self.extend(np.zeros((self.u[0].shape[0], self.x.shape[0])), T)
         self.k = self.u.copy()
 
-    def step(self):
+    def plan(self):
         """
         Description: Updates internal parameters and then returns the estimated optimal set of actions
         Args:
@@ -97,48 +97,6 @@ class LQR(ControlModel):
 
         return self.u
 
-    def predict(self):
-        """
-        Description: Returns estimated optimal set of actions
-        Args:
-            None
-        Returns:
-            Estimated optimal set of actions
-        """
-        return self.u
-
-
-    def update(self):
-        """
-        Description: Updates internal parameters
-        Args:
-            None
-        """
-
-        ## Initialize V and Q Functions ##
-        V = np.zeros((self.F[0].shape[0], self.F[0].shape[0]))
-        v = np.zeros((self.F[0].shape[0], 1))
-        Q = np.zeros((self.C[0].shape[0], self.C[0].shape[1]))
-        q = np.zeros((self.c[0].shape[0], 1))
-
-        ## Backward Recursion ##
-        for t in range(self.T - 1, -1, -1):
-
-            Q = self.C[t] + self.F[t].T @ V @ self.F[t]
-            q = self.c[t] + self.F[t].T @ V @ self.f[t] + self.F[t].T @ v
-
-            self.K[t] = -np.linalg.inv(Q[self.x.shape[0] :, self.x.shape[0] :]) @ Q[self.x.shape[0] :, : self.x.shape[0]]
-            self.k[t] = -np.linalg.inv(Q[self.x.shape[0] :, self.x.shape[0] :]) @ q[self.x.shape[0] :]
-
-            V = Q[: self.x.shape[0], : self.x.shape[0]] + Q[: self.x.shape[0], self.x.shape[0] :] @ self.K[t] + self.K[t].T @ Q[self.x.shape[0] :, : self.x.shape[0]] + self.K[t].T @ Q[self.x.shape[0] :, self.x.shape[0] :] @ self.K[t]
-            v = q[: self.x.shape[0]] + Q[: self.x.shape[0], self.x.shape[0] :] @ self.k[t] + self.K[t].T @ q[self.x.shape[0] :] + self.K[t].T @ Q[self.x.shape[0] :, self.x.shape[0] :] @ self.k[t]
-
-        ## Forward Recursion ##
-        for t in range(self.T):
-            self.u[t] = self.K[t] @ self.x + self.k[t]
-            self.x = self.F[t] @ np.vstack((self.x, self.u[t])) + self.f[t]
-
-        return
 
     def help(self):
         """

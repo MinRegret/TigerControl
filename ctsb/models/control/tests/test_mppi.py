@@ -25,7 +25,7 @@ def test_mppi(steps=1000, show_plot=True):
 
     model = ctsb.model("MPPI")
     model.initialize(env = problem, K = K, T = T, U = U, lambda_ = lambda_, u_init = 0)
-    model.step(n = 2)
+    model.plan(n = 2)
  
     print("test_mppi passed")
     return

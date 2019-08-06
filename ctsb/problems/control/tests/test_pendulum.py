@@ -23,11 +23,11 @@ def test_pendulum(verbose=False):
 
     if verbose:
         print("Running iLQR...")
-    u = model.ilqr(obs, T, max_iterations, lamb, threshold)
+    u = model.plan(obs, T, max_iterations, lamb, threshold)
 
     #print("u: " + str([float(u_t) for u_t in u]))
     index = 0
-    for t in range(5 * T):
+    for t in range(25 * T):
         if verbose: 
             problem.render()
 
@@ -40,7 +40,7 @@ def test_pendulum(verbose=False):
             obs = problem.initialize()
         if done or index == T:
             print("recomputing u...")
-            u = model.ilqr(obs, T, max_iterations, lamb, threshold)
+            u = model.plan(obs, T, max_iterations, lamb, threshold)
             index = 0
 
     problem.close()
