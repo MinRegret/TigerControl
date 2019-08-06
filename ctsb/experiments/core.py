@@ -93,6 +93,7 @@ def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100, 
     (model_id, model_params) = model
     loss_fn = metrics[metric]
 
+
     # initialize problem
     problem = ctsb.problem(problem_id)
     if(problem_params is None):

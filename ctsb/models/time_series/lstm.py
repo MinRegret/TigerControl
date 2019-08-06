@@ -49,13 +49,15 @@ class LSTM(TimeSeriesModel):
         self.cell = np.zeros(h)
         self.x = np.zeros((l, n))
 
-        def _update_x(self_x, x):
+        """ private helper methods"""
+        @jax.jit
+        def glob_update_x(self_x, x):
             new_x = np.roll(self_x, self.n)
             new_x = jax.ops.index_update(new_x, jax.ops.index[0,:], x)
             return new_x
-        self._update_x = jax.jit(_update_x)
 
-        def _fast_predict(params, x, hid, cell):
+        @jax.jit
+        def glob_fast_predict(params, x, hid, cell):
             W_hh, W_xh, W_out, b_h = params
             sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
             gate = np.dot(W_hh, hid) + np.dot(W_xh, x) + b_h 
@@ -64,9 +66,9 @@ class LSTM(TimeSeriesModel):
             next_hid = sigmoid(o) * np.tanh(next_cell)
             y = np.dot(W_out, next_hid)
             return (y, next_hid, next_cell)
-        self._fast_predict = jax.jit(_fast_predict)
 
-        def _predict(params, x):
+        @jax.jit
+        def glob_predict(params, x):
             W_hh, W_xh, W_out, b_h = params
             sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
             next_hid = np.zeros(self.h)
@@ -78,7 +80,11 @@ class LSTM(TimeSeriesModel):
                 next_hid = sigmoid(o) * np.tanh(next_cell)
             y = np.dot(W_out, next_hid)
             return y
-        self._predict = jax.jit(_predict)
+
+        self._update_x = glob_update_x
+        self._fast_predict = glob_fast_predict
+        self._predict = glob_predict
+
         self._store_optimizer(optimizer, self._predict)
 
     def to_ndarray(self, x):

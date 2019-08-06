@@ -110,7 +110,7 @@ class iLQR(ControlModel):
         self._linearization = linearization
 
 
-    def ilqr(self, x_0, T, threshold=0.05, lamb=0.1, max_iterations=50):
+    def ilqr(self, x_0, T, max_iterations=10, lamb=0.1, threshold=None):
         dim_x, dim_u = self.dim_x, self.dim_u
         u = [np.zeros((dim_u,)) for t in range(T)]
         x = [x_0]
@@ -126,7 +126,7 @@ class iLQR(ControlModel):
             new_cost = self.total_cost(x_new, u_new)
             if new_cost < old_cost:
                 x, u = x_new, u_new
-                if np.abs(new_cost - old_cost) / old_cost < threshold:
+                if threshold and (old_cost - new_cost) / old_cost < threshold:
                     break
                 lamb /= 2.0
                 old_cost = new_cost
