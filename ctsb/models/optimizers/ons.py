@@ -47,12 +47,18 @@ class ONS(Optimizer):
         grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
 
         if(self.A is None):
-            self.A = np.eye(grad.shape[0]) * self.eps # initialize
+            if(type(params) is list):
+                self.A = [np.eye(dw.shape[0]) * self.eps for dw in grad]
+            else:
+                self.A = np.eye(grad.shape[0]) * self.eps # initialize
 
-        self.A += grad @ grad.T # update
+        if(type(params) is list):
+            for i in range(len(self.A)):
+                self.A[i] += grad[i] @ grad[i].T # update
+        else:
+            self.A += grad @ grad.T # update
 
         if (type(params) is list):
-            raise NotImplementedError
             self.max_norm = np.maximum(self.max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad]))
             lr = self.lr / self.max_norm # retained for normalization
             return [w - lr * (1. / self.beta) * np.linalg.inv(A) @ dw for (w, A, dw) in zip(params, self.A, grad)]

@@ -13,6 +13,8 @@ class SimpleBoost:
     combination of the previous p observed values in a time-series
     """
 
+    compatibles = set(['TimeSeries'])
+
     def __init__(self):
         self.initialized = False
 

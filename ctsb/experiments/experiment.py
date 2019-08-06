@@ -273,7 +273,7 @@ class Experiment(object):
                 for key in table_dict.keys():
                     f.write("%s,%s\n" % (key, table_dict[key]))
 
-    def graph(self, problem_ids = None, save_as = None, metric = 'mse', time = None):
+    def graph(self, problem_ids = None, metric = 'mse', cutoffs = None, time = None, save_as = None, size = 3, dpi = 300):
         '''
         Description: Show a graph for the results of the experiments for specified metric.
         
@@ -307,8 +307,11 @@ class Experiment(object):
         nrows = max(int(np.sqrt(n_problems)), 1)
         ncols = n_problems // nrows + n_problems % nrows
 
-        fig, ax = plt.subplots(nrows=nrows, ncols=ncols)
+        fig, ax = plt.subplots(figsize = (ncols * size, nrows * size), nrows=nrows, ncols=ncols)
+        fig.canvas.set_window_title('TigerBench')
+
         if n_problems == 1:
+
             (problem, problem_result_plus_model, model_list) = all_problem_info[0]
             for (loss, model) in problem_result_plus_model:
                 ax.plot(loss, label=str(model))
@@ -316,7 +319,24 @@ class Experiment(object):
             ax.set_title("Problem:" + str(problem))
             ax.set_xlabel("timesteps")
             ax.set_ylabel(metric)
+            if(cutoffs is not None and problem in cutoffs.keys()):
+                ax.set_ylim([0, cutoffs[problem]])
+
+        elif nrows == 1:
+
+            for j in range(ncols):
+                (problem, problem_result_plus_model, model_list) = all_problem_info[j]
+                for (loss, model) in problem_result_plus_model:
+                    ax[j].plot(loss, label=str(model))
+                ax[j].set_title("Problem:" + str(problem), size=10)
+                ax[j].legend(loc="upper left", fontsize=3 + 10//n_problems)
+                ax[j].set_xlabel("timesteps")
+                ax[j].set_ylabel(metric)
+                if(cutoffs is not None and problem in cutoffs.keys()):
+                    ax[j].set_ylim([0, cutoffs[problem]])
+
         else:
+
             cur_pb = 0
             for i in range(nrows):
                 for j in range(ncols):
@@ -332,8 +352,13 @@ class Experiment(object):
                     ax[i, j].legend(loc="upper left", fontsize=3 + 10//n_problems)
                     ax[i, j].set_xlabel("timesteps")
                     ax[i, j].set_ylabel(metric)
+                    if(cutoffs is not None and problem in cutoffs.keys()):
+                        ax[i, j].set_ylim([0, cutoffs[problem]])
 
         fig.tight_layout()
+
+        if(save_as is not None):
+            plt.savefig(save_as, dpi=dpi)
 
         if time:
             plt.show(block=False)
@@ -341,9 +366,6 @@ class Experiment(object):
             plt.close()
         else:
             plt.show()
-
-        if(save_as is not None):
-            plt.savefig(save_as)
 
     def help(self):
         '''
