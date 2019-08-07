@@ -11,6 +11,8 @@ def test_ons(show=False):
 
     model1 = ctsb.model('LSTM')
     model1.initialize(n=1, m=1, l=3, h=10, optimizer=ONS) # initialize with class
+    model1 = ctsb.model('AutoRegressor')
+    model1.initialize(optimizer=ONS) # initialize with class
 
     model1.predict(1.0) # call methods to verify it works
     model1.update(1.0)
@@ -43,8 +45,6 @@ def test_ons(show=False):
         plt.close()
         
     print("test_ons passed")
-
-
 
 if __name__ == "__main__":
     test_ons(show=True)
