@@ -51,11 +51,17 @@ class deprecated_ONS(Optimizer):
             else:
                 self.A = np.eye(grad.shape[0]) * self.eps # initialize
 
+        #print("deprecated A before: " + str(self.A[0]))
+
         if(type(params) is list):
             for i in range(len(self.A)):
                 self.A[i] += grad[i] @ grad[i].T # update
         else:
             self.A += grad @ grad.T # update
+
+        #print("deprecated A after: " + str(self.A[0]))
+
+        #print("grad: " + str(grad[0][:10]))
 
         if (type(params) is list):
             self.max_norm = np.maximum(self.max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad]))

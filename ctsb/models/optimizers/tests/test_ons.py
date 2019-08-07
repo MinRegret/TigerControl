@@ -1,3 +1,4 @@
+
 import ctsb
 from ctsb.models.optimizers.ons import ONS
 from ctsb.models.optimizers.deprecated_ons import deprecated_ONS
@@ -6,40 +7,53 @@ import matplotlib.pyplot as plt
 import time
 
 def test_ons(show=False):
+
+    #ctsb.set_key(0) # consistent randomness
+
     problem = ctsb.problem('ARMA-v0')
     x = problem.initialize(p=2,q=0)
 
-    model1 = ctsb.model('LSTM')
-    model1.initialize(n=1, m=1, l=3, h=10, optimizer=ONS) # initialize with class
+    models = []
+    labels = ['ONS + project', 'ONS no project', 'Deprecated ONS']
 
-    model1.predict(1.0) # call methods to verify it works
-    model1.update(1.0)
+    model = ctsb.model('LSTM')
+    model.initialize(n=1, m=1, l=3, h=10, optimizer=ONS) # initialize with class
+    models.append(model)
 
-    model2 = ctsb.model('LSTM')
-    model2.initialize(n=1, m=1, l=3, h=10, optimizer=deprecated_ONS) # initialize with class
+    model = ctsb.model('LSTM')
+    optimizer = ONS(hyperparameters={'project':False})
+    model.initialize(n=1, m=1, l=3, h=10, optimizer=optimizer) # initialize with class
+    models.append(model)
 
-    model2.predict(1.0) # call methods to verify it works
-    model2.update(1.0)
+    model = ctsb.model('LSTM')
+    model.initialize(n=1, m=1, l=3, h=10, optimizer=deprecated_ONS) # initialize with class
+    models.append(model)
 
-    loss1, loss2 = [], []
-    time_start = time.time()
+    losses = [[] for i in range(len(models))]
+    update_time = [0.0 for i in range(len(models))]
     for t in range(100):
-        y_pred1 = model1.predict(x)
-        y_pred2 = model2.predict(x)
         y_true = problem.step()
-        loss1.append(mse(y_pred1, y_true))
-        model1.update(y_true)
-        loss2.append(mse(y_pred2, y_true))
-        model2.update(y_true)
+        for i in range(len(models)):
+            l, model = losses[i], models[i]
+            y_pred = model.predict(x)
+            l.append(mse(y_pred, y_true))
+
+            t = time.time()
+            model.update(y_true)
+            update_time[i] += time.time() - t
         x = y_true
-    print(time.time() - time_start)
+
+    print("time taken:")
+    for t, label in zip(update_time, labels):
+        print(label + ": " + str(t))
 
     if show:
-        plt.plot(loss1, label = 'ONS')
-        plt.plot(loss2, label = 'deprecated ONS')
+        plt.yscale('log')
+        for l, label in zip(losses, labels):
+            plt.plot(l, label = label)
         plt.legend()
         plt.show(block=False)
-        plt.pause(3)
+        plt.pause(30)
         plt.close()
         
     print("test_ons passed")
