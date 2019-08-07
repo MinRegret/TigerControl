@@ -1,6 +1,7 @@
 # problems/control/pybullet problem init file
 
 from ctsb.problems.pybullet.pybullet_problem import PyBulletProblem
+from ctsb.problems.pybullet.simulator import Simulator
 from ctsb.problems.pybullet.cartpole import CartPole
 from ctsb.problems.pybullet.cartpole_swingup import CartPoleSwingup
 from ctsb.problems.pybullet.cartpole_double import CartPoleDouble

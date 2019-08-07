@@ -1,19 +1,23 @@
-ctsb.models.optimizers.sgd
+ctsb.models.optimizers.SGD
 ==========================
 
-.. automodule:: ctsb.models.optimizers.sgd
+.. currentmodule:: ctsb.models.optimizers
+
+.. autoclass:: SGD
 
    
-   
-   
+   .. automethod:: __init__
 
    
-   
-   .. rubric:: Classes
+   .. rubric:: Methods
 
    .. autosummary::
    
-      SGD
+      ~SGD.__init__
+      ~SGD.gradient
+      ~SGD.set_loss
+      ~SGD.set_predict
+      ~SGD.update
    
    
 

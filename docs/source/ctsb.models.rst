@@ -22,6 +22,8 @@ control
    ctsb.models.control.LQR
    ctsb.models.control.MPPI
    ctsb.models.control.CartPoleNN
+   ctsb.models.control.AdversarialDisturbances
+   ctsb.models.control.ILQR
 
 
 time_series
@@ -36,6 +38,7 @@ time_series
    ctsb.models.time_series.PredictZero
    ctsb.models.time_series.rnn.RNN
    ctsb.models.time_series.lstm.LSTM
+   ctsb.models.time_series.least_squares.LeastSquares
 
 optimizers
 ----------
@@ -44,8 +47,18 @@ optimizers
   :toctree: _autosummary
 
    ctsb.models.optimizers.Optimizer
-   ctsb.models.optimizers.adagrad
-   ctsb.models.optimizers.sgd
-   ctsb.models.optimizers.ogd
+   ctsb.models.optimizers.Adagrad
+   ctsb.models.optimizers.Adam
+   ctsb.models.optimizers.ONS
+   ctsb.models.optimizers.SGD
+   ctsb.models.optimizers.OGD
    ctsb.models.optimizers.mse
    ctsb.models.optimizers.cross_entropy
+
+boosting
+--------
+
+.. autosummary::
+  :toctree: _autosummary
+
+  ctsb.models.boosting.SimpleBoost
