@@ -8,7 +8,7 @@ def test_ogd(show=False):
     x = problem.initialize(p=2,q=0)
 
     model = ctsb.model('LSTM')
-    model.initialize(n=1, m=1, l=3, h=10, optimizer=OGD) # initialize with class
+    model.initialize(n=1, m=1, l=5, h=10, optimizer=OGD) # initialize with class
     model.predict(1.0) # call methods to verify it works
     model.update(1.0)
 

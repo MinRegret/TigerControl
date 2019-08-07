@@ -48,27 +48,30 @@ class RNN(TimeSeriesModel):
         self.hid = np.zeros(h)
         self.x = np.zeros((l, n))
 
+        """ private helper methods"""
+        @jax.jit
         def _update_x(self_x, x):
-            new_x = np.roll(self_x, self.n)
-            new_x = jax.ops.index_update(new_x, jax.ops.index[0,:], x)
+            new_x = np.roll(self_x, -self.n)
+            new_x = jax.ops.index_update(new_x, jax.ops.index[-1,:], x)
             return new_x
-        self._update_x = jax.jit(_update_x)
 
-        def _fast_predict(params, x, hid):
+        @jax.jit
+        def _fast_predict(carry, x):
+            params, hid = carry  # unroll tuple in carry
             W_h, W_x, W_out, b_h = params
             next_hid = np.tanh(np.dot(W_h, hid) + np.dot(W_x, x) + b_h)
             y = np.dot(W_out, next_hid)
-            return (y, next_hid)
-        self._fast_predict = jax.jit(_fast_predict)
+            return (params, next_hid), y
 
+        @jax.jit
         def _predict(params, x):
-            W_h, W_x, W_out, b_h = params
-            next_hid = np.zeros(self.h)
-            for x_t in x:
-                next_hid = np.tanh(np.dot(W_h, next_hid) + np.dot(W_x, x_t) + b_h)
-            y = np.dot(W_out, next_hid)
-            return y
-        self._predict = jax.jit(_predict)
+            _, y = jax.lax.scan(_fast_predict, (params, np.zeros(h)), x)
+            return y[-1]
+
+        self.transform = lambda x: float(x) if (self.m == 1) else x
+        self._update_x = _update_x
+        self._fast_predict = _fast_predict
+        self._predict = _predict
         self._store_optimizer(optimizer, self._predict)
 
     def to_ndarray(self, x):
@@ -94,13 +97,11 @@ class RNN(TimeSeriesModel):
             Predicted value for the next time-step
         """
         assert self.initialized
-        
-        x = self.to_ndarray(x)
-
-        self.x = self._update_x(self.x, x)
-        y, self.hid = self._fast_predict(self.params, x, self.hid)
-
+        self.x = self._update_x(self.x, self.to_ndarray(x))
+        carry, y = self._fast_predict((self.params, self.hid), self.to_ndarray(x))
+        _, self.hid = carry
         return y
+
 
     def forecast(self, x, timeline = 1):
         """
@@ -112,25 +113,16 @@ class RNN(TimeSeriesModel):
             Forecasted values 'timeline' timesteps in the future
         """
         assert self.initialized
-
-        x = self.to_ndarray(x)
-
-        self.x = self._update_x(self.x, x)
-        x, self.hid = self._fast_predict(self.params, x, self.hid)
+        self.x = self._update_x(self.x, self.to_ndarray(x))
+        carry, x = self._fast_predict((self.params, self.hid), self.to_ndarray(x))
+        _, self.hid = carry
         hid = self.hid
 
-        if(self.m == 1):
-            pred = [float(x)]
-        else:
-            pred = [x]
-
+        pred = [self.transform(x)]
         for t in range(timeline - 1):
-            x, hid = self._fast_predict(self.params, x, hid)
-            if(self.m == 1):
-                pred.append(float(x))
-            else:
-                pred.append(x)
-
+            carry, x = self._fast_predict((self.params, hid), self.to_ndarray(x))
+            _, self.hid = carry
+            pred.append(self.transform(x))
         return pred
 
     def update(self, y):
