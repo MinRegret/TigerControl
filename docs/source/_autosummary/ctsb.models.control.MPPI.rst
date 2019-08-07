@@ -17,8 +17,8 @@ ctsb.models.control.MPPI
       ~MPPI.compute_total_cost
       ~MPPI.help
       ~MPPI.initialize
+      ~MPPI.plan
       ~MPPI.predict
-      ~MPPI.step
       ~MPPI.update
    
    
@@ -29,6 +29,7 @@ ctsb.models.control.MPPI
 
    .. autosummary::
    
+      ~MPPI.compatibles
       ~MPPI.spec
    
    

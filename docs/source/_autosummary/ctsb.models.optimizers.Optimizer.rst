@@ -14,7 +14,9 @@ ctsb.models.optimizers.Optimizer
    .. autosummary::
    
       ~Optimizer.__init__
-      ~Optimizer.update
+      ~Optimizer.gradient
+      ~Optimizer.set_loss
+      ~Optimizer.set_predict
    
    
 
