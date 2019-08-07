@@ -7,10 +7,10 @@ import jax.random as random
 import matplotlib.pyplot as plt
 
 
-def test_lstm(steps=1000, show_plot=False, verbose=False):
+def test_lstm_control(steps=1000, show_plot=False, verbose=False):
     T = steps
     n, m, h = 5, 3, 10
-    problem = ctsb.problem("LSTM-v0")
+    problem = ctsb.problem("LSTM-Control-v0")
     problem.initialize(n, m, h)
     assert problem.T == 0
 
@@ -32,9 +32,9 @@ def test_lstm(steps=1000, show_plot=False, verbose=False):
         plt.show(block=False)
         plt.pause(1)
         plt.close()
-    print("test_lstm passed")
+    print("test_lstm_control passed")
     return
 
 
 if __name__=="__main__":
-    test_lstm()
+    test_lstm_control()

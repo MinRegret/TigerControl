@@ -8,3 +8,6 @@ from ctsb.problems.time_series.crypto import Crypto
 from ctsb.problems.time_series.random import Random
 from ctsb.problems.time_series.arma import ARMA
 from ctsb.problems.time_series.unemployment import Unemployment
+from ctsb.problems.time_series.lds_time_series import LDS_TimeSeries
+from ctsb.problems.time_series.rnn_time_series import RNN_TimeSeries
+from ctsb.problems.time_series.lstm_time_series import LSTM_TimeSeries

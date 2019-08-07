@@ -9,7 +9,7 @@ from ctsb.utils import generate_key
 def test_rnn(steps=100, show_plot=True):
     T = steps 
     n, m, l, d = 4, 5, 10, 10
-    problem = ctsb.problem("LDS-v0")
+    problem = ctsb.problem("LDS-Control-v0")
     y_true = problem.initialize(n, m, d)
     model = ctsb.model("RNN")
     model.initialize(n, m, l, d)
