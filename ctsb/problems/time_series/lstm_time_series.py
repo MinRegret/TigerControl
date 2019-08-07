@@ -1,14 +1,15 @@
 """
-Recurrent neural network output
+Long-short term memory output
 """
 import jax
 import jax.numpy as np
+import jax.random as random
 import jax.experimental.stax as stax
 import ctsb
 from ctsb.utils.random import generate_key
 from ctsb.problems.control import ControlProblem
 
-class RNN_Output(ControlProblem):
+class LSTM_TimeSeries(ControlProblem):
     """
     Description: Produces outputs from a randomly initialized recurrent neural network.
     """
@@ -26,40 +27,45 @@ class RNN_Output(ControlProblem):
         Returns:
             The first value in the time-series
         """
+
         self.T = 0
         self.initialized = True
         self.n, self.m, self.h = n, m, h
 
         glorot_init = stax.glorot() # returns a function that initializes weights
-        self.W_h = glorot_init(generate_key(), (h, h))
-        self.W_x = glorot_init(generate_key(), (h, n))
-        self.W_out = glorot_init(generate_key(), (m, h))
-        self.b_h = np.zeros(h)
-        self.hid = np.zeros(h)
+        self.W_hh = glorot_init(generate_key(), (4*h, h)) # maps h_t to gates
+        self.W_xh = glorot_init(generate_key(), (4*h, n)) # maps x_t to gates
+        self.b_h = np.zeros(4*h)
+        self.b_h = jax.ops.index_update(self.b_h, jax.ops.index[h:2*h], np.ones(h)) # forget gate biased initialization
+        self.W_out = glorot_init(generate_key(), (m, h)) # maps h_t to output
+        self.cell = np.zeros(h) # long-term memory
+        self.hid = np.zeros(h) # short-term memory
 
-        def _step(x, hid):
-            next_hid = np.tanh(np.dot(self.W_h, hid) + np.dot(self.W_x, x) + self.b_h)
+        def _step(x, hid, cell):
+            sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
+            gate = np.dot(self.W_hh, hid) + np.dot(self.W_xh, x) + self.b_h 
+            i, f, g, o = np.split(gate, 4) # order: input, forget, cell, output
+            next_cell =  sigmoid(f) * cell + sigmoid(i) * np.tanh(g)
+            next_hid = sigmoid(o) * np.tanh(next_cell)
             y = np.dot(self.W_out, next_hid)
-            return (next_hid, y)
+            return (next_hid, next_cell, y)
 
         self._step = jax.jit(_step)
-        return np.dot(self.W_out, self.hid)
+        return self.step()
         
-    def step(self, x):
+    def step(self):
         """
         Description: Takes an input and produces the next output of the RNN.
-
         Args:
             x (numpy.ndarray): RNN input, an n-dimensional real-valued vector.
         Returns:
             The output of the RNN computed on the past l inputs, including the new x.
         """
         assert self.initialized
-        assert x.shape == (self.n,)
         self.T += 1
-
-        self.hid, y = self._step(x, self.hid)
-        return y
+        x = random.normal(generate_key(), shape=(self.n,))
+        self.hid, self.cell, y = self._step(x, self.hid, self.cell)
+        return x, y
 
     def hidden(self):
         """
@@ -70,7 +76,7 @@ class RNN_Output(ControlProblem):
             h: The hidden state.
         """
         assert self.initialized
-        return self.hid
+        return (self.hid, self.cell)
 
     def help(self):
         """
@@ -80,16 +86,16 @@ class RNN_Output(ControlProblem):
         Returns:
             None
         """
-        print(RNN_Output_help)
+        print(LSTM_TimeSeries_help)
 
 
 
 # string to print when calling help() method
-RNN_Output_help = """
+LSTM_TimeSeries_help = """
 
 -------------------- *** --------------------
 
-Id: RNN-v0
+Id: LSTM-TimeSeries-v0
 Description: Produces outputs from a randomly initialized recurrent neural network.
 
 Methods:

@@ -8,10 +8,10 @@ from ctsb.utils.random import generate_key
 
 
 
-def test_rnn(steps=1000, show_plot=False, verbose=False):
+def test_rnn_control(steps=1000, show_plot=False, verbose=False):
     T = steps
     n, m = 5, 3
-    problem = ctsb.problem("RNN-v0")
+    problem = ctsb.problem("RNN-Control-v0")
     problem.initialize(n, m)
     assert problem.T == 0
 
@@ -33,9 +33,9 @@ def test_rnn(steps=1000, show_plot=False, verbose=False):
         plt.show(block=False)
         plt.pause(1)
         plt.close()
-    print("test_rnn passed")
+    print("test_rnn_control passed")
     return
 
 
 if __name__=="__main__":
-    test_rnn(show_plot=True)
+    test_rnn_control(show_plot=True)

@@ -11,7 +11,7 @@ from ctsb.utils import generate_key
 from ctsb.problems.control import ControlProblem
 
 
-class LDS(ControlProblem):
+class LDS_TimeSeries(ControlProblem):
     """
     Description: Simulates a linear dynamical system.
     """
@@ -58,12 +58,10 @@ class LDS(ControlProblem):
             return (next_h, y)
 
         self._step = jax.jit(_step)
-
-        y = np.dot(self.C, self.h) + np.dot(self.D, np.zeros(n)) + noise * random.normal(generate_key(), shape=(m,))
-        return y
+        return self.step()
 
 
-    def step(self, u):
+    def step(self):
         """
         Description: Moves the system dynamics one time-step forward.
         Args:
@@ -72,11 +70,11 @@ class LDS(ControlProblem):
             A new observation from the LDS.
         """
         assert self.initialized
-        assert u.shape == (self.n,)
         self.T += 1
 
-        self.h, y = self._step(u, self.h, (random.normal(generate_key(), shape=(self.d,)), random.normal(generate_key(), shape=(self.m,))))
-        return y
+        x = random.normal(generate_key(), shape=(self.n,))
+        self.h, y = self._step(x, self.h, (random.normal(generate_key(), shape=(self.d,)), random.normal(generate_key(), shape=(self.m,))))
+        return x, y
 
     def hidden(self):
         """
@@ -97,16 +95,16 @@ class LDS(ControlProblem):
         Returns:
             None
         """
-        print(LDS_help)
+        print(LDS_TimeSeries_help)
 
 
 
 # string to print when calling help() method
-LDS_help = """
+LDS_TimeSeries_help = """
 
 -------------------- *** --------------------
 
-Id: LDS-v0
+Id: LDS-TimeSeries-v0
 Description: Simulates a linear dynamical system.
 
 Methods:

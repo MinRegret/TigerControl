@@ -1,4 +1,4 @@
-# test the LDS problem class
+# test the LSTM problem class
 
 import jax.numpy as np
 import jax.random as random
@@ -7,32 +7,33 @@ import matplotlib.pyplot as plt
 from ctsb.utils.random import generate_key
 
 
-def test_lds(steps=1000, show_plot=False, verbose=False):
+def test_lstm_time_series(steps=1000, show_plot=False, verbose=False):
     T = steps
     n, m, d = 5, 3, 10
-    problem = ctsb.problem("LDS-v0")
+    problem = ctsb.problem("LSTM-TimeSeries-v0")
     problem.initialize(n, m, d)
-    assert problem.T == 0
 
-    test_output = []
+    x_output = []
+    y_output = []
     for t in range(T):
-        u = random.normal(generate_key(),shape=(n,))
-        test_output.append(problem.step(u))
+        x, y = problem.step()
+        x_output.append(x)
+        y_output.append(y)
 
     info = problem.hidden()
     if verbose:
         print(info)
 
-    assert problem.T == T
     if show_plot:
-        plt.plot(test_output)
+        plt.plot(x_output)
+        plt.plot(y_output)
         plt.title("lds")
         plt.show(block=False)
         plt.pause(1)
         plt.close()
-    print("test_lds passed")
+    print("test_lstm_time_series passed")
     return
 
 
 if __name__=="__main__":
-    test_lds(show_plot=True)
+    test_lstm_time_series(show_plot=True)

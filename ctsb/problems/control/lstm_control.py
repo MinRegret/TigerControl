@@ -8,7 +8,7 @@ import ctsb
 from ctsb.utils.random import generate_key
 from ctsb.problems.control import ControlProblem
 
-class LSTM_Output(ControlProblem):
+class LSTM_Control(ControlProblem):
     """
     Description: Produces outputs from a randomly initialized recurrent neural network.
     """
@@ -86,16 +86,16 @@ class LSTM_Output(ControlProblem):
         Returns:
             None
         """
-        print(LSTM_Output_help)
+        print(LSTM_Control_help)
 
 
 
 # string to print when calling help() method
-LSTM_Output_help = """
+LSTM_Control_help = """
 
 -------------------- *** --------------------
 
-Id: RNN-v0
+Id: RNN-Control-v0
 Description: Produces outputs from a randomly initialized recurrent neural network.
 
 Methods:
