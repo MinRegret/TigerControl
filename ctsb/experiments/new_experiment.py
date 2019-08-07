@@ -8,7 +8,7 @@ class NewExperiment(object):
     def __init__(self):
         self.initialized = False
         
-    def initialize(self, problems, models, problem_to_models=None, metrics = 'mse', timesteps = 1000,\
+    def initialize(self, problems, models, problem_to_models=None, metrics = 'mse', key = 0, timesteps = 1000, \
                          verbose = True, load_bar = True):
         '''
         Description: Initializes the new experiment instance. 
@@ -22,8 +22,8 @@ class NewExperiment(object):
                                        problem in problem_to_params
         '''
         self.intialized = True
-        self.problems, self.models = problems, models
-        self.metrics, self.timesteps, self.verbose, self.load_bar = metrics, timesteps, verbose, load_bar
+        self.problems, self.models, self.metrics = problems, models, metrics
+        self.key, self.timesteps, self.verbose, self.load_bar = key, timesteps, verbose, load_bar
 
         if(problem_to_models is None):
             self.problem_to_models = create_full_problem_to_models(self.problems.keys(), self.models.keys())
@@ -47,7 +47,7 @@ class NewExperiment(object):
                 for (new_problem_id, problem_params) in self.problems[problem_id]:
                     for model_id in self.problem_to_models[problem_id]:
                         for (new_model_id, model_params) in self.models[model_id]:
-                            loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
+                            loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, key = self.key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
                             prob_model_to_result[(metric, problem_id, model_id)] = loss
                             prob_model_to_result[('time', problem_id, model_id)] = time
                             prob_model_to_result[('memory', problem_id, model_id)] = memory

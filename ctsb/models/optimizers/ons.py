@@ -69,11 +69,13 @@ class ONS(Optimizer):
         assert self.initialized
 
         grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
+        is_list = True
 
         # Make everything a list for generality
         if(type(params) is not list):
             params = [params]
             grad = [grad]
+            is_list = False
 
         grad = [np.ravel(dw) for dw in grad]
 
@@ -102,8 +104,11 @@ class ONS(Optimizer):
                                 for (w, A, dw) in zip(params, self.A, grad)]
 
         if(self.project):
-            return [self.norm_project(p, A, 2 * self.general_norm(y)) \
+            new_params = [self.norm_project(p, A, 2 * self.general_norm(y)) \
                     for (p, A) in zip(new_params, self.A)]
         
+        if(not is_list):
+            new_params = new_params[0]
+
         return new_params
 

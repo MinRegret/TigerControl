@@ -71,7 +71,7 @@ def create_full_problem_to_models(problems_ids, model_ids):
     return full_problem_to_models
 
 ##### CURRENTLY ONLY WORKS WITH TIME SERIES #######
-def run_experiment(problem, model, metric = 'mse', key = None, timesteps = 100, verbose = True, load_bar = True):
+def run_experiment(problem, model, metric = 'mse', key = 0, timesteps = 100, verbose = True, load_bar = True):
     '''
     Description: Initializes the experiment instance.
     
