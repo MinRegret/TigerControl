@@ -1,15 +1,13 @@
 """
-Linear Quadratic Regulator
+Iterative Linear Quadratic Regulator
 """
 import jax
 import jax.numpy as np
 import ctsb
 from ctsb.models.control import ControlModel
 
-# for testing
-import time
 
-class iLQR(ControlModel):
+class ILQR(ControlModel):
     """
     Description: Computes optimal set of actions using the Linear Quadratic Regulator
     algorithm.
@@ -21,11 +19,11 @@ class iLQR(ControlModel):
         self.initialized = False
 
 
-    def initialize(self, problem, L, dim_x, dim_u):
+    def initialize(self, problem_dynamics, L, dim_x, dim_u):
         """
         Description: Initialize the dynamics of the model
         Args:
-            dyn (function): dynamics of problem
+            problem (instance/function): problem instance *OR* dynamics of problem
             L (function): loss function
             dim_x (int): state_space dimension
             dim_u (int): action_space dimension
@@ -33,7 +31,10 @@ class iLQR(ControlModel):
         self.initialized = True
 
         # initialize dynamics, loss, and derivatives
-        dyn = problem.dynamics
+        if callable(problem_dynamics):
+            dyn = problem_dynamics
+        else:
+            dyn = problem_dynamics.dynamics
         self.dyn = dyn
         self.L = L
         self.dim_x = dim_x
@@ -110,7 +111,7 @@ class iLQR(ControlModel):
         self._linearization = linearization
 
 
-    def ilqr(self, x_0, T, max_iterations=10, lamb=0.1, threshold=None):
+    def plan(self, x_0, T, max_iterations=10, lamb=0.1, threshold=None):
         dim_x, dim_u = self.dim_x, self.dim_u
         u = [np.zeros((dim_u,)) for t in range(T)]
         x = [x_0]
@@ -135,16 +136,6 @@ class iLQR(ControlModel):
         return u
 
 
-    def predict(self, x_0, T, threshold=0.1, lamb=0.1, max_iterations=10):
-        """
-        Description: Returns estimated optimal set of actions
-        Args:
-            None
-        Returns:
-            Estimated optimal set of actions
-        """
-        return self.ilqr(x_0, T, threshold, lamb, max_iterations)
-
     def help(self):
         """
         Description: Prints information about this class and its methods.
@@ -153,18 +144,18 @@ class iLQR(ControlModel):
         Returns:
             None
         """
-        print(LQR_help)
+        print(ILQR_help)
 
     def __str__(self):
         return "<iLQR Model>"
 
 
 # string to print when calling help() method
-LQR_help = """
+ILQR_help = """
 
 -------------------- *** --------------------
 
-Id: LQR
+Id: ILQR
 
 Description: Computes optimal set of actions using the Linear Quadratic Regulator
     algorithm.

@@ -51,13 +51,14 @@ class LSTM(TimeSeriesModel):
 
         """ private helper methods"""
         @jax.jit
-        def glob_update_x(self_x, x):
-            new_x = np.roll(self_x, self.n)
-            new_x = jax.ops.index_update(new_x, jax.ops.index[0,:], x)
+        def _update_x(self_x, x):
+            new_x = np.roll(self_x, -self.n)
+            new_x = jax.ops.index_update(new_x, jax.ops.index[-1,:], x)
             return new_x
 
         @jax.jit
-        def glob_fast_predict(params, x, hid, cell):
+        def _fast_predict(carry, x):
+            params, hid, cell = carry # unroll tuple in carry
             W_hh, W_xh, W_out, b_h = params
             sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
             gate = np.dot(W_hh, hid) + np.dot(W_xh, x) + b_h 
@@ -65,26 +66,17 @@ class LSTM(TimeSeriesModel):
             next_cell =  sigmoid(f) * cell + sigmoid(i) * np.tanh(g)
             next_hid = sigmoid(o) * np.tanh(next_cell)
             y = np.dot(W_out, next_hid)
-            return (y, next_hid, next_cell)
+            return (params, next_hid, next_cell), y
 
         @jax.jit
-        def glob_predict(params, x):
-            W_hh, W_xh, W_out, b_h = params
-            sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
-            next_hid = np.zeros(self.h)
-            next_cell = np.zeros(self.h)
-            for x_t in x:
-                gate = np.dot(W_hh, next_hid) + np.dot(W_xh, x_t) + b_h 
-                i, f, g, o = np.split(gate, 4) # order: input, forget, cell, output
-                next_cell =  sigmoid(f) * next_cell + sigmoid(i) * np.tanh(g)
-                next_hid = sigmoid(o) * np.tanh(next_cell)
-            y = np.dot(W_out, next_hid)
-            return y
+        def _predict(params, x):
+            _, y = jax.lax.scan(_fast_predict, (params, np.zeros(h), np.zeros(h)), x)
+            return y[-1]
 
-        self._update_x = glob_update_x
-        self._fast_predict = glob_fast_predict
-        self._predict = glob_predict
-
+        self.transform = lambda x: float(x) if (self.m == 1) else x
+        self._update_x = _update_x
+        self._fast_predict = _fast_predict
+        self._predict = _predict
         self._store_optimizer(optimizer, self._predict)
 
     def to_ndarray(self, x):
@@ -110,10 +102,9 @@ class LSTM(TimeSeriesModel):
             Predicted value for the next time-step
         """
         assert self.initialized
-
         self.x = self._update_x(self.x, self.to_ndarray(x))
-        y, self.hid, self.cell = self._fast_predict(self.params, self.to_ndarray(x), self.hid, self.cell)
-
+        carry, y = self._fast_predict((self.params, self.hid, self.cell), self.to_ndarray(x))
+        _, self.hid, self.cell = carry
         return y
 
     def forecast(self, x, timeline = 1):
@@ -126,24 +117,16 @@ class LSTM(TimeSeriesModel):
             Forecasted values 'timeline' timesteps in the future
         """
         assert self.initialized
-
         self.x = self._update_x(self.x, self.to_ndarray(x))
-        x, self.hid, self.cell = self._fast_predict(self.params, self.to_ndarray(x), self.hid, self.cell)
-
+        carry, x = self._fast_predict((self.params, self.hid, self.cell), self.to_ndarray(x))
+        _, self.hid, self.cell = carry
         hid, cell = self.hid, self.cell
 
-        if(self.m == 1):
-            pred = [float(x)]
-        else:
-            pred = [x]
-
+        pred = [self.transform(x)]
         for t in range(timeline - 1):
-            x, hid, cell = self._fast_predict(self.params, self.to_ndarray(x), hid, cell)
-            if(self.m == 1):
-                pred.append(float(x))
-            else:
-                pred.append(x)
-
+            carry, x = self._fast_predict((self.params, hid, cell), self.to_ndarray(x))
+            _, self.hid, self.cell = carry
+            pred.append(self.transform(x))
         return pred
 
     def update(self, y):

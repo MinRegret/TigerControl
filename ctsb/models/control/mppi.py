@@ -87,7 +87,7 @@ class MPPI(ControlModel):
             _, reward, _, _ = self.env.step([perturbed_action_t])
             self.cost_total = jax.ops.index_update(self.cost_total, k, self.cost_total[k] - reward)
 
-    def step(self, n = 100):
+    def plan(self, n = 100):
         """
         Description: Updates internal parameters and then returns the estimated optimal set of actions
         Args:
@@ -100,27 +100,6 @@ class MPPI(ControlModel):
             self._update()
 
         return self.U
-
-    def predict(self):
-        """
-        Description: Returns estimated optimal set of actions
-        Args:
-            None
-        Returns:
-            Estimated optimal set of actions
-        """
-        return self.U
-
-
-    def update(self, n = 100):
-        """
-        Description: Updates internal parameters
-        Args:
-            n (non-negative int): Number of updates
-        """
-        for i in range(n):
-            self._update()
-        return
 
     def help(self):
         """

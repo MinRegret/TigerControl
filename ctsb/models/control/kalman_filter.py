@@ -139,17 +139,6 @@ class KalmanFilter(ControlModel):
             return x_temp
 
 
-    def update(self, rule=None):
-        """
-        Description:
-            Takes update rule and adjusts internal parameters
-        Args:
-            rule (function): rule with which to alter parameters
-        Returns:
-            None
-        """
-        return
-
     def help(self):
         """
         Description:
