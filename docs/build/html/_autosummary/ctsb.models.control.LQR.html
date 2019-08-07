@@ -201,17 +201,17 @@ algorithm.</p>
 <tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code>(F,&nbsp;f,&nbsp;C,&nbsp;c,&nbsp;T,&nbsp;x)</td>
 <td>Description: Initialize the dynamics of the model :param F: past value contribution coefficients :type F: float/numpy.ndarray :param f: bias coefficients :type f: float/numpy.ndarray :param C: quadratic cost coefficients :type C: float/numpy.ndarray :param c: linear cost coefficients :type c: float/numpy.ndarray :param T: number of timesteps :type T: postive int :param x: initial state :type x: float/numpy.ndarray</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>()</td>
-<td>Description: Returns estimated optimal set of actions :param None:</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>([x])</td>
+<td></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">step</span></code>()</td>
-<td>Description: Updates internal parameters and then returns the estimated optimal set of actions :param None:</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">LQR.step</span></code></td>
+<td></td>
 </tr>
 <tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_ndarray</span></code>(x)</td>
 <td>Description: If x is a scalar, transform it to a (1, 1) numpy.ndarray; otherwise, leave it unchanged.</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>()</td>
-<td>Description: Updates internal parameters :param None:</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>(**kwargs)</td>
+<td></td>
 </tr>
 </tbody>
 </table>

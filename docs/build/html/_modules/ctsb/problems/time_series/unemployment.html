@@ -163,8 +163,10 @@
 
 <div class="viewcode-block" id="Unemployment"><a class="viewcode-back" href="../../../../_autosummary/ctsb.problems.time_series.Unemployment.html#ctsb.problems.time_series.Unemployment">[docs]</a><span class="k">class</span> <span class="nc">Unemployment</span><span class="p">(</span><span class="n">TimeSeriesProblem</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Description: Outputs the daily price of bitcoin from 2013-04-28 to 2018-02-10</span>
+<span class="sd">    Description: Monthly unemployment rate since 1948.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;Unemployment-v0&#39;</span><span class="p">,</span> <span class="s1">&#39;TimeSeries&#39;</span><span class="p">])</span>
 
 <div class="viewcode-block" id="Unemployment.__init__"><a class="viewcode-back" href="../../../../_autosummary/ctsb.problems.time_series.Unemployment.html#ctsb.problems.time_series.Unemployment.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
@@ -236,8 +238,7 @@
 <span class="s2">-------------------- *** --------------------</span>
 
 <span class="s2">Id: Unemployment-v0</span>
-<span class="s2">Description: Outputs the daily price of bitcoin</span>
-<span class="s2">        from 2013-04-28 to 2018-02-10</span>
+<span class="s2">Description: Outputs monthly unemployment rate from 1948 until today.</span>
 
 <span class="s2">Methods:</span>
 
@@ -246,7 +247,7 @@
 <span class="s2">        Args:</span>
 <span class="s2">            None</span>
 <span class="s2">        Returns:</span>
-<span class="s2">            The first bitcoin price</span>
+<span class="s2">            The first unemployment rate</span>
 
 <span class="s2">    step()</span>
 <span class="s2">        Description:</span>
@@ -254,7 +255,7 @@
 <span class="s2">        Args:</span>
 <span class="s2">            None</span>
 <span class="s2">        Returns:</span>
-<span class="s2">            The next bitcoin price</span>
+<span class="s2">            Next unemployment rate</span>
 
 <span class="s2">    hidden()</span>
 <span class="s2">        Description:</span>

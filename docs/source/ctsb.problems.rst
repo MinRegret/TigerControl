@@ -54,3 +54,5 @@ time_series
    ctsb.problems.time_series.Random
    ctsb.problems.time_series.ARMA
    ctsb.problems.time_series.Unemployment
+   ctsb.problems.time_series.LDS_TimeSeries
+   ctsb.problems.time_series.

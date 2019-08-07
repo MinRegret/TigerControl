@@ -196,10 +196,10 @@ combination of the previous p observed values in a time-series</p>
 <td>Description: Prints information about this class and its methods.</td>
 </tr>
 <tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code>([p,&nbsp;optimizer])</td>
-<td>Description: Initializes autoregressive model parameters :param p: Length of history used for prediction :type p: int :param optimizer: optimizer choice :type optimizer: class :param loss: loss choice :type loss: class :param lr: learning rate for update :type lr: float</td>
+<td>Description: Initializes autoregressive model parameters</td>
 </tr>
 <tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>(x)</td>
-<td>Description: Predict next value given present value :param x: Value at current time-step :type x: int/numpy.ndarray</td>
+<td>Description: Predict next value given observation :param x: Observation :type x: int/numpy.ndarray</td>
 </tr>
 <tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>(y)</td>
 <td>Description: Updates parameters using the specified optimizer :param y: True value at current time-step :type y: int/numpy.ndarray</td>

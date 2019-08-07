@@ -181,7 +181,7 @@
 
 <span class="sd">    where we assume w(t) ~ N(0, Q) and v(t) ~ N(0, R).</span>
 
-<span class="sd">    The user must provides estimates for A, B, H, Q and R, as well as initial</span>
+<span class="sd">    The user must provide estimates for A, B, H, Q and R, as well as initial</span>
 <span class="sd">    estimates for x(0) and P(0).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -287,17 +287,6 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">x_temp</span>
 
-
-    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Description:</span>
-<span class="sd">            Takes update rule and adjusts internal parameters</span>
-<span class="sd">        Args:</span>
-<span class="sd">            rule (function): rule with which to alter parameters</span>
-<span class="sd">        Returns:</span>
-<span class="sd">            None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span>
 
     <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
