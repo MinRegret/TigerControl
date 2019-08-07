@@ -1,7 +1,7 @@
-ctsb.problems.control.pybullet.CartPoleSwingup
-==============================================
+ctsb.problems.pybullet.CartPoleSwingup
+======================================
 
-.. currentmodule:: ctsb.problems.control.pybullet
+.. currentmodule:: ctsb.problems.pybullet
 
 .. autoclass:: CartPoleSwingup
 
@@ -14,6 +14,7 @@ ctsb.problems.control.pybullet.CartPoleSwingup
    .. autosummary::
    
       ~CartPoleSwingup.__init__
+      ~CartPoleSwingup.close
       ~CartPoleSwingup.fork
       ~CartPoleSwingup.getState
       ~CartPoleSwingup.get_action_space
@@ -30,5 +31,11 @@ ctsb.problems.control.pybullet.CartPoleSwingup
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CartPoleSwingup.compatibles
    
    

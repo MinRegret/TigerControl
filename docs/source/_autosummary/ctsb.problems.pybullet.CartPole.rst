@@ -1,7 +1,7 @@
-ctsb.problems.control.pybullet.CartPole
-=======================================
+ctsb.problems.pybullet.CartPole
+===============================
 
-.. currentmodule:: ctsb.problems.control.pybullet
+.. currentmodule:: ctsb.problems.pybullet
 
 .. autoclass:: CartPole
 
@@ -14,6 +14,7 @@ ctsb.problems.control.pybullet.CartPole
    .. autosummary::
    
       ~CartPole.__init__
+      ~CartPole.close
       ~CartPole.fork
       ~CartPole.getState
       ~CartPole.get_action_space

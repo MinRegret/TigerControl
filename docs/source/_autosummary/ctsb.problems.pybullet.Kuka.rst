@@ -1,7 +1,7 @@
-ctsb.problems.control.pybullet.Kuka
-===================================
+ctsb.problems.pybullet.Kuka
+===========================
 
-.. currentmodule:: ctsb.problems.control.pybullet
+.. currentmodule:: ctsb.problems.pybullet
 
 .. autoclass:: Kuka
 
@@ -14,6 +14,7 @@ ctsb.problems.control.pybullet.Kuka
    .. autosummary::
    
       ~Kuka.__init__
+      ~Kuka.close
       ~Kuka.fork
       ~Kuka.getState
       ~Kuka.get_action_space

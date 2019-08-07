@@ -85,6 +85,7 @@ class ONS(Optimizer):
 
         grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
         is_list = True
+        
         # Make everything a list for generality
         if(type(params) is not list):
             params = [params]
@@ -109,8 +110,7 @@ class ONS(Optimizer):
 
         if(self.project):
             norm = 5. * self.general_norm(y)
-            pars = [self.norm_project(p, A, norm) for (p, A) in zip(new_params, self.A)]
-            return pars
+            return [self.norm_project(p, A, norm) for (p, A) in zip(new_params, self.A)]
 
         if(not is_list):
             new_params = new_params[0]

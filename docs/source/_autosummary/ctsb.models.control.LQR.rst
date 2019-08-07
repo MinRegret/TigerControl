@@ -17,8 +17,8 @@ ctsb.models.control.LQR
       ~LQR.extend
       ~LQR.help
       ~LQR.initialize
+      ~LQR.plan
       ~LQR.predict
-      ~LQR.step
       ~LQR.to_ndarray
       ~LQR.update
    
@@ -30,6 +30,7 @@ ctsb.models.control.LQR
 
    .. autosummary::
    
+      ~LQR.compatibles
       ~LQR.spec
    
    

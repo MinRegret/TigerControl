@@ -15,7 +15,7 @@ class Experiment(object):
         self.initialized = False
         
     def initialize(self, problems = None, models = None, problem_to_models = None, metrics = ['mse'], \
-                         use_precomputed = True, timesteps = 100, verbose = True, load_bar = True):
+                   key = 0, use_precomputed = True, timesteps = 100, verbose = True, load_bar = True):
         '''
         Description: Initializes the experiment instance. 
 
@@ -36,7 +36,7 @@ class Experiment(object):
         '''
 
         self.problems, self.models, self.problem_to_models, self.metrics = to_dict(problems), to_dict(models), problem_to_models, metrics
-        self.use_precomputed, self.timesteps, self.verbose, self.load_bar = use_precomputed, timesteps, verbose, load_bar
+        self.key, self.use_precomputed, self.timesteps, self.verbose, self.load_bar = key, use_precomputed, timesteps, verbose, load_bar
 
         self.n_problems, self.n_models = {}, {}
 
@@ -62,7 +62,7 @@ class Experiment(object):
 
         else:
             self.new_experiment = NewExperiment()
-            self.new_experiment.initialize(self.problems, self.models, problem_to_models, metrics, timesteps, verbose, load_bar)
+            self.new_experiment.initialize(self.problems, self.models, problem_to_models, metrics, key, timesteps, verbose, load_bar)
             # map of the form [metric][problem][model] -> loss series + time + memory
             self.prob_model_to_result = self.new_experiment.run_all_experiments()
 
@@ -107,7 +107,7 @@ class Experiment(object):
                             print("WARNING: In precomputed mode, experiments for a new model will run for the predetermined key.")
                             key = precomputed.get_key()
                         else:
-                            key = None
+                            key = self.key
 
                         loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, \
                                         key = key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
@@ -156,7 +156,7 @@ class Experiment(object):
                             print("WARNING: In precomputed mode, experiments for a new model will run for the predetermined key.")
                             key = precomputed.get_key()
                         else:
-                            key = None
+                            key = self.key
 
                         loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, \
                                         key = key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
@@ -218,7 +218,10 @@ class Experiment(object):
         if(save_as is not None):
             with open(save_as, 'w') as f:
                 for key in table_dict.keys():
-                    f.write("%s,%s\n" % (key, table_dict[key]))
+                    f.write(key)
+                    for item in table_dict[key]:
+                        f.write(",%s" % str(item))
+                    f.write('\n')
 
     def scoreboard2(self, save_as = None, metric = 'mse', n_digits = 3, verbose = True):
         '''
@@ -270,9 +273,44 @@ class Experiment(object):
         if(save_as is not None):
             with open(save_as, 'w') as f:
                 for key in table_dict.keys():
-                    f.write("%s,%s\n" % (key, table_dict[key]))
+                    f.write(key)
+                    for item in table_dict[key]:
+                        f.write(",%s" % str(item))
+                    f.write('\n')
 
-    def graph(self, problem_ids = None, metric = 'mse', cutoffs = None, time = None, save_as = None, size = 3, dpi = 300):
+    def avg_regret(self, loss):
+        avg_regret = []
+        cur_avg = 0
+        for i in range(len(loss)):
+            cur_avg = (i / (i + 1)) * cur_avg + loss[i] / (i + 1)
+            avg_regret.append(cur_avg)
+        return avg_regret
+
+    def _plot(self, ax, problem, problem_result_plus_model,\
+                    n_problems, metric, avg_regret, cutoffs, yscale):
+
+        for (loss, model) in problem_result_plus_model:
+            if(avg_regret):
+                ax.plot(self.avg_regret(loss), label=str(model))
+            else:
+                ax.plot(loss, label=str(model))
+
+        ax.legend(loc="upper right", fontsize=3 + 20//n_problems)
+        ax.set_title("Problem:" + str(problem))
+        ax.set_xlabel("timesteps")
+        ax.set_ylabel(metric)
+
+        if(cutoffs is not None and problem in cutoffs.keys()):
+            ax.set_ylim([0, cutoffs[problem]])
+
+        if(yscale is not None):
+            ax.set_yscale(yscale)
+
+        return ax
+
+    def graph(self, problem_ids = None, metric = 'mse', avg_regret = True, cutoffs = None,\
+            yscale = None, time = None, save_as = None, size = 3, dpi = 100):
+
         '''
         Description: Show a graph for the results of the experiments for specified metric.
         
@@ -310,32 +348,15 @@ class Experiment(object):
         fig.canvas.set_window_title('TigerBench')
 
         if n_problems == 1:
-
             (problem, problem_result_plus_model, model_list) = all_problem_info[0]
-            for (loss, model) in problem_result_plus_model:
-                ax.plot(loss, label=str(model))
-                ax.legend(loc="upper left")
-            ax.set_title("Problem:" + str(problem))
-            ax.set_xlabel("timesteps")
-            ax.set_ylabel(metric)
-            if(cutoffs is not None and problem in cutoffs.keys()):
-                ax.set_ylim([0, cutoffs[problem]])
-
+            ax = self._plot(ax, problem, problem_result_plus_model, \
+                                n_problems, metric, avg_regret, cutoffs, yscale)
         elif nrows == 1:
-
             for j in range(ncols):
                 (problem, problem_result_plus_model, model_list) = all_problem_info[j]
-                for (loss, model) in problem_result_plus_model:
-                    ax[j].plot(loss, label=str(model))
-                ax[j].set_title("Problem:" + str(problem), size=10)
-                ax[j].legend(loc="upper left", fontsize=3 + 10//n_problems)
-                ax[j].set_xlabel("timesteps")
-                ax[j].set_ylabel(metric)
-                if(cutoffs is not None and problem in cutoffs.keys()):
-                    ax[j].set_ylim([0, cutoffs[problem]])
-
+                ax[j] = self._plot(ax[j], problem, problem_result_plus_model,\
+                                          n_problems, metric, avg_regret, cutoffs, yscale)
         else:
-
             cur_pb = 0
             for i in range(nrows):
                 for j in range(ncols):
@@ -345,14 +366,8 @@ class Experiment(object):
                         break
                     (problem, problem_result_plus_model, model_list) = all_problem_info[cur_pb]
                     cur_pb += 1
-                    for (loss, model) in problem_result_plus_model:
-                        ax[i, j].plot(loss, label=str(model))
-                    ax[i, j].set_title("Problem:" + str(problem), size=10)
-                    ax[i, j].legend(loc="upper left", fontsize=3 + 10//n_problems)
-                    ax[i, j].set_xlabel("timesteps")
-                    ax[i, j].set_ylabel(metric)
-                    if(cutoffs is not None and problem in cutoffs.keys()):
-                        ax[i, j].set_ylim([0, cutoffs[problem]])
+                    ax[i, j] = self._plot(ax[i, j], problem, problem_result_plus_model,\
+                                                    n_problems, metric, avg_regret, cutoffs, yscale)
 
         fig.tight_layout()
 

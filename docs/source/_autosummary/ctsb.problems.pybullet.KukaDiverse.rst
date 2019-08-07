@@ -1,7 +1,7 @@
-ctsb.problems.control.pybullet.KukaDiverse
-==========================================
+ctsb.problems.pybullet.KukaDiverse
+==================================
 
-.. currentmodule:: ctsb.problems.control.pybullet
+.. currentmodule:: ctsb.problems.pybullet
 
 .. autoclass:: KukaDiverse
 
@@ -14,6 +14,7 @@ ctsb.problems.control.pybullet.KukaDiverse
    .. autosummary::
    
       ~KukaDiverse.__init__
+      ~KukaDiverse.close
       ~KukaDiverse.fork
       ~KukaDiverse.getState
       ~KukaDiverse.get_action_space

@@ -1,7 +1,7 @@
-ctsb.problems.control.pybullet.Humanoid
-=======================================
+ctsb.problems.pybullet.Humanoid
+===============================
 
-.. currentmodule:: ctsb.problems.control.pybullet
+.. currentmodule:: ctsb.problems.pybullet
 
 .. autoclass:: Humanoid
 
@@ -14,6 +14,7 @@ ctsb.problems.control.pybullet.Humanoid
    .. autosummary::
    
       ~Humanoid.__init__
+      ~Humanoid.close
       ~Humanoid.fork
       ~Humanoid.getState
       ~Humanoid.get_action_space

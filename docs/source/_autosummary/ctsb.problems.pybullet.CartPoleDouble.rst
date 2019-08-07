@@ -1,7 +1,7 @@
-ctsb.problems.control.pybullet.CartPoleDouble
-=============================================
+ctsb.problems.pybullet.CartPoleDouble
+=====================================
 
-.. currentmodule:: ctsb.problems.control.pybullet
+.. currentmodule:: ctsb.problems.pybullet
 
 .. autoclass:: CartPoleDouble
 
@@ -14,6 +14,7 @@ ctsb.problems.control.pybullet.CartPoleDouble
    .. autosummary::
    
       ~CartPoleDouble.__init__
+      ~CartPoleDouble.close
       ~CartPoleDouble.fork
       ~CartPoleDouble.getState
       ~CartPoleDouble.get_action_space
@@ -30,5 +31,11 @@ ctsb.problems.control.pybullet.CartPoleDouble
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CartPoleDouble.compatibles
    
    

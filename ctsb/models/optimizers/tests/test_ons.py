@@ -58,7 +58,5 @@ def test_ons(show=False):
         
     print("test_ons passed")
 
-
-
 if __name__ == "__main__":
     test_ons(show=True)

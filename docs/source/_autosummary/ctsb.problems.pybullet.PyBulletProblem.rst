@@ -1,7 +1,7 @@
-ctsb.problems.control.pybullet.PyBulletProblem
-==============================================
+ctsb.problems.pybullet.PyBulletProblem
+======================================
 
-.. currentmodule:: ctsb.problems.control.pybullet
+.. currentmodule:: ctsb.problems.pybullet
 
 .. autoclass:: PyBulletProblem
 
@@ -14,6 +14,7 @@ ctsb.problems.control.pybullet.PyBulletProblem
    .. autosummary::
    
       ~PyBulletProblem.__init__
+      ~PyBulletProblem.close
       ~PyBulletProblem.fork
       ~PyBulletProblem.getState
       ~PyBulletProblem.get_action_space

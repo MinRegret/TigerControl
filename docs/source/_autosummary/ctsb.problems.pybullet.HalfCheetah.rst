@@ -1,7 +1,7 @@
-ctsb.problems.control.pybullet.HalfCheetah
-==========================================
+ctsb.problems.pybullet.HalfCheetah
+==================================
 
-.. currentmodule:: ctsb.problems.control.pybullet
+.. currentmodule:: ctsb.problems.pybullet
 
 .. autoclass:: HalfCheetah
 
@@ -14,6 +14,7 @@ ctsb.problems.control.pybullet.HalfCheetah
    .. autosummary::
    
       ~HalfCheetah.__init__
+      ~HalfCheetah.close
       ~HalfCheetah.fork
       ~HalfCheetah.getState
       ~HalfCheetah.get_action_space

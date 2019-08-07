@@ -1,7 +1,7 @@
-ctsb.problems.control.pybullet.Ant
-==================================
+ctsb.problems.pybullet.Ant
+==========================
 
-.. currentmodule:: ctsb.problems.control.pybullet
+.. currentmodule:: ctsb.problems.pybullet
 
 .. autoclass:: Ant
 
@@ -14,6 +14,7 @@ ctsb.problems.control.pybullet.Ant
    .. autosummary::
    
       ~Ant.__init__
+      ~Ant.close
       ~Ant.fork
       ~Ant.getState
       ~Ant.get_action_space

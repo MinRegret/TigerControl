@@ -1,7 +1,7 @@
-ctsb.problems.control.pybullet.Minitaur
-=======================================
+ctsb.problems.pybullet.Minitaur
+===============================
 
-.. currentmodule:: ctsb.problems.control.pybullet
+.. currentmodule:: ctsb.problems.pybullet
 
 .. autoclass:: Minitaur
 
@@ -14,6 +14,7 @@ ctsb.problems.control.pybullet.Minitaur
    .. autosummary::
    
       ~Minitaur.__init__
+      ~Minitaur.close
       ~Minitaur.fork
       ~Minitaur.getState
       ~Minitaur.get_action_space
