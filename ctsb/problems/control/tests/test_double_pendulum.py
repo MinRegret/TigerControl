@@ -22,7 +22,7 @@ def test_cartpole(verbose=False):
 
     if verbose:
         print("Running iLQR...")
-    u = model.ilqr(obs, T, max_iterations, lamb, threshold)
+    u = model.plan(obs, T, max_iterations, lamb, threshold)
 
     index = 0
     for t in range(5 * T):
@@ -38,7 +38,7 @@ def test_cartpole(verbose=False):
             obs = problem.initialize()
         if done or index == T:
             print("recomputing u...")
-            u = model.ilqr(obs, T, max_iterations, lamb, threshold)
+            u = model.plan(obs, T, max_iterations, lamb, threshold)
             index = 0
 
     problem.close()
