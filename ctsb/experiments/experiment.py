@@ -96,6 +96,12 @@ class Experiment(object):
                 new_id += '-' + name
             self.models[model_id] = [(new_id, model_params)]
 
+        if(self.use_precomputed):
+            print("WARNING: In precomputed mode, experiments for a new model will run for the predetermined key.")
+            key = precomputed.get_key()
+        else:
+            key = self.key
+
         ''' Evaluate performance of new model on all problems '''
         for metric in self.metrics:
             for problem_id in self.problems.keys():
@@ -103,12 +109,6 @@ class Experiment(object):
 
                     ''' If model is compatible with problem, run experiment and store results. '''
                     try:
-                        if(self.use_precomputed):
-                            print("WARNING: In precomputed mode, experiments for a new model will run for the predetermined key.")
-                            key = precomputed.get_key()
-                        else:
-                            key = self.key
-
                         loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, \
                                         key = key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
                     except:
@@ -145,6 +145,12 @@ class Experiment(object):
                 new_id += name
             self.problems[problem_id] = [(new_id, problem_params)]
 
+        if(self.use_precomputed):
+            print("WARNING: In precomputed mode, experiments for a new model will run for the predetermined key.")
+            key = precomputed.get_key()
+        else:
+            key = self.key
+
         ''' Evaluate performance of new model on all problems '''
         for metric in self.metrics:
             for model_id in self.models.keys():
@@ -152,12 +158,6 @@ class Experiment(object):
 
                     ''' If model is compatible with problem, run experiment and store results. '''
                     try:
-                        if(self.use_precomputed):
-                            print("WARNING: In precomputed mode, experiments for a new model will run for the predetermined key.")
-                            key = precomputed.get_key()
-                        else:
-                            key = self.key
-
                         loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, \
                                         key = key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
                     except:
@@ -168,62 +168,16 @@ class Experiment(object):
                     self.prob_model_to_result[('time', new_id, new_model_id)] = time
                     self.prob_model_to_result[('memory', new_id, new_model_id)] = memory
 
-    def scoreboard(self, save_as = None, metric = 'mse', n_digits = 3, verbose = True):
-        '''
-        Description: Show a scoreboard for the results of the experiments for specified metric.
-
-        Args:
-            save_as (string): If not None, datapath to save results as csv file.
-            metric (string): Metric to compare results
-            verbose (boolean): Specifies whether to print the description of the scoreboard entries
-        '''
-
-        if(self.use_precomputed and metric == 'time' and self.new_models):
-            print("WARNING: Time comparison between precomputed models and" + \
-                  "any added model may be irrelevant due to hardware differences.")
-
-        if(verbose and metric in self.metrics):
-            print("Average " + metric + ":")
-        else:
-            print(metric + ":")
-            
-        table = PrettyTable()
-        table_dict = {}
-
-        problem_ids = get_ids(self.problems)
-        model_ids = get_ids(self.models)
-
-        table_dict['Models'] = model_ids
-
-        field_names = ['Problems\Models']
-        for model_id in model_ids:
-            field_names.append(model_id)
-        table.field_names = field_names
-
-        for problem_id in problem_ids:
-            problem_scores = [problem_id]
-            # get scores for each model
-            for model_id in model_ids:
-                score = np.mean(self.prob_model_to_result[(metric, problem_id, model_id)])
-                score = round(float(score), n_digits)
-                if(score == 0.0):
-                    score = '—'
-                problem_scores.append(score)
-            table.add_row(problem_scores)
-            table_dict[problem_id] = problem_scores[1:]
-
-        print(table)
-
+    def to_csv(self, table_dict, save_as):
         ''' Save to csv file '''
-        if(save_as is not None):
-            with open(save_as, 'w') as f:
-                for key in table_dict.keys():
-                    f.write(key)
-                    for item in table_dict[key]:
-                        f.write(",%s" % str(item))
-                    f.write('\n')
+        with open(save_as, 'w') as f:
+            for key in table_dict.keys():
+                f.write(key)
+                for item in table_dict[key]:
+                    f.write(",%s" % str(item))
+                f.write('\n')
 
-    def scoreboard2(self, save_as = None, metric = 'mse', n_digits = 3, verbose = True):
+    def scoreboard(self, metric = 'mse', n_digits = 3, truncate_ids = True, verbose = True, save_as = None):
         '''
         Description: Show a scoreboard for the results of the experiments for specified metric.
 
@@ -233,7 +187,7 @@ class Experiment(object):
             verbose (boolean): Specifies whether to print the description of the scoreboard entries
         '''
 
-        if(self.use_precomputed and metric == 'time' and self.new_models):
+        if(self.use_precomputed and metric == 'time' and len(self.n_models.keys()) > 0):
             print("WARNING: Time comparison between precomputed models and" + \
                   "any added model may be irrelevant due to hardware differences.")
 
@@ -252,7 +206,11 @@ class Experiment(object):
 
         field_names = ['Model\Problems']
         for problem_id in problem_ids:
-            field_names.append(problem_id)
+            if(truncate_ids and len(problem_id) > 9):
+                field_names.append(problem_id[:4] + '..' + problem_id[-3:])
+            else:
+                field_names.append(problem_id)
+
         table.field_names = field_names
 
         for model_id in model_ids:
@@ -269,14 +227,8 @@ class Experiment(object):
 
         print(table)
 
-        ''' Save to csv file '''
         if(save_as is not None):
-            with open(save_as, 'w') as f:
-                for key in table_dict.keys():
-                    f.write(key)
-                    for item in table_dict[key]:
-                        f.write(",%s" % str(item))
-                    f.write('\n')
+            self.to_csv(table_dict, save_as)
 
     def avg_regret(self, loss):
         avg_regret = []
@@ -286,16 +238,16 @@ class Experiment(object):
             avg_regret.append(cur_avg)
         return avg_regret
 
-    def _plot(self, ax, problem, problem_result_plus_model,\
-                    n_problems, metric, avg_regret, cutoffs, yscale):
+    def _plot(self, ax, problem, problem_result_plus_model, n_problems, metric, \
+                avg_regret, cutoffs, yscale, show_legend = True):
 
         for (loss, model) in problem_result_plus_model:
             if(avg_regret):
                 ax.plot(self.avg_regret(loss), label=str(model))
             else:
                 ax.plot(loss, label=str(model))
-
-        ax.legend(loc="upper right", fontsize=3 + 20//n_problems)
+        if(show_legend):
+            ax.legend(loc="center", fontsize=3 + 20//n_problems)
         ax.set_title("Problem:" + str(problem))
         ax.set_xlabel("timesteps")
         ax.set_ylabel(metric)
@@ -309,7 +261,7 @@ class Experiment(object):
         return ax
 
     def graph(self, problem_ids = None, metric = 'mse', avg_regret = True, cutoffs = None,\
-            yscale = None, time = None, save_as = None, size = 3, dpi = 100):
+            yscale = None, time = 20, save_as = None, size = 3, dpi = 100):
 
         '''
         Description: Show a graph for the results of the experiments for specified metric.
@@ -360,14 +312,24 @@ class Experiment(object):
             cur_pb = 0
             for i in range(nrows):
                 for j in range(ncols):
+
                     if(cur_pb == n_problems):
+                        legend = []
+                        for model_id in model_ids:
+                            legend.append((0, model_id))
+                        ax[i, j] = self._plot(ax[i, j], 'LEGEND', legend,\
+                                n_problems, metric, False, cutoffs, None, show_legend = True)
+                        continue
+
+                    if(cur_pb > n_problems):
                         ax[i, j].plot(0, 'x', 'red', label="NO MORE \n MODELS")
                         ax[i, j].legend(loc="center", fontsize=8 + 10//n_problems)
-                        break
+                        continue
+
                     (problem, problem_result_plus_model, model_list) = all_problem_info[cur_pb]
                     cur_pb += 1
                     ax[i, j] = self._plot(ax[i, j], problem, problem_result_plus_model,\
-                                                    n_problems, metric, avg_regret, cutoffs, yscale)
+                                n_problems, metric, avg_regret, cutoffs, yscale, show_legend = False)
 
         fig.tight_layout()
 
