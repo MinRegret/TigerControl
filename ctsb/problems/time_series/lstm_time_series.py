@@ -13,7 +13,8 @@ class LSTM_TimeSeries(ControlProblem):
     """
     Description: Produces outputs from a randomly initialized recurrent neural network.
     """
-
+    compatibles = set(['TimeSeries'])
+    
     def __init__(self):
         self.initialized = False
 
@@ -30,6 +31,7 @@ class LSTM_TimeSeries(ControlProblem):
 
         self.T = 0
         self.initialized = True
+        self.has_regressors = True
         self.n, self.m, self.h = n, m, h
 
         glorot_init = stax.glorot() # returns a function that initializes weights

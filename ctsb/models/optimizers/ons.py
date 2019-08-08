@@ -21,6 +21,7 @@ class ONS(Optimizer):
     def __init__(self, pred=None, loss=mse, learning_rate=1.0, hyperparameters={}):
         self.initialized = False
         self.max_norm = 1.
+        self.y_radius = 1.
         self.lr = learning_rate
         self.hps = {'reg':0.001, 'beta':20., 'eps':0.1, 'project':False, 'full_matrix':False}
         self.hps.update(hyperparameters)
@@ -109,12 +110,10 @@ class ONS(Optimizer):
         new_params = [w - eta * dw for (w, dw) in zip(params, new_grad)]
 
         if(self.project):
-            norm = 5. * self.general_norm(y)
+            self.y_radius = np.maximum(self.y_radius, self.general_norm(y))
+            norm = 3. * self.y_radius
             new_params = [self.norm_project(p, A, norm) for (p, A) in zip(new_params, self.A)]
 
         if(not is_list):
             new_params = new_params[0]
         return new_params
-
-
-
