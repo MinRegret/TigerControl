@@ -111,8 +111,9 @@ class Experiment(object):
                     try:
                         loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, \
                                         key = key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
-                    except:
+                    except Exception as e:
                         print("ERROR: Could not run %s on %s. Please make sure model and problem are compatible." % (model_id, problem_id))
+                        print(e)
                         loss, time, memory = 0, 0.0, 0.0
 
                     self.prob_model_to_result[(metric, new_problem_id, new_id)] = loss
@@ -160,8 +161,9 @@ class Experiment(object):
                     try:
                         loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, \
                                         key = key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
-                    except:
+                    except Exception as e:
                         print("ERROR: Could not run %s on %s. Please make sure model and problem are compatible." % (model_id, problem_id))
+                        print(e)
                         loss, time, memory = 0.0, 0.0, 0.0
 
                     self.prob_model_to_result[(metric, new_id, new_model_id)] = loss

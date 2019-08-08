@@ -57,7 +57,7 @@ class AutoRegressor(TimeSeriesModel):
         """
         assert self.initialized, "ERROR: Model not initialized!"
 
-        self.past = self._update_past(self.past, x)
+        self.past = self._update_past(self.past, x.squeeze()) # squeeze to remove extra dimensions
         return self._predict(self.params, self.past)
 
     def forecast(self, x, timeline = 1):

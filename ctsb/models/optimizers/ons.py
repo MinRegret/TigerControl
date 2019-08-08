@@ -23,9 +23,9 @@ class ONS(Optimizer):
         self.max_norm = 1.
         self.y_radius = 1.
         self.lr = learning_rate
-        self.hps = {'reg':0.001, 'beta':20., 'eps':0.1, 'project':False, 'full_matrix':False}
+        self.hps = {'reg':0.01, 'beta':20., 'eps':0.1, 'project':False, 'full_matrix':False}
         self.hps.update(hyperparameters)
-        self.beta, self.eps, self.reg = self.hps['beta'], self.hps['eps'], hps['reg']
+        self.beta, self.eps, self.reg = self.hps['beta'], self.hps['eps'], self.hps['reg']
         self.project, self.full_matrix = self.hps['project'], self.hps['full_matrix']
         self.A, self.Ainv = None, None
         self.pred, self.loss = pred, loss
