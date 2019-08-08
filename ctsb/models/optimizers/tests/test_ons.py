@@ -14,7 +14,8 @@ def test_ons(show=False):
     x = problem.initialize(p=2,q=0)
 
     models = []
-    labels = ['ONS + project', 'ONS no project', 'Deprecated ONS']
+    #labels = ['ONS + project', 'ONS no project', 'Deprecated ONS']
+    labels = ['ONS + project', 'ONS no project'] # don't run deprecated ONS
 
     model = ctsb.model('LSTM')
     model.initialize(n=1, m=1, l=3, h=10, optimizer=ONS) # initialize with class
@@ -25,9 +26,9 @@ def test_ons(show=False):
     model.initialize(n=1, m=1, l=3, h=10, optimizer=optimizer) # initialize with class
     models.append(model)
 
-    model = ctsb.model('LSTM')
-    model.initialize(n=1, m=1, l=3, h=10, optimizer=deprecated_ONS) # initialize with class
-    models.append(model)
+    #model = ctsb.model('LSTM')
+    #model.initialize(n=1, m=1, l=3, h=10, optimizer=deprecated_ONS) # initialize with class
+    #models.append(model)
 
     losses = [[] for i in range(len(models))]
     update_time = [0.0 for i in range(len(models))]
