@@ -12,7 +12,6 @@ def test_new_experiment(steps=5000, show=False):
     '''exp.add_model('AutoRegressor', {'p' : 3, 'optimizer' : OGD}, name = 'OGD')
                 exp.add_model('AutoRegressor', {'p' : 3, 'optimizer' : Adagrad})
                 exp.add_model('AutoRegressor', {'p' : 3, 'optimizer' : ONS})
-                #exp.add_model('AutoRegressor', {'p' : 3, 'optimizer' : deprecated_ONS})
                 exp.add_model('AutoRegressor', {'p' : 3, 'optimizer' : Adam})
             
                 exp.add_model('SimpleBoost', {'model_id': 'AutoRegressor', \

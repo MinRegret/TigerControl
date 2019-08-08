@@ -21,13 +21,13 @@ class Adam(Optimizer):
         self.initialized = False
         self.lr = learning_rate
 
-        self.hyperparameters = {'beta_1': 0.9, 'beta_2': 0.999, 'eps': 1e-7, 'max_norm':False}
+        self.hyperparameters = {'beta_1': 0.9, 'beta_2': 0.999, 'eps': 1e-7, 'max_norm':1.0}
         self.hyperparameters.update(hyperparameters)
-        self.beta_1, self.beta_2 = self.hyperparameters['beta_1'], self.hyperparameters['beta_2']
+        for key, value in self.hyperparameters.items():
+            if hasattr(self, key):
+                raise error.InvalidInput("key {} is already an attribute in {}".format(key, self))
+            setattr(self, key, value) # store all hyperparameters
         self.beta_1_t, self.beta_2_t = self.beta_1, self.beta_2
-        self.eps = self.hyperparameters['eps']
-
-        self.max_norm = 1. if self.hyperparameters['max_norm'] else 0.0
         self.m, self.v = None, None
 
         self.pred = pred
@@ -46,8 +46,8 @@ class Adam(Optimizer):
 
             # maintain current power of betas
             beta_1_t, beta_2_t = beta_1_t * self.beta_1, beta_2_t * self.beta_2
-            max_norm = np.where(max_norm > 0.0, np.maximum(max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad])), max_norm)
-            lr = self.lr / np.where(max_norm > 0.0, max_norm, 1.)
+            max_norm = np.where(max_norm, np.maximum(max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad])), max_norm)
+            lr = self.lr / np.where(max_norm, max_norm, 1.)
             new_params = [w - lr / (np.sqrt(v_i) + self.eps) * m_i for (w, v_i, m_i) in zip(params, v_t, m_t)]
             return new_params, m, v, max_norm, beta_1_t, beta_2_t
         self._update = _update

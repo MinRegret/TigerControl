@@ -3,6 +3,7 @@ AdaGrad optimizer
 '''
 from ctsb.models.optimizers.core import Optimizer
 from ctsb.models.optimizers.losses import mse
+from ctsb import error
 from jax import jit, grad
 import jax.numpy as np
 
@@ -20,9 +21,12 @@ class Adagrad(Optimizer):
     def __init__(self, pred=None, loss=mse, learning_rate=1.0, hyperparameters={}):
         self.initialized = False
         self.lr = learning_rate
-        self.hyperparameters = {'max_norm':10.0}
+        self.hyperparameters = {'max_norm':10.0, 'reg': 0.0}
         self.hyperparameters.update(hyperparameters)
-        self.max_norm = self.hyperparameters['max_norm']
+        for key, value in self.hyperparameters.items():
+            if hasattr(self, key):
+                raise error.InvalidInput("key {} is already an attribute in {}".format(key, self))
+            setattr(self, key, value) # store all hyperparameters
         self.G = None
         self.pred = pred
         self.loss = loss
