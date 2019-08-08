@@ -10,3 +10,4 @@ xlrd
 tqdm
 PrettyTable
 gym
+cvxopt

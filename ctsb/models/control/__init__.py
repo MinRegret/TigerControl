@@ -7,4 +7,3 @@ from ctsb.models.control.lqr import LQR
 from ctsb.models.control.ilqr import ILQR
 from ctsb.models.control.mppi import MPPI
 from ctsb.models.control.cartpole_nn import CartPoleNN
-from ctsb.models.control.adversarial_disturbances import AdversarialDisturbances
