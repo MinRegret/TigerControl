@@ -22,11 +22,10 @@ class ONS(Optimizer):
         self.initialized = False
         self.max_norm = 1.
         self.lr = learning_rate
-        self.hyperparameters = {'beta':20., 'eps':0.1, 'project':True, 'full_matrix':False}
-        self.hyperparameters.update(hyperparameters)
-        self.beta, self.eps = self.hyperparameters['beta'], self.hyperparameters['eps']
-        self.project = self.hyperparameters['project']
-        self.full_matrix = self.hyperparameters['full_matrix']
+        self.hps = {'reg':0.001, 'beta':20., 'eps':0.1, 'project':False, 'full_matrix':False}
+        self.hps.update(hyperparameters)
+        self.beta, self.eps, self.reg = self.hps['beta'], self.hps['eps'], hps['reg']
+        self.project, self.full_matrix = self.hps['project'], self.hps['full_matrix']
         self.A, self.Ainv = None, None
         self.pred, self.loss = pred, loss
         self.numpyify = lambda m: onp.array(m).astype(onp.double) # maps jax.numpy to regular numpy
@@ -92,6 +91,7 @@ class ONS(Optimizer):
             grad = [grad]
             is_list = False
 
+        # equivalent to adding L2 regularization, since grad(|w|**2) = 2*w
         grad = [np.ravel(dw) for dw in grad]
 
         # initialize A
@@ -110,7 +110,7 @@ class ONS(Optimizer):
 
         if(self.project):
             norm = 5. * self.general_norm(y)
-            return [self.norm_project(p, A, norm) for (p, A) in zip(new_params, self.A)]
+            new_params = [self.norm_project(p, A, norm) for (p, A) in zip(new_params, self.A)]
 
         if(not is_list):
             new_params = new_params[0]

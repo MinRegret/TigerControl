@@ -22,7 +22,9 @@ class Optimizer():
     def __init__(self, pred=None, loss=mse, learning_rate=0.01, hyperparameters={}):
         self.initialized = False
         self.lr = learning_rate
-        self.hyperparameters = hyperparameters
+        self.hps = {'reg':0.001} # L2 regularization, default value 0.01
+        self.hps.update(hyperparameters)
+        self.reg = self.hps['reg']
         self.pred = pred
         self.loss = loss
         if self._is_valid_pred(pred, raise_error=False) and self._is_valid_loss(loss, raise_error=False):
@@ -64,9 +66,10 @@ class Optimizer():
             Gradient of parameters in same shape as input
         """
         assert self.initialized
-        if loss:
-            return self._custom_grad(params, x, y, loss)
-        return self._grad(params, x, y)
+        grad = self._custom_grad(params, x, y, loss) if loss else self._grad(params, x, y)
+        if hasattr(self, 'reg'): # if self has L2 regularization, then update gradients
+            grad = [grad + 2 * self.reg * w for grad, w in zip(grad,  params)]
+        return grad
 
     def _is_valid_loss(self, loss, raise_error=True):
         """ Description: checks that loss is a valid function to differentiate with respect to using jax """
