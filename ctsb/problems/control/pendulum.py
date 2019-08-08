@@ -29,7 +29,13 @@ class Pendulum(ControlProblem):
         self.viewer = None
         self.action_space = (1,)
         self.observation_space = (2,)
-        self.angle_normalize = lambda x: (((x+np.pi) % (2*np.pi)) - np.pi)
+
+        @jax.jit
+        def angle_normalize(x):
+            x = np.where(x > np.pi, x - 2*np.pi, x)
+            x = np.where(x < -np.pi, x + 2*np.pi, x)
+            return x
+        self.angle_normalize = angle_normalize
 
         @jax.jit
         def dynamics(x, u):

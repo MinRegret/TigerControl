@@ -21,14 +21,13 @@ class Adam(Optimizer):
         self.initialized = False
         self.lr = learning_rate
 
-        self.hyperparameters = {'beta_1': 0.9, 'beta_2': 0.999, 'eps': 0.00000001}
+        self.hyperparameters = {'beta_1': 0.9, 'beta_2': 0.999, 'eps': 1e-7, 'max_norm':False}
         self.hyperparameters.update(hyperparameters)
         self.beta_1, self.beta_2 = self.hyperparameters['beta_1'], self.hyperparameters['beta_2']
         self.beta_1_t, self.beta_2_t = self.beta_1, self.beta_2
         self.eps = self.hyperparameters['eps']
 
-        self.max_norm = 1.
-
+        self.max_norm = 1. if self.hyperparameters['max_norm'] else 0.0
         self.m, self.v = None, None
 
         self.pred = pred
@@ -36,19 +35,22 @@ class Adam(Optimizer):
         if self._is_valid_pred(pred, raise_error=False) and self._is_valid_loss(loss, raise_error=False):
             self.set_predict(pred, loss=loss)
 
-    def to_ndarray(self, x):
-        """
-        Description: If x is a scalar, transform it to a (1, 1) numpy.ndarray;
-        otherwise, leave it unchanged.
-        Args:
-            x (float/numpy.ndarray)
-        Returns:
-            A numpy.ndarray representation of x
-        """
-        x = np.asarray(x)
-        if np.ndim(x) == 0:
-            x = x[None]
-        return x
+        @jit # helper update method
+        def _update(params, grad, m, v, max_norm, beta_1_t, beta_2_t):
+            m = [self.beta_1 * m_i + (1. - self.beta_1) * dw for (m_i, dw) in zip(m, grad)]
+            v = [self.beta_2 * v_i + (1. - self.beta_2) * np.square(dw) for (v_i, dw) in zip(v, grad)]
+            
+            # bias-corrected estimates
+            m_t = [m_i / (1 - beta_1_t) for m_i in m]
+            v_t = [v_i / (1 - beta_2_t) for v_i in v]
+
+            # maintain current power of betas
+            beta_1_t, beta_2_t = beta_1_t * self.beta_1, beta_2_t * self.beta_2
+            max_norm = np.where(max_norm > 0.0, np.maximum(max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad])), max_norm)
+            lr = self.lr / np.where(max_norm > 0.0, max_norm, 1.)
+            new_params = [w - lr / (np.sqrt(v_i) + self.eps) * m_i for (w, v_i, m_i) in zip(params, v_t, m_t)]
+            return new_params, m, v, max_norm, beta_1_t, beta_2_t
+        self._update = _update
 
     def update(self, params, x, y, loss=None):
         """
@@ -65,35 +67,21 @@ class Adam(Optimizer):
 
         grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
 
+        # Make everything a list for generality
+        is_list = True
+        if(type(params) is not list):
+            params = [params]
+            grad = [grad]
+            is_list = False
+
         if(self.m is None):
-            if(type(params) is list):
-                self.m = [np.zeros(dw.shape) for dw in grad]
-                self.v = [np.zeros((dw.T @ dw).shape) for dw in grad]
-            else:    
-                self.m = np.zeros(grad.shape)
-                self.v = np.zeros((grad.T @ grad).shape)
+            self.m = [np.zeros(dw.shape) for dw in grad]
+            self.v = [np.zeros(dw.shape) for dw in grad]
 
-        if(type(params) is list):
-            self.m = [self.beta_1 * m + (1. - self.beta_1) * dw for (m, dw) in zip(self.m, grad)]
-            self.v = [self.beta_2 * v + (1. - self.beta_2) * dw.T @ dw for (v, dw) in zip(self.v, grad)]
-            # bias-corrected estimates
-            m_t = [m / (1 - self.beta_1_t) for m in self.m]
-            v_t = [v / (1 - self.beta_2_t) for v in self.v]
-        else:
-            self.m = self.beta_1 * self.m + (1. - self.beta_1) * grad
-            self.v = self.beta_2 * self.v + (1. - self.beta_2) * grad.T @ grad
-            # bias-corrected estimates
-            m_t = self.m / (1 - self.beta_1_t)
-            v_t = self.v / (1 - self.beta_2_t)
+        updated_params = self._update(params, grad, self.m, self.v, self.max_norm, self.beta_1_t, self.beta_2_t)
+        new_params, self.m, self.v, self.max_norm, self.beta_1_t, self.beta_2_t = updated_params
 
-        # maintain current power of betas
-        self.beta_1_t, self.beta_2_t = self.beta_1_t * self.beta_1, self.beta_2_t * self.beta_2
+        if(not is_list):
+            new_params = new_params[0]
+        return new_params
 
-        if(type(params) is list):
-            self.max_norm = np.maximum(self.max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad]))
-            lr = self.lr / self.max_norm
-            return [w - lr / (np.sqrt(np.linalg.norm(self.to_ndarray(v))) + self.eps) * m for (w, v, m) in zip(params, v_t, m_t)]
-        else:
-            self.max_norm = np.maximum(self.max_norm, np.linalg.norm(grad))
-            lr = self.lr / self.max_norm
-            return params - lr / (np.sqrt(np.linalg.norm(self.to_ndarray(v_t))) + self.eps) * m_t
