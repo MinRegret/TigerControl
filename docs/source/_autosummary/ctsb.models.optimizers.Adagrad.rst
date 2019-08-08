@@ -1,19 +1,23 @@
-ctsb.models.optimizers.adagrad
+ctsb.models.optimizers.Adagrad
 ==============================
 
-.. automodule:: ctsb.models.optimizers.adagrad
+.. currentmodule:: ctsb.models.optimizers
+
+.. autoclass:: Adagrad
 
    
-   
-   
+   .. automethod:: __init__
 
    
-   
-   .. rubric:: Classes
+   .. rubric:: Methods
 
    .. autosummary::
    
-      Adagrad
+      ~Adagrad.__init__
+      ~Adagrad.gradient
+      ~Adagrad.set_loss
+      ~Adagrad.set_predict
+      ~Adagrad.update
    
    
 

@@ -73,11 +73,6 @@ model_register(
 )
 
 model_register(
-    id='AdversarialDisturbances',
-    entry_point='ctsb.models.control:AdversarialDisturbances',
-)
-
-model_register(
     id='MPPI',
     entry_point='ctsb.models.control:MPPI',
 )
