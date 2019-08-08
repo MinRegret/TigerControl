@@ -21,7 +21,7 @@ class LSTM(TimeSeriesModel):
         self.initialized = False
         self.uses_regressors = True
 
-    def initialize(self, n, m, l = 32, h = 64, optimizer = OGD):
+    def initialize(self, n=1, m=1, l = 32, h = 64, optimizer = OGD):
         """
         Description: Randomly initialize the LSTM.
         Args:

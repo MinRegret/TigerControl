@@ -6,48 +6,63 @@ from ctsb.models.optimizers.core import Optimizer
 from ctsb.models.optimizers.losses import mse
 from jax import jit, grad
 import jax.numpy as np
-import cvxopt
 
-cvxopt.solvers.options['show_progress'] = False
+# regular numpy is necessary for cvxopt to work
+import numpy as onp
+from cvxopt import matrix, solvers
+solvers.options['show_progress'] = False
+
 
 class ONS(Optimizer):
     """
     Online newton step algorithm.
     """
 
-    def __init__(self, pred=None, loss=mse, hyperparameters={}):
-        
+    def __init__(self, pred=None, loss=mse, learning_rate=1.0, hyperparameters={}):
         self.initialized = False
-        
         self.max_norm = 1.
-        
-        self.hyperparameters = {'beta':20., 'eps':0.1, 'fast_inverse':False, 'project':False, 'full_matrix':False}
+        self.y_radius = 1.
+        self.lr = learning_rate
+        self.hyperparameters = {'beta':20., 'eps':0.1, 'project':True, 'full_matrix':False}
         self.hyperparameters.update(hyperparameters)
         self.beta, self.eps = self.hyperparameters['beta'], self.hyperparameters['eps']
-        self.fast_inverse, self.project = self.hyperparameters['fast_inverse'], self.hyperparameters['project']
+        self.project = self.hyperparameters['project']
         self.full_matrix = self.hyperparameters['full_matrix']
-
         self.A, self.Ainv = None, None
-
         self.pred, self.loss = pred, loss
+        self.numpyify = lambda m: onp.array(m).astype(onp.double) # maps jax.numpy to regular numpy
 
         if self._is_valid_pred(pred, raise_error=False) and self._is_valid_loss(loss, raise_error=False):
             self.set_predict(pred, loss=loss)
+
+        @jit # partial update step for every matrix in model weights list
+        def partial_update(A, Ainv, grad, w):
+            A = A + np.outer(grad, grad)
+            inv_grad = Ainv @ grad
+            Ainv = Ainv - np.outer(inv_grad, inv_grad) / (1 + grad.T @ Ainv @ grad)
+            new_grad = np.reshape(Ainv @ grad, w.shape)
+            return A, Ainv, new_grad
+        self.partial_update = partial_update
+
 
     def norm_project(self, y, A, c):
         """ 
             Project y using norm A on the convex set bounded by c.
         """
 
-        if (np.all(np.absolute(y) <= c)): # check if y already in K
+        if np.any(np.isnan(y)) or np.all(np.absolute(y) <= c):
             return y
 
-        P = cvxopt.matrix(A)
-        q = cvxopt.matrix(-A.dot(y))
-        G = cvxopt.matrix(np.append(np.identity(len(y)), -np.identity(len(y)), axis=0), tc='d')
-        h = cvxopt.matrix(np.repeat(c, 2 * len(y)), tc='d')
+        y_shape = y.shape
+        y_reshaped = np.ravel(y)
+        dim_y = y_reshaped.shape[0]
+        P = matrix(self.numpyify(A))
+        q = matrix(self.numpyify(-np.dot(A, y_reshaped)))
+        G = matrix(self.numpyify(np.append(np.identity(dim_y), -np.identity(dim_y), axis=0)), tc='d')
+        h = matrix(self.numpyify(np.repeat(c, 2 * dim_y)), tc='d')
+        solution = np.array(onp.array(solvers.qp(P, q, G, h)['x'])).squeeze().reshape(y_shape)
+        return solution
 
-        return (np.array([1]) * cvxopt.solvers.qp(P, q, G, h)['x']).reshape(len(y),) # run quadratic program
 
     def general_norm(self, x):
         x = np.asarray(x)
@@ -55,7 +70,8 @@ class ONS(Optimizer):
             x = x[None]
         return np.linalg.norm(x)
 
-    def update(self, params, x, y, loss=mse):
+
+    def update(self, params, x, y, loss=None):
         """
         Description: Updates parameters based on correct value, loss and learning rate.
         Args:
@@ -70,7 +86,6 @@ class ONS(Optimizer):
 
         grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
         is_list = True
-
         # Make everything a list for generality
         if(type(params) is not list):
             params = [params]
@@ -79,36 +94,26 @@ class ONS(Optimizer):
 
         grad = [np.ravel(dw) for dw in grad]
 
-        # initualize A
+        # initialize A
         if(self.A is None):
             self.A = [np.eye(dw.shape[0]) * self.eps for dw in grad]
-            if(self.fast_inverse):
-                self.Ainv = [np.eye(dw.shape[0]) * (1 / self.eps) for dw in grad]
-
-        for i in range(len(grad)):
-            self.A[i] += grad[i] @ grad[i].T # update
-            # PROBLEM: grad[i] shape is 40x10!!!
-            if(self.fast_inverse): 
-                self.Ainv[i] -= (self.Ainv[i] @ grad[i]) @ (self.Ainv[i] @ grad[i]).T / \
-                                (1 + grad[i].T @ self.Ainv[i] @ grad[i])
+            self.Ainv = [np.eye(dw.shape[0]) * (1 / self.eps) for dw in grad]
 
         # compute max norm for normalization                       
         self.max_norm = np.maximum(self.max_norm, np.linalg.norm([self.general_norm(dw) for dw in grad]))
-        eta = (1 / self.max_norm) * (1. / self.beta)
+        eta = self.lr / (self.max_norm * self.beta)
 
-        if(self.fast_inverse):
-            new_params = [w - eta * np.reshape(Ainv @ dw, w.shape) \
-                        for (w, Ainv, dw) in zip(params, self.Ainv, grad)]
-        else:
-            new_params = [w - eta * np.reshape(np.linalg.inv(A) @ dw, w.shape) \
-                                for (w, A, dw) in zip(params, self.A, grad)]
+        new_values = [self.partial_update(A, Ainv, grad, w) for (A, Ainv, grad, w) in zip(self.A, self.Ainv, grad, params)]
+        self.A, self.Ainv, new_grad = list(map(list, zip(*new_values)))
+
+        new_params = [w - eta * dw for (w, dw) in zip(params, new_grad)]
 
         if(self.project):
-            new_params = [self.norm_project(p, A, 2 * self.general_norm(y)) \
-                    for (p, A) in zip(new_params, self.A)]
-        
+            self.y_radius = np.maximum(self.y_radius, self.general_norm(y))
+            norm = 2. * self.y_radius
+            new_params = [self.norm_project(p, A, norm) for (p, A) in zip(new_params, self.A)]
+
         if(not is_list):
             new_params = new_params[0]
-
         return new_params
-
+        

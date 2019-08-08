@@ -8,18 +8,18 @@ import os
 import csv
 
 ''' List of all problems and models '''
-all_metrics = ['mse', 'cross_entropy']
+all_metrics = ['mse']
 
 ## no uciindoor-v0 , ctrl indices has some problems##
-all_problems = ['Random-v0', 'ARMA-v0', 'SP500-v0', 'Crypto-v0', 'ENSO-v0']
+all_problems = ['ARMA-v0', 'Crypto-v0', 'SP500-v0']
 
 ####### LSTM AND RNN NOT INCLUDED BECAUSE THEY NEED INPUT SHAPE ###############
 ####### and ArmaAdaGrad is not classified as timeseries & other problems ... ###########
-all_models = ['PredictZero', 'LastValue', 'AutoRegressor']
+all_models = ['LastValue', 'AutoRegressor', 'RNN', 'LSTM']
 
 ####### NEED TO MAKE IT HARD TO CHANGE !!!!!! ########
 ''' Fix timesteps and key '''
-timesteps = 100
+timesteps = 1500
 key = 0
 
 ''' Ensure repeatability '''
