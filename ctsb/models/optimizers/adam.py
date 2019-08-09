@@ -4,6 +4,7 @@ Adam optimizer
 
 from ctsb.models.optimizers.core import Optimizer
 from ctsb.models.optimizers.losses import mse
+from ctsb import error
 from jax import jit, grad
 import jax.numpy as np
 
@@ -21,7 +22,7 @@ class Adam(Optimizer):
         self.initialized = False
         self.lr = learning_rate
 
-        self.hyperparameters = {'beta_1': 0.9, 'beta_2': 0.999, 'eps': 1e-7, 'max_norm':1.0}
+        self.hyperparameters = {'reg':0.0, 'beta_1': 0.9, 'beta_2': 0.999, 'eps': 1e-7, 'max_norm':True}
         self.hyperparameters.update(hyperparameters)
         for key, value in self.hyperparameters.items():
             if hasattr(self, key):
@@ -81,7 +82,5 @@ class Adam(Optimizer):
         updated_params = self._update(params, grad, self.m, self.v, self.max_norm, self.beta_1_t, self.beta_2_t)
         new_params, self.m, self.v, self.max_norm, self.beta_1_t, self.beta_2_t = updated_params
 
-        if(not is_list):
-            new_params = new_params[0]
-        return new_params
+        return new_params if is_list else new_params[0]
 

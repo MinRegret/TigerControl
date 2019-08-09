@@ -21,7 +21,7 @@ class Adagrad(Optimizer):
     def __init__(self, pred=None, loss=mse, learning_rate=1.0, hyperparameters={}):
         self.initialized = False
         self.lr = learning_rate
-        self.hyperparameters = {'max_norm':10.0, 'reg': 0.0}
+        self.hyperparameters = {'max_norm':True, 'reg': 0.0}
         self.hyperparameters.update(hyperparameters)
         for key, value in self.hyperparameters.items():
             if hasattr(self, key):
@@ -47,17 +47,14 @@ class Adagrad(Optimizer):
         self._custom_grad = jit(grad(_custom_loss), static_argnums=[3])
         self.initialized = True
 
-        # new code - initialize private array-wise gradient update method
-        def _array_update(params, grad, G, lr):
-            new_G = G + np.square(grad)
-            new_params = params - lr * (grad / np.sqrt(new_G))
-            return (new_params, new_G)
-        self._array_update = jit(_array_update)
-
-        def _list_update(params, grad, G, lr):
-            new_vals = [self._array_update(w, dw, g, lr) for w, dw, g in zip(params, grad, G)]
-            return ([w[0] for w in new_vals], [w[1] for w in new_vals])
-        self._list_update = jit(_list_update)
+        @jit
+        def _update(params, grad, G, max_norm):
+            new_G = [g + np.square(dw) for g, dw in zip(G, grad)]
+            max_norm = np.where(max_norm, np.maximum(max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad])), max_norm)
+            lr = self.lr / np.where(max_norm, max_norm, 1.)
+            new_params = [w - lr * dw / np.sqrt(g) for w, dw, g in zip(params, grad, new_G)]
+            return new_params, new_G, max_norm
+        self._update = _update
 
     def update(self, params, x, y, loss=None):
         """
@@ -71,25 +68,19 @@ class Adagrad(Optimizer):
             Updated parameters in same shape as input
         """
         assert self.initialized
-        if self.G is None:
-            if (type(params) is list):
-                self.G = [1e-3 * np.ones(shape=w.shape) for w in params]
-            else:
-                self.G = 1e-3 * np.ones(shape=params.shape)
 
+        # Make everything a list for generality
+        is_list = True
+        if(type(params) is not list):
+            params = [params]
+            grad = [grad]
+            is_list = False
+
+        if self.G is None: self.G = [1e-3 * np.ones(shape=w.shape) for w in params]
         grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
-        if (type(params) is list):
-            new_params, self.G = self._list_update(params, grad, self.G, self.lr)
-            norm = np.linalg.norm([np.linalg.norm(w) for w in new_params])
-            if norm > self.max_norm:
-                new_params = [w * self.max_norm / norm for w in new_params]
-            return new_params
-
-        new_params, self.G = self._array_update(params, grad, self.G, self.lr)
-        norm = np.linalg.norm(new_params)
-        if norm > self.max_norm:
-            new_params = new_params * self.max_norm / norm
-        return new_params
+        new_params, self.G, self.max_norm = self._update(params, grad, self.G, self.max_norm)
+        
+        return new_params if is_list else new_params[0]
 
 
 

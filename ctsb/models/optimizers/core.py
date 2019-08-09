@@ -19,12 +19,15 @@ class Optimizer():
     Returns:
         None
     """
-    def __init__(self, pred=None, loss=mse, learning_rate=0.01, hyperparameters={}):
+    def __init__(self, pred=None, loss=mse, learning_rate=1.0, hyperparameters={}):
         self.initialized = False
         self.lr = learning_rate
-        self.hps = {'reg':0.01} # L2 regularization, default value 0.01
-        self.hps.update(hyperparameters)
-        self.reg = self.hps['reg']
+        self.hyperparameters = {'reg':0.00} # L2 regularization, default value 0.01
+        self.hyperparameters.update(hyperparameters)
+        for key, value in self.hyperparameters.items():
+            if hasattr(self, key):
+                raise error.InvalidInput("key {} is already an attribute in {}".format(key, self))
+            setattr(self, key, value) # store all hyperparameters        
         self.pred = pred
         self.loss = loss
         if self._is_valid_pred(pred, raise_error=False) and self._is_valid_loss(loss, raise_error=False):
