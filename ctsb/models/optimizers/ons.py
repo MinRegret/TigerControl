@@ -4,6 +4,7 @@ Newton Step optimizer
 
 from ctsb.models.optimizers.core import Optimizer
 from ctsb.models.optimizers.losses import mse
+from ctsb import error
 from jax import jit, grad
 import jax.numpy as np
 
@@ -20,13 +21,13 @@ class ONS(Optimizer):
 
     def __init__(self, pred=None, loss=mse, learning_rate=1.0, hyperparameters={}):
         self.initialized = False
-        self.max_norm = 1.
-        self.y_radius = 1.
         self.lr = learning_rate
-        self.hps = {'reg':0.01, 'beta':20., 'eps':0.1, 'project':False, 'full_matrix':False}
-        self.hps.update(hyperparameters)
-        self.beta, self.eps, self.reg = self.hps['beta'], self.hps['eps'], self.hps['reg']
-        self.project, self.full_matrix = self.hps['project'], self.hps['full_matrix']
+        self.hyperparameters = {'reg':0.00, 'eps':0.1, 'project':False, 'max_norm':True, 'min_radius':10., 'full_matrix':False}
+        self.hyperparameters.update(hyperparameters)
+        for key, value in self.hyperparameters.items():
+            if hasattr(self, key):
+                raise error.InvalidInput("key {} is already an attribute in {}".format(key, self))
+            setattr(self, key, value) # store all hyperparameters
         self.A, self.Ainv = None, None
         self.pred, self.loss = pred, loss
         self.numpyify = lambda m: onp.array(m).astype(onp.double) # maps jax.numpy to regular numpy
@@ -84,9 +85,9 @@ class ONS(Optimizer):
         assert self.initialized
 
         grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
-        is_list = True
         
         # Make everything a list for generality
+        is_list = True
         if(type(params) is not list):
             params = [params]
             grad = [grad]
@@ -96,24 +97,24 @@ class ONS(Optimizer):
         grad = [np.ravel(dw) for dw in grad]
 
         # initialize A
-        if(self.A is None):
+        if self.A is None:
             self.A = [np.eye(dw.shape[0]) * self.eps for dw in grad]
             self.Ainv = [np.eye(dw.shape[0]) * (1 / self.eps) for dw in grad]
 
-        # compute max norm for normalization                       
-        self.max_norm = np.maximum(self.max_norm, np.linalg.norm([self.general_norm(dw) for dw in grad]))
-        eta = self.lr / (self.max_norm * self.beta)
-
         new_values = [self.partial_update(A, Ainv, grad, w) for (A, Ainv, grad, w) in zip(self.A, self.Ainv, grad, params)]
         self.A, self.Ainv, new_grad = list(map(list, zip(*new_values)))
+        
+        # compute max norm for normalization
+        eta = self.lr
+        if self.max_norm:
+            self.max_norm = np.maximum(self.max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad]))
+            eta = eta * self.max_norm
 
         new_params = [w - eta * dw for (w, dw) in zip(params, new_grad)]
 
-        if(self.project):
-            self.y_radius = np.maximum(self.y_radius, self.general_norm(y))
-            norm = 3. * self.y_radius
+        if self.project:
+            self.min_radius = np.maximum(self.min_radius, self.general_norm(y))
+            norm = 5. * self.min_radius
             new_params = [self.norm_project(p, A, norm) for (p, A) in zip(new_params, self.A)]
 
-        if(not is_list):
-            new_params = new_params[0]
-        return new_params
+        return new_params if is_list else new_params[0]
