@@ -8,6 +8,10 @@ from ctsb.models.optimizers import losses
 
 # ---------- Time-Series Models ----------
 
+model_register(
+    id='WaveFiltering',
+    entry_point='ctsb.models.time_series:WaveFiltering',
+)
 
 model_register(
     id='LastValue',
