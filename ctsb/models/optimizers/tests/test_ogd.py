@@ -4,6 +4,7 @@ from ctsb.models.optimizers.losses import mse
 import matplotlib.pyplot as plt
 
 def test_ogd(show=False):
+    
     problem = ctsb.problem('ARMA-v0')
     x = problem.initialize(p=2,q=0)
 

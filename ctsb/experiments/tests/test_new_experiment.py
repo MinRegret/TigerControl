@@ -12,7 +12,6 @@ def test_new_experiment(steps=5000, show=False):
     '''exp.add_model('AutoRegressor', {'p' : 3, 'optimizer' : OGD}, name = 'OGD')
                 exp.add_model('AutoRegressor', {'p' : 3, 'optimizer' : Adagrad})
                 exp.add_model('AutoRegressor', {'p' : 3, 'optimizer' : ONS})
-                exp.add_model('AutoRegressor', {'p' : 3, 'optimizer' : deprecated_ONS})
                 exp.add_model('AutoRegressor', {'p' : 3, 'optimizer' : Adam})
             
                 exp.add_model('SimpleBoost', {'model_id': 'AutoRegressor', \
@@ -49,7 +48,7 @@ def test_new_experiment(steps=5000, show=False):
     exp.add_model('SimpleBoost', {'model_id': 'LSTM', \
         'model_params': {'n' : 1, 'm' : 1, 'optimizer' : Adam}}, name = 'LSTM-Adam')
 
-    #exp.add_problem('ARMA-v0', {'p':2, 'q':0}, name = '20')
+    exp.add_problem('ARMA-v0', {'p':2, 'q':0}, name = '20')
     #exp.add_problem('ARMA-v0', {'p':3, 'q':3}, name = '33')
     #exp.add_problem('ARMA-v0', {'p':5, 'q':4}, name = '54')
 
@@ -65,13 +64,13 @@ def test_new_experiment(steps=5000, show=False):
     exp.add_problem('ENSO-v0', {'input_signals': ['oni'], 'timeline' : 12}, name = 'T12')
 
     ctsb_dir = get_ctsb_dir()
-    datapath = 'data/results/scoreboard_real_LSTM.csv'
+    datapath = 'data/results/scoreboard_sim_LSTM.csv'
     datapath = os.path.join(ctsb_dir, datapath)
 
     exp.scoreboard(save_as = datapath)
     #exp.scoreboard(metric = 'time')
 
-    datapath = 'data/results/graph_real_LSTM.png'
+    datapath = 'data/results/graph_sim_LSTM.png'
     datapath = os.path.join(ctsb_dir, datapath)
 
     exp.graph(yscale = 'log', save_as = datapath, dpi = 300)
@@ -86,3 +85,4 @@ def test_new_experiment(steps=5000, show=False):
 
 if __name__ == "__main__":
     test_new_experiment(show=True)
+    
