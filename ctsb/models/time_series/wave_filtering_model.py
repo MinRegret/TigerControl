@@ -2,11 +2,14 @@
 Last observed value
 """
 
+import jax
 import jax.numpy as np
 import jax.random as rand
 import ctsb
 from ctsb.models.time_series import TimeSeriesModel
 from ctsb.utils import generate_key
+import scipy.linalg as la
+import numpy as onp
 
 class WaveFiltering(TimeSeriesModel):
     """
@@ -19,7 +22,14 @@ class WaveFiltering(TimeSeriesModel):
         self.initialized = False
         self.uses_regressors = False
 
-    def initialize(self, n, m, k, T, eta, R_M, k_values, k_vectors):
+    # return top k eigen pairs in descending order
+    def eigen_pairs(self, T, k):
+        v = onp.fromfunction(lambda i: 1.0 / ((i+2)**3 - (i+2)), (2 * T - 1,))
+        Z = 2 * la.hankel(v[:T], v[T-1:])
+        eigen_values, eigen_vectors = np.linalg.eigh(Z)
+        return np.flip(eigen_values[-k:], axis=0), np.flip(eigen_vectors[:,-k:], axis=1)
+
+    def initialize(self, n, m, k, T, eta, R_M):
         """
         Description: Initialize the (non-existent) hidden dynamics of the model
         Args:
@@ -28,23 +38,27 @@ class WaveFiltering(TimeSeriesModel):
             None
         """
         self.initialized = True
-        self.n = n
-        self.m = m
-        self.k = k
-        self.T = T
-        self.eta = eta
-        self.R_M = R_M
-        self.k_values = k_values
-        self.k_vectors = k_vectors
+        self.n, self.m, self.k, self.T = n, m, k, T
+        self.eta, self.R_M = eta, R_M
         self.k_prime = n * k + 2 * n + m
         self.M = 2 * rand.uniform(generate_key(), shape=(self.m, self.k_prime)) - 1
         if (4 * k > T):
             raise Exception("Model parameter k must be less than T/4")
-        self.X = np.array([])
-        self.Y = np.array([])
+        self.X = np.zeros((n,T))
+        self.Y = np.zeros((m,T))
         self.X_sim = None
         self.t = 0
         self.y_hat = None
+        self.k_values, self.k_vectors = self.eigen_pairs(T, k)
+        self.eigen_diag = np.diag(self.k_values**0.25)
+
+
+        @jax.jit
+        def _update_x(X, x):
+            new_x = np.roll(X, 1)
+            new_x = jax.ops.index_update(new_x, jax.ops.index[:,0], x)
+            return new_x
+        self._update_x = _update_x
 
     def predict(self, x):
         """
@@ -54,11 +68,26 @@ class WaveFiltering(TimeSeriesModel):
         Returns:
             Predicted value for the next time-step
         """
+        '''
         if self.X.size == 0:
-            self.X = np.asarray([x]).T
+            # self.X = np.asarray([x]).T
+            self.X = x.reshape(-1,1)
         else:
-            self.X = np.hstack((self.X, np.asarray([x]).T))
+            # self.X = np.hstack((self.X, np.asarray([x]).T))
+            self.X = np.hstack((self.X, x.reshape(-1,1)))
+        '''
 
+        # print("-----------------------------")
+        # print("x:")
+        # print(x)
+        # print("type(x) : " + str(type(x)))
+        # print("self.X")
+        # print(self.X)
+        # print("self.X.shape: " + str(self.X.shape))
+        self.X = self._update_x(self.X, x)
+        X_sim_pre = self.X.dot(self.k_vectors).dot(self.eigen_diag)
+
+        '''
         if (self.t == 0): # t = 0 results in an excessively complicated corner case otherwise
             self.X_sim = np.append(np.zeros(self.n * self.k + self.n), np.append(self.X[:,0], np.zeros(self.m)))
         else:
@@ -67,8 +96,20 @@ class WaveFiltering(TimeSeriesModel):
                 X_sim_pre = self.X[:,0:self.t-1].dot(np.flipud(self.k_vectors[0:self.t-1,:])).dot(eigen_diag)
             else:
                 X_sim_pre = self.X[:,self.t-self.T-1:self.t-1].dot(np.flipud(self.k_vectors)).dot(eigen_diag)
-            x_y_cols = np.append(np.append(self.X[:,self.t-1], self.X[:,self.t]), self.Y[:,self.t-1])
-            self.X_sim = np.append(X_sim_pre.T.flatten(), x_y_cols)
+        '''
+
+
+            # x_y_cols = np.append(np.append(self.X[:,self.t-1], self.X[:,self.t]), self.Y[:,self.t-1])
+        x_y_cols = np.append(np.append(self.X[:,1], self.X[:,0]), self.Y[:,1])
+        '''print("x_y_cols.shape : " + str(x_y_cols.shape))
+        print("self.X[:,1].shape : " + str(self.X[:,1].shape))
+        print(self.X[:,1])
+        print("self.X[:,0].shape : " + str(self.X[:,0].shape))
+        print(self.X[:,0])
+        print("self.Y[:,1].shape : " + str(self.Y[:,1].shape))
+        print("X_sim_pre.shape : " + str(X_sim_pre.shape))'''
+        self.X_sim = np.append(X_sim_pre.T.flatten(), x_y_cols)
+        # print("self.X_sim.shape : " + str(self.X_sim.shape))
         self.y_hat = self.M.dot(self.X_sim)
         return self.y_hat
 
@@ -91,12 +132,17 @@ class WaveFiltering(TimeSeriesModel):
         Returns:
             None
         """
+        '''
         if self.Y.size == 0:
             self.Y = np.asarray([y]).T
         else:
             # self.Y = np.append(self.Y, np.asarray([y]).T)
             self.Y = np.hstack((self.Y, np.asarray([y]).T))
-        y_delta = np.asarray([self.y_hat]).T - np.asarray([y]).T
+        '''
+        self.Y = self._update_x(self.Y, y)
+
+        # y_delta = np.asarray([self.y_hat]).T - np.asarray([y]).T
+        y_delta = self.y_hat.reshape(-1,1) - y.reshape(-1,1)
         self.M = self.M - 2 * self.eta * np.outer(y_delta, self.X_sim) # changed from +2 to -2
         if (np.linalg.norm(self.M) > self.R_M):
             self.M = self.M * (self.R_M / np.linalg.norm(self.M))
