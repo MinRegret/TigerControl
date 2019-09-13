@@ -7,3 +7,4 @@ from ctsb.models.time_series.last_value import LastValue
 from ctsb.models.time_series.predict_zero import PredictZero
 from ctsb.models.time_series.rnn import RNN
 from ctsb.models.time_series.lstm import LSTM
+from ctsb.models.time_series.wave_filtering_model import WaveFiltering
