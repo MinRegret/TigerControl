@@ -1,18 +1,9 @@
 import ctsb
 import time
-import numpy as onp
 import jax.numpy as np
 import jax.random as rand
-import scipy.linalg as la
 import matplotlib.pyplot as plt
 from ctsb.utils import generate_key
-
-# compute and return top k eigenpairs of a TxT Hankel matrix
-def eigen_pairs(T, k):
-	v = onp.fromfunction(lambda i: 1.0 / ((i+2)**3 - (i+2)), (2 * T - 1,))
-	Z = 2 * la.hankel(v[:T], v[T-1:])
-	eigen_values, eigen_vectors = np.linalg.eigh(Z)
-	return eigen_values[-k:], eigen_vectors[:,-k:]
 
 def test_wave_filtering(show_plot=False):
 	# state variables
@@ -51,12 +42,9 @@ def test_wave_filtering(show_plot=False):
 		Y.append(C.dot(h) + D.dot(X[:,t]) + rand.truncated_normal(generate_key(), 0, 0.1, shape=(m,)))
 		h = A.dot(h) + B.dot(X[:,t]) + rand.truncated_normal(generate_key(), 0, 0.1, shape=(hidden_state_dim,))
 	Y = np.array(Y).T # list to numpy matrix
-
-	# compute eigenpairs
-	vals, vecs = eigen_pairs(T, k)
 	
 	model = ctsb.model("WaveFiltering")
-	model.initialize(n, m, k, T, eta, R_M, vals, vecs)
+	model.initialize(n, m, k, T, eta, R_M)
 	# loss = lambda y_true, y_pred: (y_true - y_pred)**2
 	loss = lambda y_true, y_pred: (np.linalg.norm(y_true - y_pred))**2
  
@@ -73,8 +61,11 @@ def test_wave_filtering(show_plot=False):
 	if show_plot:
 		plt.plot(results)
 		plt.title("WaveFiltering model on random data")
-		plt.show(block=True)
+		plt.show(block=False)
 	print("test_wave_filtering passed")
+	print(np.linalg.norm(X[:,-1]))
+	print(np.linalg.norm(Y[:,-1]))
+	print(results[-1])
 
 if __name__=="__main__":
 	test_wave_filtering(True)
