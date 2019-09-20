@@ -48,6 +48,11 @@ model_register(
     entry_point='ctsb.models.boosting:SimpleBoost',
 )
 
+model_register(
+    id='SimpleBoostAdj',
+    entry_point='ctsb.models.boosting:SimpleBoostAdj',
+)
+
 
 # ---------- Control Models ----------
 

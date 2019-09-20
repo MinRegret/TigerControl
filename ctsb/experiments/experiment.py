@@ -15,7 +15,7 @@ class Experiment(object):
         self.initialized = False
         
     def initialize(self, problems = None, models = None, problem_to_models = None, metrics = ['mse'], \
-                   key = 0, use_precomputed = True, timesteps = 100, verbose = True, load_bar = True):
+                   key = 0, use_precomputed = False, timesteps = 100, verbose = False, load_bar = False):
         '''
         Description: Initializes the experiment instance. 
 
@@ -249,9 +249,9 @@ class Experiment(object):
             else:
                 ax.plot(loss, label=str(model))
         if(show_legend):
-            ax.legend(loc="center", fontsize=3 + 20//n_problems)
+            ax.legend(loc="upper right", fontsize=5 + 5//n_problems)
         ax.set_title("Problem:" + str(problem))
-        ax.set_xlabel("timesteps")
+        #ax.set_xlabel("timesteps")
         ax.set_ylabel(metric)
 
         if(cutoffs is not None and problem in cutoffs.keys()):
@@ -333,7 +333,7 @@ class Experiment(object):
                     ax[i, j] = self._plot(ax[i, j], problem, problem_result_plus_model,\
                                 n_problems, metric, avg_regret, cutoffs, yscale, show_legend = False)
 
-        fig.tight_layout()
+        #fig.tight_layout()
 
         if(save_as is not None):
             plt.savefig(save_as, dpi=dpi)

@@ -21,7 +21,7 @@ class UCI_Indoor(TimeSeriesProblem):
         self.initialized = False
         # self.data_path = os.path.join(get_ctsb_dir(), "data/uci_indoor_cleaned.csv")
         self.pred_indices = []
-        self.has_regressors = True
+        self.has_regressors = False
 
     def initialize(self, pred_indices=['5:Weather_Temperature']):
         """
@@ -38,8 +38,8 @@ class UCI_Indoor(TimeSeriesProblem):
         self.max_T = self.df.shape[0]
         self.pred_indices = pred_indices
         
-        # return self.df.iloc[self.T].drop(['1:Date','2:Time','24:Day_Of_Week'])
-        return (self.df.iloc[self.T].drop(self.pred_indices).as_matrix(), self.df.iloc[self.T][self.pred_indices].as_matrix())
+        return np.array(self.df.iloc[self.T]['7:CO2_Habitacion_Sensor'])
+        # return (self.df.iloc[self.T].drop(self.pred_indices).as_matrix(), self.df.iloc[self.T][self.pred_indices].as_matrix())
 
     def step(self):
         """
@@ -53,8 +53,8 @@ class UCI_Indoor(TimeSeriesProblem):
         self.T += 1
         if self.T == self.max_T: 
             raise StepOutOfBounds("Number of steps exceeded length of dataset ({})".format(self.max_T))
-        return (self.df.iloc[self.T].drop(self.pred_indices).as_matrix(), self.df.iloc[self.T][self.pred_indices].as_matrix())
-        # return self.df.iloc[self.T].drop(['1:Date','2:Time','24:Day_Of_Week'])
+        # return (self.df.iloc[self.T].drop(self.pred_indices).as_matrix(), self.df.iloc[self.T][self.pred_indices].as_matrix())
+        return np.array(self.df.iloc[self.T]['7:CO2_Habitacion_Sensor'])
 
     def hidden(self):
         """

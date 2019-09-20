@@ -22,7 +22,7 @@ class ARMA(TimeSeriesProblem):
         self.initialized = False
         self.has_regressors = False
 
-    def initialize(self, p=3, q=3, c=None, noise_magnitude=0.1):
+    def initialize(self, p=3, q=3, noise_list = None, c=None, noise_magnitude=0.1, noise_distribution = 'normal'):
         """
         Description: Randomly initialize the hidden dynamics of the system.
         Args:
@@ -44,23 +44,43 @@ class ARMA(TimeSeriesProblem):
             phi = random.normal(generate_key(), shape=(p,))
             self.phi = 0.99 * phi / np.linalg.norm(phi, ord=1)
         else:
-            assert len(p.shape) == 1
             self.phi = p
         if type(q) == int:
             self.psi = random.normal(generate_key(), shape=(q,))
         else:
-            assert len(q.shape) == 1
             self.psi = q
-        self.p = self.phi.shape[0]
-        self.q = self.psi.shape[0]
-        self.noise_magnitude = noise_magnitude
+        if(type(self.phi) is list):
+            self.p = self.phi[0].shape[0]
+        else:
+            self.p = self.phi.shape[0]
+        if(type(self.psi) is list):
+            self.q = self.psi[0].shape[0]
+        else:
+            self.q = self.psi.shape[0]
+        self.noise_magnitude, self.noise_distribution = noise_magnitude, noise_distribution
         self.c = random.normal(generate_key()) if c == None else c
         self.x = random.normal(generate_key(), shape=(self.p,))
-        self.noise = self.noise_magnitude * random.normal(generate_key(), shape=(q,))
+        self.noise_list = None
+        if(noise_list is not None):
+            self.noise_list = noise_list
+            self.noise = np.array(noise_list[0:self.q])
+        elif(noise_distribution == 'normal'):
+            self.noise = self.noise_magnitude * random.normal(generate_key(), shape=(self.q,))
+        elif(noise_distribution == 'unif'):
+            self.noise = self.noise_magnitude * random.uniform(generate_key(), shape=(self.q,), minval=-1., maxval=1.)
 
         def _step(x, noise, eps):
-            x_ar = np.dot(x, self.phi)
-            x_ma = np.dot(noise, self.psi)
+
+            if(type(self.phi) is list):
+                x_ar = np.dot(x, self.phi[self.T])
+            else:
+                x_ar = np.dot(x, self.phi)
+
+            if(type(self.psi) is list):
+                x_ma = np.dot(noise, self.psi[self.T])
+            else:
+                x_ma = np.dot(noise, self.psi)
+
             x_new = self.c + x_ar + x_ma + eps
 
             next_x = np.roll(x, 1) 
@@ -84,7 +104,15 @@ class ARMA(TimeSeriesProblem):
         """
         assert self.initialized
         self.T += 1
-        self.x, self.noise, x_new = self._step(self.x, self.noise, self.noise_magnitude * random.normal(generate_key()))  
+        if(self.noise_list is not None):
+            self.x, self.noise, x_new = self._step(self.x, self.noise, self.noise_list[self.q + self.T - 1])
+        else:
+            if(self.noise_distribution == 'normal'):
+                self.x, self.noise, x_new = self._step(self.x, self.noise, \
+                    self.noise_magnitude * random.normal(generate_key()))
+            elif(self.noise_distribution == 'unif'):
+                self.x, self.noise, x_new = self._step(self.x, self.noise, \
+                    self.noise_magnitude * random.uniform(generate_key(), minval=-1., maxval=1.))
         return x_new
 
     def hidden(self):

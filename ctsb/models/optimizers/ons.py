@@ -23,10 +23,10 @@ class ONS(Optimizer):
         self.max_norm = 1.
         self.y_radius = 1.
         self.lr = learning_rate
-        self.hps = {'reg':0.01, 'beta':20., 'eps':0.1, 'project':False, 'full_matrix':False}
+        self.hps = {'reg':0.00, 'eps':0.0001, 'use_max_norm':False, 'project':False, 'full_matrix':False}
         self.hps.update(hyperparameters)
-        self.beta, self.eps, self.reg = self.hps['beta'], self.hps['eps'], self.hps['reg']
-        self.project, self.full_matrix = self.hps['project'], self.hps['full_matrix']
+        self.eps, self.reg = self.hps['eps'], self.hps['reg']
+        self.use_max_norm, self.project, self.full_matrix = self.hps['use_max_norm'], self.hps['project'], self.hps['full_matrix']
         self.A, self.Ainv = None, None
         self.pred, self.loss = pred, loss
         self.numpyify = lambda m: onp.array(m).astype(onp.double) # maps jax.numpy to regular numpy
@@ -100,9 +100,12 @@ class ONS(Optimizer):
             self.A = [np.eye(dw.shape[0]) * self.eps for dw in grad]
             self.Ainv = [np.eye(dw.shape[0]) * (1 / self.eps) for dw in grad]
 
-        # compute max norm for normalization                       
-        self.max_norm = np.maximum(self.max_norm, np.linalg.norm([self.general_norm(dw) for dw in grad]))
-        eta = self.lr / (self.max_norm * self.beta)
+        eta = self.lr
+
+        # compute max norm and normalize accordingly
+        if(self.max_norm):                     
+            self.max_norm = np.maximum(self.max_norm, np.linalg.norm([self.general_norm(dw) for dw in grad]))
+            eta = eta / self.max_norm
 
         new_values = [self.partial_update(A, Ainv, grad, w) for (A, Ainv, grad, w) in zip(self.A, self.Ainv, grad, params)]
         self.A, self.Ainv, new_grad = list(map(list, zip(*new_values)))
