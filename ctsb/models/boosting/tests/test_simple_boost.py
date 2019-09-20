@@ -23,12 +23,20 @@ def test_simple_boost(steps=5000, show=False):
     #test_simple_boost_lstm(steps=steps, show=show)
     print("test_simple_boost passed")
 
+def avg_regret(loss):
+    avg_regret = []
+    cur_avg = 0
+    for i in range(len(loss)):
+        cur_avg = (i / (i + 1)) * cur_avg + loss[i] / (i + 1)
+        avg_regret.append(cur_avg)
+    return avg_regret
 
 def test_simple_boost_lstm(steps=500, show=True):
     # model initialize
     T = steps
     model_id = "LSTM"
-    model_params = {'n':1, 'm':1, 'l':5, 'h':10, 'optimizer':Adagrad}
+    ogd = OGD(learning_rate=0.01)
+    model_params = {'n':1, 'm':1, 'l':5, 'h':10, 'optimizer':ogd}
     models = []
     Ns = [1, 3, 6]
     for n in Ns: # number of weak learners
@@ -73,13 +81,13 @@ def test_simple_boost_lstm(steps=500, show=True):
         # plot every boosting model loss
         for n, results in zip(Ns, result_list):
             print("Mean loss for n={}: {}".format(n, np.mean(np.array(results[start:]))))
-            plt.plot(x, results[start:], label="SimpleBoost, n={}".format(n))
+            plt.plot(x, avg_regret(results[start:]), label="SimpleBoost, n={}".format(n))
 
         # plot loss for last value and autoregressor models
         print("Mean loss for LastValue: {}".format(np.mean(np.array(last_value[start:]))))
-        plt.plot(x, last_value[start:], label="Last value model")
+        plt.plot(x, avg_regret(last_value[start:]), label="Last value model")
         print("Mean loss for AutoRegressor: {}".format(np.mean(np.array(autoreg_loss[start:]))))
-        plt.plot(x, autoreg_loss[start:], label="AutoRegressor model")
+        plt.plot(x, avg_regret(autoreg_loss[start:]), label="AutoRegressor model")
 
         plt.title("SimpleBoost model on ARMA problem")
         plt.legend()

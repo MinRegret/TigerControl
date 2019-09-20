@@ -4,6 +4,7 @@ OGD optimizer
 import jax.numpy as np
 from ctsb.models.optimizers.core import Optimizer
 from ctsb.models.optimizers.losses import mse
+from ctsb import error
 
 class OGD(Optimizer):
     """
@@ -18,10 +19,12 @@ class OGD(Optimizer):
     def __init__(self, pred=None, loss=mse, learning_rate=1.0, hyperparameters={}):
         self.initialized = False
         self.lr = learning_rate
-        self.hyperparameters = {'T':0, 'max_norm':1.0}
+        self.hyperparameters = {'T':0, 'max_norm':True}
         self.hyperparameters.update(hyperparameters)
-        self.T = self.hyperparameters['T']
-        self.max_norm = self.hyperparameters['max_norm']
+        for key, value in self.hyperparameters.items():
+            if hasattr(self, key):
+                raise error.InvalidInput("key {} is already an attribute in {}".format(key, self))
+            setattr(self, key, value) # store all hyperparameters
         self.G = None
         self.pred = pred
         self.loss = loss
@@ -41,17 +44,23 @@ class OGD(Optimizer):
         """
         assert self.initialized
 
-        self.T = self.T + 1
+        self.T += 1
         grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
-        
-        if (type(params) is list):
-            self.max_norm = np.maximum(self.max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad]))
-            lr = self.lr / (self.max_norm * np.sqrt(self.T))
-            return [w - lr * dw for (w, dw) in zip(params, grad)]
 
-        self.max_norm = np.maximum(self.max_norm, np.linalg.norm(grad))
-        lr = self.lr / (self.max_norm * np.sqrt(self.T))
-        return params - lr * grad
+        # Make everything a list for generality
+        is_list = True
+        if(type(params) is not list):
+            params = [params]
+            grad = [grad]
+            is_list = False
+    
+        lr = self.lr / np.sqrt(self.T)
+        if self.max_norm:
+            self.max_norm = np.maximum(self.max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad]))
+            lr = self.lr / self.max_norm
+        new_params = [w - lr * dw for (w, dw) in zip(params, grad)]
+
+        return new_params if is_list else new_params[0]
 
 
 
