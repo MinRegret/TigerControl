@@ -25,7 +25,9 @@ def to_dict(x):
     Returns:
         A dictionary 'version' of x
     '''
-    if(type(x) is not dict):
+    if(x is None):
+        return {}
+    elif(type(x) is not dict):
         x_dict = {}
         for key in x:
             x_dict[key] = [(key, None)]

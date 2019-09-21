@@ -5,6 +5,8 @@ AR(p): Linear combination of previous values
 import ctsb
 import jax
 import jax.numpy as np
+import jax.experimental.stax as stax
+from ctsb.utils.random import generate_key
 from ctsb.models.time_series import TimeSeriesModel
 from ctsb.models.optimizers import *
 from ctsb.models.optimizers.losses import mse
@@ -33,7 +35,8 @@ class AutoRegressor(TimeSeriesModel):
         """
         self.initialized = True
         self.past = np.zeros(p)
-        self.params = np.zeros(p + 1)
+        glorot_init = stax.glorot() # returns a function that initializes weights
+        self.params = glorot_init(generate_key(), (p+1,1)).squeeze()
 
         def _update_past(self_past, x):
             new_past = np.roll(self_past, 1)
@@ -57,7 +60,9 @@ class AutoRegressor(TimeSeriesModel):
         """
         assert self.initialized, "ERROR: Model not initialized!"
 
-        self.past = self._update_past(self.past, x.squeeze()) # squeeze to remove extra dimensions
+        if(type(x) is not float): x = x.squeeze()
+
+        self.past = self._update_past(self.past, x) # squeeze to remove extra dimensions
         return self._predict(self.params, self.past)
 
     def forecast(self, x, timeline = 1):
