@@ -1,7 +1,7 @@
-ctsb.problems.time\_series.ARMA
+tigercontrol.problems.time\_series.ARMA
 ===============================
 
-.. currentmodule:: ctsb.problems.time_series
+.. currentmodule:: tigercontrol.problems.time_series
 
 .. autoclass:: ARMA
 

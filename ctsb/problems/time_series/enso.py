@@ -2,13 +2,13 @@
 Monthly values of control indices useful for predicting La Nina/El Nino
 """
 
-import ctsb
+import tigercontrol
 import os
 import jax.numpy as np
 import pandas as pd
-from ctsb.utils.dataset_registry import enso, get_ctsb_dir
-from ctsb.error import StepOutOfBounds
-from ctsb.problems.time_series import TimeSeriesProblem
+from tigercontrol.utils.dataset_registry import enso, get_tigercontrol_dir
+from tigercontrol.error import StepOutOfBounds
+from tigercontrol.problems.time_series import TimeSeriesProblem
 
 class ENSO(TimeSeriesProblem):
     """

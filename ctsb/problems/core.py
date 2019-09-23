@@ -1,7 +1,7 @@
 # Problem class
 # Author: John Hallman
 
-from ctsb import error
+from tigercontrol import error
 
 # class for online control tests
 class Problem(object):

@@ -1,7 +1,7 @@
-from ctsb.models.control.tests.run_all_tests import run_all_tests as control_model_tests
-from ctsb.models.time_series.tests.run_all_tests import run_all_tests as time_series_model_tests
-from ctsb.models.optimizers.tests.run_all_tests import run_all_tests as optimizers_tests
-from ctsb.models.tests.test_custom_model import test_custom_model
+from tigercontrol.models.control.tests.run_all_tests import run_all_tests as control_model_tests
+from tigercontrol.models.time_series.tests.run_all_tests import run_all_tests as time_series_model_tests
+from tigercontrol.models.optimizers.tests.run_all_tests import run_all_tests as optimizers_tests
+from tigercontrol.models.tests.test_custom_model import test_custom_model
 
 def run_all_tests(steps=1000, show=False):
     print("\nrunning all models tests...\n")

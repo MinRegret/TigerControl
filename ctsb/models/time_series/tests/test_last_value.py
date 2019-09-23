@@ -1,15 +1,15 @@
 # test the PredictZero model class
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
 def test_last_value(steps=1000, show_plot=True):
     T = steps 
     p, q = 3, 3
-    problem = ctsb.problem("ARMA-v0")
+    problem = tigercontrol.problem("ARMA-v0")
     cur_x = problem.initialize(p, q)
-    model = ctsb.model("LastValue")
+    model = tigercontrol.model("LastValue")
     model.initialize()
     loss = lambda y_true, y_pred: (y_true - y_pred)**2
  

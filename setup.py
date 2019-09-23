@@ -6,8 +6,8 @@ import setuptools
 version = '0.1'
 
 setuptools.setup(
-    name='ctsb',
-    url='https://github.com/johnhallman/ctsb',
+    name='tigercontrol',
+    url='https://github.com/johnhallman/tigercontrol',
     author='John Hallman',
     author_email='johnolof@gmail.com',
     packages=setuptools.find_packages(),

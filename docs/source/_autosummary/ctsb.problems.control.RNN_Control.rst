@@ -1,7 +1,7 @@
-ctsb.problems.control.RNN\_Control
+tigercontrol.problems.control.RNN\_Control
 ==================================
 
-.. currentmodule:: ctsb.problems.control
+.. currentmodule:: tigercontrol.problems.control
 
 .. autoclass:: RNN_Control
 

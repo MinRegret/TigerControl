@@ -1,7 +1,7 @@
-ctsb.models.control.ODEShootingMethod
+tigercontrol.models.control.ODEShootingMethod
 =====================================
 
-.. currentmodule:: ctsb.models.control
+.. currentmodule:: tigercontrol.models.control
 
 .. autoclass:: ODEShootingMethod
 

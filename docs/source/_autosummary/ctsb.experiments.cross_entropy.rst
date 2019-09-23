@@ -1,6 +1,6 @@
-ctsb.experiments.cross\_entropy
+tigercontrol.experiments.cross\_entropy
 ===============================
 
-.. currentmodule:: ctsb.experiments
+.. currentmodule:: tigercontrol.experiments
 
 .. autofunction:: cross_entropy

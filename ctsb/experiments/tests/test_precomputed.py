@@ -1,6 +1,6 @@
-import ctsb
-from ctsb.experiments.experiment import Experiment
-from ctsb.models.optimizers import *
+import tigercontrol
+from tigercontrol.experiments.experiment import Experiment
+from tigercontrol.models.optimizers import *
 
 def test_precomputed(steps=100, show=False):
     exp = Experiment()

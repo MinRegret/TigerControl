@@ -2,7 +2,7 @@ import re
 import importlib
 import warnings
 from difflib import get_close_matches
-from ctsb import error
+from tigercontrol import error
 
 # This format is true today, but it's *not* an official spec.
 # [username/](problem-name)-v(version)    problem-name is group 1, version is group 2
@@ -84,7 +84,7 @@ class Spec(object):
         return "{} Spec({})".format(str(self), self.id)
 
     def __str__(self):
-        return "<CTSB Spec>"
+        return "<TigerControl Spec>"
 
 class Registry(object):
     """Register object by ID. IDs remain stable over time and are

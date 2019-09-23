@@ -1,7 +1,7 @@
-import ctsb
+import tigercontrol
 import os
-from ctsb.utils.dataset_registry import sp500, uci_indoor
-from ctsb.utils.download_tools import get_ctsb_dir
+from tigercontrol.utils.dataset_registry import sp500, uci_indoor
+from tigercontrol.utils.download_tools import get_tigercontrol_dir
 
 # add all unit tests in datset_registry
 def test_dataset_registry(show=False):
@@ -15,8 +15,8 @@ def test_dataset_registry(show=False):
 # Unit test for dataset_registry.download_fn. Tests if file is downloaded and processed correctly.
 def test_dataset_download(path_to_csv, download_fn, verbose=False):
     download_fn(verbose)
-    ctsb_dir = get_ctsb_dir()
-    total_path = os.path.join(ctsb_dir, path_to_csv)
+    tigercontrol_dir = get_tigercontrol_dir()
+    total_path = os.path.join(tigercontrol_dir, path_to_csv)
     assert(os.path.isfile(total_path))
     # os.remove(total_path)
     if verbose:

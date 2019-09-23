@@ -1,7 +1,7 @@
 # experiments init file
 
-from ctsb.experiments.metrics import *
-from ctsb.experiments.core import create_full_problem_to_models, run_experiment
-from ctsb.experiments.new_experiment import NewExperiment
-from ctsb.experiments.experiment import Experiment
-from ctsb.experiments.precomputed import recompute, load_prob_model_to_result
+from tigercontrol.experiments.metrics import *
+from tigercontrol.experiments.core import create_full_problem_to_models, run_experiment
+from tigercontrol.experiments.new_experiment import NewExperiment
+from tigercontrol.experiments.experiment import Experiment
+from tigercontrol.experiments.precomputed import recompute, load_prob_model_to_result

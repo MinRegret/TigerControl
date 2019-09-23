@@ -1,6 +1,6 @@
-ctsb.utils.generate\_key
+tigercontrol.utils.generate\_key
 ========================
 
-.. currentmodule:: ctsb.utils
+.. currentmodule:: tigercontrol.utils
 
 .. autofunction:: generate_key

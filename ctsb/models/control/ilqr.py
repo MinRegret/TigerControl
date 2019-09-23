@@ -3,8 +3,8 @@ Iterative Linear Quadratic Regulator
 """
 import jax
 import jax.numpy as np
-import ctsb
-from ctsb.models.control import ControlModel
+import tigercontrol
+from tigercontrol.models.control import ControlModel
 
 
 class ILQR(ControlModel):

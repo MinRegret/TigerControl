@@ -1,20 +1,20 @@
-import ctsb
-from ctsb.models.optimizers.ogd import OGD
-from ctsb.models.optimizers.losses import mse
+import tigercontrol
+from tigercontrol.models.optimizers.ogd import OGD
+from tigercontrol.models.optimizers.losses import mse
 import matplotlib.pyplot as plt
 
 def test_ogd(show=False):
     
-    problem = ctsb.problem('ARMA-v0')
+    problem = tigercontrol.problem('ARMA-v0')
     x = problem.initialize(p=2,q=0)
 
-    model = ctsb.model('LSTM')
+    model = tigercontrol.model('LSTM')
     model.initialize(n=1, m=1, l=5, h=10, optimizer=OGD) # initialize with class
     model.predict(1.0) # call methods to verify it works
     model.update(1.0)
 
     optimizer = OGD(learning_rate=0.001)
-    model = ctsb.model('LSTM')
+    model = tigercontrol.model('LSTM')
     model.initialize(n=1, m=1, l=3, h=10, optimizer=optimizer) # reinitialize with instance
 
     loss = []

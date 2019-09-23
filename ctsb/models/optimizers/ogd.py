@@ -2,9 +2,9 @@
 OGD optimizer
 '''
 import jax.numpy as np
-from ctsb.models.optimizers.core import Optimizer
-from ctsb.models.optimizers.losses import mse
-from ctsb import error
+from tigercontrol.models.optimizers.core import Optimizer
+from tigercontrol.models.optimizers.losses import mse
+from tigercontrol import error
 
 class OGD(Optimizer):
     """

@@ -1,6 +1,6 @@
-ctsb.models.optimizers.cross\_entropy
+tigercontrol.models.optimizers.cross\_entropy
 =====================================
 
-.. currentmodule:: ctsb.models.optimizers
+.. currentmodule:: tigercontrol.models.optimizers
 
 .. autofunction:: cross_entropy

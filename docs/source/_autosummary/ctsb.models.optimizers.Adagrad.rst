@@ -1,7 +1,7 @@
-ctsb.models.optimizers.Adagrad
+tigercontrol.models.optimizers.Adagrad
 ==============================
 
-.. currentmodule:: ctsb.models.optimizers
+.. currentmodule:: tigercontrol.models.optimizers
 
 .. autoclass:: Adagrad
 

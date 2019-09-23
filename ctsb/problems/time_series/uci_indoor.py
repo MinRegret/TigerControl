@@ -2,13 +2,13 @@
 UCI indoor temperature data
 """
 
-import ctsb
+import tigercontrol
 import os
 import jax.numpy as np
 import pandas as pd
-from ctsb.utils import uci_indoor, get_ctsb_dir
-from ctsb.error import StepOutOfBounds
-from ctsb.problems.time_series import TimeSeriesProblem
+from tigercontrol.utils import uci_indoor, get_tigercontrol_dir
+from tigercontrol.error import StepOutOfBounds
+from tigercontrol.problems.time_series import TimeSeriesProblem
 
 class UCI_Indoor(TimeSeriesProblem):
     """
@@ -19,7 +19,7 @@ class UCI_Indoor(TimeSeriesProblem):
 
     def __init__(self):
         self.initialized = False
-        # self.data_path = os.path.join(get_ctsb_dir(), "data/uci_indoor_cleaned.csv")
+        # self.data_path = os.path.join(get_tigercontrol_dir(), "data/uci_indoor_cleaned.csv")
         self.pred_indices = []
         self.has_regressors = False
 

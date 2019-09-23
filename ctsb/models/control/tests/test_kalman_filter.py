@@ -1,9 +1,9 @@
 # test the KalmanFilter model class
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import jax.random as random
-from ctsb.utils import generate_key
+from tigercontrol.utils import generate_key
 import matplotlib.pyplot as plt
 
 # Test Kalman Filter for constant signal x = 0.5 with measurement noise 0.1
@@ -14,7 +14,7 @@ def test_kalman_filter(steps=100, show_plot=True):
     env_noise = 0.3
     x0 = 0
 
-    model = ctsb.model("KalmanFilter")
+    model = tigercontrol.model("KalmanFilter")
     model.initialize(x0, 1, 0, 1, 1, 0, env_noise)
 
     loss = lambda x_true, x_pred: (x_true - x_pred)**2

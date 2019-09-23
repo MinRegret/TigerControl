@@ -5,7 +5,7 @@ Implements pseudorandomness in our program
 import sys
 import numpy as np
 import jax.random as random
-import ctsb
+import tigercontrol
 
 def set_key(key=None):
     '''
@@ -17,7 +17,7 @@ def set_key(key=None):
     if key == None:
         key = int(np.random.random_integers(sys.maxsize))
     assert type(key) == int
-    ctsb.GLOBAL_RANDOM_KEY = random.PRNGKey(key)
+    tigercontrol.GLOBAL_RANDOM_KEY = random.PRNGKey(key)
 
 def generate_key():
     '''
@@ -26,8 +26,8 @@ def generate_key():
     Returns:
         Random random key
     '''
-    key, subkey = random.split(ctsb.GLOBAL_RANDOM_KEY)
-    ctsb.GLOBAL_RANDOM_KEY = key
+    key, subkey = random.split(tigercontrol.GLOBAL_RANDOM_KEY)
+    tigercontrol.GLOBAL_RANDOM_KEY = key
     return subkey
 
 def get_global_key():
@@ -37,4 +37,4 @@ def get_global_key():
     Returns:
         Current global random key
     '''
-    return ctsb.GLOBAL_RANDOM_KEY
+    return tigercontrol.GLOBAL_RANDOM_KEY

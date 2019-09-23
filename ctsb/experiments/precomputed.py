@@ -1,8 +1,8 @@
 ''' Precompute '''
 
-from ctsb.utils.random import set_key
-from ctsb.experiments.core import run_experiment, create_full_problem_to_models
-from ctsb.utils.download_tools import get_ctsb_dir
+from tigercontrol.utils.random import set_key
+from tigercontrol.experiments.core import run_experiment, create_full_problem_to_models
+from tigercontrol.utils.download_tools import get_tigercontrol_dir
 import jax.numpy as np
 import os
 import csv
@@ -63,9 +63,9 @@ def recompute(verbose = False, load_bar = False):
     for metric in all_metrics:
         for problem_id in all_problems:
             # datapath for current metric and problem
-            ctsb_dir = get_ctsb_dir()
+            tigercontrol_dir = get_tigercontrol_dir()
             datapath = 'data/precomputed_results/' + metric + '_' + problem_id[:-3] + '.csv'
-            datapath = os.path.join(ctsb_dir, datapath)
+            datapath = os.path.join(tigercontrol_dir, datapath)
 
             with open(datapath, 'w') as csvfile:
                 writer = csv.writer(csvfile)
@@ -82,9 +82,9 @@ def recompute(verbose = False, load_bar = False):
     ''' Store time and memory usage '''
     for problem_id in all_problems:
         # datapath for current metric and problem
-        ctsb_dir = get_ctsb_dir()
+        tigercontrol_dir = get_tigercontrol_dir()
         datapath = 'data/precomputed_results/time_memory' + '_' + problem_id[:-3] + '.csv'
-        datapath = os.path.join(ctsb_dir, datapath)
+        datapath = os.path.join(tigercontrol_dir, datapath)
 
         with open(datapath, 'w') as csvfile:
             writer = csv.writer(csvfile)
@@ -127,9 +127,9 @@ def load_prob_model_to_result(problem_ids = all_problems, model_ids = all_models
     for metric in metrics:
         for problem_id in problem_ids:
             # datapath for current metric and problem
-            ctsb_dir = get_ctsb_dir()
+            tigercontrol_dir = get_tigercontrol_dir()
             datapath = 'data/precomputed_results/' + metric + '_' + problem_id[:-3] + '.csv'
-            datapath = os.path.join(ctsb_dir, datapath)
+            datapath = os.path.join(tigercontrol_dir, datapath)
 
             with open(datapath) as csvfile:
                 reader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
@@ -143,9 +143,9 @@ def load_prob_model_to_result(problem_ids = all_problems, model_ids = all_models
     ''' Get time and memory usage '''
     for problem_id in problem_ids:
         # datapath for current metric and problem
-        ctsb_dir = get_ctsb_dir()
+        tigercontrol_dir = get_tigercontrol_dir()
         datapath = 'data/precomputed_results/time_memory' + '_' + problem_id[:-3] + '.csv'
-        datapath = os.path.join(ctsb_dir, datapath)
+        datapath = os.path.join(tigercontrol_dir, datapath)
 
         with open(datapath) as csvfile:
             reader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)

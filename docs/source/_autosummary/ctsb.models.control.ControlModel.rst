@@ -1,7 +1,7 @@
-ctsb.models.control.ControlModel
+tigercontrol.models.control.ControlModel
 ================================
 
-.. currentmodule:: ctsb.models.control
+.. currentmodule:: tigercontrol.models.control
 
 .. autoclass:: ControlModel
 

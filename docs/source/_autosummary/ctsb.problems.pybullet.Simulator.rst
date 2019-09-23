@@ -1,7 +1,7 @@
-ctsb.problems.pybullet.Simulator
+tigercontrol.problems.pybullet.Simulator
 ================================
 
-.. currentmodule:: ctsb.problems.pybullet
+.. currentmodule:: tigercontrol.problems.pybullet
 
 .. autoclass:: Simulator
 

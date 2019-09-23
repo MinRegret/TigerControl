@@ -1,6 +1,6 @@
-ctsb.experiments.create\_full\_problem\_to\_models
+tigercontrol.experiments.create\_full\_problem\_to\_models
 ==================================================
 
-.. currentmodule:: ctsb.experiments
+.. currentmodule:: tigercontrol.experiments
 
 .. autofunction:: create_full_problem_to_models

@@ -3,15 +3,15 @@
 import jax.numpy as np
 import jax.random as random
 import matplotlib.pyplot as plt
-import ctsb
-from ctsb.utils.random import generate_key
+import tigercontrol
+from tigercontrol.utils.random import generate_key
 
 
 
 def test_rnn_control(steps=1000, show_plot=False, verbose=False):
     T = steps
     n, m = 5, 3
-    problem = ctsb.problem("RNN-Control-v0")
+    problem = tigercontrol.problem("RNN-Control-v0")
     problem.initialize(n, m)
     assert problem.T == 0
 

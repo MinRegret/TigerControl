@@ -1,6 +1,6 @@
 # test the CustomModel class
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
@@ -10,11 +10,11 @@ def test_custom_model(steps=1000, show_plot=True):
     T = steps 
     p, q = 3, 3
     loss = lambda y_true, y_pred: (y_true - y_pred)**2
-    problem = ctsb.problem("ARMA-v0")
+    problem = tigercontrol.problem("ARMA-v0")
     cur_x = problem.initialize(p, q)
 
     # simple LastValue custom model implementation
-    class Custom(ctsb.CustomModel):
+    class Custom(tigercontrol.CustomModel):
         def initialize(self):
             self.x = 0.0
         def predict(self, x):
@@ -23,12 +23,12 @@ def test_custom_model(steps=1000, show_plot=True):
             self.x = y
 
     # try registering and calling the custom model
-    ctsb.register_custom_model(Custom, "TestCustomModel")
-    custom_model = ctsb.model("TestCustomModel")
+    tigercontrol.register_custom_model(Custom, "TestCustomModel")
+    custom_model = tigercontrol.model("TestCustomModel")
     custom_model.initialize()
 
     # regular LastValue model as sanity check
-    reg_model = ctsb.model("LastValue")
+    reg_model = tigercontrol.model("LastValue")
     reg_model.initialize()
  
     results = []

@@ -1,6 +1,6 @@
-ctsb.utils.crypto
+tigercontrol.utils.crypto
 =================
 
-.. currentmodule:: ctsb.utils
+.. currentmodule:: tigercontrol.utils
 
 .. autofunction:: crypto

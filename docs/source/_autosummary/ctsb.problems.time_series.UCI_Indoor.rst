@@ -1,7 +1,7 @@
-ctsb.problems.time\_series.UCI\_Indoor
+tigercontrol.problems.time\_series.UCI\_Indoor
 ======================================
 
-.. currentmodule:: ctsb.problems.time_series
+.. currentmodule:: tigercontrol.problems.time_series
 
 .. autoclass:: UCI_Indoor
 

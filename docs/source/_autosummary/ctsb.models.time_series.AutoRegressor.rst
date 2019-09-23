@@ -1,7 +1,7 @@
-ctsb.models.time\_series.AutoRegressor
+tigercontrol.models.time\_series.AutoRegressor
 ======================================
 
-.. currentmodule:: ctsb.models.time_series
+.. currentmodule:: tigercontrol.models.time_series
 
 .. autoclass:: AutoRegressor
 

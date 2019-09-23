@@ -1,7 +1,7 @@
-from ctsb.problems.control.tests.run_all_tests import run_all_tests as control_problems_tests
-from ctsb.problems.time_series.tests.run_all_tests import run_all_tests as time_series_problems_tests
-from ctsb.problems.pybullet.tests.run_all_tests import run_all_tests as pybullet_problems_tests
-from ctsb.problems.tests.test_custom_problem import test_custom_problem
+from tigercontrol.problems.control.tests.run_all_tests import run_all_tests as control_problems_tests
+from tigercontrol.problems.time_series.tests.run_all_tests import run_all_tests as time_series_problems_tests
+from tigercontrol.problems.pybullet.tests.run_all_tests import run_all_tests as pybullet_problems_tests
+from tigercontrol.problems.tests.test_custom_problem import test_custom_problem
 
 # run all unit tests for problems
 def run_all_tests(steps=1000, show=False):

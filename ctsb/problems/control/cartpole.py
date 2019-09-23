@@ -5,9 +5,9 @@ import jax
 import jax.numpy as np
 import jax.random as random
 
-import ctsb
-from ctsb.utils import generate_key
-from ctsb.problems.control import ControlProblem
+import tigercontrol
+from tigercontrol.utils import generate_key
+from tigercontrol.problems.control import ControlProblem
 
 # necessary for rendering
 from gym.envs.classic_control import rendering

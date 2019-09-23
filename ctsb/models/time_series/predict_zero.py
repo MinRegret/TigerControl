@@ -3,8 +3,8 @@ Predict 0
 """
 
 import jax.numpy as np
-import ctsb
-from ctsb.models.time_series import TimeSeriesModel
+import tigercontrol
+from tigercontrol.models.time_series import TimeSeriesModel
 
 class PredictZero(TimeSeriesModel):
     """

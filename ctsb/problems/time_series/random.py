@@ -3,9 +3,9 @@ Produces randomly generated scalar values at every timestep, taken from a normal
 """
 import jax.numpy as np
 import jax.random as random
-import ctsb
-from ctsb.utils.random import generate_key
-from ctsb.problems.time_series import TimeSeriesProblem
+import tigercontrol
+from tigercontrol.utils.random import generate_key
+from tigercontrol.problems.time_series import TimeSeriesProblem
 
 class Random(TimeSeriesProblem):
     """

@@ -1,7 +1,7 @@
-ctsb.problems.pybullet.HalfCheetah
+tigercontrol.problems.pybullet.HalfCheetah
 ==================================
 
-.. currentmodule:: ctsb.problems.pybullet
+.. currentmodule:: tigercontrol.problems.pybullet
 
 .. autoclass:: HalfCheetah
 

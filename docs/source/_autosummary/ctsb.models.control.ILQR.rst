@@ -1,7 +1,7 @@
-ctsb.models.control.ILQR
+tigercontrol.models.control.ILQR
 ========================
 
-.. currentmodule:: ctsb.models.control
+.. currentmodule:: tigercontrol.models.control
 
 .. autoclass:: ILQR
 

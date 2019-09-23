@@ -1,7 +1,7 @@
-ctsb.problems.control.DoublePendulum
+tigercontrol.problems.control.DoublePendulum
 ====================================
 
-.. currentmodule:: ctsb.problems.control
+.. currentmodule:: tigercontrol.problems.control
 
 .. autoclass:: DoublePendulum
 

@@ -1,16 +1,16 @@
 # test the LeastSquares model class
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import matplotlib.pyplot as plt
-from ctsb.models.optimizers import *
+from tigercontrol.models.optimizers import *
 
 def test_least_squares(steps=1000, show_plot=True):
     T = steps 
-    problem = ctsb.problem("ENSO-v0")
+    problem = tigercontrol.problem("ENSO-v0")
     x, y = problem.initialize(input_signals = ['nino12', 'nino34', 'nino4'])
 
-    model = ctsb.model("LeastSquares")
+    model = tigercontrol.model("LeastSquares")
     model.initialize(x, y, reg = 10.0 * steps)
     loss = lambda y_true, y_pred: np.sum((y_true - y_pred)**2)
  

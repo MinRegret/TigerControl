@@ -3,11 +3,11 @@ test SimpleBoost model
 note: n=3 seems to do consistently better than other n's...
 """
 import jax.numpy as np
-import ctsb
-from ctsb.models.optimizers.ogd import OGD
-from ctsb.models.optimizers.losses import mse
+import tigercontrol
+from tigercontrol.models.optimizers.ogd import OGD
+from tigercontrol.models.optimizers.losses import mse
 import matplotlib.pyplot as plt
-from ctsb.utils.random import set_key
+from tigercontrol.utils.random import set_key
 from tqdm import tqdm
 
 def avg_regret(loss):
@@ -40,17 +40,17 @@ def test_simple_boost_lstm(steps=500, show=True):
     models = []
     Ns = [1, 3, 6]
     for n in Ns: # number of weak learners
-        model = ctsb.model("SimpleBoost")
+        model = tigercontrol.model("SimpleBoost")
         model.initialize(model_id, model_params, n, reg=1.0) # regularization
         models.append(model)
 
     # regular AutoRegressor for comparison
-    autoreg = ctsb.model("AutoRegressor")
+    autoreg = tigercontrol.model("AutoRegressor")
     autoreg.initialize(p=4) # regularization
 
     # problem initialize
     p, q = 4, 0
-    problem = ctsb.problem("ARMA-v0")
+    problem = tigercontrol.problem("ARMA-v0")
     y_true = problem.initialize(p, q, noise_magnitude=0.1)
  
     # run all boosting model
@@ -105,7 +105,7 @@ def test_simple_boost_arma(steps=500, show=True):
     timelines = [6, 9, 12]
 
     # regular AutoRegressor for comparison
-    autoreg = ctsb.model("AutoRegressor")
+    autoreg = tigercontrol.model("AutoRegressor")
     autoreg.initialize(p=18, optimizer = OGD) 
 
     fig, ax = plt.subplots(nrows=1, ncols=3)
@@ -115,12 +115,12 @@ def test_simple_boost_arma(steps=500, show=True):
     for timeline in timelines:
 
         # problem initialize
-        problem = ctsb.problem("ENSO-v0")
+        problem = tigercontrol.problem("ENSO-v0")
         x, y_true = problem.initialize(input_signals = ['oni'], timeline = timeline)
         models = []
 
         for n in Ns: # number of weak learners
-            model = ctsb.model("SimpleBoost")
+            model = tigercontrol.model("SimpleBoost")
             model.initialize(model_id, model_params, n, reg=0.0) # regularization
             models.append(model)
 

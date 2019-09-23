@@ -1,7 +1,7 @@
-ctsb.problems.ControlProblem
+tigercontrol.problems.ControlProblem
 ============================
 
-.. currentmodule:: ctsb.problems
+.. currentmodule:: tigercontrol.problems
 
 .. autoclass:: ControlProblem
 

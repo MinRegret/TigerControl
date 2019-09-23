@@ -2,13 +2,13 @@
 S&P 500 daily opening price
 """
 
-import ctsb
+import tigercontrol
 import os
 import jax.numpy as np
 import pandas as pd
-from ctsb.utils import sp500, get_ctsb_dir
-from ctsb.error import StepOutOfBounds
-from ctsb.problems.time_series import TimeSeriesProblem
+from tigercontrol.utils import sp500, get_tigercontrol_dir
+from tigercontrol.error import StepOutOfBounds
+from tigercontrol.problems.time_series import TimeSeriesProblem
 
 class SP500(TimeSeriesProblem):
     """
@@ -20,7 +20,7 @@ class SP500(TimeSeriesProblem):
 
     def __init__(self):
         self.initialized = False
-        self.data_path = os.path.join(get_ctsb_dir(), "data/sp500.csv")
+        self.data_path = os.path.join(get_tigercontrol_dir(), "data/sp500.csv")
         self.has_regressors = False
 
     def initialize(self):

@@ -2,19 +2,19 @@
 Test for PyBullet cartpole problem
 """
 import time
-import ctsb
+import tigercontrol
 import jax.numpy as np
 
 
 # cartpole test
 def test_cartpole(verbose=False):
-    problem = ctsb.problem("CartPole-v0")
+    problem = tigercontrol.problem("CartPole-v0")
     C_x, C_u = np.diag(np.array([0.1, 0.0, 1.0, 0.0])), np.diag(np.array([0.1]))
     L = lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u
     dim_x, dim_u = 4, 1
     obs = problem.initialize()
 
-    model = ctsb.model("ILQR")
+    model = tigercontrol.model("ILQR")
     model.initialize(problem, L, dim_x, dim_u)
     T = 100 # horizon
     threshold = 0.05

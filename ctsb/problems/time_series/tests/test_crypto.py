@@ -1,13 +1,13 @@
 # test the crypto problem class
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
 
 def test_crypto(steps=1000, show_plot=False, verbose=False):
     T = steps
-    problem = ctsb.problem("Crypto-v0")
+    problem = tigercontrol.problem("Crypto-v0")
     problem.initialize()
     assert problem.T == 0
 

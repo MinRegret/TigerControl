@@ -1,17 +1,17 @@
 # test the Autogressor model class
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import matplotlib.pyplot as plt
-from ctsb.models.optimizers import *
+from tigercontrol.models.optimizers import *
 
 def test_autoregressor(steps=1000, show_plot=True):
     T = steps 
     p, q = 3, 3
-    problem = ctsb.problem("ARMA-v0")
+    problem = tigercontrol.problem("ARMA-v0")
     cur_x = problem.initialize(p, q)
 
-    model = ctsb.model("AutoRegressor")
+    model = tigercontrol.model("AutoRegressor")
     model.initialize(p, optimizer = ONS)
     loss = lambda y_true, y_pred: np.sum((y_true - y_pred)**2)
  

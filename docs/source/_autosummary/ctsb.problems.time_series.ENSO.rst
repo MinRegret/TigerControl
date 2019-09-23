@@ -1,7 +1,7 @@
-ctsb.problems.time\_series.ENSO
+tigercontrol.problems.time\_series.ENSO
 ===============================
 
-.. currentmodule:: ctsb.problems.time_series
+.. currentmodule:: tigercontrol.problems.time_series
 
 .. autoclass:: ENSO
 

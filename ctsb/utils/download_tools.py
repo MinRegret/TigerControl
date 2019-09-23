@@ -4,20 +4,20 @@ from __future__ import print_function
 import os
 import sys
 import zipfile
-import ctsb
+import tigercontrol
 from urllib.error import URLError
 from urllib.request import urlretrieve
 
-def get_ctsb_dir():
+def get_tigercontrol_dir():
     """
     Description:
         Gets absolute path of package directory.
     Returns:
         Absolute path of package directory
     """
-    init_dir = os.path.abspath(ctsb.__file__)
-    ctsb_dir = init_dir.rsplit('/', 1)[0]
-    return ctsb_dir
+    init_dir = os.path.abspath(tigercontrol.__file__)
+    tigercontrol_dir = init_dir.rsplit('/', 1)[0]
+    return tigercontrol_dir
 
 def report_download_progress(chunk_number, chunk_size, file_size):
     """

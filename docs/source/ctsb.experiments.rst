@@ -1,6 +1,6 @@
-ctsb.experiments package
+tigercontrol.experiments package
 ========================
-.. automodule:: ctsb.experiments
+.. automodule:: tigercontrol.experiments
 
 core
 ----

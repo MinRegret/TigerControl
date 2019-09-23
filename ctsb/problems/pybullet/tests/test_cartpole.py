@@ -2,15 +2,15 @@
 Test for PyBullet cartpole problem
 """
 import time
-import ctsb
+import tigercontrol
 import jax.numpy as np
 
 # cartpole test
 def test_cartpole(verbose=False):
-    problem = ctsb.problem("PyBullet-CartPole-v0")
+    problem = tigercontrol.problem("PyBullet-CartPole-v0")
     obs = problem.initialize(render=verbose)
 
-    model = ctsb.model("CartPoleNN")
+    model = tigercontrol.model("CartPoleNN")
     model.initialize(problem.get_observation_space(), problem.get_action_space())
 
     t_start = time.time()

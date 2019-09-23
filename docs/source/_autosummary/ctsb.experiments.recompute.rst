@@ -1,6 +1,6 @@
-ctsb.experiments.recompute
+tigercontrol.experiments.recompute
 ==========================
 
-.. currentmodule:: ctsb.experiments
+.. currentmodule:: tigercontrol.experiments
 
 .. autofunction:: recompute

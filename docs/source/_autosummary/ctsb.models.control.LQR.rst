@@ -1,7 +1,7 @@
-ctsb.models.control.LQR
+tigercontrol.models.control.LQR
 =======================
 
-.. currentmodule:: ctsb.models.control
+.. currentmodule:: tigercontrol.models.control
 
 .. autoclass:: LQR
 

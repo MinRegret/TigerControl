@@ -2,15 +2,15 @@
 
 import jax.numpy as np
 import jax.random as random
-import ctsb
+import tigercontrol
 import matplotlib.pyplot as plt
-from ctsb.utils.random import generate_key
+from tigercontrol.utils.random import generate_key
 
 
 def test_lstm_time_series(steps=1000, show_plot=False, verbose=False):
     T = steps
     n, m, d = 5, 3, 10
-    problem = ctsb.problem("LSTM-TimeSeries-v0")
+    problem = tigercontrol.problem("LSTM-TimeSeries-v0")
     problem.initialize(n, m, d)
 
     x_output = []

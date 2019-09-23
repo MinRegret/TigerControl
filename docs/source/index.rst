@@ -1,19 +1,19 @@
-.. ctsb_docs documentation master file, created by
+.. tigercontrol_docs documentation master file, created by
    sphinx-quickstart on Fri Jul 19 15:53:19 2019.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-CTSB reference documentation
+TigerControl reference documentation
 ===============================
 
-For an introduction to CTSB, start at the
-`CTSB GitHub page <https://github.com/johnhallman/ctsb>`_.
+For an introduction to TigerControl, start at the
+`TigerControl GitHub page <https://github.com/johnhallman/tigercontrol>`_.
 
 .. toctree::
    :maxdepth: 3
    :caption: Contents
 
-   ctsb
+   tigercontrol
    help
    license
 

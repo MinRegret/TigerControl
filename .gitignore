@@ -8,8 +8,8 @@
 __pycache__
 # ignore all csv files except for the ENSO dataset (ctrl_indices) and precomputed results
 *.csv
-!ctsb/data/enso.csv
-!ctsb/data/precomputed_results/*.csv
+!tigercontrol/data/enso.csv
+!tigercontrol/data/precomputed_results/*.csv
 
 # Setuptools distribution and build folders.
 /dist/

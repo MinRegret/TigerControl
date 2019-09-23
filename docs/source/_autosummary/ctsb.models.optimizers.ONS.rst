@@ -1,7 +1,7 @@
-ctsb.models.optimizers.ONS
+tigercontrol.models.optimizers.ONS
 ==========================
 
-.. currentmodule:: ctsb.models.optimizers
+.. currentmodule:: tigercontrol.models.optimizers
 
 .. autoclass:: ONS
 

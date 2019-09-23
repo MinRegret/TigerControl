@@ -2,18 +2,18 @@
 Test for PyBullet double pendulum problem
 """
 import time
-import ctsb
+import tigercontrol
 import jax.numpy as np
 
 
 # double pendulum test #TODO: finish
 def test_cartpole(verbose=False):
-    problem = ctsb.problem("DoublePendulum-v0")
+    problem = tigercontrol.problem("DoublePendulum-v0")
     L = lambda x, u: np.cos(x[0]) + np.cos(x[0] + x[1])
     dim_x, dim_u = 4, 1
     obs = problem.initialize()
 
-    model = ctsb.model("ILQR")
+    model = tigercontrol.model("ILQR")
     model.initialize(problem, L, dim_x, dim_u)
     T = 100 # horizon
     threshold = None

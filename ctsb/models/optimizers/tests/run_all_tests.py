@@ -1,8 +1,8 @@
-from ctsb.models.optimizers.tests.test_adagrad import test_adagrad
-from ctsb.models.optimizers.tests.test_sgd import test_sgd
-from ctsb.models.optimizers.tests.test_ogd import test_ogd
-from ctsb.models.optimizers.tests.test_adam import test_adam
-from ctsb.models.optimizers.tests.test_ons import test_ons
+from tigercontrol.models.optimizers.tests.test_adagrad import test_adagrad
+from tigercontrol.models.optimizers.tests.test_sgd import test_sgd
+from tigercontrol.models.optimizers.tests.test_ogd import test_ogd
+from tigercontrol.models.optimizers.tests.test_adam import test_adam
+from tigercontrol.models.optimizers.tests.test_ons import test_ons
 
 
 # run all optimizers tests

@@ -1,9 +1,9 @@
 # Experiment class
 
-from ctsb import error
-from ctsb.experiments.core import run_experiment, get_ids, to_dict
-from ctsb.experiments.new_experiment import NewExperiment
-from ctsb.experiments import precomputed
+from tigercontrol import error
+from tigercontrol.experiments.core import run_experiment, get_ids, to_dict
+from tigercontrol.experiments.new_experiment import NewExperiment
+from tigercontrol.experiments import precomputed
 import csv
 import jax.numpy as np
 import matplotlib.pyplot as plt

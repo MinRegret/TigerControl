@@ -1,6 +1,6 @@
-ctsb.utils.set\_key
+tigercontrol.utils.set\_key
 ===================
 
-.. currentmodule:: ctsb.utils
+.. currentmodule:: tigercontrol.utils
 
 .. autofunction:: set_key

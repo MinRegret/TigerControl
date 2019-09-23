@@ -1,7 +1,7 @@
 # NewExperiment class
 
-from ctsb import error
-from ctsb.experiments.core import to_dict, run_experiment, create_full_problem_to_models
+from tigercontrol import error
+from tigercontrol.experiments.core import to_dict, run_experiment, create_full_problem_to_models
 
 class NewExperiment(object):
     ''' Description: class for implementing algorithms with enforced modularity '''

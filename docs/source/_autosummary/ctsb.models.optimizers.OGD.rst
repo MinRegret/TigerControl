@@ -1,7 +1,7 @@
-ctsb.models.optimizers.OGD
+tigercontrol.models.optimizers.OGD
 ==========================
 
-.. currentmodule:: ctsb.models.optimizers
+.. currentmodule:: tigercontrol.models.optimizers
 
 .. autoclass:: OGD
 

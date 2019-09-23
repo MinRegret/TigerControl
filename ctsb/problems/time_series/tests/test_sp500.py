@@ -1,13 +1,13 @@
 # test the S&P 500 problem class
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
 
 def test_sp500(steps=1000, show_plot=False, verbose=False):
     T = steps
-    problem = ctsb.problem("SP500-v0")
+    problem = tigercontrol.problem("SP500-v0")
     problem.initialize()
     assert problem.T == 0
 

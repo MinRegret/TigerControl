@@ -1,10 +1,10 @@
 # Model class
 # Author: John Hallman
 
-from ctsb import error
-from ctsb.models import Model
-from ctsb.models.registration import model_registry
-from ctsb.models.optimizers import Optimizer
+from tigercontrol import error
+from tigercontrol.models import Model
+from tigercontrol.models.registration import model_registry
+from tigercontrol.models.optimizers import Optimizer
 
 
 # class for implementing algorithms with enforced modularity

@@ -1,13 +1,13 @@
 # test the ENSO problem class
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
 
 def test_enso(steps=1000, show_plot=False, verbose=False):
     T = steps
-    problem = ctsb.problem("ENSO-v0")
+    problem = tigercontrol.problem("ENSO-v0")
     problem.initialize(input_signals = ['oni'])
     assert problem.T == 0
 

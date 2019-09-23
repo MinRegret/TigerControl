@@ -1,7 +1,7 @@
-ctsb.utils package
+tigercontrol.utils package
 ==================
 
-.. automodule:: ctsb.utils
+.. automodule:: tigercontrol.utils
 
 dataset_registry
 ----------------

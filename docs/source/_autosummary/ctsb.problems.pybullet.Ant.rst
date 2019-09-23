@@ -1,7 +1,7 @@
-ctsb.problems.pybullet.Ant
+tigercontrol.problems.pybullet.Ant
 ==========================
 
-.. currentmodule:: ctsb.problems.pybullet
+.. currentmodule:: tigercontrol.problems.pybullet
 
 .. autoclass:: Ant
 

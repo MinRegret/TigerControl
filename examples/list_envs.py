@@ -1,3 +1,3 @@
-import ctsb
+import tigercontrol
 
 # empty file

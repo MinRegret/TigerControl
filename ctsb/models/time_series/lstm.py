@@ -4,10 +4,10 @@ LSTM neural network model
 import jax
 import jax.numpy as np
 import jax.experimental.stax as stax
-import ctsb
-from ctsb.utils.random import generate_key
-from ctsb.models.time_series import TimeSeriesModel
-from ctsb.models.optimizers import *
+import tigercontrol
+from tigercontrol.utils.random import generate_key
+from tigercontrol.models.time_series import TimeSeriesModel
+from tigercontrol.models.optimizers import *
 
 
 class LSTM(TimeSeriesModel):

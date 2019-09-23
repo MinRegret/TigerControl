@@ -5,9 +5,9 @@ Last observed value
 import jax
 import jax.numpy as np
 import jax.random as rand
-import ctsb
-from ctsb.models.time_series import TimeSeriesModel
-from ctsb.utils import generate_key
+import tigercontrol
+from tigercontrol.models.time_series import TimeSeriesModel
+from tigercontrol.utils import generate_key
 import scipy.linalg as la
 import numpy as onp
 

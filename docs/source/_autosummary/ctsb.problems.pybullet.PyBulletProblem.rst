@@ -1,7 +1,7 @@
-ctsb.problems.pybullet.PyBulletProblem
+tigercontrol.problems.pybullet.PyBulletProblem
 ======================================
 
-.. currentmodule:: ctsb.problems.pybullet
+.. currentmodule:: tigercontrol.problems.pybullet
 
 .. autoclass:: PyBulletProblem
 

@@ -1,7 +1,7 @@
-ctsb.models.time\_series.lstm.LSTM
+tigercontrol.models.time\_series.lstm.LSTM
 ==================================
 
-.. currentmodule:: ctsb.models.time_series.lstm
+.. currentmodule:: tigercontrol.models.time_series.lstm
 
 .. autoclass:: LSTM
 

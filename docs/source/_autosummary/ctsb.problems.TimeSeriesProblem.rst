@@ -1,7 +1,7 @@
-ctsb.problems.TimeSeriesProblem
+tigercontrol.problems.TimeSeriesProblem
 ===============================
 
-.. currentmodule:: ctsb.problems
+.. currentmodule:: tigercontrol.problems
 
 .. autoclass:: TimeSeriesProblem
 

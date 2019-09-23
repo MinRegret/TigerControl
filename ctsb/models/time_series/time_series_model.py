@@ -1,8 +1,8 @@
 # TimeSeriesModel class
 # Author: John Hallman
 
-from ctsb import error
-from ctsb.models import Model
+from tigercontrol import error
+from tigercontrol.models import Model
 
 class TimeSeriesModel(Model):
     ''' Description: class for implementing algorithms with enforced modularity '''

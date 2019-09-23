@@ -1,7 +1,7 @@
-ctsb.models.time\_series.PredictZero
+tigercontrol.models.time\_series.PredictZero
 ====================================
 
-.. currentmodule:: ctsb.models.time_series
+.. currentmodule:: tigercontrol.models.time_series
 
 .. autoclass:: PredictZero
 

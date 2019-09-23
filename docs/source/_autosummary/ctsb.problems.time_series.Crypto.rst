@@ -1,7 +1,7 @@
-ctsb.problems.time\_series.Crypto
+tigercontrol.problems.time\_series.Crypto
 =================================
 
-.. currentmodule:: ctsb.problems.time_series
+.. currentmodule:: tigercontrol.problems.time_series
 
 .. autoclass:: Crypto
 
