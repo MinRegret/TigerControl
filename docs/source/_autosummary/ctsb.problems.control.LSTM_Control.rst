@@ -1,7 +1,7 @@
-ctsb.problems.control.LSTM\_Control
+tigercontrol.problems.control.LSTM\_Control
 ===================================
 
-.. currentmodule:: ctsb.problems.control
+.. currentmodule:: tigercontrol.problems.control
 
 .. autoclass:: LSTM_Control
 

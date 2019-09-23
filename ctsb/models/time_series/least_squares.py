@@ -2,9 +2,9 @@
 Online Least Squares
 """
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
-from ctsb.models.time_series import TimeSeriesModel
+from tigercontrol.models.time_series import TimeSeriesModel
 
 class LeastSquares(TimeSeriesModel):
     """

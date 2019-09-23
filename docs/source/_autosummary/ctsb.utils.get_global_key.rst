@@ -1,6 +1,6 @@
-ctsb.utils.get\_global\_key
+tigercontrol.utils.get\_global\_key
 ===========================
 
-.. currentmodule:: ctsb.utils
+.. currentmodule:: tigercontrol.utils
 
 .. autofunction:: get_global_key

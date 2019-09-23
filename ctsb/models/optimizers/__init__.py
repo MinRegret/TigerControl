@@ -1,9 +1,9 @@
 # models/optimizers init file
 
-from ctsb.models.optimizers.core import Optimizer
-from ctsb.models.optimizers.sgd import SGD
-from ctsb.models.optimizers.ogd import OGD
-from ctsb.models.optimizers.ons import ONS
-from ctsb.models.optimizers.adam import Adam
-from ctsb.models.optimizers.adagrad import Adagrad
-from ctsb.models.optimizers.losses import *
+from tigercontrol.models.optimizers.core import Optimizer
+from tigercontrol.models.optimizers.sgd import SGD
+from tigercontrol.models.optimizers.ogd import OGD
+from tigercontrol.models.optimizers.ons import ONS
+from tigercontrol.models.optimizers.adam import Adam
+from tigercontrol.models.optimizers.adagrad import Adagrad
+from tigercontrol.models.optimizers.losses import *

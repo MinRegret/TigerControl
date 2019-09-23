@@ -1,8 +1,8 @@
 # Model class
 # Author: John Hallman
 
-from ctsb import error
-from ctsb.models.optimizers import Optimizer
+from tigercontrol import error
+from tigercontrol.models.optimizers import Optimizer
 
 # class for implementing algorithms with enforced modularity
 class Model(object):

@@ -4,8 +4,8 @@ Core class for optimizers
 
 import inspect
 from jax import jit, grad
-from ctsb.models.optimizers.losses import mse
-from ctsb import error
+from tigercontrol.models.optimizers.losses import mse
+from tigercontrol import error
 
 class Optimizer():
     """

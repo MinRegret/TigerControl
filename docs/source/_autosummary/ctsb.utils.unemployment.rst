@@ -1,6 +1,6 @@
-ctsb.utils.unemployment
+tigercontrol.utils.unemployment
 =======================
 
-.. currentmodule:: ctsb.utils
+.. currentmodule:: tigercontrol.utils
 
 .. autofunction:: unemployment

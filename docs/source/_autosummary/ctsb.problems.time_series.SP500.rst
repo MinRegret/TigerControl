@@ -1,7 +1,7 @@
-ctsb.problems.time\_series.SP500
+tigercontrol.problems.time\_series.SP500
 ================================
 
-.. currentmodule:: ctsb.problems.time_series
+.. currentmodule:: tigercontrol.problems.time_series
 
 .. autoclass:: SP500
 

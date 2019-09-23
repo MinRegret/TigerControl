@@ -8,7 +8,7 @@ import datetime
 import csv
 import pandas as pd
 import numpy as np
-from ctsb.utils.download_tools import *
+from tigercontrol.utils.download_tools import *
 
 
 def to_datetime(date, time):
@@ -61,8 +61,8 @@ def unemployment(verbose=True):
 
     import datetime
     from urllib.request import urlretrieve
-    ctsb_dir = get_ctsb_dir()
-    path_csv = os.path.join(ctsb_dir, 'data/unemployment.csv')
+    tigercontrol_dir = get_tigercontrol_dir()
+    path_csv = os.path.join(tigercontrol_dir, 'data/unemployment.csv')
     if os.path.exists(path_csv): # if file exists return csv
         return pd.read_csv(path_csv)
 
@@ -105,13 +105,13 @@ def uci_indoor(verbose=True):
         Dataframe containing uci_indoor data
     """
 
-    ctsb_dir = get_ctsb_dir()
+    tigercontrol_dir = get_tigercontrol_dir()
     url_uci_indoor = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00274/NEW-DATA.zip'
-    path_uci_indoor_zip = os.path.join(ctsb_dir, 'data/uci_indoor.zip')
-    path_uci_indoor_unzip = os.path.join(ctsb_dir, 'data/uci_indoor')
-    path_uci_indoor_txt1 = os.path.join(ctsb_dir, 'data/uci_indoor/NEW-DATA-1.T15.txt')
-    path_uci_indoor_csv = os.path.join(ctsb_dir, 'data/uci_indoor.csv')
-    path_uci_indoor_cleaned = os.path.join(ctsb_dir, 'data/uci_indoor_cleaned.csv')
+    path_uci_indoor_zip = os.path.join(tigercontrol_dir, 'data/uci_indoor.zip')
+    path_uci_indoor_unzip = os.path.join(tigercontrol_dir, 'data/uci_indoor')
+    path_uci_indoor_txt1 = os.path.join(tigercontrol_dir, 'data/uci_indoor/NEW-DATA-1.T15.txt')
+    path_uci_indoor_csv = os.path.join(tigercontrol_dir, 'data/uci_indoor.csv')
+    path_uci_indoor_cleaned = os.path.join(tigercontrol_dir, 'data/uci_indoor_cleaned.csv')
 
     # check if files have been downloaded before, else download
     if not os.path.exists(path_uci_indoor_cleaned):
@@ -161,11 +161,11 @@ def sp500(verbose=True):
         Dataframe containing S&P500 data
     """
 
-    ctsb_dir = get_ctsb_dir()
+    tigercontrol_dir = get_tigercontrol_dir()
     url_sp500_xls = 'http://www.cboe.com/micro/buywrite/dailypricehistory.xls'
-    path_sp500_xls = os.path.join(ctsb_dir, 'data/sp500_xls.xls')
-    path_sp500_txt = os.path.join(ctsb_dir, 'data/sp500_col.txt')
-    path_sp500_csv = os.path.join(ctsb_dir, 'data/sp500.csv')
+    path_sp500_xls = os.path.join(tigercontrol_dir, 'data/sp500_xls.xls')
+    path_sp500_txt = os.path.join(tigercontrol_dir, 'data/sp500_col.txt')
+    path_sp500_csv = os.path.join(tigercontrol_dir, 'data/sp500.csv')
 
     # check if files have been downloaded before, else download
     if not os.path.exists(path_sp500_csv):
@@ -199,8 +199,8 @@ def crypto():
     Returns:
         Dataframe containing cryptocurrency data
     """
-    ctsb_dir = get_ctsb_dir()
-    path_crypto_csv = os.path.join(ctsb_dir, 'data/crypto.csv')
+    tigercontrol_dir = get_tigercontrol_dir()
+    path_crypto_csv = os.path.join(tigercontrol_dir, 'data/crypto.csv')
     
     if not os.path.exists(path_crypto_csv):
         df = pd.read_csv('https://query.data.world/s/43quzwdjeh2zmghpdcgvgkppo6bvg7')
@@ -228,8 +228,8 @@ def enso(input_signals, include_month, output_signals, history, timeline):
 
     ############################## GET DATA ###################################
 
-    ctsb_dir = get_ctsb_dir()
-    datapath = os.path.join(ctsb_dir, 'data/enso.csv')
+    tigercontrol_dir = get_tigercontrol_dir()
+    datapath = os.path.join(tigercontrol_dir, 'data/enso.csv')
     signals_pd = pd.read_csv(datapath)
 
     signal_length = signals_pd['nino34'].values.shape[0]

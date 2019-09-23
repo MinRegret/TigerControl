@@ -1,7 +1,7 @@
-ctsb.models.optimizers.Optimizer
+tigercontrol.models.optimizers.Optimizer
 ================================
 
-.. currentmodule:: ctsb.models.optimizers
+.. currentmodule:: tigercontrol.models.optimizers
 
 .. autoclass:: Optimizer
 

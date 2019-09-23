@@ -1,8 +1,8 @@
 '''
 SGD optimizer
 '''
-from ctsb.models.optimizers.core import Optimizer
-from ctsb.models.optimizers.losses import mse
+from tigercontrol.models.optimizers.core import Optimizer
+from tigercontrol.models.optimizers.losses import mse
 
 class SGD(Optimizer):
     """

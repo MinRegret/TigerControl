@@ -1,6 +1,6 @@
-ctsb.utils.uci\_indoor
+tigercontrol.utils.uci\_indoor
 ======================
 
-.. currentmodule:: ctsb.utils
+.. currentmodule:: tigercontrol.utils
 
 .. autofunction:: uci_indoor

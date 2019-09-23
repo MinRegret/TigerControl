@@ -1,7 +1,7 @@
-ctsb.models.time\_series.least\_squares.LeastSquares
+tigercontrol.models.time\_series.least\_squares.LeastSquares
 ====================================================
 
-.. currentmodule:: ctsb.models.time_series.least_squares
+.. currentmodule:: tigercontrol.models.time_series.least_squares
 
 .. autoclass:: LeastSquares
 

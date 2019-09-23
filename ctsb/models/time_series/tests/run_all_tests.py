@@ -1,8 +1,8 @@
-from ctsb.models.time_series.tests.test_last_value import test_last_value
-from ctsb.models.time_series.tests.test_predict_zero import test_predict_zero
-from ctsb.models.time_series.tests.test_autoregressor import test_autoregressor
-from ctsb.models.time_series.tests.test_rnn import test_rnn
-from ctsb.models.time_series.tests.test_lstm import test_lstm
+from tigercontrol.models.time_series.tests.test_last_value import test_last_value
+from tigercontrol.models.time_series.tests.test_predict_zero import test_predict_zero
+from tigercontrol.models.time_series.tests.test_autoregressor import test_autoregressor
+from tigercontrol.models.time_series.tests.test_rnn import test_rnn
+from tigercontrol.models.time_series.tests.test_lstm import test_lstm
 
 def run_all_tests(steps=1000, show=False):
     print("\nrunning all time series models tests...\n")

@@ -6,9 +6,9 @@ import jax.numpy as np
 import jax.random as random
 
 import os
-import ctsb
-from ctsb.utils import generate_key, get_ctsb_dir
-from ctsb.problems.control import ControlProblem
+import tigercontrol
+from tigercontrol.utils import generate_key, get_tigercontrol_dir
+from tigercontrol.problems.control import ControlProblem
 
 # necessary for rendering
 from gym.envs.classic_control import rendering
@@ -83,7 +83,7 @@ class Pendulum(ControlProblem):
             axle = rendering.make_circle(.05)
             axle.set_color(0,0,0)
             self.viewer.add_geom(axle)
-            fname = os.path.join(get_ctsb_dir(), "problems/control/assets/clockwise.png")
+            fname = os.path.join(get_tigercontrol_dir(), "problems/control/assets/clockwise.png")
             self.img = rendering.Image(fname, 1., 1.)
             self.imgtrans = rendering.Transform()
             self.img.add_attr(self.imgtrans)

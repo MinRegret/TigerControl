@@ -2,14 +2,14 @@
 monthly unemployment for the past few decades
 """
 
-import ctsb
+import tigercontrol
 import os
 import jax.numpy as np
 import pandas as pd
 from datetime import datetime
-from ctsb.utils import unemployment, get_ctsb_dir
-from ctsb.error import StepOutOfBounds
-from ctsb.problems.time_series import TimeSeriesProblem
+from tigercontrol.utils import unemployment, get_tigercontrol_dir
+from tigercontrol.error import StepOutOfBounds
+from tigercontrol.problems.time_series import TimeSeriesProblem
 
 
 class Unemployment(TimeSeriesProblem):

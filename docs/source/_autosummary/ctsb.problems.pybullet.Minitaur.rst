@@ -1,7 +1,7 @@
-ctsb.problems.pybullet.Minitaur
+tigercontrol.problems.pybullet.Minitaur
 ===============================
 
-.. currentmodule:: ctsb.problems.pybullet
+.. currentmodule:: tigercontrol.problems.pybullet
 
 .. autoclass:: Minitaur
 

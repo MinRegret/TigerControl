@@ -1,7 +1,7 @@
-ctsb.problems.control.LDS\_Control
+tigercontrol.problems.control.LDS\_Control
 ==================================
 
-.. currentmodule:: ctsb.problems.control
+.. currentmodule:: tigercontrol.problems.control
 
 .. autoclass:: LDS_Control
 

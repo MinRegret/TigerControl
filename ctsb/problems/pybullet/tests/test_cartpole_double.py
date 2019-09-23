@@ -2,11 +2,11 @@
 Test for PyBullet cartpole problem
 """
 import time
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import jax.random as random
-from ctsb.models.control.control_model import ControlModel
-from ctsb.utils import generate_key
+from tigercontrol.models.control.control_model import ControlModel
+from tigercontrol.utils import generate_key
 
 # neural network policy class trained specifically for the cartpole problem
 class SmallReactivePolicy(ControlModel):
@@ -27,11 +27,11 @@ class SmallReactivePolicy(ControlModel):
 # cartpole test
 def test_cartpole_double(verbose=False):
     # try to break this test
-    problem = ctsb.problem("PyBullet-CartPoleSwingup-v0")
+    problem = tigercontrol.problem("PyBullet-CartPoleSwingup-v0")
     obs = problem.initialize(render=False)
     #problem.close()
 
-    problem = ctsb.problem("PyBullet-CartPoleDouble-v0")
+    problem = tigercontrol.problem("PyBullet-CartPoleDouble-v0")
     obs = problem.initialize(render=verbose)
 
     model = SmallReactivePolicy()

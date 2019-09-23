@@ -1,7 +1,7 @@
-import ctsb
-from ctsb.experiments import Experiment
-from ctsb.utils.download_tools import get_ctsb_dir
-from ctsb.models.optimizers import *
+import tigercontrol
+from tigercontrol.experiments import Experiment
+from tigercontrol.utils.download_tools import get_tigercontrol_dir
+from tigercontrol.models.optimizers import *
 import os
 
 def test_new_experiment(steps=5000, show=False):
@@ -63,20 +63,20 @@ def test_new_experiment(steps=5000, show=False):
     exp.add_problem('ENSO-v0', {'input_signals': ['oni'], 'timeline' : 6}, name = 'T6')
     exp.add_problem('ENSO-v0', {'input_signals': ['oni'], 'timeline' : 12}, name = 'T12')
 
-    ctsb_dir = get_ctsb_dir()
+    tigercontrol_dir = get_tigercontrol_dir()
     datapath = 'data/results/scoreboard_sim_LSTM.csv'
-    datapath = os.path.join(ctsb_dir, datapath)
+    datapath = os.path.join(tigercontrol_dir, datapath)
 
     exp.scoreboard(save_as = datapath)
     #exp.scoreboard(metric = 'time')
 
     datapath = 'data/results/graph_sim_LSTM.png'
-    datapath = os.path.join(ctsb_dir, datapath)
+    datapath = os.path.join(tigercontrol_dir, datapath)
 
     exp.graph(yscale = 'log', save_as = datapath, dpi = 300)
 
     '''datapath = 'data/results/graph_sim_autoregressors.png'
-                datapath = os.path.join(ctsb_dir, datapath)
+                datapath = os.path.join(tigercontrol_dir, datapath)
             
                 exp.graph(problem_ids = ['SP500-v0', 'ENSO-T1', 'ENSO-T3', 'ENSO-T6', 'ENSO-T12'], \
                     yscale = 'log', save_as = datapath, dpi = 200)'''

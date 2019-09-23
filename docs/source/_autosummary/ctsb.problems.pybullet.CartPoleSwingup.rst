@@ -1,7 +1,7 @@
-ctsb.problems.pybullet.CartPoleSwingup
+tigercontrol.problems.pybullet.CartPoleSwingup
 ======================================
 
-.. currentmodule:: ctsb.problems.pybullet
+.. currentmodule:: tigercontrol.problems.pybullet
 
 .. autoclass:: CartPoleSwingup
 

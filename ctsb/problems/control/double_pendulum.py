@@ -6,8 +6,8 @@ import jax.numpy as np
 import jax.random as random
 from jax.numpy import sin, cos
 
-from ctsb.utils import generate_key
-from ctsb.problems.control import ControlProblem
+from tigercontrol.utils import generate_key
+from tigercontrol.problems.control import ControlProblem
 
 __copyright__ = "Copyright 2013, RLPy http://acl.mit.edu/RLPy"
 __credits__ = ["Alborz Geramifard", "Robert H. Klein", "Christoph Dann",

@@ -1,8 +1,8 @@
 # Problem class
 # Author: John Hallman
 
-from ctsb import error
-from ctsb.problems import Problem
+from tigercontrol import error
+from tigercontrol.problems import Problem
 
 class TimeSeriesProblem(Problem):
     ''' Description: class for online control tests '''

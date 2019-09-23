@@ -1,6 +1,6 @@
 # neural network policy class trained specifically for the cartpole problem
-from ctsb.models.control.control_model import ControlModel
-from ctsb.models.control.cartpole_weights import *
+from tigercontrol.models.control.control_model import ControlModel
+from tigercontrol.models.control.cartpole_weights import *
 
 class CartPoleNN(ControlModel):
     ''' Description: Simple multi-layer perceptron policy, no internal state '''

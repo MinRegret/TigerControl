@@ -1,21 +1,21 @@
 # test the RNN and LSTM model classes on ARMA
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import jax.random as random
 import matplotlib.pyplot as plt
-from ctsb.utils import generate_key
+from tigercontrol.utils import generate_key
 
 def test_rnn_lstm_arma(steps=100, show_plot=True):
     T = steps 
     p, q = 3, 0
-    problem = ctsb.problem("ARMA-v0")
+    problem = tigercontrol.problem("ARMA-v0")
     cur_x = problem.initialize(p, q)
 
-    model_RNN = ctsb.model("RNN")
+    model_RNN = tigercontrol.model("RNN")
     model_RNN.initialize(1, 1, l = p)
 
-    model_LSTM = ctsb.model("LSTM")
+    model_LSTM = tigercontrol.model("LSTM")
     model_LSTM.initialize(1, 1, l = p)
 
     loss = lambda pred, true: np.sum((pred - true)**2)

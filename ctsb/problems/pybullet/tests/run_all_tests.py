@@ -1,12 +1,12 @@
-from ctsb.problems.pybullet.tests.test_cartpole import test_cartpole
-from ctsb.problems.pybullet.tests.test_cartpole_double import test_cartpole_double
-from ctsb.problems.pybullet.tests.test_cartpole_swingup import test_cartpole_swingup
-from ctsb.problems.pybullet.tests.test_simulator import test_simulator
-from ctsb.problems.pybullet.tests.test_kuka import test_kuka
-from ctsb.problems.pybullet.tests.test_kuka_diverse import test_kuka_diverse
-from ctsb.problems.pybullet.tests.test_minitaur import test_minitaur
-from ctsb.problems.pybullet.tests.test_ant import test_ant
-from ctsb.problems.pybullet.tests.test_humanoid import test_humanoid
+from tigercontrol.problems.pybullet.tests.test_cartpole import test_cartpole
+from tigercontrol.problems.pybullet.tests.test_cartpole_double import test_cartpole_double
+from tigercontrol.problems.pybullet.tests.test_cartpole_swingup import test_cartpole_swingup
+from tigercontrol.problems.pybullet.tests.test_simulator import test_simulator
+from tigercontrol.problems.pybullet.tests.test_kuka import test_kuka
+from tigercontrol.problems.pybullet.tests.test_kuka_diverse import test_kuka_diverse
+from tigercontrol.problems.pybullet.tests.test_minitaur import test_minitaur
+from tigercontrol.problems.pybullet.tests.test_ant import test_ant
+from tigercontrol.problems.pybullet.tests.test_humanoid import test_humanoid
 
 
 def run_all_tests(steps=1000, show=False):

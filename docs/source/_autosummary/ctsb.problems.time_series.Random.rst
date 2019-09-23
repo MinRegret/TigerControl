@@ -1,7 +1,7 @@
-ctsb.problems.time\_series.Random
+tigercontrol.problems.time\_series.Random
 =================================
 
-.. currentmodule:: ctsb.problems.time_series
+.. currentmodule:: tigercontrol.problems.time_series
 
 .. autoclass:: Random
 

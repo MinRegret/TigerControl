@@ -1,6 +1,6 @@
 # test the ARMA problem class
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 def test_arma(steps=1000, show_plot=True, verbose=False):
     T = steps
     p, q = 3, 3
-    problem = ctsb.problem("ARMA-v0")
+    problem = tigercontrol.problem("ARMA-v0")
     problem.initialize(p,q)
     assert problem.T == 0
 

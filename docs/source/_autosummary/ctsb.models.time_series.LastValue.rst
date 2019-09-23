@@ -1,7 +1,7 @@
-ctsb.models.time\_series.LastValue
+tigercontrol.models.time\_series.LastValue
 ==================================
 
-.. currentmodule:: ctsb.models.time_series
+.. currentmodule:: tigercontrol.models.time_series
 
 .. autoclass:: LastValue
 

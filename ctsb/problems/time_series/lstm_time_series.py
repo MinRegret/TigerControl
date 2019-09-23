@@ -5,9 +5,9 @@ import jax
 import jax.numpy as np
 import jax.random as random
 import jax.experimental.stax as stax
-import ctsb
-from ctsb.utils.random import generate_key
-from ctsb.problems.control import ControlProblem
+import tigercontrol
+from tigercontrol.utils.random import generate_key
+from tigercontrol.problems.control import ControlProblem
 
 class LSTM_TimeSeries(ControlProblem):
     """

@@ -1,7 +1,7 @@
 # utils init file
 
-from ctsb.utils.registration_tools import Spec, Registry
-from ctsb.utils.download_tools import get_ctsb_dir
-from ctsb.utils.dataset_registry import sp500, uci_indoor, crypto, unemployment, enso
-from ctsb.utils.random import set_key, generate_key, get_global_key
-import ctsb.utils.tests
+from tigercontrol.utils.registration_tools import Spec, Registry
+from tigercontrol.utils.download_tools import get_tigercontrol_dir
+from tigercontrol.utils.dataset_registry import sp500, uci_indoor, crypto, unemployment, enso
+from tigercontrol.utils.random import set_key, generate_key, get_global_key
+import tigercontrol.utils.tests

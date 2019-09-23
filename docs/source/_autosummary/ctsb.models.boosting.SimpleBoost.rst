@@ -1,7 +1,7 @@
-ctsb.models.boosting.SimpleBoost
+tigercontrol.models.boosting.SimpleBoost
 ================================
 
-.. currentmodule:: ctsb.models.boosting
+.. currentmodule:: tigercontrol.models.boosting
 
 .. autoclass:: SimpleBoost
 

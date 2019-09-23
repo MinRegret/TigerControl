@@ -1,6 +1,6 @@
-# ctsb.help() method
+# tigercontrol.help() method
 
-from ctsb import problem_registry, model_registry
+from tigercontrol import problem_registry, model_registry
 
 
 def help():
@@ -15,15 +15,15 @@ def help():
 
 global_help_string = """
 
-Welcome to CTSB - the Control and Time-Series Benchmarks framework!
+Welcome to TigerControl - the Control and Time-Series Benchmarks framework!
 
-If this is your first time using CTSB, you might want to read more about it in 
-detail at github.com/johnhallman/ctsb, or documentation at ctsb.readthedocs.io.
+If this is your first time using TigerControl, you might want to read more about it in 
+detail at github.com/johnhallman/tigercontrol, or documentation at tigercontrol.readthedocs.io.
 
 If you're looking for a specific Problem or Model, you can call it via the 
-ctsb.problem and ctsb.model methods respectively, such as:
+tigercontrol.problem and tigercontrol.model methods respectively, such as:
 
-    problem = ctsb.problem("nameOfModel")
+    problem = tigercontrol.problem("nameOfModel")
 
 Below is the list of all currently avaliable problems and models:
 
@@ -35,7 +35,7 @@ Below is the list of all currently avaliable problems and models:
     ---------
     {}
 
-Good luck exploring CTSB!
+Good luck exploring TigerControl!
 
 """
 

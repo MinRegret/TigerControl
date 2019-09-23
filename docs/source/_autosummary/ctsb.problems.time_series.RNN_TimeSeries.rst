@@ -1,7 +1,7 @@
-ctsb.problems.time\_series.RNN\_TimeSeries
+tigercontrol.problems.time\_series.RNN\_TimeSeries
 ==========================================
 
-.. currentmodule:: ctsb.problems.time_series
+.. currentmodule:: tigercontrol.problems.time_series
 
 .. autoclass:: RNN_TimeSeries
 

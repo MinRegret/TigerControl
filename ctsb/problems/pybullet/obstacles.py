@@ -3,9 +3,9 @@ import pybullet as pybullet
 import numpy as np
 import pybullet as pybullet
 import gym.spaces as spaces
-# from ctsb.problems.pybullet.obstacle_utils import *
-from ctsb.utils import get_ctsb_dir
-from ctsb.problems.pybullet.pybullet_problem import PyBulletProblem
+# from tigercontrol.problems.pybullet.obstacle_utils import *
+from tigercontrol.utils import get_tigercontrol_dir
+from tigercontrol.problems.pybullet.pybullet_problem import PyBulletProblem
 import os
 
 class ObstaclesEnv(gym.Env):
@@ -135,11 +135,11 @@ class ObstaclesEnv(gym.Env):
         self.robotHeight = params['robotHeight']
 
         # Ground plane
-        ctsb_dir = get_ctsb_dir()
-        pybullet.loadURDF(os.path.join(ctsb_dir, "problems/control/pybullet/URDFs/plane.urdf"))
+        tigercontrol_dir = get_tigercontrol_dir()
+        pybullet.loadURDF(os.path.join(tigercontrol_dir, "problems/control/pybullet/URDFs/plane.urdf"))
 
         # Load robot from URDF
-        self.husky = pybullet.loadURDF(os.path.join(ctsb_dir, "problems/control/pybullet/URDFs/husky.urdf"), globalScaling=0.5)
+        self.husky = pybullet.loadURDF(os.path.join(tigercontrol_dir, "problems/control/pybullet/URDFs/husky.urdf"), globalScaling=0.5)
 
         # Sphere
         colSphereId = pybullet.createCollisionShape(pybullet.GEOM_SPHERE, radius=robotRadius)

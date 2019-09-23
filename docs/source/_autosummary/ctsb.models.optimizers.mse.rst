@@ -1,6 +1,6 @@
-ctsb.models.optimizers.mse
+tigercontrol.models.optimizers.mse
 ==========================
 
-.. currentmodule:: ctsb.models.optimizers
+.. currentmodule:: tigercontrol.models.optimizers
 
 .. autofunction:: mse

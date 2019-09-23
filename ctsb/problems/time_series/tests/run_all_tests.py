@@ -1,9 +1,9 @@
-from ctsb.problems.time_series.tests.test_arma import test_arma
-from ctsb.problems.time_series.tests.test_random import test_random
-from ctsb.problems.time_series.tests.test_sp500 import test_sp500
-from ctsb.problems.time_series.tests.test_uci_indoor import test_uci_indoor
-from ctsb.problems.time_series.tests.test_crypto import test_crypto
-from ctsb.problems.time_series.tests.test_enso import test_enso
+from tigercontrol.problems.time_series.tests.test_arma import test_arma
+from tigercontrol.problems.time_series.tests.test_random import test_random
+from tigercontrol.problems.time_series.tests.test_sp500 import test_sp500
+from tigercontrol.problems.time_series.tests.test_uci_indoor import test_uci_indoor
+from tigercontrol.problems.time_series.tests.test_crypto import test_crypto
+from tigercontrol.problems.time_series.tests.test_enso import test_enso
 
 def run_all_tests(steps=1000, show=False):
     print("\nrunning all time-series problems tests...\n")

@@ -1,7 +1,7 @@
-ctsb.problems.pybullet.Humanoid
+tigercontrol.problems.pybullet.Humanoid
 ===============================
 
-.. currentmodule:: ctsb.problems.pybullet
+.. currentmodule:: tigercontrol.problems.pybullet
 
 .. autoclass:: Humanoid
 

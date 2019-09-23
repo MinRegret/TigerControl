@@ -1,7 +1,7 @@
-ctsb.models.control.CartPoleNN
+tigercontrol.models.control.CartPoleNN
 ==============================
 
-.. currentmodule:: ctsb.models.control
+.. currentmodule:: tigercontrol.models.control
 
 .. autoclass:: CartPoleNN
 

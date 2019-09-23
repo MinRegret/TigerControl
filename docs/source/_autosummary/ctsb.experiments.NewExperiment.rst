@@ -1,7 +1,7 @@
-ctsb.experiments.NewExperiment
+tigercontrol.experiments.NewExperiment
 ==============================
 
-.. currentmodule:: ctsb.experiments
+.. currentmodule:: tigercontrol.experiments
 
 .. autoclass:: NewExperiment
 

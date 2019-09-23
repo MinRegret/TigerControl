@@ -1,6 +1,6 @@
-ctsb.utils.enso
+tigercontrol.utils.enso
 ===============
 
-.. currentmodule:: ctsb.utils
+.. currentmodule:: tigercontrol.utils
 
 .. autofunction:: enso

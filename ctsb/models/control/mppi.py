@@ -5,9 +5,9 @@ MPPI
 import jax
 import jax.numpy as np
 import jax.random as random
-from ctsb.utils import generate_key
-import ctsb
-from ctsb.models.control import ControlModel
+from tigercontrol.utils import generate_key
+import tigercontrol
+from tigercontrol.models.control import ControlModel
 
 class MPPI(ControlModel):
     """

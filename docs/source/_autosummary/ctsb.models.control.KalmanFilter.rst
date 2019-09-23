@@ -1,7 +1,7 @@
-ctsb.models.control.KalmanFilter
+tigercontrol.models.control.KalmanFilter
 ================================
 
-.. currentmodule:: ctsb.models.control
+.. currentmodule:: tigercontrol.models.control
 
 .. autoclass:: KalmanFilter
 

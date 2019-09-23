@@ -1,7 +1,7 @@
-ctsb.models.time\_series.rnn.RNN
+tigercontrol.models.time\_series.rnn.RNN
 ================================
 
-.. currentmodule:: ctsb.models.time_series.rnn
+.. currentmodule:: tigercontrol.models.time_series.rnn
 
 .. autoclass:: RNN
 

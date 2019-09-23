@@ -1,13 +1,13 @@
 # test the LQR model class
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import numpy.random as random
 import matplotlib.pyplot as plt
 
 def test_lqr(steps=10, show_plot=True):
 
-    model = ctsb.model("LQR")
+    model = tigercontrol.model("LQR")
     lambda1 = 0.5
     lambda2 = 10
 

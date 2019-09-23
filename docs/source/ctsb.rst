@@ -1,4 +1,4 @@
-ctsb package
+tigercontrol package
 ============
 
 Subpackages
@@ -7,7 +7,7 @@ Subpackages
 .. toctree::
     :maxdepth: 1
 
-    ctsb.utils
-    ctsb.problems
-    ctsb.models
-    ctsb.experiments
+    tigercontrol.utils
+    tigercontrol.problems
+    tigercontrol.models
+    tigercontrol.experiments

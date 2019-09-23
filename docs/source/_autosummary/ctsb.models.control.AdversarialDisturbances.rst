@@ -1,7 +1,7 @@
-ctsb.models.control.AdversarialDisturbances
+tigercontrol.models.control.AdversarialDisturbances
 ===========================================
 
-.. currentmodule:: ctsb.models.control
+.. currentmodule:: tigercontrol.models.control
 
 .. autoclass:: AdversarialDisturbances
 

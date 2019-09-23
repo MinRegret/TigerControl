@@ -1,8 +1,8 @@
 # PyBullet Problems
 
-from ctsb import error
-from ctsb.problems import Problem
-from ctsb.problems.pybullet.simulator import Simulator
+from tigercontrol import error
+from tigercontrol.problems import Problem
+from tigercontrol.problems.pybullet.simulator import Simulator
 
 
 class PyBulletProblem(Simulator):

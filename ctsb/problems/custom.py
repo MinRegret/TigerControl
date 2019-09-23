@@ -1,9 +1,9 @@
 # Problem class
 # Author: John Hallman
 
-from ctsb import error
-from ctsb.problems import Problem
-from ctsb.problems.registration import problem_registry
+from tigercontrol import error
+from tigercontrol.problems import Problem
+from tigercontrol.problems.registration import problem_registry
 
  
 class CustomProblem(object):

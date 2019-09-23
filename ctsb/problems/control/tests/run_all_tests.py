@@ -1,9 +1,9 @@
-from ctsb.problems.control.tests.test_lds_control import test_lds_control
-from ctsb.problems.control.tests.test_lstm_control import test_lstm_control
-from ctsb.problems.control.tests.test_rnn_control import test_rnn_control
-from ctsb.problems.control.tests.test_cartpole import test_cartpole
-from ctsb.problems.control.tests.test_pendulum import test_pendulum
-from ctsb.problems.control.tests.test_double_pendulum import test_double_pendulum
+from tigercontrol.problems.control.tests.test_lds_control import test_lds_control
+from tigercontrol.problems.control.tests.test_lstm_control import test_lstm_control
+from tigercontrol.problems.control.tests.test_rnn_control import test_rnn_control
+from tigercontrol.problems.control.tests.test_cartpole import test_cartpole
+from tigercontrol.problems.control.tests.test_pendulum import test_pendulum
+from tigercontrol.problems.control.tests.test_double_pendulum import test_double_pendulum
 
 
 def run_all_tests(steps=1000, show=False):

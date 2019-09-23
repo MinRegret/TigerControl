@@ -1,7 +1,7 @@
-ctsb.models.optimizers.Adam
+tigercontrol.models.optimizers.Adam
 ===========================
 
-.. currentmodule:: ctsb.models.optimizers
+.. currentmodule:: tigercontrol.models.optimizers
 
 .. autoclass:: Adam
 

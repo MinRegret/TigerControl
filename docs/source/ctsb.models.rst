@@ -1,7 +1,7 @@
-ctsb.models package
+tigercontrol.models package
 =====================
 
-.. automodule:: ctsb.models
+.. automodule:: tigercontrol.models
 
 core
 ----
@@ -16,14 +16,14 @@ control
 .. autosummary::
   :toctree: _autosummary
 
-   ctsb.models.control.ControlModel
-   ctsb.models.control.KalmanFilter
-   ctsb.models.control.ODEShootingMethod
-   ctsb.models.control.LQR
-   ctsb.models.control.MPPI
-   ctsb.models.control.CartPoleNN
-   ctsb.models.control.AdversarialDisturbances
-   ctsb.models.control.ILQR
+   tigercontrol.models.control.ControlModel
+   tigercontrol.models.control.KalmanFilter
+   tigercontrol.models.control.ODEShootingMethod
+   tigercontrol.models.control.LQR
+   tigercontrol.models.control.MPPI
+   tigercontrol.models.control.CartPoleNN
+   tigercontrol.models.control.AdversarialDisturbances
+   tigercontrol.models.control.ILQR
 
 
 time_series
@@ -32,13 +32,13 @@ time_series
 .. autosummary::
   :toctree: _autosummary
 
-   ctsb.models.time_series.TimeSeriesModel
-   ctsb.models.time_series.AutoRegressor
-   ctsb.models.time_series.LastValue
-   ctsb.models.time_series.PredictZero
-   ctsb.models.time_series.rnn.RNN
-   ctsb.models.time_series.lstm.LSTM
-   ctsb.models.time_series.least_squares.LeastSquares
+   tigercontrol.models.time_series.TimeSeriesModel
+   tigercontrol.models.time_series.AutoRegressor
+   tigercontrol.models.time_series.LastValue
+   tigercontrol.models.time_series.PredictZero
+   tigercontrol.models.time_series.rnn.RNN
+   tigercontrol.models.time_series.lstm.LSTM
+   tigercontrol.models.time_series.least_squares.LeastSquares
 
 optimizers
 ----------
@@ -46,14 +46,14 @@ optimizers
 .. autosummary::
   :toctree: _autosummary
 
-   ctsb.models.optimizers.Optimizer
-   ctsb.models.optimizers.Adagrad
-   ctsb.models.optimizers.Adam
-   ctsb.models.optimizers.ONS
-   ctsb.models.optimizers.SGD
-   ctsb.models.optimizers.OGD
-   ctsb.models.optimizers.mse
-   ctsb.models.optimizers.cross_entropy
+   tigercontrol.models.optimizers.Optimizer
+   tigercontrol.models.optimizers.Adagrad
+   tigercontrol.models.optimizers.Adam
+   tigercontrol.models.optimizers.ONS
+   tigercontrol.models.optimizers.SGD
+   tigercontrol.models.optimizers.OGD
+   tigercontrol.models.optimizers.mse
+   tigercontrol.models.optimizers.cross_entropy
 
 boosting
 --------
@@ -61,4 +61,4 @@ boosting
 .. autosummary::
   :toctree: _autosummary
 
-  ctsb.models.boosting.SimpleBoost
+  tigercontrol.models.boosting.SimpleBoost

@@ -1,7 +1,7 @@
 # Problem class
 # Author: John Hallman
 
-from ctsb.problems import Problem
+from tigercontrol.problems import Problem
 
 class ControlProblem(Problem):
     ''' Description: class for online control tests '''

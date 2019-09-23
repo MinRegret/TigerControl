@@ -3,7 +3,7 @@
 import sys
 import numpy as np
 import jax.random as random
-from ctsb.utils.random import set_key, generate_key, get_global_key
+from tigercontrol.utils.random import set_key, generate_key, get_global_key
 
 # test jax random number generator seeding implementation
 def test_random(show=False):

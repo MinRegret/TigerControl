@@ -1,6 +1,6 @@
-ctsb.experiments.mse
+tigercontrol.experiments.mse
 ====================
 
-.. currentmodule:: ctsb.experiments
+.. currentmodule:: tigercontrol.experiments
 
 .. autofunction:: mse

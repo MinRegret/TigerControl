@@ -1,6 +1,6 @@
 # test the CustomProblem class
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import matplotlib.pyplot as plt
 
@@ -9,11 +9,11 @@ def test_custom_problem(steps=1000, show=True):
     # initial preparation
     T = steps
     loss = lambda y_true, y_pred: (y_true - y_pred)**2
-    model = ctsb.model("LastValue")
+    model = tigercontrol.model("LastValue")
     model.initialize()
 
     # simple custom Problem that returns alternating +/- 1.0
-    class Custom(ctsb.CustomProblem):
+    class Custom(tigercontrol.CustomProblem):
         def initialize(self):
             self.T = 0
             return -1
@@ -22,8 +22,8 @@ def test_custom_problem(steps=1000, show=True):
             return 2 * (self.T % 2) - 1
 
     # try registering and calling the custom problem
-    ctsb.register_custom_problem(Custom, "TestCustomProblem")
-    custom_problem = ctsb.problem("TestCustomProblem")
+    tigercontrol.register_custom_problem(Custom, "TestCustomProblem")
+    custom_problem = tigercontrol.problem("TestCustomProblem")
     cur_x = custom_problem.initialize()
  
     results = []

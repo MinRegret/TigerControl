@@ -1,7 +1,7 @@
-ctsb.models.control.MPPI
+tigercontrol.models.control.MPPI
 ========================
 
-.. currentmodule:: ctsb.models.control
+.. currentmodule:: tigercontrol.models.control
 
 .. autoclass:: MPPI
 

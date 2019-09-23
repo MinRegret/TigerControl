@@ -2,10 +2,10 @@
 AR(p): Linear combination of previous values
 """
 
-import ctsb
+import tigercontrol
 import jax
 import jax.numpy as np
-from ctsb.models.optimizers.losses import mse
+from tigercontrol.models.optimizers.losses import mse
 
 class SimpleBoost:
     """
@@ -38,7 +38,7 @@ class SimpleBoost:
         self.N = N
         self.models = []
         for _ in range(N):
-            new_model = ctsb.model(model_id)
+            new_model = tigercontrol.model(model_id)
             new_model.initialize(**model_params)
             new_model.optimizer.set_loss(proxy_loss) # proxy loss
             self.models.append(new_model)

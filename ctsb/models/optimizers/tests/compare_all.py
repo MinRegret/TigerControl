@@ -1,7 +1,7 @@
 
-import ctsb
-from ctsb.models.optimizers import *
-from ctsb.models.optimizers.losses import mse
+import tigercontrol
+from tigercontrol.models.optimizers import *
+from tigercontrol.models.optimizers.losses import mse
 import matplotlib.pyplot as plt
 import time
 from tqdm import tqdm
@@ -16,27 +16,27 @@ def avg_regret(loss):
 
 def test_ons(show=False):
 
-    #ctsb.set_key(0) # consistent randomness
+    #tigercontrol.set_key(0) # consistent randomness
 
-    problem = ctsb.problem('ARMA-v0')
+    problem = tigercontrol.problem('ARMA-v0')
     x, y_true = problem.initialize()
 
     models = []
     labels = ['OGD', 'ONS', 'Adam'] # don't run deprecated ONS
 
-    model = ctsb.model('LSTM')
+    model = tigercontrol.model('LSTM')
     model.initialize(n = 1, m = 1, optimizer=OGD) # initialize with class
     models.append(model)
 
-    #model = ctsb.model('AutoRegressor')
+    #model = tigercontrol.model('AutoRegressor')
     #model.initialize(optimizer=Adagrad) # initialize with class
     #models.append(model)
 
-    model = ctsb.model('LSTM')
+    model = tigercontrol.model('LSTM')
     model.initialize(n = 1, m = 1, optimizer=ONS) # initialize with class
     models.append(model)
 
-    #model = ctsb.model('AutoRegressor')
+    #model = tigercontrol.model('AutoRegressor')
     #model.initialize(optimizer=Adam) # initialize with class
     #models.append(model)
 

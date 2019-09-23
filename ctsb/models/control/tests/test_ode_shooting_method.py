@@ -1,6 +1,6 @@
 # Test the ODEShootingMethod model class by solving x'' = x + 4exp(t) for L = 1
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import math
 import matplotlib.pyplot as plt
@@ -18,7 +18,7 @@ def test_ode_shooting_method(steps=10, show_plot=True):
     t = L / 2
     y_true = y(t)
 
-    model = ctsb.model("ODEShootingMethod")
+    model = tigercontrol.model("ODEShootingMethod")
     model.initialize(f, y(0), y(L), 3.0, 4.0, t)
 
     loss = lambda x_true, x_pred: (x_true - x_pred)**2

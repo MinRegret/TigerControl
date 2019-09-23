@@ -1,17 +1,17 @@
 # test the LSTM model class
 
-import ctsb
+import tigercontrol
 import jax.numpy as np
 import jax.random as random
 import matplotlib.pyplot as plt
-from ctsb.utils import generate_key
+from tigercontrol.utils import generate_key
 
 def test_lstm(steps=100, show_plot=True):
     T = steps 
     n, m, l, d = 4, 5, 10, 10
-    problem = ctsb.problem("LDS-Control-v0")
+    problem = tigercontrol.problem("LDS-Control-v0")
     y_true = problem.initialize(n, m, d)
-    model = ctsb.model("LSTM")
+    model = tigercontrol.model("LSTM")
     model.initialize(n, m, l, d)
     loss = lambda pred, true: np.sum((pred - true)**2)
  

@@ -3,7 +3,7 @@ PyBullet Pendulum enviornment
 """
 
 from pybullet_envs.bullet.minitaur_gym_env import MinitaurBulletEnv
-from ctsb.problems.pybullet.pybullet_problem import PyBulletProblem
+from tigercontrol.problems.pybullet.pybullet_problem import PyBulletProblem
 
 
 class Minitaur(PyBulletProblem):

@@ -1,20 +1,20 @@
-import ctsb
-from ctsb.models.optimizers.adagrad import Adagrad
-from ctsb.models.optimizers.losses import mse
+import tigercontrol
+from tigercontrol.models.optimizers.adagrad import Adagrad
+from tigercontrol.models.optimizers.losses import mse
 import matplotlib.pyplot as plt
 
 def test_adagrad(show=False):
 
-    problem = ctsb.problem('ARMA-v0')
+    problem = tigercontrol.problem('ARMA-v0')
     x = problem.initialize(p=2,q=0)
 
-    model = ctsb.model('LSTM')
+    model = tigercontrol.model('LSTM')
     model.initialize(n=1, m=1, l=3, h=10, optimizer=Adagrad) # initialize with class
     model.predict(1.0) # call methods to verify it works
     model.update(1.0)
 
     optimizer = Adagrad(learning_rate=0.1)
-    model = ctsb.model('LSTM')
+    model = tigercontrol.model('LSTM')
     model.initialize(n=1, m=1, l=3, h=10, optimizer=optimizer) # reinitialize with instance
 
     loss = []

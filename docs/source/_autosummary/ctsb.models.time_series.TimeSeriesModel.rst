@@ -1,7 +1,7 @@
-ctsb.models.time\_series.TimeSeriesModel
+tigercontrol.models.time\_series.TimeSeriesModel
 ========================================
 
-.. currentmodule:: ctsb.models.time_series
+.. currentmodule:: tigercontrol.models.time_series
 
 .. autoclass:: TimeSeriesModel
 

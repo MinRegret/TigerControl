@@ -2,19 +2,19 @@
 Test for PyBullet pendulum problem
 """
 import time
-import ctsb
+import tigercontrol
 import jax.numpy as np
 
 
 # cartpole test
 def test_pendulum(verbose=False):
-    problem = ctsb.problem("Pendulum-v0")
+    problem = tigercontrol.problem("Pendulum-v0")
     #L = lambda x, u: 1. - x[1] # 1 - cos(theta), where theta=0 is the goal (pendulum pointing up)
     L = lambda x, u: x[0]**2
     dim_x, dim_u = 2, 1
     obs = problem.initialize()
 
-    model = ctsb.model("ILQR")
+    model = tigercontrol.model("ILQR")
     model.initialize(problem, L, dim_x, dim_u)
     T = 100 # horizon
     threshold = 0.01

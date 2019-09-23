@@ -2,8 +2,8 @@ import re
 import importlib
 import warnings
 
-from ctsb import error
-from ctsb.utils import Spec, Registry
+from tigercontrol import error
+from tigercontrol.utils import Spec, Registry
 
 # This format is true today, but it's *not* an official spec.
 # [username/](problem-name)-v(version)    problem-name is group 1, version is group 2
@@ -27,7 +27,7 @@ class ProblemSpec(Spec):
         id (str): The official problem ID
     """
     def __str__(self):
-        return "<CTSB Problem Spec>"
+        return "<TigerControl Problem Spec>"
 
 
 class ProblemRegistry(Registry):
@@ -38,7 +38,7 @@ class ProblemRegistry(Registry):
     code that was running.
     """
     def __str__(self):
-        return "<CTSB Problem Registry>"
+        return "<TigerControl Problem Registry>"
 
 
 

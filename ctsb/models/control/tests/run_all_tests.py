@@ -1,7 +1,7 @@
-from ctsb.models.control.tests.test_kalman_filter import test_kalman_filter
-from ctsb.models.control.tests.test_ode_shooting_method import test_ode_shooting_method
-from ctsb.models.control.tests.test_lqr import test_lqr
-from ctsb.models.control.tests.test_mppi import test_mppi
+from tigercontrol.models.control.tests.test_kalman_filter import test_kalman_filter
+from tigercontrol.models.control.tests.test_ode_shooting_method import test_ode_shooting_method
+from tigercontrol.models.control.tests.test_lqr import test_lqr
+from tigercontrol.models.control.tests.test_mppi import test_mppi
 
 def run_all_tests(steps=1000, show=False):
     print("\nrunning all control models tests...\n")

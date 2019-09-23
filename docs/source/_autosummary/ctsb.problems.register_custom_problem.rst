@@ -1,6 +1,6 @@
-ctsb.problems.register\_custom\_problem
+tigercontrol.problems.register\_custom\_problem
 =======================================
 
-.. currentmodule:: ctsb.problems
+.. currentmodule:: tigercontrol.problems
 
 .. autofunction:: register_custom_problem

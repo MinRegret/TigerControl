@@ -1,7 +1,7 @@
-ctsb.problems.pybullet.KukaDiverse
+tigercontrol.problems.pybullet.KukaDiverse
 ==================================
 
-.. currentmodule:: ctsb.problems.pybullet
+.. currentmodule:: tigercontrol.problems.pybullet
 
 .. autoclass:: KukaDiverse
 

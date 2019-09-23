@@ -1,7 +1,7 @@
-ctsb.problems.control.CartPole
+tigercontrol.problems.control.CartPole
 ==============================
 
-.. currentmodule:: ctsb.problems.control
+.. currentmodule:: tigercontrol.problems.control
 
 .. autoclass:: CartPole
 

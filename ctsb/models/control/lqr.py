@@ -3,8 +3,8 @@ Linear Quadratic Regulator
 """
 
 import jax.numpy as np
-import ctsb
-from ctsb.models.control import ControlModel
+import tigercontrol
+from tigercontrol.models.control import ControlModel
 
 class LQR(ControlModel):
     """

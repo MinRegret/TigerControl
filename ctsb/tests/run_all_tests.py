@@ -1,23 +1,23 @@
 """
-Run all tests for the CTSB framework
+Run all tests for the TigerControl framework
 """
 
-from ctsb.utils.tests.run_all_tests import run_all_tests as utils_tests
-from ctsb.problems.tests.run_all_tests import run_all_tests as problems_tests
-from ctsb.models.tests.run_all_tests import run_all_tests as models_tests
-from ctsb.experiments.tests.run_all_tests import run_all_tests as experiments_tests
-from ctsb.tests.test_ctsb_functionality import test_ctsb_functionality
+from tigercontrol.utils.tests.run_all_tests import run_all_tests as utils_tests
+from tigercontrol.problems.tests.run_all_tests import run_all_tests as problems_tests
+from tigercontrol.models.tests.run_all_tests import run_all_tests as models_tests
+from tigercontrol.experiments.tests.run_all_tests import run_all_tests as experiments_tests
+from tigercontrol.tests.test_tigercontrol_functionality import test_tigercontrol_functionality
 
 # run all sub-level tests
 def run_all_tests(show_results=False):
 
-    print("\n----- Running all CTSB tests! -----\n")
+    print("\n----- Running all TigerControl tests! -----\n")
 
     utils_tests(show=show_results)
     experiments_tests(show=show_results)
     models_tests(show=show_results)
     problems_tests(show=show_results)
-    test_ctsb_functionality()
+    test_tigercontrol_functionality()
 
     print("\n----- Tests done -----\n")
 

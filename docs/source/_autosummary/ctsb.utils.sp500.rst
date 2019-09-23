@@ -1,6 +1,6 @@
-ctsb.utils.sp500
+tigercontrol.utils.sp500
 ================
 
-.. currentmodule:: ctsb.utils
+.. currentmodule:: tigercontrol.utils
 
 .. autofunction:: sp500

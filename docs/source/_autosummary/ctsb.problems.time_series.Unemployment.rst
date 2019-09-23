@@ -1,7 +1,7 @@
-ctsb.problems.time\_series.Unemployment
+tigercontrol.problems.time\_series.Unemployment
 =======================================
 
-.. currentmodule:: ctsb.problems.time_series
+.. currentmodule:: tigercontrol.problems.time_series
 
 .. autoclass:: Unemployment
 

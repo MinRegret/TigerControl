@@ -1,7 +1,7 @@
 """Runs a random policy for the random object KukaObjectEnv.
 """
 
-import ctsb
+import tigercontrol
 import numpy as np
 import time
 from gym import spaces
@@ -31,7 +31,7 @@ class ContinuousDownwardBiasPolicy(object):
 
 def test_kuka(verbose=False):
 
-    problem = ctsb.problem("PyBullet-Kuka-v0")
+    problem = tigercontrol.problem("PyBullet-Kuka-v0")
     obs = problem.initialize(render=verbose)
     policy = ContinuousDownwardBiasPolicy()
 

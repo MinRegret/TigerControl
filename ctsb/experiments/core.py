@@ -1,12 +1,12 @@
 # experiments core class
 
-import ctsb
-from ctsb.experiments import metrics as metrics_module
-from ctsb import error
+import tigercontrol
+from tigercontrol.experiments import metrics as metrics_module
+from tigercontrol import error
 import jax.numpy as np
-from ctsb.problems.time_series import TimeSeriesProblem
-from ctsb.models.time_series import TimeSeriesModel
-from ctsb.utils.random import set_key
+from tigercontrol.problems.time_series import TimeSeriesProblem
+from tigercontrol.models.time_series import TimeSeriesModel
+from tigercontrol.utils.random import set_key
 from tqdm import tqdm
 import inspect
 import time
@@ -97,7 +97,7 @@ def run_experiment(problem, model, metric = 'mse', key = 0, timesteps = 100, ver
 
 
     # initialize problem
-    problem = ctsb.problem(problem_id)
+    problem = tigercontrol.problem(problem_id)
     if(problem_params is None):
         init = problem.initialize()
     else:
@@ -110,7 +110,7 @@ def run_experiment(problem, model, metric = 'mse', key = 0, timesteps = 100, ver
         x, y = init, problem.step()
 
     # initialize model
-    model = ctsb.model(model_id)
+    model = tigercontrol.model(model_id)
     if(model_params is None):
         model.initialize()
     else:

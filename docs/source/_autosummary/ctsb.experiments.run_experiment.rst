@@ -1,6 +1,6 @@
-ctsb.experiments.run\_experiment
+tigercontrol.experiments.run\_experiment
 ================================
 
-.. currentmodule:: ctsb.experiments
+.. currentmodule:: tigercontrol.experiments
 
 .. autofunction:: run_experiment

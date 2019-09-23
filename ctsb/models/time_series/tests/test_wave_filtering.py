@@ -1,9 +1,9 @@
-import ctsb
+import tigercontrol
 import time
 import jax.numpy as np
 import jax.random as rand
 import matplotlib.pyplot as plt
-from ctsb.utils import generate_key
+from tigercontrol.utils import generate_key
 
 def test_wave_filtering(show_plot=False):
 	# state variables
@@ -43,7 +43,7 @@ def test_wave_filtering(show_plot=False):
 		h = A.dot(h) + B.dot(X[:,t]) + rand.truncated_normal(generate_key(), 0, 0.1, shape=(hidden_state_dim,))
 	Y = np.array(Y).T # list to numpy matrix
 	
-	model = ctsb.model("WaveFiltering")
+	model = tigercontrol.model("WaveFiltering")
 	model.initialize(n, m, k, T, eta, R_M)
 	# loss = lambda y_true, y_pred: (y_true - y_pred)**2
 	loss = lambda y_true, y_pred: (np.linalg.norm(y_true - y_pred))**2
