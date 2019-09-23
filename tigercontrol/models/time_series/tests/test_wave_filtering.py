@@ -47,10 +47,14 @@ def test_wave_filtering(show_plot=False):
 	model.initialize(n, m, k, T, eta, R_M)
 	# loss = lambda y_true, y_pred: (y_true - y_pred)**2
 	loss = lambda y_true, y_pred: (np.linalg.norm(y_true - y_pred))**2
+
+	lastvalue_model = tigercontrol.model("LastValue")
+	lastvalue_model.initialize()
  
 	results = []
+	lastvalue_results = []
 	for i in range(T):
-		print(i)
+		# print(i)
 		cur_y_pred = model.predict(X[:,i])
 		#print(model.forecast(cur_x, 3))
 		cur_y_true = Y[:,i]
@@ -58,15 +62,24 @@ def test_wave_filtering(show_plot=False):
 		results.append(cur_loss)
 		model.update(cur_y_true)
 
+		lastvalue_cur_y_pred = lastvalue_model.predict(X[:,i])
+		lastvalue_cur_y_true = Y[:,i]
+		lastvalue_cur_loss = loss(lastvalue_cur_y_true, lastvalue_cur_y_pred)
+		lastvalue_results.append(lastvalue_cur_loss)
+
+	# print("test_wave_filtering passed")
+	print(np.linalg.norm(X[:,-1]))
+	print(np.linalg.norm(Y[:-1]))
+	print(results[-10:-1])
 	if show_plot:
 		plt.plot(results)
 		plt.title("WaveFiltering model on random data")
-		plt.show(block=False)
-	print("test_wave_filtering passed")
-	print(np.linalg.norm(X[:,-1]))
-	print(np.linalg.norm(Y[:,-1]))
-	print(results[-1])
+		plt.show(block=True)
 
+		plt.plot(lastvalue_results)
+		plt.title("LastValue model on random data")
+		plt.show(block=True)
+	
 if __name__=="__main__":
 	test_wave_filtering(True)
 

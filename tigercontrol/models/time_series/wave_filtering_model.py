@@ -28,6 +28,7 @@ class WaveFiltering(TimeSeriesModel):
         Z = 2 * la.hankel(v[:T], v[T-1:])
         eigen_values, eigen_vectors = np.linalg.eigh(Z)
         return np.flip(eigen_values[-k:], axis=0), np.flip(eigen_vectors[:,-k:], axis=1)
+        # return eigen_values[-k:], eigen_vectors[:,-k:]
 
     def initialize(self, n, m, k, T, eta, R_M):
         """
@@ -41,7 +42,7 @@ class WaveFiltering(TimeSeriesModel):
         self.n, self.m, self.k, self.T = n, m, k, T
         self.eta, self.R_M = eta, R_M
         self.k_prime = n * k + 2 * n + m
-        self.M = 2 * rand.uniform(generate_key(), shape=(self.m, self.k_prime)) - 1
+        self.M = rand.uniform(generate_key(), shape=(self.m, self.k_prime))
         if (4 * k > T):
             raise Exception("Model parameter k must be less than T/4")
         self.X = np.zeros((n,T))
@@ -55,7 +56,7 @@ class WaveFiltering(TimeSeriesModel):
 
         @jax.jit
         def _update_x(X, x):
-            new_x = np.roll(X, 1)
+            new_x = np.roll(X, 1, axis=1)
             new_x = jax.ops.index_update(new_x, jax.ops.index[:,0], x)
             return new_x
         self._update_x = _update_x
