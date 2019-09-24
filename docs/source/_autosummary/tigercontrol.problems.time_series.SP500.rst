@@ -1,5 +1,5 @@
 tigercontrol.problems.time\_series.SP500
-================================
+========================================
 
 .. currentmodule:: tigercontrol.problems.time_series
 
@@ -28,6 +28,7 @@ tigercontrol.problems.time\_series.SP500
 
    .. autosummary::
    
+      ~SP500.compatibles
       ~SP500.spec
    
    

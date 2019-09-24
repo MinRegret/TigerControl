@@ -1,5 +1,5 @@
 tigercontrol.problems.time\_series.Unemployment
-=======================================
+===============================================
 
 .. currentmodule:: tigercontrol.problems.time_series
 
@@ -28,6 +28,7 @@ tigercontrol.problems.time\_series.Unemployment
 
    .. autosummary::
    
+      ~Unemployment.compatibles
       ~Unemployment.spec
    
    

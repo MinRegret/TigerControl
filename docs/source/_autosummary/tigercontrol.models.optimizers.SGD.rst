@@ -1,5 +1,5 @@
 tigercontrol.models.optimizers.SGD
-==========================
+==================================
 
 .. currentmodule:: tigercontrol.models.optimizers
 

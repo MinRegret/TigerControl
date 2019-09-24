@@ -1,5 +1,5 @@
 tigercontrol.experiments.NewExperiment
-==============================
+======================================
 
 .. currentmodule:: tigercontrol.experiments
 

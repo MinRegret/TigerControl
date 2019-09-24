@@ -1,5 +1,5 @@
 tigercontrol package
-============
+====================
 
 Subpackages
 -----------

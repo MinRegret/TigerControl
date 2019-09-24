@@ -1,5 +1,5 @@
 tigercontrol.models.time\_series.AutoRegressor
-======================================
+==============================================
 
 .. currentmodule:: tigercontrol.models.time_series
 
@@ -14,6 +14,7 @@ tigercontrol.models.time\_series.AutoRegressor
    .. autosummary::
    
       ~AutoRegressor.__init__
+      ~AutoRegressor.forecast
       ~AutoRegressor.help
       ~AutoRegressor.initialize
       ~AutoRegressor.predict
@@ -27,6 +28,7 @@ tigercontrol.models.time\_series.AutoRegressor
 
    .. autosummary::
    
+      ~AutoRegressor.compatibles
       ~AutoRegressor.spec
    
    

@@ -1,5 +1,5 @@
 tigercontrol.problems.time\_series.LDS\_TimeSeries
-==========================================
+==================================================
 
 .. currentmodule:: tigercontrol.problems.time_series
 
@@ -28,6 +28,7 @@ tigercontrol.problems.time\_series.LDS\_TimeSeries
 
    .. autosummary::
    
+      ~LDS_TimeSeries.compatibles
       ~LDS_TimeSeries.spec
    
    

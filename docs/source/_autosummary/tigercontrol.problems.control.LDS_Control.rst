@@ -1,5 +1,5 @@
 tigercontrol.problems.control.LDS\_Control
-==================================
+==========================================
 
 .. currentmodule:: tigercontrol.problems.control
 

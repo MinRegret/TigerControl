@@ -1,5 +1,5 @@
 tigercontrol.experiments.mse
-====================
+============================
 
 .. currentmodule:: tigercontrol.experiments
 

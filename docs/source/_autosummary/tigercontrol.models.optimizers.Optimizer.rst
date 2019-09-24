@@ -1,5 +1,5 @@
 tigercontrol.models.optimizers.Optimizer
-================================
+========================================
 
 .. currentmodule:: tigercontrol.models.optimizers
 

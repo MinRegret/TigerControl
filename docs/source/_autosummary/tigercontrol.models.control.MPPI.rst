@@ -1,5 +1,5 @@
 tigercontrol.models.control.MPPI
-========================
+================================
 
 .. currentmodule:: tigercontrol.models.control
 

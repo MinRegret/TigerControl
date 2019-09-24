@@ -1,5 +1,5 @@
 tigercontrol.models.boosting.SimpleBoost
-================================
+========================================
 
 .. currentmodule:: tigercontrol.models.boosting
 

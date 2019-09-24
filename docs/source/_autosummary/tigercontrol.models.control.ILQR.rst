@@ -1,5 +1,5 @@
 tigercontrol.models.control.ILQR
-========================
+================================
 
 .. currentmodule:: tigercontrol.models.control
 

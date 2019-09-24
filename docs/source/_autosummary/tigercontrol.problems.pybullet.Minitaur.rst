@@ -1,5 +1,5 @@
 tigercontrol.problems.pybullet.Minitaur
-===============================
+=======================================
 
 .. currentmodule:: tigercontrol.problems.pybullet
 

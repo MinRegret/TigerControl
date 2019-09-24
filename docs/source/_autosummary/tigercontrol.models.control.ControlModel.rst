@@ -1,5 +1,5 @@
 tigercontrol.models.control.ControlModel
-================================
+========================================
 
 .. currentmodule:: tigercontrol.models.control
 

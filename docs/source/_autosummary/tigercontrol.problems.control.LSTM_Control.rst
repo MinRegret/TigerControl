@@ -1,5 +1,5 @@
 tigercontrol.problems.control.LSTM\_Control
-===================================
+===========================================
 
 .. currentmodule:: tigercontrol.problems.control
 

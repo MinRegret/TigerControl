@@ -1,5 +1,5 @@
 tigercontrol.problems.pybullet.Obstacles
-================================
+========================================
 
 .. currentmodule:: tigercontrol.problems.pybullet
 

@@ -1,5 +1,5 @@
 tigercontrol.models.optimizers.Adagrad
-==============================
+======================================
 
 .. currentmodule:: tigercontrol.models.optimizers
 

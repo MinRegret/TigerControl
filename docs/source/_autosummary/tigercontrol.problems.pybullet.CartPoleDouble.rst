@@ -1,5 +1,5 @@
 tigercontrol.problems.pybullet.CartPoleDouble
-=====================================
+=============================================
 
 .. currentmodule:: tigercontrol.problems.pybullet
 

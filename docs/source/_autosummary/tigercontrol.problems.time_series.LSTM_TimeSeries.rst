@@ -1,5 +1,5 @@
 tigercontrol.problems.time\_series.LSTM\_TimeSeries
-===========================================
+===================================================
 
 .. currentmodule:: tigercontrol.problems.time_series
 
@@ -28,6 +28,7 @@ tigercontrol.problems.time\_series.LSTM\_TimeSeries
 
    .. autosummary::
    
+      ~LSTM_TimeSeries.compatibles
       ~LSTM_TimeSeries.spec
    
    

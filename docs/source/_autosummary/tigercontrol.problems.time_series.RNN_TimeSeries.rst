@@ -1,5 +1,5 @@
 tigercontrol.problems.time\_series.RNN\_TimeSeries
-==========================================
+==================================================
 
 .. currentmodule:: tigercontrol.problems.time_series
 
@@ -28,6 +28,7 @@ tigercontrol.problems.time\_series.RNN\_TimeSeries
 
    .. autosummary::
    
+      ~RNN_TimeSeries.compatibles
       ~RNN_TimeSeries.spec
    
    

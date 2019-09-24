@@ -1,5 +1,5 @@
 tigercontrol.models.control.ODEShootingMethod
-=====================================
+=============================================
 
 .. currentmodule:: tigercontrol.models.control
 
@@ -29,6 +29,7 @@ tigercontrol.models.control.ODEShootingMethod
 
    .. autosummary::
    
+      ~ODEShootingMethod.compatibles
       ~ODEShootingMethod.spec
    
    

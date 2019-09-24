@@ -1,5 +1,5 @@
 tigercontrol.problems.time\_series.ENSO
-===============================
+=======================================
 
 .. currentmodule:: tigercontrol.problems.time_series
 
@@ -28,6 +28,7 @@ tigercontrol.problems.time\_series.ENSO
 
    .. autosummary::
    
+      ~ENSO.compatibles
       ~ENSO.spec
    
    

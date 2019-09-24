@@ -1,5 +1,5 @@
 tigercontrol.experiments.cross\_entropy
-===============================
+=======================================
 
 .. currentmodule:: tigercontrol.experiments
 

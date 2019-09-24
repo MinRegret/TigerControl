@@ -1,5 +1,5 @@
 tigercontrol.problems package
-=====================
+=============================
 
 .. automodule:: tigercontrol.problems
 

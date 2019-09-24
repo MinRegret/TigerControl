@@ -1,5 +1,5 @@
 tigercontrol.experiments.recompute
-==========================
+==================================
 
 .. currentmodule:: tigercontrol.experiments
 
