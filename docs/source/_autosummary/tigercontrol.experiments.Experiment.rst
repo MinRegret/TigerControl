@@ -1,5 +1,5 @@
 tigercontrol.experiments.Experiment
-===========================
+===================================
 
 .. currentmodule:: tigercontrol.experiments
 
@@ -15,10 +15,13 @@ tigercontrol.experiments.Experiment
    
       ~Experiment.__init__
       ~Experiment.add_model
+      ~Experiment.add_problem
+      ~Experiment.avg_regret
       ~Experiment.graph
       ~Experiment.help
       ~Experiment.initialize
       ~Experiment.scoreboard
+      ~Experiment.to_csv
    
    
 

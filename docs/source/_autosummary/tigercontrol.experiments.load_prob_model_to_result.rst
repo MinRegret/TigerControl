@@ -1,5 +1,5 @@
 tigercontrol.experiments.load\_prob\_model\_to\_result
-==============================================
+======================================================
 
 .. currentmodule:: tigercontrol.experiments
 

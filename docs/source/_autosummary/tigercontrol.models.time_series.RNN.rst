@@ -1,7 +1,7 @@
-tigercontrol.models.time\_series.rnn.RNN
-================================
+tigercontrol.models.time\_series.RNN
+====================================
 
-.. currentmodule:: tigercontrol.models.time_series.rnn
+.. currentmodule:: tigercontrol.models.time_series
 
 .. autoclass:: RNN
 
@@ -14,9 +14,11 @@ tigercontrol.models.time\_series.rnn.RNN
    .. autosummary::
    
       ~RNN.__init__
+      ~RNN.forecast
       ~RNN.help
       ~RNN.initialize
       ~RNN.predict
+      ~RNN.to_ndarray
       ~RNN.update
    
    
@@ -27,6 +29,7 @@ tigercontrol.models.time\_series.rnn.RNN
 
    .. autosummary::
    
+      ~RNN.compatibles
       ~RNN.spec
    
    

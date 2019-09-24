@@ -1,5 +1,5 @@
 tigercontrol.problems.control.CartPole
-==============================
+======================================
 
 .. currentmodule:: tigercontrol.problems.control
 

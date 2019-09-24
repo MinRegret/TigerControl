@@ -1,5 +1,5 @@
 tigercontrol.models.time\_series.TimeSeriesModel
-========================================
+================================================
 
 .. currentmodule:: tigercontrol.models.time_series
 

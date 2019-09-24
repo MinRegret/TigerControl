@@ -1,5 +1,5 @@
 tigercontrol.problems.pybullet.CartPoleSwingup
-======================================
+==============================================
 
 .. currentmodule:: tigercontrol.problems.pybullet
 

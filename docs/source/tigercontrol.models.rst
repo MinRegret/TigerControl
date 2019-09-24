@@ -1,5 +1,5 @@
 tigercontrol.models package
-=====================
+===========================
 
 .. automodule:: tigercontrol.models
 
@@ -22,7 +22,6 @@ control
    tigercontrol.models.control.LQR
    tigercontrol.models.control.MPPI
    tigercontrol.models.control.CartPoleNN
-   tigercontrol.models.control.AdversarialDisturbances
    tigercontrol.models.control.ILQR
 
 
@@ -36,9 +35,9 @@ time_series
    tigercontrol.models.time_series.AutoRegressor
    tigercontrol.models.time_series.LastValue
    tigercontrol.models.time_series.PredictZero
-   tigercontrol.models.time_series.rnn.RNN
-   tigercontrol.models.time_series.lstm.LSTM
-   tigercontrol.models.time_series.least_squares.LeastSquares
+   tigercontrol.models.time_series.RNN
+   tigercontrol.models.time_series.LSTM
+   tigercontrol.models.time_series.LeastSquares
 
 optimizers
 ----------

@@ -1,5 +1,5 @@
 tigercontrol.models.control.KalmanFilter
-================================
+========================================
 
 .. currentmodule:: tigercontrol.models.control
 
@@ -29,6 +29,7 @@ tigercontrol.models.control.KalmanFilter
 
    .. autosummary::
    
+      ~KalmanFilter.compatibles
       ~KalmanFilter.spec
    
    

@@ -1,5 +1,5 @@
 tigercontrol.problems.ControlProblem
-============================
+====================================
 
 .. currentmodule:: tigercontrol.problems
 

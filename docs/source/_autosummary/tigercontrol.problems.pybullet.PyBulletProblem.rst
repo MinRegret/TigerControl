@@ -1,5 +1,5 @@
 tigercontrol.problems.pybullet.PyBulletProblem
-======================================
+==============================================
 
 .. currentmodule:: tigercontrol.problems.pybullet
 

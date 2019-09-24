@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 TigerControl reference documentation
-===============================
+====================================
 
 For an introduction to TigerControl, start at the
 `TigerControl GitHub page <https://github.com/johnhallman/tigercontrol>`_.

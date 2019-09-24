@@ -1,5 +1,5 @@
 tigercontrol.models.optimizers.cross\_entropy
-=====================================
+=============================================
 
 .. currentmodule:: tigercontrol.models.optimizers
 

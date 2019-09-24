@@ -1,5 +1,5 @@
 tigercontrol.problems.control.RNN\_Control
-==================================
+==========================================
 
 .. currentmodule:: tigercontrol.problems.control
 

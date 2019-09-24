@@ -1,7 +1,7 @@
-tigercontrol.models.time\_series.lstm.LSTM
-==================================
+tigercontrol.models.time\_series.LSTM
+=====================================
 
-.. currentmodule:: tigercontrol.models.time_series.lstm
+.. currentmodule:: tigercontrol.models.time_series
 
 .. autoclass:: LSTM
 
@@ -14,6 +14,7 @@ tigercontrol.models.time\_series.lstm.LSTM
    .. autosummary::
    
       ~LSTM.__init__
+      ~LSTM.forecast
       ~LSTM.help
       ~LSTM.initialize
       ~LSTM.predict
@@ -28,6 +29,7 @@ tigercontrol.models.time\_series.lstm.LSTM
 
    .. autosummary::
    
+      ~LSTM.compatibles
       ~LSTM.spec
    
    

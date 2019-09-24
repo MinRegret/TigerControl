@@ -1,5 +1,5 @@
 tigercontrol.problems.pybullet.Humanoid
-===============================
+=======================================
 
 .. currentmodule:: tigercontrol.problems.pybullet
 

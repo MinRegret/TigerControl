@@ -1,5 +1,5 @@
 tigercontrol.problems.TimeSeriesProblem
-===============================
+=======================================
 
 .. currentmodule:: tigercontrol.problems
 

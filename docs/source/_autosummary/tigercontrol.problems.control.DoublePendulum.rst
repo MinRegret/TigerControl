@@ -1,5 +1,5 @@
 tigercontrol.problems.control.DoublePendulum
-====================================
+============================================
 
 .. currentmodule:: tigercontrol.problems.control
 

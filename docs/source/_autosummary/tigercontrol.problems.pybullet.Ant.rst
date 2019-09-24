@@ -1,5 +1,5 @@
 tigercontrol.problems.pybullet.Ant
-==========================
+==================================
 
 .. currentmodule:: tigercontrol.problems.pybullet
 

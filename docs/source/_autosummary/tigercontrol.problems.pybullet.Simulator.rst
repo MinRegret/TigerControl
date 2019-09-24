@@ -1,5 +1,5 @@
 tigercontrol.problems.pybullet.Simulator
-================================
+========================================
 
 .. currentmodule:: tigercontrol.problems.pybullet
 

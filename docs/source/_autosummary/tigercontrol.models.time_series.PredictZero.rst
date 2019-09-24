@@ -1,5 +1,5 @@
 tigercontrol.models.time\_series.PredictZero
-====================================
+============================================
 
 .. currentmodule:: tigercontrol.models.time_series
 
@@ -14,6 +14,7 @@ tigercontrol.models.time\_series.PredictZero
    .. autosummary::
    
       ~PredictZero.__init__
+      ~PredictZero.forecast
       ~PredictZero.help
       ~PredictZero.initialize
       ~PredictZero.predict
@@ -27,6 +28,7 @@ tigercontrol.models.time\_series.PredictZero
 
    .. autosummary::
    
+      ~PredictZero.compatibles
       ~PredictZero.spec
    
    

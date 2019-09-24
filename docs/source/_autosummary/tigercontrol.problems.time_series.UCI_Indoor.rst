@@ -1,5 +1,5 @@
 tigercontrol.problems.time\_series.UCI\_Indoor
-======================================
+==============================================
 
 .. currentmodule:: tigercontrol.problems.time_series
 
@@ -28,6 +28,7 @@ tigercontrol.problems.time\_series.UCI\_Indoor
 
    .. autosummary::
    
+      ~UCI_Indoor.compatibles
       ~UCI_Indoor.spec
    
    

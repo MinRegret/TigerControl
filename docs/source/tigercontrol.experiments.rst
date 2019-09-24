@@ -1,5 +1,5 @@
 tigercontrol.experiments package
-========================
+================================
 .. automodule:: tigercontrol.experiments
 
 core

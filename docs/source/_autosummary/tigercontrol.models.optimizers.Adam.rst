@@ -1,5 +1,5 @@
 tigercontrol.models.optimizers.Adam
-===========================
+===================================
 
 .. currentmodule:: tigercontrol.models.optimizers
 
@@ -17,7 +17,6 @@ tigercontrol.models.optimizers.Adam
       ~Adam.gradient
       ~Adam.set_loss
       ~Adam.set_predict
-      ~Adam.to_ndarray
       ~Adam.update
    
    

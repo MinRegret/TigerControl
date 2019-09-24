@@ -1,5 +1,5 @@
 tigercontrol.models.time\_series.LastValue
-==================================
+==========================================
 
 .. currentmodule:: tigercontrol.models.time_series
 
@@ -14,6 +14,7 @@ tigercontrol.models.time\_series.LastValue
    .. autosummary::
    
       ~LastValue.__init__
+      ~LastValue.forecast
       ~LastValue.help
       ~LastValue.initialize
       ~LastValue.predict
@@ -27,6 +28,7 @@ tigercontrol.models.time\_series.LastValue
 
    .. autosummary::
    
+      ~LastValue.compatibles
       ~LastValue.spec
    
    

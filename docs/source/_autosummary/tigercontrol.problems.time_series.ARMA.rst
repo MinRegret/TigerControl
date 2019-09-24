@@ -1,5 +1,5 @@
 tigercontrol.problems.time\_series.ARMA
-===============================
+=======================================
 
 .. currentmodule:: tigercontrol.problems.time_series
 
@@ -28,6 +28,7 @@ tigercontrol.problems.time\_series.ARMA
 
    .. autosummary::
    
+      ~ARMA.compatibles
       ~ARMA.spec
    
    

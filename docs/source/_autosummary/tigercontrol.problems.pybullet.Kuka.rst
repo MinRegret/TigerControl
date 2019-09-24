@@ -1,5 +1,5 @@
 tigercontrol.problems.pybullet.Kuka
-===========================
+===================================
 
 .. currentmodule:: tigercontrol.problems.pybullet
 

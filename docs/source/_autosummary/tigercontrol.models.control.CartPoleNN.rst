@@ -1,5 +1,5 @@
 tigercontrol.models.control.CartPoleNN
-==============================
+======================================
 
 .. currentmodule:: tigercontrol.models.control
 
@@ -27,6 +27,7 @@ tigercontrol.models.control.CartPoleNN
 
    .. autosummary::
    
+      ~CartPoleNN.compatibles
       ~CartPoleNN.spec
    
    

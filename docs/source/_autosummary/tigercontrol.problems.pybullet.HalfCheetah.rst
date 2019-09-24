@@ -1,5 +1,5 @@
 tigercontrol.problems.pybullet.HalfCheetah
-==================================
+==========================================
 
 .. currentmodule:: tigercontrol.problems.pybullet
 

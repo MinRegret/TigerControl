@@ -1,5 +1,5 @@
 tigercontrol.utils.generate\_key
-========================
+================================
 
 .. currentmodule:: tigercontrol.utils
 

@@ -1,5 +1,5 @@
 tigercontrol.models.optimizers.ONS
-==========================
+==================================
 
 .. currentmodule:: tigercontrol.models.optimizers
 
