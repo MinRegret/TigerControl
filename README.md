@@ -1,7 +1,7 @@
 # TigerControl
 **********
 
-**TigerControl** (Control and Time-Series Benchmarks) is an open-source framework for benchmarking control and time-series algorithms in simulated and real settings, and is available for anyone to download and use. By reducing algorithms to a set of standard APIs, TigerControl allows the user to quickly switch between models and tasks while running experiments and plotting results on the go, and for quick and simple comparison between model performances. TigerControl also comes with built-in standard control and time-series algorithms for comparison or other use.
+**TigerControl** is an open-source framework for benchmarking control and time-series algorithms in simulated and real settings, and is available for anyone to download and use. By reducing algorithms to a set of standard APIs, TigerControl allows the user to quickly switch between models and tasks while running experiments and plotting results on the go, and for quick and simple comparison between model performances. TigerControl also comes with built-in standard control and time-series algorithms for comparison or other use.
 
 
 Overview
