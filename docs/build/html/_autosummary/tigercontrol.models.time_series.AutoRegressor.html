@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tigercontrol.models.time_series.AutoRegressor &mdash; tigercontrol 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tigercontrol.models.time_series.LastValue" href="tigercontrol.models.time_series.LastValue.html" />
+    <link rel="prev" title="tigercontrol.models.time_series.TimeSeriesModel" href="tigercontrol.models.time_series.TimeSeriesModel.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> tigercontrol
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../tigercontrol.html">tigercontrol package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../tigercontrol.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../tigercontrol.utils.html">tigercontrol.utils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tigercontrol.problems.html">tigercontrol.problems package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../tigercontrol.models.html">tigercontrol.models package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.models.html#core">core</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.models.html#control">control</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../tigercontrol.models.html#time-series">time_series</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.models.html#optimizers">optimizers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.models.html#boosting">boosting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../tigercontrol.experiments.html">tigercontrol.experiments package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html">help</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html#contact">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tigercontrol</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../tigercontrol.html">tigercontrol package</a> &raquo;</li>
+        
+          <li><a href="../tigercontrol.models.html">tigercontrol.models package</a> &raquo;</li>
+        
+      <li>tigercontrol.models.time_series.AutoRegressor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/_autosummary/tigercontrol.models.time_series.AutoRegressor.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tigercontrol-models-time-series-autoregressor">
+<h1>tigercontrol.models.time_series.AutoRegressor<a class="headerlink" href="#tigercontrol-models-time-series-autoregressor" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="tigercontrol.models.time_series.AutoRegressor">
+<em class="property">class </em><code class="descclassname">tigercontrol.models.time_series.</code><code class="descname">AutoRegressor</code><a class="reference internal" href="../_modules/tigercontrol/models/time_series/autoregressor.html#AutoRegressor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.models.time_series.AutoRegressor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description: Implements the equivalent of an AR(p) model - predicts a linear
+combination of the previous p observed values in a time-series</p>
+<dl class="method">
+<dt id="tigercontrol.models.time_series.AutoRegressor.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/models/time_series/autoregressor.html#AutoRegressor.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.models.time_series.AutoRegressor.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tigercontrol.models.time_series.AutoRegressor.__init__" title="tigercontrol.models.time_series.AutoRegressor.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</td>
+<td>Initialize self.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">forecast</span></code>(x[,&nbsp;timeline])</td>
+<td>Description: Forecast values ‘timeline’ timesteps in the future :param x: Value at current time-step :type x: int/numpy.ndarray :param timeline: timeline for forecast :type timeline: int</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>()</td>
+<td>Description: Prints information about this class and its methods.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code>([p,&nbsp;optimizer])</td>
+<td>Description: Initializes autoregressive model parameters</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>(x)</td>
+<td>Description: Predict next value given observation :param x: Observation :type x: int/numpy.ndarray</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>(y)</td>
+<td>Description: Updates parameters using the specified optimizer :param y: True value at current time-step :type y: int/numpy.ndarray</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">compatibles</span></code></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">spec</span></code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tigercontrol.models.time_series.LastValue.html" class="btn btn-neutral float-right" title="tigercontrol.models.time_series.LastValue" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tigercontrol.models.time_series.TimeSeriesModel.html" class="btn btn-neutral float-left" title="tigercontrol.models.time_series.TimeSeriesModel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, alexjyu
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
