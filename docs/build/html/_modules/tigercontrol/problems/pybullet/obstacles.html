@@ -1,0 +1,551 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tigercontrol.problems.pybullet.obstacles &mdash; tigercontrol 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> tigercontrol
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tigercontrol.html">tigercontrol package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../help.html">help</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html#contact">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">tigercontrol</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>tigercontrol.problems.pybullet.obstacles</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tigercontrol.problems.pybullet.obstacles</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">import</span> <span class="nn">pybullet</span> <span class="k">as</span> <span class="nn">pybullet</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pybullet</span> <span class="k">as</span> <span class="nn">pybullet</span>
+<span class="kn">import</span> <span class="nn">gym.spaces</span> <span class="k">as</span> <span class="nn">spaces</span>
+<span class="c1"># from tigercontrol.problems.pybullet.obstacle_utils import *</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.utils</span> <span class="k">import</span> <span class="n">get_tigercontrol_dir</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.problems.pybullet.pybullet_problem</span> <span class="k">import</span> <span class="n">PyBulletProblem</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">class</span> <span class="nc">ObstaclesEnv</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renders</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># start the bullet physics server</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_renders</span> <span class="o">=</span> <span class="n">renders</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">renders</span><span class="p">):</span>
+          <span class="n">pybullet</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">pybullet</span><span class="o">.</span><span class="n">GUI</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">pybullet</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">pybullet</span><span class="o">.</span><span class="n">DIRECT</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Dict</span><span class="p">({</span><span class="s2">&quot;x_position&quot;</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="o">=-</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,)),</span> 
+                                              <span class="s2">&quot;y_position&quot;</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">26.0</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,)),</span>
+                                              <span class="s2">&quot;theta&quot;</span><span class="p">:</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span> <span class="k">if</span> <span class="n">params</span> <span class="o">!=</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_params</span><span class="p">()</span>
+        <span class="c1"># self.reset()</span>
+
+    <span class="k">def</span> <span class="nf">step_fgm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
+        <span class="c1"># State: [x,y,theta]</span>
+        <span class="c1"># x: horizontal position</span>
+        <span class="c1"># y: vertical position</span>
+        <span class="c1"># theta: angle from vertical (positive is anti-clockwise)</span>
+        
+        <span class="c1"># Dynamics:</span>
+        <span class="c1"># xdot = -(r/2)*(ul + ur)*sin(theta)</span>
+        <span class="c1"># ydot = (r/2)*(ul + ur)*cos(theta)</span>
+        <span class="c1"># thetadot = (r/L)*(ur - ul)</span>
+
+        <span class="c1"># Robot parameters</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span> <span class="c1"># Radius of robot wheel</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span> <span class="c1"># Length between wheels (i.e., width of base)</span>
+        
+        <span class="n">dt</span> <span class="o">=</span> <span class="mf">0.05</span>
+        <span class="n">v0</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># forward speed</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">dt</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">r</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">v0</span><span class="o">/</span><span class="n">r</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span> <span class="c1"># x position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dt</span><span class="o">*</span><span class="p">((</span><span class="n">r</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">v0</span><span class="o">/</span><span class="n">r</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span> <span class="c1"># y position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">angle</span>
+
+        <span class="c1"># Update position of pybullet object</span>
+        <span class="n">quat</span> <span class="o">=</span> <span class="n">pybullet</span><span class="o">.</span><span class="n">getQuaternionFromEuler</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span> <span class="c1"># pi/2 since Husky visualization is rotated by pi/2</span>
+        <span class="n">pybullet</span><span class="o">.</span><span class="n">resetBasePositionAndOrientation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">husky</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">quat</span><span class="p">)</span>
+        <span class="n">pybullet</span><span class="o">.</span><span class="n">resetBasePositionAndOrientation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">robotHeight</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> 
+
+        <span class="c1"># closestPoints = pybullet.getClosestPoints(self.sphere, self.obsUid, 0.0)</span>
+        <span class="c1"># See if the robot is in collision. If so, cost = 1.0. </span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">closestPoints</span> <span class="o">=</span> <span class="n">pybullet</span><span class="o">.</span><span class="n">getClosestPoints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">obsUid</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">closestPoints</span><span class="p">:</span> <span class="c1"># Check if closestPoints is non-empty </span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="c1"># break # break out of simulation for this environment</span>
+        
+        <span class="n">done</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">5</span> \
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">5</span> \
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> \
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10</span> \
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> \
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> \
+        
+        <span class="n">done</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">done</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_diff</span><span class="p">):</span>
+        <span class="c1"># State: [x,y,theta]</span>
+        <span class="c1"># x: horizontal position</span>
+        <span class="c1"># y: vertical position</span>
+        <span class="c1"># theta: angle from vertical (positive is anti-clockwise)</span>
+        
+        <span class="c1"># Dynamics:</span>
+        <span class="c1"># xdot = -(r/2)*(ul + ur)*sin(theta)</span>
+        <span class="c1"># ydot = (r/2)*(ul + ur)*cos(theta)</span>
+        <span class="c1"># thetadot = (r/L)*(ur - ul)</span>
+
+        <span class="c1"># Robot parameters</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">;</span> <span class="c1"># Radius of robot wheel</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">;</span> <span class="c1"># Length between wheels (i.e., width of base)</span>
+        
+        <span class="n">dt</span> <span class="o">=</span> <span class="mf">0.05</span>
+        <span class="n">v0</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="c1"># forward speed</span>
+        
+        <span class="c1"># Saturate udiff</span>
+        <span class="n">u_diff_max</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">v0</span><span class="o">/</span><span class="n">r</span><span class="p">)</span> 
+        <span class="n">u_diff_min</span> <span class="o">=</span> <span class="o">-</span><span class="n">u_diff_max</span>
+        <span class="n">u_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">u_diff_min</span><span class="p">,</span> <span class="n">u_diff</span><span class="p">)</span>
+        <span class="n">u_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">u_diff_max</span><span class="p">,</span> <span class="n">u_diff</span><span class="p">)</span>
+        
+        <span class="n">ul</span> <span class="o">=</span> <span class="n">v0</span><span class="o">/</span><span class="n">r</span> <span class="o">-</span> <span class="n">u_diff</span><span class="p">;</span>
+        <span class="n">ur</span> <span class="o">=</span> <span class="n">v0</span><span class="o">/</span><span class="n">r</span> <span class="o">+</span> <span class="n">u_diff</span><span class="p">;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">dt</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">r</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">ul</span> <span class="o">+</span> <span class="n">ur</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span> <span class="c1"># x position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dt</span><span class="o">*</span><span class="p">((</span><span class="n">r</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">ul</span> <span class="o">+</span> <span class="n">ur</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span> <span class="c1"># y position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">dt</span><span class="o">*</span><span class="p">((</span><span class="n">r</span><span class="o">/</span><span class="n">L</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">ur</span> <span class="o">-</span> <span class="n">ul</span><span class="p">))</span>
+
+        <span class="c1"># Update position of pybullet object</span>
+        <span class="n">quat</span> <span class="o">=</span> <span class="n">pybullet</span><span class="o">.</span><span class="n">getQuaternionFromEuler</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span> <span class="c1"># pi/2 since Husky visualization is rotated by pi/2</span>
+        <span class="n">pybullet</span><span class="o">.</span><span class="n">resetBasePositionAndOrientation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">husky</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">quat</span><span class="p">)</span>
+        <span class="n">pybullet</span><span class="o">.</span><span class="n">resetBasePositionAndOrientation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">robotHeight</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> 
+
+        <span class="c1"># closestPoints = pybullet.getClosestPoints(self.sphere, self.obsUid, 0.0)</span>
+        <span class="c1"># See if the robot is in collision. If so, cost = 1.0. </span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">closestPoints</span> <span class="o">=</span> <span class="n">pybullet</span><span class="o">.</span><span class="n">getClosestPoints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">obsUid</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">closestPoints</span><span class="p">:</span> <span class="c1"># Check if closestPoints is non-empty </span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="c1"># break # break out of simulation for this environment</span>
+        
+        <span class="n">done</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">5</span> \
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">5</span> \
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> \
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10</span> \
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> \
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> \
+        
+        <span class="n">done</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">done</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># print(&quot;-----------reset simulation---------------&quot;)</span>
+        <span class="n">pybullet</span><span class="o">.</span><span class="n">resetSimulation</span><span class="p">()</span>
+        <span class="c1"># Get some robot parameters</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span>
+        <span class="n">robotRadius</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;robotRadius&#39;</span><span class="p">]</span>
+        <span class="n">numRays</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;numRays&#39;</span><span class="p">]</span>
+        <span class="n">thetas_nominal</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;thetas_nominal&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">robotHeight</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;robotHeight&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Ground plane</span>
+        <span class="n">tigercontrol_dir</span> <span class="o">=</span> <span class="n">get_tigercontrol_dir</span><span class="p">()</span>
+        <span class="n">pybullet</span><span class="o">.</span><span class="n">loadURDF</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tigercontrol_dir</span><span class="p">,</span> <span class="s2">&quot;problems/control/pybullet/URDFs/plane.urdf&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Load robot from URDF</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">husky</span> <span class="o">=</span> <span class="n">pybullet</span><span class="o">.</span><span class="n">loadURDF</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tigercontrol_dir</span><span class="p">,</span> <span class="s2">&quot;problems/control/pybullet/URDFs/husky.urdf&quot;</span><span class="p">),</span> <span class="n">globalScaling</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="c1"># Sphere</span>
+        <span class="n">colSphereId</span> <span class="o">=</span> <span class="n">pybullet</span><span class="o">.</span><span class="n">createCollisionShape</span><span class="p">(</span><span class="n">pybullet</span><span class="o">.</span><span class="n">GEOM_SPHERE</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">robotRadius</span><span class="p">)</span>
+        <span class="n">mass</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_renders</span><span class="p">):</span>
+            <span class="n">visualShapeId</span> <span class="o">=</span> <span class="n">pybullet</span><span class="o">.</span><span class="n">createVisualShape</span><span class="p">(</span><span class="n">pybullet</span><span class="o">.</span><span class="n">GEOM_SPHERE</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">robotRadius</span><span class="p">,</span><span class="n">rgbaColor</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="c1"># This just makes sure that the sphere is not visible (we only use the sphere for collision checking)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">visualShapeId</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sphere</span> <span class="o">=</span> <span class="n">pybullet</span><span class="o">.</span><span class="n">createMultiBody</span><span class="p">(</span><span class="n">mass</span><span class="p">,</span><span class="n">colSphereId</span><span class="p">,</span><span class="n">visualShapeId</span><span class="p">)</span>
+
+        <span class="c1"># generate obstacles</span>
+        <span class="n">heightObs</span> <span class="o">=</span> <span class="mi">20</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">robotHeight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obsUid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_obstacles</span><span class="p">(</span><span class="n">pybullet</span><span class="p">,</span> <span class="n">heightObs</span><span class="p">,</span> <span class="n">robotRadius</span><span class="p">)</span>
+
+        <span class="c1"># Initialize position of robot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span> <span class="c1"># [x, y, theta]</span>
+        <span class="n">quat</span> <span class="o">=</span> <span class="n">pybullet</span><span class="o">.</span><span class="n">getQuaternionFromEuler</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span> <span class="c1"># pi/2 since Husky visualization is rotated by pi/2</span>
+
+        <span class="n">pybullet</span><span class="o">.</span><span class="n">resetBasePositionAndOrientation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">husky</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">quat</span><span class="p">)</span>
+        <span class="n">pybullet</span><span class="o">.</span><span class="n">resetBasePositionAndOrientation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">robotHeight</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">husky</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sphere</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">obsUid</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;human&#39;</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Helper functions for setting up obstacle environments, simulating dynamics, etc.</span>
+    <span class="c1"># Parameters</span>
+    <span class="k">def</span> <span class="nf">default_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># Initialize parameter dictionary</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;numRays&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">401</span> <span class="c1"># number of rays for sensor measurements</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;senseRadius&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">6.0</span> <span class="c1"># sensing radius</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;robotRadius&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.27</span> <span class="c1"># radius of robot</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;robotHeight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.15</span><span class="o">/</span><span class="mi">2</span> <span class="c1"># rough height of COM of robot</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;th_min&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> <span class="c1"># sensing angle minimum </span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;th_max&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> <span class="c1"># sensing angle maximum</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;T_horizon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span> <span class="c1"># time horizon over which to evaluate everything   </span>
+        
+        <span class="c1"># precompute vector of angles for sensor</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;thetas_nominal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;th_min&#39;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;th_max&#39;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;numRays&#39;</span><span class="p">]),</span> <span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;numRays&#39;</span><span class="p">],</span><span class="mi">1</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">params</span> 
+
+    <span class="c1"># Create some obstacles </span>
+    <span class="k">def</span> <span class="nf">generate_obstacles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">heightObs</span><span class="p">,</span> <span class="n">robotRadius</span><span class="p">,</span> <span class="n">numObs</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">x_lim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">],</span> <span class="n">y_lim</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">24.0</span><span class="p">]):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Params:</span>
+<span class="sd">            p : pybullet</span>
+<span class="sd">            heightObs: height of cylinders</span>
+<span class="sd">            robotRadius: radius of robot</span>
+<span class="sd">            numObs: number of cylinders to generate</span>
+<span class="sd">            x_lim (list): [lower, upper] box for x-coordinate</span>
+<span class="sd">            y_lim (list): [lower, upper] box for y-coordinate</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        
+        <span class="c1"># First create bounding obstacles</span>
+        <span class="c1"># x_lim = [-5.0, 5.0]</span>
+        <span class="c1"># y_lim = [0.0, 24.0]</span>
+            
+        <span class="c1">#numObs = 10 + np.random.randint(0,5)</span>
+        <span class="c1"># NUMBER OF OBJECTS</span>
+        <span class="c1"># numObs = 45</span>
+
+        <span class="c1"># radiusObs = 0.15</span>
+        <span class="n">massObs</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">visualShapeId</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">linkMasses</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">numObs</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># +3 is because we have three bounding walls</span>
+        <span class="n">colIdxs</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">numObs</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">visIdxs</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">numObs</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">posObs</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">numObs</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">orientObs</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">numObs</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">parentIdxs</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">numObs</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+        
+        <span class="n">linkInertialFramePositions</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">numObs</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">linkInertialFrameOrientations</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">numObs</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">linkJointTypes</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">numObs</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">linkJointAxis</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">numObs</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numObs</span><span class="p">):</span>
+            
+            <span class="n">linkMasses</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">visIdxs</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># p.createVisualShape(p.GEOM_CYLINDER,radiusObs,[1,1,1],heightObs,rgbaColor=[0,0,0,1])</span>
+            <span class="n">parentIdxs</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        
+            <span class="n">linkInertialFramePositions</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">linkInertialFrameOrientations</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">linkJointTypes</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">JOINT_FIXED</span>
+            <span class="n">linkJointAxis</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># [None]*numObs</span>
+            
+            <span class="n">posObs_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">posObs_obs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">x_lim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> 
+            <span class="n">posObs_obs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">+</span> <span class="n">y_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">y_lim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">2.0</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Push up a bit (by 4.0)</span>
+            <span class="n">posObs_obs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># set z at ground level</span>
+            <span class="n">posObs</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="o">=</span> <span class="n">posObs_obs</span> <span class="c1"># .tolist()</span>
+            <span class="n">orientObs</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">colIdxs</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">createCollisionShape</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">GEOM_CYLINDER</span><span class="p">,</span><span class="n">radius</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="mf">0.05</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="n">heightObs</span><span class="p">)</span>
+            <span class="c1"># colIdxs[obs] = p.createCollisionShape(p.GEOM_CYLINDER,radius=radiusObs,height=heightObs)</span>
+
+        <span class="c1"># Create bounding objects</span>
+        <span class="c1"># Left wall</span>
+        <span class="n">linkMasses</span><span class="p">[</span><span class="n">numObs</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">visIdxs</span><span class="p">[</span><span class="n">numObs</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># p.createVisualShape(p.GEOM_BOX, halfExtents = [0.1, (y_lim[1] - y_lim[0])/2.0, heightObs/2], rgbaColor=[0.8,0.1,0.1,1.0]) # -1</span>
+        <span class="n">parentIdxs</span><span class="p">[</span><span class="n">numObs</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">linkInertialFramePositions</span><span class="p">[</span><span class="n">numObs</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">linkInertialFrameOrientations</span><span class="p">[</span><span class="n">numObs</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">linkJointTypes</span><span class="p">[</span><span class="n">numObs</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">JOINT_FIXED</span>
+        <span class="n">linkJointAxis</span><span class="p">[</span><span class="n">numObs</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> 
+        <span class="n">posObs</span><span class="p">[</span><span class="n">numObs</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">y_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">y_lim</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+        <span class="n">orientObs</span><span class="p">[</span><span class="n">numObs</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">colIdxs</span><span class="p">[</span><span class="n">numObs</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">createCollisionShape</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">GEOM_BOX</span><span class="p">,</span> <span class="n">halfExtents</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="p">(</span><span class="n">y_lim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">heightObs</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+        
+        
+        <span class="c1"># Right wall</span>
+        <span class="n">linkMasses</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">visIdxs</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># p.createVisualShape(p.GEOM_BOX, halfExtents = [0.1, (y_lim[1] - y_lim[0])/2.0, heightObs/2], rgbaColor=[0.8,0.1,0.1,1.0]) # -1</span>
+        <span class="n">parentIdxs</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">linkInertialFramePositions</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">linkInertialFrameOrientations</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">linkJointTypes</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">JOINT_FIXED</span>
+        <span class="n">linkJointAxis</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> 
+        <span class="n">posObs</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_lim</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">y_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">y_lim</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+        <span class="n">orientObs</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">colIdxs</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">createCollisionShape</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">GEOM_BOX</span><span class="p">,</span> <span class="n">halfExtents</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="p">(</span><span class="n">y_lim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">heightObs</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>
+        
+        <span class="c1"># Bottom wall</span>
+        <span class="n">linkMasses</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">visIdxs</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># p.createVisualShape(p.GEOM_BOX, halfExtents = [0.1, (x_lim[1] - x_lim[0])/2.0, heightObs/2], rgbaColor=[0.8,0.1,0.1,1.0])</span>
+        <span class="n">parentIdxs</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">linkInertialFramePositions</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">linkInertialFrameOrientations</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">linkJointTypes</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">JOINT_FIXED</span>
+        <span class="n">linkJointAxis</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> 
+        <span class="n">posObs</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">x_lim</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">y_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">]</span>
+        <span class="n">orientObs</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">colIdxs</span><span class="p">[</span><span class="n">numObs</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">createCollisionShape</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">GEOM_BOX</span><span class="p">,</span> <span class="n">halfExtents</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="p">(</span><span class="n">x_lim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_lim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">heightObs</span><span class="o">/</span><span class="mi">2</span><span class="p">])</span>        
+            
+        <span class="n">obsUid</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">createMultiBody</span><span class="p">(</span><span class="n">baseCollisionShapeIndex</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> 
+                                   <span class="n">baseVisualShapeIndex</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> 
+                                   <span class="n">basePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> 
+                                   <span class="n">baseOrientation</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> 
+                                   <span class="n">baseInertialFramePosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> 
+                                   <span class="n">baseInertialFrameOrientation</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> 
+                                   <span class="n">linkMasses</span> <span class="o">=</span> <span class="n">linkMasses</span><span class="p">,</span> 
+                                   <span class="n">linkCollisionShapeIndices</span> <span class="o">=</span> <span class="n">colIdxs</span><span class="p">,</span> 
+                                   <span class="n">linkVisualShapeIndices</span> <span class="o">=</span> <span class="n">visIdxs</span><span class="p">,</span> 
+                                   <span class="n">linkPositions</span> <span class="o">=</span> <span class="n">posObs</span><span class="p">,</span> 
+                                   <span class="n">linkOrientations</span> <span class="o">=</span> <span class="n">orientObs</span><span class="p">,</span> 
+                                   <span class="n">linkParentIndices</span> <span class="o">=</span> <span class="n">parentIdxs</span><span class="p">,</span> 
+                                   <span class="n">linkInertialFramePositions</span> <span class="o">=</span> <span class="n">linkInertialFramePositions</span><span class="p">,</span> 
+                                   <span class="n">linkInertialFrameOrientations</span> <span class="o">=</span> <span class="n">linkInertialFrameOrientations</span><span class="p">,</span> 
+                                   <span class="n">linkJointTypes</span> <span class="o">=</span> <span class="n">linkJointTypes</span><span class="p">,</span> 
+                                   <span class="n">linkJointAxis</span> <span class="o">=</span> <span class="n">linkJointAxis</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">obsUid</span>
+
+    <span class="c1"># Simulate range sensor (get distances along rays)        </span>
+    <span class="k">def</span> <span class="nf">getDistances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span> 
+
+        <span class="c1"># Get distances </span>
+        <span class="c1"># rays emanate from robot</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
+        <span class="n">robotHeight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;robotHeight&#39;</span><span class="p">]</span>
+        <span class="n">numRays</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;numRays&#39;</span><span class="p">]</span>
+        <span class="n">senseRadius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;senseRadius&#39;</span><span class="p">]</span>
+        <span class="n">thetas_nominal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;thetas_nominal&#39;</span><span class="p">]</span>
+
+        <span class="n">raysFrom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">numRays</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span> <span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">numRays</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span> <span class="n">robotHeight</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">numRays</span><span class="p">,</span><span class="mi">1</span><span class="p">))),</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">thetas</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="n">thetas_nominal</span> <span class="c1"># Note the minus sign: +ve direction for state[2] is anti-clockwise (right hand rule), but sensor rays go clockwise</span>
+
+        <span class="n">raysTo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">senseRadius</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetas</span><span class="p">),</span> <span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">senseRadius</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">thetas</span><span class="p">),</span> <span class="n">robotHeight</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">numRays</span><span class="p">,</span><span class="mi">1</span><span class="p">))),</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">coll</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">rayTestBatch</span><span class="p">(</span><span class="n">raysFrom</span><span class="p">,</span> <span class="n">raysTo</span><span class="p">)</span>
+
+        <span class="n">dists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="n">numRays</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numRays</span><span class="p">):</span>
+            <span class="n">dists</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">senseRadius</span><span class="o">*</span><span class="n">coll</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+                
+        <span class="k">return</span> <span class="n">dists</span>
+
+<div class="viewcode-block" id="Obstacles"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.pybullet.Obstacles.html#tigercontrol.problems.pybullet.Obstacles">[docs]</a><span class="k">class</span> <span class="nc">Obstacles</span><span class="p">(</span><span class="n">PyBulletProblem</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Simulates a obstacles avoidance environment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;Obstacles-v0&#39;</span><span class="p">,</span> <span class="s1">&#39;PyBullet&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Obstacles.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.pybullet.Obstacles.html#tigercontrol.problems.pybullet.Obstacles.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">render</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env</span> <span class="o">=</span> <span class="n">ObstaclesEnv</span><span class="p">(</span><span class="n">renders</span><span class="o">=</span><span class="n">render</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">state</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">husky</span><span class="p">,</span> <span class="n">sphere</span><span class="p">,</span> <span class="n">obsUid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">husky</span><span class="p">,</span> <span class="n">sphere</span><span class="p">,</span> <span class="n">obsUid</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">step_fgm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">step_fgm</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;human&#39;</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="n">close</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">getDistances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">getDistances</span><span class="p">(</span><span class="n">p</span><span class="p">)</span></div>
+
+
+
+
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, alexjyu
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
