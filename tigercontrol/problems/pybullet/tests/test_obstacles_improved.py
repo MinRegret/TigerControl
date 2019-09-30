@@ -3,7 +3,7 @@ Test for PyBullet cartpole problem
 """
 import time
 import tigercontrol
-import jax.numpy as np
+import numpy as np
 import jax.random as random
 from tigercontrol.utils import generate_key
 import pybullet as pybullet
