@@ -1,7 +1,6 @@
 import gym
 import pybullet as pybullet
 import numpy as np
-import pybullet as pybullet
 import gym.spaces as spaces
 # from tigercontrol.problems.pybullet.obstacle_utils import *
 from tigercontrol.utils import get_tigercontrol_dir
@@ -136,10 +135,10 @@ class ObstaclesEnv(gym.Env):
 
         # Ground plane
         tigercontrol_dir = get_tigercontrol_dir()
-        pybullet.loadURDF(os.path.join(tigercontrol_dir, "problems/control/pybullet/URDFs/plane.urdf"))
+        pybullet.loadURDF(os.path.join(tigercontrol_dir, "problems/pybullet/URDFs/plane.urdf"))
 
         # Load robot from URDF
-        self.husky = pybullet.loadURDF(os.path.join(tigercontrol_dir, "problems/control/pybullet/URDFs/husky.urdf"), globalScaling=0.5)
+        self.husky = pybullet.loadURDF(os.path.join(tigercontrol_dir, "problems/pybullet/URDFs/husky.urdf"), globalScaling=0.5)
 
         # Sphere
         colSphereId = pybullet.createCollisionShape(pybullet.GEOM_SPHERE, radius=robotRadius)
