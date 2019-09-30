@@ -7,7 +7,6 @@ import numpy as np
 import jax.random as random
 from tigercontrol.utils import generate_key
 import pybullet as pybullet
-# from tigercontrol.problems.pybullet.obstacle_utils import *
 import os.path
 from os import path
 from pathlib import Path
