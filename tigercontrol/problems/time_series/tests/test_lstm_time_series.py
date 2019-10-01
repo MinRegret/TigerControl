@@ -9,7 +9,7 @@ from tigercontrol.utils.random import generate_key
 
 def test_lstm_time_series(steps=1000, show_plot=False, verbose=False):
     T = steps
-    n, m, d = 5, 3, 10
+    n, m, d = 5, 1, 10
     problem = tigercontrol.problem("LSTM-TimeSeries-v0")
     problem.initialize(n, m, d)
 
@@ -25,11 +25,12 @@ def test_lstm_time_series(steps=1000, show_plot=False, verbose=False):
         print(info)
 
     if show_plot:
-        plt.plot(x_output)
+        #plt.plot(x_output)
+        plt.figure(figsize=(10, 6))
         plt.plot(y_output)
-        plt.title("lds")
+        plt.title("Output of random LSTM")
         plt.show(block=False)
-        plt.pause(1)
+        plt.pause(5)
         plt.close()
     print("test_lstm_time_series passed")
     return
