@@ -13,7 +13,7 @@ def test_uci_indoor(steps=1000, show_plot=False, verbose=False):
 
     test_output = []
     for t in range(T):
-        test_output.append(problem.step()[1])
+        test_output.append(problem.step())
 
     assert problem.T == T
     if verbose:

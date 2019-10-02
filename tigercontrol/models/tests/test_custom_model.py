@@ -18,9 +18,10 @@ def test_custom_model(steps=1000, show_plot=True):
         def initialize(self):
             self.x = 0.0
         def predict(self, x):
+            self.x = x
             return self.x
         def update(self, y):
-            self.x = y
+            pass
 
     # try registering and calling the custom model
     tigercontrol.register_custom_model(Custom, "TestCustomModel")

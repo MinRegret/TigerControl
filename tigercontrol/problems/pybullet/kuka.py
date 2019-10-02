@@ -15,7 +15,7 @@ class Kuka(PyBulletProblem):
 
     def initialize(self, render=False):
         self.initialized = True
-        self._env = KukaGymEnv(renders=True)
+        self._env = KukaGymEnv(renders=render)
         self.observation_space = self._env.observation_space.shape
         self.action_space = self._env.action_space.shape
         self.state = {}

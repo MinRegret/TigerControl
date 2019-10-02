@@ -7,7 +7,7 @@ import jax.numpy as np
 
 
 # double pendulum test #TODO: finish
-def test_cartpole(verbose=False):
+def test_double_pendulum(verbose=False):
     problem = tigercontrol.problem("DoublePendulum-v0")
     L = lambda x, u: np.cos(x[0]) + np.cos(x[0] + x[1])
     dim_x, dim_u = 4, 1
@@ -28,22 +28,23 @@ def test_cartpole(verbose=False):
     for t in range(5 * T):
         if verbose: 
             problem.render()
-
-        time.sleep(1. / 15.)
+            time.sleep(1. / 15.)
         obs, r, done, _ = problem.step(u[index])
         index += 1
 
         if done:
-            print("solved double pendulum in {} time steps!".format(t+1))
+            if verbose:
+                print("solved double pendulum in {} time steps!".format(t+1))
             obs = problem.initialize()
         if done or index == T:
-            print("recomputing u...")
+            if verbose:
+                print("recomputing u...")
             u = model.plan(obs, T, max_iterations, lamb, threshold)
             index = 0
 
     problem.close()
-    print("test_cartpole passed")
+    print("test_double_pendulum passed")
 
 
 if __name__ == "__main__":
-    test_cartpole(verbose=True)
+    test_double_pendulum(verbose=True)

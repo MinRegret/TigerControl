@@ -76,7 +76,7 @@ class KalmanFilter(ControlModel):
         x, A, B, H, P, Q, R = self.to_ndarray(x), self.to_ndarray(A), self.to_ndarray(B), self.to_ndarray(H), self.to_ndarray(P), self.to_ndarray(Q), self.to_ndarray(R)
 
         self.x, self.A, self.B, self.H, self.P, self.Q, self.R  = x, A, B, H, P, Q, R
-        self.K = np.ndarray(A.shape)
+        self.K = np.array(A.shape) # jax.numpy.ndarray(A.shape) throws an error
 
     def step(self, u, z, n = 1):
         """
