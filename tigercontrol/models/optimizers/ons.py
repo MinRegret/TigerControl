@@ -22,10 +22,10 @@ class ONS(Optimizer):
     def __init__(self, pred=None, loss=mse, learning_rate=1.0, hyperparameters={}):
         self.initialized = False
         self.lr = learning_rate
-        self.hps = {'reg':0.00, 'eps':0.0001, 'use_max_norm':False, 'project':False, 'full_matrix':False}
+        self.hps = {'reg':0.00, 'eps':0.0001, 'max_norm':0, 'project':False, 'full_matrix':False}
         self.hps.update(hyperparameters)
         self.eps, self.reg = self.hps['eps'], self.hps['reg']
-        self.use_max_norm, self.project, self.full_matrix = self.hps['use_max_norm'], self.hps['project'], self.hps['full_matrix']
+        self.max_norm, self.project, self.full_matrix = self.hps['max_norm'], self.hps['project'], self.hps['full_matrix']
         self.A, self.Ainv = None, None
         self.pred, self.loss = pred, loss
         self.numpyify = lambda m: onp.array(m).astype(onp.double) # maps jax.numpy to regular numpy
@@ -102,18 +102,12 @@ class ONS(Optimizer):
         eta = self.lr
 
         # compute max norm and normalize accordingly
-        if(self.max_norm):                     
+        if(self.max_norm > 0):                     
             self.max_norm = np.maximum(self.max_norm, np.linalg.norm([self.general_norm(dw) for dw in grad]))
             eta = eta / self.max_norm
             
         new_values = [self.partial_update(A, Ainv, grad, w) for (A, Ainv, grad, w) in zip(self.A, self.Ainv, grad, params)]
         self.A, self.Ainv, new_grad = list(map(list, zip(*new_values)))
-        
-        # compute max norm for normalization
-        eta = self.lr
-        if self.max_norm:
-            self.max_norm = np.maximum(self.max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad]))
-            eta = eta * self.max_norm
 
         new_params = [w - eta * dw for (w, dw) in zip(params, new_grad)]
 
