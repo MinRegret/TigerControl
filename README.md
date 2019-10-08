@@ -18,7 +18,7 @@ Installation
 Clone the directory and use pip or pip3 to set up a minimal installation of TigerControl, which excludes PyBullet control problems.
 
 ```
-    git clone https://github.com/johnhallman/tigercontrol.git
+    git clone https://github.com/MinRegret/tigercontrol.git
     pip install -e tigercontrol
 ```
 
@@ -37,7 +37,7 @@ Before installing TigerControl's dependencies, create a new conda environment in
 Next, clone the GitHub repository and install the full package.
 
 ```
-    git clone https://github.com/johnhallman/tigercontrol.git
+    git clone https://github.com/MinRegret/tigercontrol.git
     pip install -e 'tigercontrol[all]'
 ```
 
