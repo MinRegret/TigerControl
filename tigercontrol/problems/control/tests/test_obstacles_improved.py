@@ -170,8 +170,8 @@ def test_obstacles(verbose=False):
     problem = tigercontrol.problem("Obstacles-v0")
     # obs = problem.initialize(render=verbose)
 
-    # model = tigercontrol.model("CartPoleNN")
-    # model.initialize(problem.get_observation_space(), problem.get_action_space())
+    # method = tigercontrol.method("CartPoleNN")
+    # method.initialize(problem.get_observation_space(), problem.get_action_space())
 
     # Initial setup
     # Flag that sets if things are visualized

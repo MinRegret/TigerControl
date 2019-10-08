@@ -4,9 +4,9 @@ Kalman Filter
 
 import jax.numpy as np
 import tigercontrol
-from tigercontrol.models.control import ControlModel
+from tigercontrol.methods.control import ControlMethod
 
-class KalmanFilter(ControlModel):
+class KalmanFilter(ControlMethod):
     """
     Description: Kalman Filter adjusts measurements of a signal based on prior states and
     knowledge of intrinsic equations of the system.
@@ -17,7 +17,7 @@ class KalmanFilter(ControlModel):
     measurement at time t is a linear combination of the signal value and
     the measurement noise v(t), i.e. z(t) = H x(t) + v(t).
 
-    Based on these, the model can advance by itself in time using a 'time'
+    Based on these, the method can advance by itself in time using a 'time'
     update and/or incorporate and correct a measurement using a 'measurement'
     update:
 
@@ -58,14 +58,14 @@ class KalmanFilter(ControlModel):
     def initialize(self, x, A, B, H, P, Q, R):
         """
         Description:
-            Initialize the dynamics of the model.
+            Initialize the dynamics of the method.
         Args:
             x (float/numpy.ndarray): estimate of x(0)
             A (float/numpy.ndarray): past value contribution coefficient
             B (float/numpy.ndarray): control signal contribution coefficient
             H (float/numpy.ndarray): true signal contribution coefficient
             P (float/numpy.ndarray): initial estimate of error covariance P(0)
-            Q (float/numpy.ndarray): covariance of model noise w(t)
+            Q (float/numpy.ndarray): covariance of method noise w(t)
             R (float/numpy.ndarray): covariance of environment noise v(t)
         Returns:
             None
@@ -151,7 +151,7 @@ class KalmanFilter(ControlModel):
         print(KalmanFilter_help)
 
     def __str__(self):
-        return "<KalmanFilter Model>"
+        return "<KalmanFilter Method>"
 
 
 # string to print when calling help() method
@@ -172,7 +172,7 @@ Description:
     measurement at time t is a linear combination of the signal value and
     the measurement noise v(t), i.e. z(t) = H x(t) + v(t).
 
-    Based on these, the model can advance by itself in time using a 'time'
+    Based on these, the method can advance by itself in time using a 'time'
     update and/or incorporate and correct a measurement using a 'measurement'
     update:
 
@@ -194,14 +194,14 @@ Methods:
 
     initialize(x, A, B, H, P, Q, R)
         Description:
-            Initialize the dynamics of the model.
+            Initialize the dynamics of the method.
         Args:
             x (float/numpy.ndarray): estimate of x(0)
             A (float/numpy.ndarray): past value contribution coefficient
             B (float/numpy.ndarray): control signal contribution coefficient
             H (float/numpy.ndarray): true signal contribution coefficient
             P (float/numpy.ndarray): initial estimate of error covariance P(0)
-            Q (float/numpy.ndarray): covariance of model noise w(t)
+            Q (float/numpy.ndarray): covariance of method noise w(t)
             R (float/numpy.ndarray): covariance of environment noise v(t)
         Returns:
             None

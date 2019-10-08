@@ -1,13 +1,13 @@
 ''' Precompute '''
 
 from tigercontrol.utils.random import set_key
-from tigercontrol.experiments.core import run_experiment, create_full_problem_to_models
+from tigercontrol.experiments.core import run_experiment, create_full_problem_to_methods
 from tigercontrol.utils.download_tools import get_tigercontrol_dir
 import jax.numpy as np
 import os
 import csv
 
-''' List of all problems and models '''
+''' List of all problems and methods '''
 all_metrics = ['mse']
 
 ## no uciindoor-v0 , ctrl indices has some problems##
@@ -15,7 +15,7 @@ all_problems = ['ARMA-v0', 'Crypto-v0', 'SP500-v0']
 
 ####### LSTM AND RNN NOT INCLUDED BECAUSE THEY NEED INPUT SHAPE ###############
 ####### and ArmaAdaGrad is not classified as timeseries & other problems ... ###########
-all_models = ['LastValue', 'AutoRegressor', 'RNN', 'LSTM']
+all_methods = ['LastValue', 'AutoRegressor', 'RNN', 'LSTM']
 
 ####### NEED TO MAKE IT HARD TO CHANGE !!!!!! ########
 ''' Fix timesteps and key '''
@@ -69,9 +69,9 @@ def recompute(verbose = False, load_bar = False):
 
             with open(datapath, 'w') as csvfile:
                 writer = csv.writer(csvfile)
-                for model_id in all_models:
+                for method_id in all_methods:
                     try:
-                        loss, time, memory = run_experiment((problem_id, None), (model_id, None), metric, \
+                        loss, time, memory = run_experiment((problem_id, None), (method_id, None), metric, \
                                                              key = key, timesteps = timesteps)
                     except:
                         loss = np.zeros(timesteps)
@@ -88,9 +88,9 @@ def recompute(verbose = False, load_bar = False):
 
         with open(datapath, 'w') as csvfile:
             writer = csv.writer(csvfile)
-            for model_id in all_models:
+            for method_id in all_methods:
                 try:
-                    _, time, memory = run_experiment((problem_id, None), (model_id, None), \
+                    _, time, memory = run_experiment((problem_id, None), (method_id, None), \
                         metric, key = key, timesteps = timesteps, verbose = verbose, load_bar = load_bar)
                 except:
                     time, memory = 0.0, 0.0
@@ -100,28 +100,28 @@ def recompute(verbose = False, load_bar = False):
 
     print("SUCCESS: EVERYTHING HAS BEEN RECOMPUTED!")
 
-def load_prob_model_to_result(problem_ids = all_problems, model_ids = all_models, problem_to_models = None, metrics = 'mse'):
+def load_prob_method_to_result(problem_ids = all_problems, method_ids = all_methods, problem_to_methods = None, metrics = 'mse'):
     '''
     Description: Initializes the experiment instance. 
 
     Args:
         problem_ids (list): ids of problems to evaluate on
-        model_ids (list): ids of models to use
-        problem_to_models (dict): map of the form problem_id -> list of model_id. If None,
-                                  then we assume that the user wants to test every model
-                                  in model_to_params against every problem in problem_to_params
+        method_ids (list): ids of methods to use
+        problem_to_methods (dict): map of the form problem_id -> list of method_id. If None,
+                                  then we assume that the user wants to test every method
+                                  in method_to_params against every problem in problem_to_params
         metrics (list): metrics to load
 
      Returns:
-        prob_model_to_result (dict): Dictionary containing results for all specified metrics and
-                                     performance (time and memory usage) for all problem-model
+        prob_method_to_result (dict): Dictionary containing results for all specified metrics and
+                                     performance (time and memory usage) for all problem-method
                                      associations.
     '''
 
-    if(problem_to_models is None):
-        problem_to_models = create_full_problem_to_models(problem_ids, model_ids)
+    if(problem_to_methods is None):
+        problem_to_methods = create_full_problem_to_methods(problem_ids, method_ids)
 
-    prob_model_to_result = {}
+    prob_method_to_result = {}
 
     ''' Get loss series '''
     for metric in metrics:
@@ -133,11 +133,11 @@ def load_prob_model_to_result(problem_ids = all_problems, model_ids = all_models
 
             with open(datapath) as csvfile:
                 reader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
-                model_no = 0
+                method_no = 0
                 for row in reader:
-                    if(all_models[model_no] in model_ids):
-                        prob_model_to_result[(metric, problem_id, all_models[model_no])] = np.array(row)
-                    model_no += 1
+                    if(all_methods[method_no] in method_ids):
+                        prob_method_to_result[(metric, problem_id, all_methods[method_no])] = np.array(row)
+                    method_no += 1
             csvfile.close()
 
     ''' Get time and memory usage '''
@@ -149,15 +149,15 @@ def load_prob_model_to_result(problem_ids = all_problems, model_ids = all_models
 
         with open(datapath) as csvfile:
             reader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
-            model_no = 0
+            method_no = 0
             for row in reader:
-                if(all_models[model_no] in model_ids):
-                    prob_model_to_result[('time', problem_id, all_models[model_no])] = row[0]
-                    prob_model_to_result[('memory', problem_id, all_models[model_no])] = row[1]
-                model_no += 1
+                if(all_methods[method_no] in method_ids):
+                    prob_method_to_result[('time', problem_id, all_methods[method_no])] = row[0]
+                    prob_method_to_result[('memory', problem_id, all_methods[method_no])] = row[1]
+                method_no += 1
         csvfile.close()
 
-    return prob_model_to_result
+    return prob_method_to_result
 
 if __name__ == "__main__":
     recompute()

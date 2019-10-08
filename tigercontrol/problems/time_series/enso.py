@@ -47,7 +47,11 @@ class ENSO(TimeSeriesProblem):
         self.X, self.y = enso(input_signals, include_month, output_signals, history, timeline) # get data
         self.max_T = self.y.shape[0]
 
-        return (float(self.X[0]), float(self.y[0]))
+        try:
+            ret = (float(self.X[0]), float(self.y[0])) # throws error when X, y are arrays
+        except:
+            ret = (self.X[0], self.y[0])
+        return ret
 
     def step(self):
         """
@@ -64,7 +68,11 @@ class ENSO(TimeSeriesProblem):
         if self.T == self.max_T: 
             raise StepOutOfBounds("Number of steps exceeded length of dataset ({})".format(self.max_T))
 
-        return (float(self.X[self.T]), float(self.y[self.T]))
+        try:
+            ret = (float(self.X[self.T]), float(self.y[self.T])) # throws error when X, y are arrays
+        except:
+            ret = (self.X[self.T], self.y[self.T])
+        return ret
 
     def hidden(self):
         """
