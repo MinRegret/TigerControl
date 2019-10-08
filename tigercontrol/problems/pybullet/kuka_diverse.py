@@ -17,7 +17,6 @@ class KukaDiverse(PyBulletProblem):
         self.initialized = True
         self._env = KukaDiverseObjectEnv(renders=render)
         self.observation_space = (48,48) # observation image dimensions
-        #self.observation_space = self._env.observation_space.shape
         self.action_space = self._env.action_space.shape
         self.state = {}
         initial_obs = self.reset()

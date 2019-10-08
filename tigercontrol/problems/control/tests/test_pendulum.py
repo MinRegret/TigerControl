@@ -30,16 +30,17 @@ def test_pendulum(verbose=False):
     for t in range(25 * T):
         if verbose: 
             problem.render()
-
-        time.sleep(1. / 30.)
+            time.sleep(1. / 30.)
         obs, r, done, _ = problem.step(u[index])
         index += 1
 
         if done:
-            print("lasted {} time steps".format(t+1))
+            if verbose:
+                print("lasted {} time steps".format(t+1))
             obs = problem.initialize()
         if done or index == T:
-            print("recomputing u...")
+            if verbose:
+                print("recomputing u...")
             u = model.plan(obs, T, max_iterations, lamb, threshold)
             index = 0
 

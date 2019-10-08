@@ -102,9 +102,9 @@ class ONS(Optimizer):
         eta = self.lr
 
         # compute max norm and normalize accordingly
-        if(self.max_norm > 0):                     
-            self.max_norm = np.maximum(self.max_norm, np.linalg.norm([self.general_norm(dw) for dw in grad]))
-            eta = eta / self.max_norm
+        if(self.use_max_norm):                     
+            self.use_max_norm = np.maximum(self.use_max_norm, np.linalg.norm([self.general_norm(dw) for dw in grad]))
+            eta = eta * self.use_max_norm
             
         new_values = [self.partial_update(A, Ainv, grad, w) for (A, Ainv, grad, w) in zip(self.A, self.Ainv, grad, params)]
         self.A, self.Ainv, new_grad = list(map(list, zip(*new_values)))

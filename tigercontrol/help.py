@@ -15,7 +15,7 @@ def help():
 
 global_help_string = """
 
-Welcome to TigerControl - the Control and Time-Series Benchmarks framework!
+Welcome to TigerControl!
 
 If this is your first time using TigerControl, you might want to read more about it in 
 detail at github.com/johnhallman/tigercontrol, or documentation at tigercontrol.readthedocs.io.
