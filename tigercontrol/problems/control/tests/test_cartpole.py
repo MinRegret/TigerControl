@@ -14,8 +14,8 @@ def test_cartpole(verbose=False):
     dim_x, dim_u = 4, 1
     obs = problem.initialize()
 
-    model = tigercontrol.model("ILQR")
-    model.initialize(problem, L, dim_x, dim_u)
+    method = tigercontrol.method("ILQR")
+    method.initialize(problem, L, dim_x, dim_u)
     T = 75 # horizon
     threshold = 0.01
     lamb = 0.1
@@ -23,7 +23,7 @@ def test_cartpole(verbose=False):
 
     if verbose:
         print("Running iLQR...")
-    u = model.plan(obs, T, max_iterations, lamb, threshold)
+    u = method.plan(obs, T, max_iterations, lamb, threshold)
 
     index = 0
     for t in range(10 * T):
@@ -40,7 +40,7 @@ def test_cartpole(verbose=False):
         if done or index == T:
             if verbose:
                 print("recomputing u...")
-            u = model.plan(obs, T, max_iterations, lamb, threshold)
+            u = method.plan(obs, T, max_iterations, lamb, threshold)
             index = 0
 
     problem.close()

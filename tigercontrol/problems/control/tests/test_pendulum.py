@@ -14,8 +14,8 @@ def test_pendulum(verbose=False):
     dim_x, dim_u = 2, 1
     obs = problem.initialize()
 
-    model = tigercontrol.model("ILQR")
-    model.initialize(problem, L, dim_x, dim_u)
+    method = tigercontrol.method("ILQR")
+    method.initialize(problem, L, dim_x, dim_u)
     T = 100 # horizon
     threshold = 0.01
     lamb = 0.1
@@ -23,7 +23,7 @@ def test_pendulum(verbose=False):
 
     if verbose:
         print("Running iLQR...")
-    u = model.plan(obs, T, max_iterations, lamb, threshold)
+    u = method.plan(obs, T, max_iterations, lamb, threshold)
 
     #print("u: " + str([float(u_t) for u_t in u]))
     index = 0
@@ -41,7 +41,7 @@ def test_pendulum(verbose=False):
         if done or index == T:
             if verbose:
                 print("recomputing u...")
-            u = model.plan(obs, T, max_iterations, lamb, threshold)
+            u = method.plan(obs, T, max_iterations, lamb, threshold)
             index = 0
 
     problem.close()

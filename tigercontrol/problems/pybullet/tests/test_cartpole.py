@@ -10,8 +10,8 @@ def test_cartpole(verbose=False):
     problem = tigercontrol.problem("PyBullet-CartPole-v0")
     obs = problem.initialize(render=verbose)
 
-    model = tigercontrol.model("CartPoleNN")
-    model.initialize(problem.get_observation_space(), problem.get_action_space())
+    method = tigercontrol.method("CartPoleNN")
+    method.initialize(problem.get_observation_space(), problem.get_action_space())
 
     t_start = time.time()
     save_to_mem_ID = -1
@@ -22,7 +22,7 @@ def test_cartpole(verbose=False):
     saved = False
     while time.time() - t_start < 3:
         time.sleep(1. / 60.)
-        a = model.predict(obs)
+        a = method.predict(obs)
         obs, r, done, _ = problem.step(a)
 
         score += r

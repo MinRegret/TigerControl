@@ -5,11 +5,11 @@ import time
 import tigercontrol
 import jax.numpy as np
 import jax.random as random
-from tigercontrol.models.control.control_model import ControlModel
+from tigercontrol.methods.control.control_method import ControlMethod
 from tigercontrol.utils import generate_key
 
 # neural network policy class trained specifically for the cartpole problem
-class SmallReactivePolicy(ControlModel):
+class SmallReactivePolicy(ControlMethod):
     "Simple multi-layer perceptron policy, no internal state"
 
     def __init__(self):
@@ -34,8 +34,8 @@ def test_cartpole_double(verbose=False):
     problem = tigercontrol.problem("PyBullet-CartPoleDouble-v0")
     obs = problem.initialize(render=verbose)
 
-    model = SmallReactivePolicy()
-    model.initialize(problem.get_observation_space(), problem.get_action_space())
+    method = SmallReactivePolicy()
+    method.initialize(problem.get_observation_space(), problem.get_action_space())
 
     t_start = time.time()
     save_to_mem_ID = -1
@@ -46,7 +46,7 @@ def test_cartpole_double(verbose=False):
     saved = False
     while time.time() - t_start < 3:
         time.sleep(1. / 60.)
-        a = model.predict(obs)
+        a = method.predict(obs)
         obs, r, done, _ = problem.step(a)
 
         score += r

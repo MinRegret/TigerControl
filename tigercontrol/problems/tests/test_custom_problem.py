@@ -9,8 +9,8 @@ def test_custom_problem(steps=1000, show=True):
     # initial preparation
     T = steps
     loss = lambda y_true, y_pred: (y_true - y_pred)**2
-    model = tigercontrol.model("LastValue")
-    model.initialize()
+    method = tigercontrol.method("LastValue")
+    method.initialize()
 
     # simple custom Problem that returns alternating +/- 1.0
     class Custom(tigercontrol.CustomProblem):
@@ -28,14 +28,14 @@ def test_custom_problem(steps=1000, show=True):
  
     results = []
     for i in range(T):
-        cur_y_pred = model.predict(cur_x)
+        cur_y_pred = method.predict(cur_x)
         cur_y_true = custom_problem.step()
         results.append(loss(cur_y_true, cur_y_pred))
         cur_x = cur_y_true
 
     if show:
         plt.plot(results)
-        plt.title("LastValue model on custom alternating problem")
+        plt.title("LastValue method on custom alternating problem")
         plt.show(block=False)
         plt.pause(2)
         plt.close()

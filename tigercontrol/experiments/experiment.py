@@ -14,7 +14,7 @@ class Experiment(object):
     def __init__(self):
         self.initialized = False
         
-    def initialize(self, problems = None, models = None, problem_to_models = None, metrics = ['mse'], \
+    def initialize(self, problems = None, methods = None, problem_to_methods = None, metrics = ['mse'], \
                    key = 0, use_precomputed = False, timesteps = 100, verbose = False, load_bar = False):
         '''
         Description: Initializes the experiment instance. 
@@ -22,11 +22,11 @@ class Experiment(object):
         Args:
             problems (dict/list): map of the form problem_id -> hyperparameters for problem or list of problem ids;
                                   in the latter case, default parameters will be used for initialization
-            models (dict/list): map of the form model_id -> hyperparameters for model or list of model ids;
+            methods (dict/list): map of the form method_id -> hyperparameters for method or list of method ids;
                                 in the latter case, default parameters will be used for initialization
-            problem_to_models (dict) : map of the form problem_id -> list of model_id.
+            problem_to_methods (dict) : map of the form problem_id -> list of method_id.
                                        If None, then we assume that the user wants to
-                                       test every model in model_to_params against every
+                                       test every method in method_to_params against every
                                        problem in problem_to_params
             metrics (list): Specifies metrics we are interested in evaluating.
             use_precomputed (boolean): Specifies whether to use precomputed results.
@@ -35,10 +35,10 @@ class Experiment(object):
             load_bar (boolean): Specifies whether to show a loading bar while the experiments are running.
         '''
 
-        self.problems, self.models, self.problem_to_models, self.metrics = to_dict(problems), to_dict(models), problem_to_models, metrics
+        self.problems, self.methods, self.problem_to_methods, self.metrics = to_dict(problems), to_dict(methods), problem_to_methods, metrics
         self.key, self.use_precomputed, self.timesteps, self.verbose, self.load_bar = key, use_precomputed, timesteps, verbose, load_bar
 
-        self.n_problems, self.n_models = {}, {}
+        self.n_problems, self.n_methods = {}, {}
 
         if(use_precomputed):
 
@@ -47,86 +47,86 @@ class Experiment(object):
                     "Will use %d instead of the specified %d" % (precomputed.get_timesteps(), timesteps))
                 self.timesteps = precomputed.get_timesteps()
 
-            # ensure problems and models don't have specified hyperparameters
+            # ensure problems and methods don't have specified hyperparameters
             if(problems is dict):
                 print("WARNING: when using precomputed results, " + \
                       "any specified problem hyperparameters will be disregarded and default ones will be used instead.")
             
-            if(models is dict):
+            if(methods is dict):
                 print("WARNING: when using precomputed results, " + \
-                      "any specified model hyperparameters will be disregarded and default ones will be used instead.")
+                      "any specified method hyperparameters will be disregarded and default ones will be used instead.")
 
-            # map of the form [metric][problem][model] -> loss series + time + memory
-            self.prob_model_to_result = precomputed.load_prob_model_to_result(problem_ids = list(self.problems.keys()), \
-                                            model_ids = list(self.models.keys()), problem_to_models = problem_to_models, metrics = metrics)
+            # map of the form [metric][problem][method] -> loss series + time + memory
+            self.prob_method_to_result = precomputed.load_prob_method_to_result(problem_ids = list(self.problems.keys()), \
+                                            method_ids = list(self.methods.keys()), problem_to_methods = problem_to_methods, metrics = metrics)
 
         else:
             self.new_experiment = NewExperiment()
-            self.new_experiment.initialize(self.problems, self.models, problem_to_models, metrics, key, timesteps, verbose, load_bar)
-            # map of the form [metric][problem][model] -> loss series + time + memory
-            self.prob_model_to_result = self.new_experiment.run_all_experiments()
+            self.new_experiment.initialize(self.problems, self.methods, problem_to_methods, metrics, key, timesteps, verbose, load_bar)
+            # map of the form [metric][problem][method] -> loss series + time + memory
+            self.prob_method_to_result = self.new_experiment.run_all_experiments()
 
-    def add_model(self, model_id, model_params = None, name = None):
+    def add_method(self, method_id, method_params = None, name = None):
         '''
-        Description: Add a new model to the experiment instance.
+        Description: Add a new method to the experiment instance.
         
         Args:
-            model_id (string): ID of new model.
-            model_params (dict): Parameters to use for initialization of new model.
+            method_id (string): ID of new method.
+            method_params (dict): Parameters to use for initialization of new method.
         '''
-        assert model_id is not None, "ERROR: No Model ID given."
+        assert method_id is not None, "ERROR: No Method ID given."
 
         ### IS THIS USEFUL OR BAD ? ###
-        if name is None and 'optimizer' in model_params:
-            name = model_params['optimizer'].__name__
+        if name is None and 'optimizer' in method_params:
+            name = method_params['optimizer'].__name__
 
         new_id = ''
-        if(model_id in self.models):
-            if(model_id not in self.n_models):
-                self.n_models[model_id] = 0
+        if(method_id in self.methods):
+            if(method_id not in self.n_methods):
+                self.n_methods[method_id] = 0
             if(name is not None):
-                new_id = model_id + '-' + name
+                new_id = method_id + '-' + name
             else:
-                self.n_models[model_id] += 1
-                new_id = model_id + '-' + str(self.n_models[model_id])
-            self.models[model_id].append((new_id, model_params))
+                self.n_methods[method_id] += 1
+                new_id = method_id + '-' + str(self.n_methods[method_id])
+            self.methods[method_id].append((new_id, method_params))
         else:
-            new_id = model_id
+            new_id = method_id
             if(name is not None):
                 new_id += '-' + name
-            self.models[model_id] = [(new_id, model_params)]
+            self.methods[method_id] = [(new_id, method_params)]
 
         if(self.use_precomputed):
-            print("WARNING: In precomputed mode, experiments for a new model will run for the predetermined key.")
+            print("WARNING: In precomputed mode, experiments for a new method will run for the predetermined key.")
             key = precomputed.get_key()
         else:
             key = self.key
 
-        ''' Evaluate performance of new model on all problems '''
+        ''' Evaluate performance of new method on all problems '''
         for metric in self.metrics:
             for problem_id in self.problems.keys():
                 for (new_problem_id, problem_params) in self.problems[problem_id]:
 
-                    ''' If model is compatible with problem, run experiment and store results. '''
+                    ''' If method is compatible with problem, run experiment and store results. '''
                     try:
-                        loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, \
+                        loss, time, memory = run_experiment((problem_id, problem_params), (method_id, method_params), metric, \
                                         key = key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
                     except Exception as e:
-                        print("ERROR: Could not run %s on %s. Please make sure model and problem are compatible." % (model_id, problem_id))
+                        print("ERROR: Could not run %s on %s. Please make sure method and problem are compatible." % (method_id, problem_id))
                         print(e)
                         loss, time, memory = 0, 0.0, 0.0
 
-                    self.prob_model_to_result[(metric, new_problem_id, new_id)] = loss
-                    self.prob_model_to_result[('time', new_problem_id, new_id)] = time
-                    self.prob_model_to_result[('memory', new_problem_id, new_id)] = memory
+                    self.prob_method_to_result[(metric, new_problem_id, new_id)] = loss
+                    self.prob_method_to_result[('time', new_problem_id, new_id)] = time
+                    self.prob_method_to_result[('memory', new_problem_id, new_id)] = memory
 
     def add_problem(self, problem_id, problem_params = None, name = None):
         '''
         Description: Add a new problem to the experiment instance.
         
         Args:
-            problem_id (string): ID of new model.
-            problem_params (dict): Parameters to use for initialization of new model.
+            problem_id (string): ID of new method.
+            problem_params (dict): Parameters to use for initialization of new method.
         '''
         assert problem_id is not None, "ERROR: No Problem ID given."
 
@@ -147,28 +147,28 @@ class Experiment(object):
             self.problems[problem_id] = [(new_id, problem_params)]
 
         if(self.use_precomputed):
-            print("WARNING: In precomputed mode, experiments for a new model will run for the predetermined key.")
+            print("WARNING: In precomputed mode, experiments for a new method will run for the predetermined key.")
             key = precomputed.get_key()
         else:
             key = self.key
 
-        ''' Evaluate performance of new model on all problems '''
+        ''' Evaluate performance of new method on all problems '''
         for metric in self.metrics:
-            for model_id in self.models.keys():
-                for (new_model_id, model_params) in self.models[model_id]:
+            for method_id in self.methods.keys():
+                for (new_method_id, method_params) in self.methods[method_id]:
 
-                    ''' If model is compatible with problem, run experiment and store results. '''
+                    ''' If method is compatible with problem, run experiment and store results. '''
                     try:
-                        loss, time, memory = run_experiment((problem_id, problem_params), (model_id, model_params), metric, \
+                        loss, time, memory = run_experiment((problem_id, problem_params), (method_id, method_params), metric, \
                                         key = key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
                     except Exception as e:
-                        print("ERROR: Could not run %s on %s. Please make sure model and problem are compatible." % (model_id, problem_id))
+                        print("ERROR: Could not run %s on %s. Please make sure method and problem are compatible." % (method_id, problem_id))
                         print(e)
                         loss, time, memory = 0.0, 0.0, 0.0
 
-                    self.prob_model_to_result[(metric, new_id, new_model_id)] = loss
-                    self.prob_model_to_result[('time', new_id, new_model_id)] = time
-                    self.prob_model_to_result[('memory', new_id, new_model_id)] = memory
+                    self.prob_method_to_result[(metric, new_id, new_method_id)] = loss
+                    self.prob_method_to_result[('time', new_id, new_method_id)] = time
+                    self.prob_method_to_result[('memory', new_id, new_method_id)] = memory
 
     def to_csv(self, table_dict, save_as):
         ''' Save to csv file '''
@@ -189,9 +189,9 @@ class Experiment(object):
             verbose (boolean): Specifies whether to print the description of the scoreboard entries
         '''
 
-        if(self.use_precomputed and metric == 'time' and len(self.n_models.keys()) > 0):
-            print("WARNING: Time comparison between precomputed models and" + \
-                  "any added model may be irrelevant due to hardware differences.")
+        if(self.use_precomputed and metric == 'time' and len(self.n_methods.keys()) > 0):
+            print("WARNING: Time comparison between precomputed methods and" + \
+                  "any added method may be irrelevant due to hardware differences.")
 
         if(verbose and metric in self.metrics):
             print("Average " + metric + ":")
@@ -202,11 +202,11 @@ class Experiment(object):
         table_dict = {}
 
         problem_ids = get_ids(self.problems)
-        model_ids = get_ids(self.models)
+        method_ids = get_ids(self.methods)
 
         table_dict['Problems'] = problem_ids
 
-        field_names = ['Model\Problems']
+        field_names = ['Method\Problems']
         for problem_id in problem_ids:
             if(truncate_ids and len(problem_id) > 9):
                 field_names.append(problem_id[:4] + '..' + problem_id[-3:])
@@ -215,18 +215,18 @@ class Experiment(object):
 
         table.field_names = field_names
 
-        for model_id in model_ids:
-            model_scores = [model_id]
+        for method_id in method_ids:
+            method_scores = [method_id]
             # get scores for each problem
             for problem_id in problem_ids:
-                score = np.mean((self.prob_model_to_result\
-                    [(metric, problem_id, model_id)])[start_time:self.timesteps])
+                score = np.mean((self.prob_method_to_result\
+                    [(metric, problem_id, method_id)])[start_time:self.timesteps])
                 score = round(float(score), n_digits)
                 if(score == 0.0):
                     score = '—'
-                model_scores.append(score)
-            table.add_row(model_scores)
-            table_dict[model_id] = model_scores[1:]
+                method_scores.append(score)
+            table.add_row(method_scores)
+            table_dict[method_id] = method_scores[1:]
 
         print(table)
 
@@ -241,14 +241,14 @@ class Experiment(object):
             avg_regret.append(cur_avg)
         return avg_regret
 
-    def _plot(self, ax, problem, problem_result_plus_model, n_problems, metric, \
+    def _plot(self, ax, problem, problem_result_plus_method, n_problems, metric, \
                 avg_regret, start_time, cutoffs, yscale, show_legend = True):
 
-        for (loss, model) in problem_result_plus_model:
+        for (loss, method) in problem_result_plus_method:
             if(avg_regret):
-                ax.plot(self.avg_regret(loss[start_time:self.timesteps]), label=str(model))
+                ax.plot(self.avg_regret(loss[start_time:self.timesteps]), label=str(method))
             else:
-                ax.plot(loss, label=str(model))
+                ax.plot(loss, label=str(method))
         if(show_legend):
             ax.legend(loc="upper right", fontsize=5 + 5//n_problems)
         ax.set_title("Problem:" + str(problem))
@@ -278,10 +278,10 @@ class Experiment(object):
         # check metric exists
         assert metric in self.metrics
 
-        # get problem and model ids
+        # get problem and method ids
         if(problem_ids is None):
             problem_ids = get_ids(self.problems)
-        model_ids = get_ids(self.models)
+        method_ids = get_ids(self.methods)
 
         # get number of problems
         n_problems = len(problem_ids)
@@ -289,12 +289,12 @@ class Experiment(object):
         all_problem_info = []
 
         for problem_id in problem_ids:
-            problem_result_plus_model = []
-            model_list = []
-            for model_id in model_ids:
-                model_list.append(model_id)
-                problem_result_plus_model.append((self.prob_model_to_result[(metric, problem_id, model_id)], model_id))
-            all_problem_info.append((problem_id, problem_result_plus_model, model_list))
+            problem_result_plus_method = []
+            method_list = []
+            for method_id in method_ids:
+                method_list.append(method_id)
+                problem_result_plus_method.append((self.prob_method_to_result[(metric, problem_id, method_id)], method_id))
+            all_problem_info.append((problem_id, problem_result_plus_method, method_list))
 
         nrows = max(int(np.sqrt(n_problems)), 1)
         ncols = n_problems // nrows + n_problems % nrows
@@ -303,13 +303,13 @@ class Experiment(object):
         fig.canvas.set_window_title('TigerBench')
 
         if n_problems == 1:
-            (problem, problem_result_plus_model, model_list) = all_problem_info[0]
-            ax = self._plot(ax, problem, problem_result_plus_model, n_problems, \
+            (problem, problem_result_plus_method, method_list) = all_problem_info[0]
+            ax = self._plot(ax, problem, problem_result_plus_method, n_problems, \
                 metric, avg_regret, start_time, cutoffs, yscale)
         elif nrows == 1:
             for j in range(ncols):
-                (problem, problem_result_plus_model, model_list) = all_problem_info[j]
-                ax[j] = self._plot(ax[j], problem, problem_result_plus_model, n_problems, \
+                (problem, problem_result_plus_method, method_list) = all_problem_info[j]
+                ax[j] = self._plot(ax[j], problem, problem_result_plus_method, n_problems, \
                                           metric, avg_regret, start_time, cutoffs, yscale)
         else:
             cur_pb = 0
@@ -318,8 +318,8 @@ class Experiment(object):
 
                     if(cur_pb == n_problems):
                         legend = []
-                        for model_id in model_ids:
-                            legend.append((0, model_id))
+                        for method_id in method_ids:
+                            legend.append((0, method_id))
                         ax[i, j] = self._plot(ax[i, j], 'LEGEND', legend,\
                                 n_problems, metric, False, cutoffs, None, show_legend = True)
                         continue
@@ -329,9 +329,9 @@ class Experiment(object):
                         ax[i, j].legend(loc="center", fontsize=8 + 10//n_problems)
                         continue
 
-                    (problem, problem_result_plus_model, model_list) = all_problem_info[cur_pb]
+                    (problem, problem_result_plus_method, method_list) = all_problem_info[cur_pb]
                     cur_pb += 1
-                    ax[i, j] = self._plot(ax[i, j], problem, problem_result_plus_model,\
+                    ax[i, j] = self._plot(ax[i, j], problem, problem_result_plus_method,\
                                 n_problems, metric, avg_regret, start_time, cutoffs, yscale, show_legend = False)
 
         #fig.tight_layout()
@@ -353,19 +353,19 @@ class Experiment(object):
         print(Experiment_help)
 
     def __str__(self):
-        return "<Experiment Model>"
+        return "<Experiment Method>"
 
 # string to print when calling help() method
 Experiment_help = """
 
 -------------------- *** --------------------
 
-Description: Streamlines the process of performing experiments and comparing results of models across
+Description: Streamlines the process of performing experiments and comparing results of methods across
              a range of problems.
 
 Methods:
 
-    initialize(problems = None, models = None, problem_to_models = None, metrics = ['mse'],
+    initialize(problems = None, methods = None, problem_to_methods = None, metrics = ['mse'],
                use_precomputed = True, timesteps = 100, verbose = True, load_bar = True):
 
         Description: Initializes the experiment instance. 
@@ -374,12 +374,12 @@ Methods:
             problems (dict/list): map of the form problem_id -> hyperparameters for problem or list of problem ids;
                                   in the latter case, default parameters will be used for initialization
 
-            models (dict/list): map of the form model_id -> hyperparameters for model or list of model ids;
+            methods (dict/list): map of the form method_id -> hyperparameters for method or list of method ids;
                                 in the latter case, default parameters will be used for initialization
 
-            problem_to_models (dict) : map of the form problem_id -> list of model_id.
+            problem_to_methods (dict) : map of the form problem_id -> list of method_id.
                                        If None, then we assume that the user wants to
-                                       test every model in model_to_params against every
+                                       test every method in method_to_params against every
                                        problem in problem_to_params
 
             metrics (list): Specifies metrics we are interested in evaluating.
@@ -393,14 +393,14 @@ Methods:
             load_bar (boolean): Specifies whether to show a loading bar while the experiments are running.
 
 
-    add_model(model_id, model_params = None):
+    add_method(method_id, method_params = None):
 
-        Description: Add a new model to the experiment instance.
+        Description: Add a new method to the experiment instance.
         
         Args:
-            model_id (string): ID of new model.
+            method_id (string): ID of new method.
 
-            model_params: Parameters to use for initialization of new model.
+            method_params: Parameters to use for initialization of new method.
 
 
     scoreboard(save_as = None, metric = 'mse'):

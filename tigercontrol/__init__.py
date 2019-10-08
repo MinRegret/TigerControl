@@ -7,8 +7,8 @@ import warnings
 import tigercontrol
 from tigercontrol import error
 from tigercontrol.problems import problem, CustomProblem, problem_registry, register_custom_problem
-from tigercontrol.models import model, CustomModel, model_registry, register_custom_model
-from tigercontrol.models.optimizers import losses
+from tigercontrol.methods import method, CustomMethod, method_registry, register_custom_method
+from tigercontrol.methods.optimizers import losses
 from tigercontrol.help import help
 from tigercontrol.utils import set_key
 from tigercontrol.experiments import Experiment
@@ -22,10 +22,10 @@ set_key()
 
 __all__ = [
 	"problem", 
-	"model", 
-	"CustomModel", 
+	"method", 
+	"CustomMethod", 
 	"Experiment", 
-	"register_custom_model", 
+	"register_custom_method", 
 	"register_custom_problem", 
 	"help", 
 	"set_key"

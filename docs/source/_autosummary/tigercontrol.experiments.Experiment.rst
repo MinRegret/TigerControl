@@ -14,7 +14,7 @@ tigercontrol.experiments.Experiment
    .. autosummary::
    
       ~Experiment.__init__
-      ~Experiment.add_model
+      ~Experiment.add_method
       ~Experiment.add_problem
       ~Experiment.avg_regret
       ~Experiment.graph

@@ -154,7 +154,7 @@
 <span class="kn">from</span> <span class="nn">tigercontrol</span> <span class="k">import</span> <span class="n">error</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.problems.time_series</span> <span class="k">import</span> <span class="n">TimeSeriesProblem</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.models.time_series</span> <span class="k">import</span> <span class="n">TimeSeriesModel</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.methods.time_series</span> <span class="k">import</span> <span class="n">TimeSeriesMethod</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.utils.random</span> <span class="k">import</span> <span class="n">set_key</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
@@ -186,12 +186,12 @@
 
 <span class="k">def</span> <span class="nf">get_ids</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Description: Gets the ids of problems/models</span>
+<span class="sd">    Description: Gets the ids of problems/methods</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        x (list / dict): list of ids of problems/models or dictionary of problems/models and parameters</span>
+<span class="sd">        x (list / dict): list of ids of problems/methods or dictionary of problems/methods and parameters</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        x (list): list of problem/models ids</span>
+<span class="sd">        x (list): list of problem/methods ids</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
@@ -202,33 +202,33 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">x</span>
 
-<div class="viewcode-block" id="create_full_problem_to_models"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.experiments.create_full_problem_to_models.html#tigercontrol.experiments.create_full_problem_to_models">[docs]</a><span class="k">def</span> <span class="nf">create_full_problem_to_models</span><span class="p">(</span><span class="n">problems_ids</span><span class="p">,</span> <span class="n">model_ids</span><span class="p">):</span>
+<div class="viewcode-block" id="create_full_problem_to_methods"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.experiments.create_full_problem_to_methods.html#tigercontrol.experiments.create_full_problem_to_methods">[docs]</a><span class="k">def</span> <span class="nf">create_full_problem_to_methods</span><span class="p">(</span><span class="n">problems_ids</span><span class="p">,</span> <span class="n">method_ids</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Description: Associate all given problems to all given models.</span>
+<span class="sd">    Description: Associate all given problems to all given methods.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        problem_ids (list): list of problem names</span>
-<span class="sd">        model_ids (list): list of model names</span>
+<span class="sd">        method_ids (list): list of method names</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        full_problem_to_models (dict): association problem -&gt; model</span>
+<span class="sd">        full_problem_to_methods (dict): association problem -&gt; method</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">full_problem_to_models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">full_problem_to_methods</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">for</span> <span class="n">problem_id</span> <span class="ow">in</span> <span class="n">problems_ids</span><span class="p">:</span>
-        <span class="n">full_problem_to_models</span><span class="p">[</span><span class="n">problem_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">model_id</span> <span class="ow">in</span> <span class="n">model_ids</span><span class="p">:</span>
-            <span class="n">full_problem_to_models</span><span class="p">[</span><span class="n">problem_id</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
+        <span class="n">full_problem_to_methods</span><span class="p">[</span><span class="n">problem_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">method_id</span> <span class="ow">in</span> <span class="n">method_ids</span><span class="p">:</span>
+            <span class="n">full_problem_to_methods</span><span class="p">[</span><span class="n">problem_id</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">method_id</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">full_problem_to_models</span></div>
+    <span class="k">return</span> <span class="n">full_problem_to_methods</span></div>
 
 <span class="c1">##### CURRENTLY ONLY WORKS WITH TIME SERIES #######</span>
-<div class="viewcode-block" id="run_experiment"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.experiments.run_experiment.html#tigercontrol.experiments.run_experiment">[docs]</a><span class="k">def</span> <span class="nf">run_experiment</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">metric</span> <span class="o">=</span> <span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">timesteps</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">load_bar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="run_experiment"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.experiments.run_experiment.html#tigercontrol.experiments.run_experiment">[docs]</a><span class="k">def</span> <span class="nf">run_experiment</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">metric</span> <span class="o">=</span> <span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">timesteps</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">load_bar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Description: Initializes the experiment instance.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        problem (tuple): problem id and parameters to initialize the specific problem instance with</span>
-<span class="sd">        model (tuple): model id and parameters to initialize the specific model instance with</span>
+<span class="sd">        method (tuple): method id and parameters to initialize the specific method instance with</span>
 <span class="sd">        metric (string): metric we are interesting in computing for current experiment</span>
 <span class="sd">        key (int): for reproducibility</span>
 <span class="sd">        timesteps(int): number of time steps to run experiment for</span>
@@ -241,7 +241,7 @@
 
     <span class="c1"># extract specifications</span>
     <span class="p">(</span><span class="n">problem_id</span><span class="p">,</span> <span class="n">problem_params</span><span class="p">)</span> <span class="o">=</span> <span class="n">problem</span>
-    <span class="p">(</span><span class="n">model_id</span><span class="p">,</span> <span class="n">model_params</span><span class="p">)</span> <span class="o">=</span> <span class="n">model</span>
+    <span class="p">(</span><span class="n">method_id</span><span class="p">,</span> <span class="n">method_params</span><span class="p">)</span> <span class="o">=</span> <span class="n">method</span>
     <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span>
 
 
@@ -258,23 +258,23 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">init</span><span class="p">,</span> <span class="n">problem</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
 
-    <span class="c1"># initialize model</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">tigercontrol</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">model_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+    <span class="c1"># initialize method</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">tigercontrol</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="n">method_id</span><span class="p">)</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">method_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">method</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="o">**</span><span class="n">model_params</span><span class="p">)</span>
+        <span class="n">method</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="o">**</span><span class="n">method_params</span><span class="p">)</span>
 
-    <span class="sd">&#39;&#39;&#39;if(problem.has_regressors and not model.uses_regressors):</span>
-<span class="sd">                    print(&quot;ERROR: %s has regressors but %s only uses output signal.&quot; % (problem_id, model_id))</span>
+    <span class="sd">&#39;&#39;&#39;if(problem.has_regressors and not method.uses_regressors):</span>
+<span class="sd">                    print(&quot;ERROR: %s has regressors but %s only uses output signal.&quot; % (problem_id, method_id))</span>
 <span class="sd">                    return np.zeros(timesteps), 0.0, 0.0&#39;&#39;&#39;</span>
 
-    <span class="k">if</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">compatibles</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">compatibles</span><span class="p">)):</span> 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERROR: </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2"> are incompatible!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">problem_id</span><span class="p">,</span> <span class="n">model_id</span><span class="p">))</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">compatibles</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">compatibles</span><span class="p">)):</span> 
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERROR: </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2"> are incompatible!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">problem_id</span><span class="p">,</span> <span class="n">method_id</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">timesteps</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
 
     <span class="k">if</span><span class="p">(</span><span class="n">verbose</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running </span><span class="si">%s</span><span class="s2"> on </span><span class="si">%s</span><span class="s2">...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">model_id</span><span class="p">,</span> <span class="n">problem_id</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running </span><span class="si">%s</span><span class="s2"> on </span><span class="si">%s</span><span class="s2">...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">method_id</span><span class="p">,</span> <span class="n">problem_id</span><span class="p">))</span>
 
     <span class="n">loss</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">time_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -282,10 +282,10 @@
 
     <span class="c1"># get loss series</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">timesteps</span><span class="p">),</span> <span class="n">disable</span> <span class="o">=</span> <span class="p">(</span><span class="ow">not</span> <span class="n">load_bar</span><span class="p">)):</span>
-        <span class="c1"># get loss and update model</span>
-        <span class="n">cur_loss</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">loss_fn</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+        <span class="c1"># get loss and update method</span>
+        <span class="n">cur_loss</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">loss_fn</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
         <span class="n">loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_loss</span><span class="p">)</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">method</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
         <span class="c1"># get new pair of observation and label</span>
         <span class="n">new</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
         <span class="k">if</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">has_regressors</span><span class="p">):</span>
