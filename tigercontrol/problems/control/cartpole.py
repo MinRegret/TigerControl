@@ -99,7 +99,7 @@ class CartPole(ControlProblem):
     def reset(self):
         self.state = random.uniform(generate_key(),shape=(4,), minval=-0.05, maxval=0.05)
         self.steps_beyond_done = None
-        #self.state = np.array([0.0, 0.03, 0.03, 0.03])
+        #self.state = np.array([0.0, 0.03, 0.03, 0.03]) # reproducible results
         return self.state
 
 
