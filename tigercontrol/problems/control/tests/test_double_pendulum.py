@@ -9,13 +9,14 @@ import jax.numpy as np
 # double pendulum test #TODO: finish
 def test_double_pendulum(verbose=False):
     problem = tigercontrol.problem("DoublePendulum-v0")
-    L = lambda x, u: np.cos(x[0]) + np.cos(x[0] + x[1])
+    # observe [cos(theta1) sin(theta1) cos(theta2) sin(theta2) thetaDot1 thetaDot2]
+    L = lambda x, u: x[0] - x[2]
     dim_x, dim_u = 4, 1
     obs = problem.initialize()
 
     model = tigercontrol.model("ILQR")
     model.initialize(problem, L, dim_x, dim_u)
-    T = 100 # horizon
+    T = 30 # horizon
     threshold = None
     lamb = 0.1
     max_iterations = 25
