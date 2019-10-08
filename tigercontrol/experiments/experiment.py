@@ -179,7 +179,7 @@ class Experiment(object):
                     f.write(",%s" % str(item))
                 f.write('\n')
 
-    def scoreboard(self, metric = 'mse', n_digits = 3, truncate_ids = True, verbose = True, save_as = None):
+    def scoreboard(self, metric = 'mse', start_time = 0, n_digits = 3, truncate_ids = True, verbose = True, save_as = None):
         '''
         Description: Show a scoreboard for the results of the experiments for specified metric.
 
@@ -219,7 +219,8 @@ class Experiment(object):
             model_scores = [model_id]
             # get scores for each problem
             for problem_id in problem_ids:
-                score = np.mean(self.prob_model_to_result[(metric, problem_id, model_id)])
+                score = np.mean((self.prob_model_to_result\
+                    [(metric, problem_id, model_id)])[start_time:self.timesteps])
                 score = round(float(score), n_digits)
                 if(score == 0.0):
                     score = '—'
@@ -241,11 +242,11 @@ class Experiment(object):
         return avg_regret
 
     def _plot(self, ax, problem, problem_result_plus_model, n_problems, metric, \
-                avg_regret, cutoffs, yscale, show_legend = True):
+                avg_regret, start_time, cutoffs, yscale, show_legend = True):
 
         for (loss, model) in problem_result_plus_model:
             if(avg_regret):
-                ax.plot(self.avg_regret(loss), label=str(model))
+                ax.plot(self.avg_regret(loss[start_time:self.timesteps]), label=str(model))
             else:
                 ax.plot(loss, label=str(model))
         if(show_legend):
@@ -262,8 +263,8 @@ class Experiment(object):
 
         return ax
 
-    def graph(self, problem_ids = None, metric = 'mse', avg_regret = True, cutoffs = None,\
-            yscale = None, time = 20, save_as = None, size = 3, dpi = 100):
+    def graph(self, problem_ids = None, metric = 'mse', avg_regret = True, start_time = 0, \
+            cutoffs = None, yscale = None, time = 20, save_as = None, size = 3, dpi = 100):
 
         '''
         Description: Show a graph for the results of the experiments for specified metric.
@@ -303,13 +304,13 @@ class Experiment(object):
 
         if n_problems == 1:
             (problem, problem_result_plus_model, model_list) = all_problem_info[0]
-            ax = self._plot(ax, problem, problem_result_plus_model, \
-                                n_problems, metric, avg_regret, cutoffs, yscale)
+            ax = self._plot(ax, problem, problem_result_plus_model, n_problems, \
+                metric, avg_regret, start_time, cutoffs, yscale)
         elif nrows == 1:
             for j in range(ncols):
                 (problem, problem_result_plus_model, model_list) = all_problem_info[j]
-                ax[j] = self._plot(ax[j], problem, problem_result_plus_model,\
-                                          n_problems, metric, avg_regret, cutoffs, yscale)
+                ax[j] = self._plot(ax[j], problem, problem_result_plus_model, n_problems, \
+                                          metric, avg_regret, start_time, cutoffs, yscale)
         else:
             cur_pb = 0
             for i in range(nrows):
@@ -331,7 +332,7 @@ class Experiment(object):
                     (problem, problem_result_plus_model, model_list) = all_problem_info[cur_pb]
                     cur_pb += 1
                     ax[i, j] = self._plot(ax[i, j], problem, problem_result_plus_model,\
-                                n_problems, metric, avg_regret, cutoffs, yscale, show_legend = False)
+                                n_problems, metric, avg_regret, start_time, cutoffs, yscale, show_legend = False)
 
         #fig.tight_layout()
 
