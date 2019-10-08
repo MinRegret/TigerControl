@@ -20,8 +20,8 @@ def test_mppi(steps=1000, show_plot=True):
 
     U = random.uniform(generate_key(), minval = ACTION_LOW, maxval = ACTION_HIGH, shape = (T,))  # pendulum joint effort in (-2, +2)
 
-    problem = tigercontrol.problem("CartPoleSwingup-v0")
-    problem.initialize(render = show_plot)
+    problem = tigercontrol.problem("CartPole-v0")
+    problem.initialize()
 
     model = tigercontrol.model("MPPI")
     model.initialize(env = problem, K = K, T = T, U = U, lambda_ = lambda_, u_init = 0)

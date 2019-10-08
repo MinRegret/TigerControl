@@ -39,7 +39,7 @@ class CartPole(ControlProblem):
         # self.kinematics_integrator = 'euler' # use euler by default
 
         # Angle at which to fail the episode
-        self.theta_threshold_radians = 12 * 2 * np.pi / 360
+        self.theta_threshold_radians = 15 * 2 * np.pi / 360
         self.x_threshold = 2.4
 
         self.action_space = (1,)
@@ -99,7 +99,7 @@ class CartPole(ControlProblem):
     def reset(self):
         self.state = random.uniform(generate_key(),shape=(4,), minval=-0.05, maxval=0.05)
         self.steps_beyond_done = None
-        self.state = np.array([0.0, 0.03, 0.03, 0.03])
+        #self.state = np.array([0.0, 0.03, 0.03, 0.03])
         return self.state
 
 
