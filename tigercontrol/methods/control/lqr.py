@@ -43,11 +43,12 @@ class LQR(ControlMethod):
         x = self.to_ndarray(x)
         return [x for i in range(T)]
 
-    def initialize(self, F, f, C, c, T, x):
+    def initialize(self, A, B, f, C, c, T, x):
         """
         Description: Initialize the dynamics of the method
         Args:
-            F (float/numpy.ndarray): past value contribution coefficients
+            A (float/numpy.ndarray): past value contribution coefficients
+            B (float/numpy.ndarray): control value contribution coefficients
             f (float/numpy.ndarray): bias coefficients
             C (float/numpy.ndarray): quadratic cost coefficients
             c (float/numpy.ndarray): linear cost coefficients
@@ -55,6 +56,8 @@ class LQR(ControlMethod):
             x (float/numpy.ndarray): initial state
         """
         self.initialized = True
+        
+        F = np.hstack((A, B))
         
         self.F, self.f, self.C, self.c, self.T, self.x = self.extend(F, T), self.extend(f, T), self.extend(C, T), self.extend(c, T), T, self.to_ndarray(x)
         
