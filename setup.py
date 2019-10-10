@@ -7,17 +7,15 @@ version = '0.1'
 
 setuptools.setup(
     name='tigercontrol',
-    url='https://github.com/johnhallman/tigercontrol',
-    author='John Hallman',
+    url='https://github.com/MinRegret/tigercontrol',
+    author='Google AI Princeton',
     author_email='johnolof@gmail.com',
     packages=setuptools.find_packages(),
     install_requires=open('requirements.txt').read().split('\n'),
-    extras_require={
-        'all': ['pybullet'],
-            },
+    extras_require={ 'all': ['pybullet'] },
     version=version,
     license='Apache License 2.0',
-    description='A control and time-series algorithms benchmarking framework',
+    description='Princeton control and time-series framework',
     long_description=open('README.md').read(),
 	classifiers=[
 		"Programming Language :: Python :: 3",
