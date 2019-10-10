@@ -7,10 +7,11 @@ written by Paula Gradu, Elad Hazan and Anirudha Majumdar
 
 import jax.numpy as np
 import tigercontrol
-from tigercontrol.methods.control import ControlMethod
+from tigercontrol.models.control import ControlModel
 from jax import grad,jit
+import jax
 
-class GPC(ControlMethod):
+class GPC(ControlModel):
     """
     Description: Computes optimal set of actions using the Linear Quadratic Regulator
     algorithm.
@@ -21,35 +22,9 @@ class GPC(ControlMethod):
     def __init__(self):
         self.initialized = False
 
-    def to_ndarray(self, x):
+    def initialize(self, A, B, x, n, m, H, HH, K):
         """
-        Description: If x is a scalar, transform it to a (1, 1) numpy.ndarray;
-        otherwise, leave it unchanged.
-        Args:
-            x (float/numpy.ndarray)
-        Returns:
-            A numpy.ndarray representation of x
-        """
-        x = np.asarray(x)
-        if(np.ndim(x) == 0):
-            x = x[None, None]
-        return x
-
-    def extend(self, x, T):
-        """
-        Description: If x is not in the correct form, convert it; otherwise, leave it unchanged.
-        Args:
-            x (float/numpy.ndarray)
-            T (postive int): number of timesteps
-        Returns:
-            A numpy.ndarray representation of x
-        """
-        x = self.to_ndarray(x)
-        return [x for i in range(T)]
-
-    def initialize(self, A,B, x , n , m , H, HH, K  ):
-        """
-        Description: Initialize the dynamics of the method
+        Description: Initialize the dynamics of the model
         Args:
             A,B (float/numpy.ndarray): system dynamics
             K  (float/numpy.ndarray): optimal controller 
@@ -66,7 +41,7 @@ class GPC(ControlMethod):
             new_past = np.roll(self_past, 1)
             new_past = jax.ops.index_update(new_past, 0, x)
             return new_past
-        self._update_past = jax.jit(_update_past)
+        self._update_past = jit(_update_past)
         
         self.K = np.zeros ((n,n)) ## compute it...
 
@@ -84,29 +59,25 @@ class GPC(ControlMethod):
         ## internal parmeters to the class 
         self.T = 1 ## keep track of iterations, for the learning rate
         self.learning_rate = 1
-        self.M = np.zeros((m, n,H) )
-        self.S = np.zeros( (n,m,HH )  )
-        S[0] = B
-        for i in range(HH)
-            S[i] = (A + B@K) @ S[i-1]
-        self.past_w = np.zeros((HH+H,n)) ## this are the previous perturbations, from most recent [0] to latest [HH-1]
+        self.M = np.zeros((H, m, n))
+        self.S = [B for i in range(HH)]
+        for i in range(HH):
+            self.S[i] = (A + B@K) @ self.S[i-1]
+        self.w_past = np.zeros((HH+H,n)) ## this are the previous perturbations, from most recent [0] to latest [HH-1]
 
 
 
-    def the_complicated_loss_function(self):
+    def the_complicated_loss_function(self, M):
         """
         This is the counterfactual loss function, we prefer not to differentiate it and use JAX 
         """
         final = np.zeros(n)
         for i in range(self.HH):
             temp = np.zeros(m)
-            for j in range(self.H)
-                temp = temp + np.dot( M[j] , self.past_w[i+j])
-            final = final + S[i] @ temp
-        return np.norm(final)
-
-
-
+            for j in range(self.H):
+                temp = temp + np.dot( M[j] , self.w_past[i+j])
+            final = final + self.S[i] @ temp
+        return np.linalg.norm(final)
 
     def plan(self,x_new):
         """
@@ -121,14 +92,16 @@ class GPC(ControlMethod):
         self.learning_rate = 1 / np.sqrt(self.T + 1)
 
         w_new = x_new - np.dot(self.A , self.x)  - np.dot(self.B , self.u)
-        self._update_past(self.w, w_new)
+        self.w_past = self._update_past(self.w_past, w_new)
         self.x = x_new
 
         self.u = np.zeros(self.m)
         for i in range(self.H):
-            self.u += np.dot( self.M[i] , self.w[i] )
+            self.u += np.dot( self.M[i] , self.w_past[i] )
+            
+        grad_fn = jit(grad(self.the_complicated_loss_function))  # compiled gradient evaluation function
 
-        M = M - self.learning_rate * grad(jit(the_complicated_loss_function))
+        self.M = self.M - self.learning_rate * grad_fn(self.M)
         return self.u
 
 
@@ -147,8 +120,7 @@ class GPC(ControlMethod):
         print(GPC_help)
 
     def __str__(self):
-        return "<GC Method>"
-
+        return "<GPC Model>"
 
 # string to print when calling help() method
 GPC_help = """
