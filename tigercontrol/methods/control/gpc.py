@@ -7,11 +7,11 @@ written by Paula Gradu, Elad Hazan and Anirudha Majumdar
 
 import jax.numpy as np
 import tigercontrol
-from tigercontrol.models.control import ControlModel
+from tigercontrol.methods.control import ControlMethod
 from jax import grad,jit
 import jax
 
-class GPC(ControlModel):
+class GPC(ControlMethod):
     """
     Description: Computes optimal set of actions using the Linear Quadratic Regulator
     algorithm.
