@@ -5,7 +5,6 @@ Linear dynamical system
 import jax
 import jax.numpy as np
 import jax.random as random
-
 import tigercontrol
 from tigercontrol.utils import generate_key
 from tigercontrol.problems.control import ControlProblem
@@ -19,12 +18,12 @@ class LDS_Control(ControlProblem):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, n, m, d, noise=1.0):
+    def initialize(self, n, m, d = None, noise=1.0, fully_observable = True):
         """
         Description: Randomly initialize the hidden dynamics of the system.
         Args:
-            n (int): Input dimension.
-            m (int): Observation/output dimension.
+            n (int): Observation/output dimension.
+            m (int): control dimension.
             d (int): Hidden state dimension.
             noise (float): Default value 1.0. The magnitude of the noise (Gaussian) added
                 to both the hidden state and the observable output.
@@ -33,16 +32,20 @@ class LDS_Control(ControlProblem):
         """
         self.initialized = True
         self.T = 0
+
+        if(fully_observable):
+            assert (n == d) or d is None, "If the system is fully observable, n must be equal to d."
         self.n, self.m, self.d, self.noise = n, m, d, noise
+        self.fully_observable = fully_observable
 
         # shrinks matrix M such that largest eigenvalue has magnitude k
         normalize = lambda M, k: k * M / np.linalg.norm(M, ord=2)
 
         # initialize matrix dynamics
         self.A = random.normal(generate_key(), shape=(d, d))
-        self.B = random.normal(generate_key(), shape=(d, n))
-        self.C = random.normal(generate_key(), shape=(m, d))
-        self.D = random.normal(generate_key(), shape=(m, n))
+        self.B = random.normal(generate_key(), shape=(d, m))
+        self.C = random.normal(generate_key(), shape=(n, d))
+        self.D = random.normal(generate_key(), shape=(n, m))
         self.h = random.normal(generate_key(), shape=(d,))
 
         # adjust dynamics matrix A
@@ -59,7 +62,11 @@ class LDS_Control(ControlProblem):
 
         self._step = jax.jit(_step)
 
-        y = np.dot(self.C, self.h) + np.dot(self.D, np.zeros(n)) + noise * random.normal(generate_key(), shape=(m,))
+        y = np.dot(self.C, self.h) + np.dot(self.D, np.zeros(m)) + noise * random.normal(generate_key(), shape=(n,))
+        
+        if(fully_observable):
+            return self.h
+
         return y
 
 
@@ -75,7 +82,11 @@ class LDS_Control(ControlProblem):
         # assert u.shape == (self.n,)
         self.T += 1
 
-        self.h, y = self._step(u, self.h, (random.normal(generate_key(), shape=(self.d,)), random.normal(generate_key(), shape=(self.m,))))
+        self.h, y = self._step(u, self.h, (random.normal(generate_key(), shape=(self.d,)), random.normal(generate_key(), shape=(self.n,))))
+        
+        if(self.fully_observable):
+            return self.h
+
         return y
 
     def hidden(self):
@@ -115,8 +126,8 @@ Methods:
         Description:
             Randomly initialize the hidden dynamics of the system.
         Args:
-            n (int): Input dimension.
-            m (int): Observation/output dimension.
+            n (int): Observation/output dimension.
+            m (int): control dimension.
             d (int): Hidden state dimension.
             noise (float): Default value 1.0. The magnitude of the noise (Gaussian) added
                 to both the hidden state and the observable output.
