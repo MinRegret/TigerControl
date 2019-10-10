@@ -72,7 +72,7 @@ class LDS_Control(ControlProblem):
             A new observation from the LDS.
         """
         assert self.initialized
-        assert u.shape == (self.n,)
+        # assert u.shape == (self.n,)
         self.T += 1
 
         self.h, y = self._step(u, self.h, (random.normal(generate_key(), shape=(self.d,)), random.normal(generate_key(), shape=(self.m,))))
