@@ -13,7 +13,7 @@ class KalmanFilter(ControlMethod):
 
     More precisely, we know that the signal at time t is a linear combination
     of its previous value plus a control signal u(t) and a process noise
-    w(t - 1), i.e. x(t) = A x(t - 1) + B u(t) + w(t), and that the
+    w(t - 1), i.e. x(t + 1) = A x(t) + B u(t) + w(t), and that the
     measurement at time t is a linear combination of the signal value and
     the measurement noise v(t), i.e. z(t) = H x(t) + v(t).
 
@@ -22,7 +22,7 @@ class KalmanFilter(ControlMethod):
     update:
 
     a. Time Update (prediction)
-    - Project state ahead: x(t) = A x(t - 1) + B u(t)
+    - Project state ahead: x(t + 1) = A x(t) + B u(t)
     - Project error covariance ahead: P(t) = A P(t - 1) A^T + Q
 
     b. Measurement Update
@@ -168,7 +168,7 @@ Description:
 
     More precisely, we know that the signal at time t is a linear combination
     of its previous value plus a control signal u(t) and a process noise
-    w(t - 1), i.e. x(t) = A x(t - 1) + B u(t) + w(t), and that the
+    w(t - 1), i.e. x(t + 1) = A x(t) + B u(t) + w(t), and that the
     measurement at time t is a linear combination of the signal value and
     the measurement noise v(t), i.e. z(t) = H x(t) + v(t).
 
@@ -177,7 +177,7 @@ Description:
     update:
 
     a. Time Update (prediction)
-    - Project state ahead: x(t) = A x(t - 1) + u(t)
+    - Project state ahead: x(t + 1) = A x(t) + B u(t)
     - Project error covariance ahead: P(t) = A P(t - 1) A^T + Q
 
     b. Measurement Update
