@@ -43,7 +43,7 @@ class GPC(ControlMethod):
             return new_past
         self._update_past = jit(_update_past)
         
-        self.K = np.zeros ((n,n)) ## compute it...
+        self.K = np.zeros ((m,n)) ## compute it...
 
         self.x = np.zeros(n)        
         self.u = np.zeros(m)
@@ -59,13 +59,11 @@ class GPC(ControlMethod):
         ## internal parmeters to the class 
         self.T = 1 ## keep track of iterations, for the learning rate
         self.learning_rate = 1
-        self.M = np.zeros((H, m, n))
+        self.M = np.ones((H, m, n)) ## CANNOT BE SET TO ZERO
         self.S = [B for i in range(HH)]
         for i in range(HH):
             self.S[i] = (A + B@K) @ self.S[i-1]
         self.w_past = np.zeros((HH+H,n)) ## this are the previous perturbations, from most recent [0] to latest [HH-1]
-
-
 
     def the_complicated_loss_function(self, M):
         """
@@ -97,16 +95,13 @@ class GPC(ControlMethod):
 
         self.u = np.zeros(self.m)
         for i in range(self.H):
-            self.u += np.dot( self.M[i] , self.w_past[i] )
+            self.u += np.dot(self.M[i] , self.w_past[i])
             
         grad_fn = jit(grad(self.the_complicated_loss_function))  # compiled gradient evaluation function
-
+        
         self.M = self.M - self.learning_rate * grad_fn(self.M)
+        
         return self.u
-
-
-        ## update the M matrices via OGD rule ##
-
 
 
     def help(self):
