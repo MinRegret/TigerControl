@@ -33,7 +33,7 @@ class LDS(ControlProblem):
                 Valid noise functions must map inputs n (x dim), x (state), u (action), w (previous noise), and t (current time)
                 to either a scalar or an n-dimensional vector of real values.
             noise magnitude (float): magnitude of noise
-            system_params (dict): specify A, B, C, and D matrices in system dynamics
+            params (dict): specify A, B, C, and D matrices in system dynamics
             initial_state (None, vector): initial x. If None then randomly initialized
         Returns:
             The first value in the time-series
@@ -42,6 +42,7 @@ class LDS(ControlProblem):
         self.T = 0
         self.n, self.m, self.d = n, m, d
         self.noise_magnitude = noise_magnitude
+        params = system_params.copy() # avoid overwriting system_params input dict
 
         if d != None: # d may only be specified in a partially observable system
             assert partially_observable
@@ -69,31 +70,31 @@ class LDS(ControlProblem):
         else:                                      # case custom function
             assert callable(noise_distribution), "noise_distribution not valid input" # assert input is callable
             from inspect import getargspec
-            arg_sub = getargspec(noise_distribution) # retrieve all parameters taken by provided function
+            arg_sub = getargspec(noise_distribution).args # retrieve all parameters taken by provided function
             for arg in arg_sub:
                 assert arg in ['n', 'x', 'u', 'w', 't'], "noise_distribution takes invalid input"
             def noise(n, x, u, w, t):
                 noise_args = {'n': n, 'x': x, 'u': u, 'w': w, 't': t}
-                arg_dict = {k:v for k,v in noise_args.items() if k in arg_sub.args}
+                arg_dict = {k:v for k,v in noise_args.items() if k in arg_sub}
                 return noise_distribution(**arg_dict)
             self.noise = noise
 
-
         # helper function that generates a random matrix with given dimensions
         for matrix, shape in {'A':(n, n), 'B':(n, m), 'C':(d, n), 'D':(d, m)}.items():
-            if matrix not in system_params:
-                system_params[matrix] = gaussian(shape)
+            if matrix not in params: 
+                if (d == None) and (matrix == 'C' or matrix == 'D'): continue
+                params[matrix] = gaussian(shape)
             else:
-                assert system_params[matrix] == shape # check input has valid shape
+                assert params[matrix].shape == shape # check input has valid shape
         normalize = lambda M, k: k * M / np.linalg.norm(M, ord=2) # scale largest eigenvalue to k
-        self.A = normalize(system_params['A'], 1.0)
-        self.B = normalize(system_params['B'], 1.0)
+        self.A = normalize(params['A'], 1.0)
+        self.B = normalize(params['B'], 1.0)
         if partially_observable:
-            self.C = normalize(system_params['C'], 1.0)
-            self.D = normalize(system_params['D'], 1.0)
+            self.C = normalize(params['C'], 1.0)
+            self.D = normalize(params['D'], 1.0)
 
         # initial state
-        self.x = initial_state if initial_state != None else gaussian((n,))
+        self.x = gaussian((n,)) if initial_state is None else initial_state
 
         # different dynamics depending on whether the system is fully observable or not
         if partially_observable:
