@@ -91,4 +91,8 @@ method_register(
     entry_point='tigercontrol.methods.control:CartPoleNN',
 )
 
+method_register(
+    id='GPC',
+    entry_point='tigercontrol.methods.control:GPC',
+)
 

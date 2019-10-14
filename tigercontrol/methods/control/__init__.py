@@ -7,3 +7,4 @@ from tigercontrol.methods.control.lqr import LQR
 from tigercontrol.methods.control.ilqr import ILQR
 from tigercontrol.methods.control.mppi import MPPI
 from tigercontrol.methods.control.cartpole_nn import CartPoleNN
+from tigercontrol.methods.control.gpc import GPC

@@ -9,7 +9,10 @@ import jax.numpy as np
 import tigercontrol
 from tigercontrol.methods.control import ControlMethod
 from jax import grad,jit
+import jax.random as random
+from tigercontrol.utils import generate_key
 import jax
+import scipy
 
 class GPC(ControlMethod):
     """
@@ -22,12 +25,11 @@ class GPC(ControlMethod):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, A, B, x, n, m, H, HH, K):
+    def initialize(self, A, B, x, n, m, H, HH, K = None):
         """
         Description: Initialize the dynamics of the model
         Args:
             A,B (float/numpy.ndarray): system dynamics
-            K  (float/numpy.ndarray): optimal controller 
             n (float/numpy.ndarray): dimension of the state
             m (float/numpy.ndarray): dimension of the controls
             H (postive int): history of the controller 
@@ -42,8 +44,14 @@ class GPC(ControlMethod):
             new_past = jax.ops.index_update(new_past, 0, x)
             return new_past
         self._update_past = jit(_update_past)
-        
-        self.K = np.zeros ((m,n)) ## compute it...
+
+        if(K is None):
+            # solve the ricatti equation 
+            X = scipy.linalg.solve_continuous_are(A, B, np.identity(n), np.identity(m))
+            #compute LQR gain
+            self.K = np.linalg.inv(B.T @ X @ B + np.identity(m)) @ (B.T @ X @ A)
+        else:
+            self.K = K
 
         self.x = np.zeros(n)        
         self.u = np.zeros(m)
@@ -55,23 +63,24 @@ class GPC(ControlMethod):
         self.H = H   ## how many control matrices
         self.HH = HH ## how many times to unfold the recursion
 
-
         ## internal parmeters to the class 
         self.T = 1 ## keep track of iterations, for the learning rate
         self.learning_rate = 1
-        self.M = np.ones((H, m, n)) ## CANNOT BE SET TO ZERO
+        self.M = random.normal(generate_key(), shape=(H, m, n)) ## CANNOT BE SET TO ZERO
         self.S = [B for i in range(HH)]
         for i in range(HH):
-            self.S[i] = (A + B@K) @ self.S[i-1]
+            self.S[i] = (A + B @ self.K) @ self.S[i-1]
         self.w_past = np.zeros((HH+H,n)) ## this are the previous perturbations, from most recent [0] to latest [HH-1]
+
+        self.is_online = True
 
     def the_complicated_loss_function(self, M):
         """
         This is the counterfactual loss function, we prefer not to differentiate it and use JAX 
         """
-        final = np.zeros(n)
+        final = np.zeros(self.n)
         for i in range(self.HH):
-            temp = np.zeros(m)
+            temp = np.zeros(self.m)
             for j in range(self.H):
                 temp = temp + np.dot( M[j] , self.w_past[i+j])
             final = final + self.S[i] @ temp
