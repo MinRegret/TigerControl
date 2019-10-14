@@ -20,6 +20,9 @@ class LDS(ControlProblem):
     def __init__(self):
         self.initialized = False
 
+    def randomwalk_noise(n, w):
+        return w + gaussian((n,))
+
     def initialize(self, n, m, d = None, partially_observable = False, noise_distribution=None, \
         noise_magnitude=1.0, system_params = {}, initial_state = None):
         """
@@ -69,22 +72,33 @@ class LDS(ControlProblem):
         else:                                      # case custom function
             assert callable(noise_distribution), "noise_distribution not valid input" # assert input is callable
             from inspect import getargspec
-            arg_sub = getargspec(noise_distribution) # retrieve all parameters taken by provided function
+            arg_sub = getargspec(noise_distribution).args # retrieve all parameters taken by provided function
+            print("--------------------------------")
+            print("arg_sub:" + str(arg_sub))
+            print("================================")
             for arg in arg_sub:
+                print("arg: " + str(arg))
                 assert arg in ['n', 'x', 'u', 'w', 't'], "noise_distribution takes invalid input"
             def noise(n, x, u, w, t):
                 noise_args = {'n': n, 'x': x, 'u': u, 'w': w, 't': t}
-                arg_dict = {k:v for k,v in noise_args.items() if k in arg_sub.args}
+                arg_dict = {k:v for k,v in noise_args.items() if k in arg_sub}
                 return noise_distribution(**arg_dict)
             self.noise = noise
 
 
         # helper function that generates a random matrix with given dimensions
+        print("++++++++++++++++++++++++++++++++++")
+        print("system_params:" + str(system_params))
         for matrix, shape in {'A':(n, n), 'B':(n, m), 'C':(d, n), 'D':(d, m)}.items():
             if matrix not in system_params:
+                if (d == None) and (matrix == 'C' or matrix == 'D'):
+                    continue
                 system_params[matrix] = gaussian(shape)
             else:
-                assert system_params[matrix] == shape # check input has valid shape
+                print("matrix: " + str(matrix))
+                print("system_params[matrix].shape : " + str(system_params[matrix].shape))
+                print("required shape : " + str(shape))
+                assert system_params[matrix].shape == shape # check input has valid shape
         normalize = lambda M, k: k * M / np.linalg.norm(M, ord=2) # scale largest eigenvalue to k
         self.A = normalize(system_params['A'], 1.0)
         self.B = normalize(system_params['B'], 1.0)
@@ -93,7 +107,7 @@ class LDS(ControlProblem):
             self.D = normalize(system_params['D'], 1.0)
 
         # initial state
-        self.x = initial_state if initial_state != None else gaussian((n,))
+        self.x = gaussian((n,)) if initial_state is None else initial_state
 
         # different dynamics depending on whether the system is fully observable or not
         if partially_observable:
