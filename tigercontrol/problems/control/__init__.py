@@ -8,4 +8,6 @@ from tigercontrol.problems.control.lstm_control import LSTM_Control
 from tigercontrol.problems.control.cartpole import CartPole
 from tigercontrol.problems.control.pendulum import Pendulum
 from tigercontrol.problems.control.double_pendulum import DoublePendulum
-
+import tigercontrol.problems.control.quadcopter
+import tigercontrol.problems.control.quadcopter_controller
+import tigercontrol.problems.control.quadcopter_gui
