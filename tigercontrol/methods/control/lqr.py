@@ -63,6 +63,8 @@ class LQR(ControlMethod):
         self.u = self.extend(np.zeros((m, 1)), T)     
         self.K = self.extend(np.zeros((m, n)), T)
 
+        self.is_online = False
+
     def plan(self):
         """
         Description: Updates internal parameters and then returns the estimated optimal set of actions
