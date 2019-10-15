@@ -45,7 +45,7 @@ class GPC(ControlMethod):
             return new_past
         self._update_past = jit(_update_past)
 
-        if(K is None):
+        if (K is None):
             # solve the ricatti equation 
             X = scipy.linalg.solve_continuous_are(A, B, np.identity(n), np.identity(m))
             #compute LQR gain
@@ -73,6 +73,7 @@ class GPC(ControlMethod):
         self.w_past = np.zeros((HH+H,n)) ## this are the previous perturbations, from most recent [0] to latest [HH-1]
 
         self.is_online = True
+        self.grad_fn = jit(grad(self.the_complicated_loss_function))  # compiled gradient evaluation function
 
     def the_complicated_loss_function(self, M):
         """
@@ -105,10 +106,7 @@ class GPC(ControlMethod):
         self.u = np.zeros(self.m)
         for i in range(self.H):
             self.u += np.dot(self.M[i] , self.w_past[i])
-            
-        grad_fn = jit(grad(self.the_complicated_loss_function))  # compiled gradient evaluation function
-        
-        self.M = self.M - self.learning_rate * grad_fn(self.M)
+        self.M = self.M - self.learning_rate * self.grad_fn(self.M)
         
         return self.u
 
