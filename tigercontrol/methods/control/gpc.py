@@ -74,6 +74,8 @@ class GPC(ControlMethod):
 
         self.is_online = True
 
+        self.grad_fn = jit(grad(self.the_complicated_loss_function))
+
     def the_complicated_loss_function(self, M):
         """
         This is the counterfactual loss function, we prefer not to differentiate it and use JAX 
@@ -106,9 +108,9 @@ class GPC(ControlMethod):
         for i in range(self.H):
             self.u += np.dot(self.M[i] , self.w_past[i])
             
-        grad_fn = jit(grad(self.the_complicated_loss_function))  # compiled gradient evaluation function
+          # compiled gradient evaluation function
         
-        self.M = self.M - self.learning_rate * grad_fn(self.M)
+        self.M = self.M - self.learning_rate * self.grad_fn(self.M)
         
         return self.u
 
