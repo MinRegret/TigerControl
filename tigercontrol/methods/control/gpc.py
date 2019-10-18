@@ -93,10 +93,8 @@ class GPC(ControlMethod):
         w_new = x_new - np.dot(self.A , self.x)  - np.dot(self.B , self.u) # dimension self.n
         self.w_past = self._update_past(self.w_past, w_new)
         self.x = x_new
-
         self.u = - self.K @ x_new + np.tensordot(self.M, self.w_past[:self.H], axes=([0,2],[0,1]))
         self.M = self.M - self.learning_rate * self.grad_fn(self.M, self.w_past, self.S)
-        
         return self.u
 
 
