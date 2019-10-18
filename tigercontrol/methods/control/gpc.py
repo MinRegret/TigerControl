@@ -66,7 +66,8 @@ class GPC(ControlMethod):
         ## internal parmeters to the class 
         self.T = 1 ## keep track of iterations, for the learning rate
         self.learning_rate = 1
-        self.M = random.normal(generate_key(), shape=(H, m, n)) / np.sqrt(0.5*(n+m)) # Glorot CANNOT BE SET TO ZERO
+        self.M = np.zeros((H, m, n))
+        #self.M = random.normal(generate_key(), shape=(H, m, n)) / np.sqrt(0.5*(n+m)) # Glorot CANNOT BE SET TO ZERO
         self.S = np.repeat(B.reshape(1, n, m), HH, axis=0) # previously [B for i in range(HH)]
         for i in range(1, HH):
             self.S = jax.ops.index_update(self.S, i, (A - B @ self.K) @ self.S[i-1]) 
