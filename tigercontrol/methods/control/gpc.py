@@ -40,7 +40,7 @@ class GPC(ControlMethod):
         self.initialized = True
         
         def _update_past(self_past, x):
-            new_past = np.roll(self_past, 1)
+            new_past = np.roll(self_past, self.n)
             new_past = jax.ops.index_update(new_past, 0, x)
             return new_past
         self._update_past = jit(_update_past)
@@ -68,9 +68,9 @@ class GPC(ControlMethod):
         self.learning_rate = 1
         self.M = random.normal(generate_key(), shape=(H, m, n)) ## CANNOT BE SET TO ZERO
         self.S = [B for i in range(HH)]
-        for i in range(HH):
+        for i in range(1, HH):
             self.S[i] = (A + B @ self.K) @ self.S[i-1]
-        self.w_past = np.zeros((HH+H,n)) ## this are the previous perturbations, from most recent [0] to latest [HH-1]
+        self.w_past = np.zeros((HH + H,n)) ## this are the previous perturbations, from most recent [0] to latest [HH-1]
 
         self.is_online = True
 
@@ -84,7 +84,7 @@ class GPC(ControlMethod):
             for j in range(self.H):
                 temp = temp + np.dot( M[j] , self.w_past[i+j])
             final = final + self.S[i] @ temp
-        return np.linalg.norm(final)
+        return np.sum(final ** 2)
 
     def plan(self,x_new):
         """
