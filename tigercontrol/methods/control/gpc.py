@@ -32,16 +32,12 @@ class GPC(ControlMethod):
             A,B (float/numpy.ndarray): system dynamics
             n (float/numpy.ndarray): dimension of the state
             m (float/numpy.ndarray): dimension of the controls
-            H (postive int): length of history of the controller 
-            HH (positive int): length of history/memory of the system
+            H (postive int): history of the controller 
+            HH history of the system 
             x (float/numpy.ndarray): current state
             past_w (float/numpy.ndarray)  previous perturbations 
         """
         self.initialized = True
-        self.is_online = True
-        self.n, self.m = n, m # dimension of state x and control u
-        self.A, self.B = A, B # system dynamics
-        self.H, self.HH = H, HH ## length of controller history and memory for loss function
         
         def _update_past(self_past, x):
             new_past = np.roll(self_past, self.n)
@@ -49,7 +45,7 @@ class GPC(ControlMethod):
             return new_past
         self._update_past = jit(_update_past)
 
-        if (K is None):
+        if(K is None):
             # solve the ricatti equation 
             X = scipy.linalg.solve_continuous_are(A, B, np.identity(n), np.identity(m))
             #compute LQR gain
@@ -57,18 +53,27 @@ class GPC(ControlMethod):
         else:
             self.K = K
 
-        # stores previous state and action
-        self.x = np.zeros(n)
+        self.x = np.zeros(n)        
         self.u = np.zeros(m)
         
+        self.n = n   ## dimension of  the state x 
+        self.m = m   ## dimension of the control u
+        self.A = A
+        self.B = B
+        self.H = H   ## how many control matrices
+        self.HH = HH ## how many times to unfold the recursion
+
         ## internal parmeters to the class 
-        self.T = 0 ## keep track of iterations, for the learning rate
-        self.learning_rate = 1.0
-        self.M = random.normal(generate_key(), shape=(H, m, n)) / np.sqrt(0.5*(n+m)) ## CANNOT BE SET TO ZERO, Glorot init
+        self.T = 1 ## keep track of iterations, for the learning rate
+        self.learning_rate = 1
+        self.M = np.zeros((H, m, n))
+        #self.M = random.normal(generate_key(), shape=(H, m, n)) / np.sqrt(0.5*(n+m)) # Glorot CANNOT BE SET TO ZERO
         self.S = np.repeat(B.reshape(1, n, m), HH, axis=0) # previously [B for i in range(HH)]
         for i in range(1, HH):
             self.S = jax.ops.index_update(self.S, i, (A - B @ self.K) @ self.S[i-1]) 
-        self.w_past = np.zeros((HH+H,n)) ## this are the previous perturbations, from most recent [0] to latest [HH-1]
+        self.w_past = np.zeros((HH + H,n)) ## this are the previous perturbations, from most recent [0] to latest [HH-1]
+
+        self.is_online = True
 
         # This is the counterfactual loss function, we prefer not to differentiate it and use JAX 
         def the_complicated_loss_function(M, w_past):
@@ -77,6 +82,7 @@ class GPC(ControlMethod):
                 temp = np.tensordot(M, w_past[i:i+self.H], axes=([0,2],[0,1]))
                 final = final + self.S[i] @ temp
             return np.sum(final ** 2)
+
         self.grad_fn = jit(grad(the_complicated_loss_function))  # compiled gradient evaluation function
 
         def _plan(x_new, x_old, u_old, w_past, M, lr):
@@ -95,6 +101,7 @@ class GPC(ControlMethod):
         Returns:
             Estimated optimal action
         """
+
         self.T +=1
         lr = self.learning_rate / np.sqrt(self.T)
         self.x, self.u, self.w_past, self.M = self._plan(x_new, self.x, self.u, self.w_past, self.M, lr)
