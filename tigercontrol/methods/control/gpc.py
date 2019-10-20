@@ -71,13 +71,21 @@ class GPC(ControlMethod):
         self.w_past = np.zeros((HH+H,n)) ## this are the previous perturbations, from most recent [0] to latest [HH-1]
 
         # This is the counterfactual loss function, we prefer not to differentiate it and use JAX 
-        def the_complicated_loss_function(M, w_past, S):
+        def the_complicated_loss_function(M, w_past):
             final = 0.0
             for i in range(self.HH):
                 temp = np.tensordot(M, w_past[i:i+self.H], axes=([0,2],[0,1]))
-                final = final + S[i] @ temp
+                final = final + self.S[i] @ temp
             return np.sum(final ** 2)
         self.grad_fn = jit(grad(the_complicated_loss_function))  # compiled gradient evaluation function
+
+        def _plan(x_new, x_old, u_old, w_past, M, lr):
+            w_new = x_new - np.dot(self.A, x_old) - np.dot(self.B, u_old)
+            w_past_new = self._update_past(w_past, w_new)
+            u_new = -self.K @ x_new + np.tensordot(M, w_past[:self.H], axes=([0,2],[0,1]))
+            M_new = M - lr * self.grad_fn(M, w_past_new)
+            return x_new, u_new, w_past_new, M_new
+        self._plan = jit(_plan)
 
     def plan(self, x_new):
         """
@@ -88,15 +96,8 @@ class GPC(ControlMethod):
             Estimated optimal action
         """
         self.T +=1
-        self.learning_rate = self.learning_rate / np.sqrt(self.T)
-
-        w_new = x_new - np.dot(self.A , self.x)  - np.dot(self.B , self.u) # dimension self.n
-        self.w_past = self._update_past(self.w_past, w_new)
-        self.x = x_new
-
-        self.u = - self.K @ x_new + np.tensordot(self.M, self.w_past[:self.H], axes=([0,2],[0,1]))
-        self.M = self.M - self.learning_rate * self.grad_fn(self.M, self.w_past, self.S)
-        
+        lr = self.learning_rate / np.sqrt(self.T)
+        self.x, self.u, self.w_past, self.M = self._plan(x_new, self.x, self.u, self.w_past, self.M, lr)
         return self.u
 
 
