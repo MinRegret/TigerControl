@@ -75,19 +75,25 @@ class GPC(ControlMethod):
 
         self.is_online = True
 
-        def the_complicated_loss_function(M, w_past, S):
-            """
-            This is the counterfactual loss function, we prefer not to differentiate it and use JAX 
-            """
-            final = np.zeros(self.n)
+        # This is the counterfactual loss function, we prefer not to differentiate it and use JAX 
+        def the_complicated_loss_function(M, w_past):
+            final = 0.0
             for i in range(self.HH):
                 temp = np.tensordot(M, w_past[i:i+self.H], axes=([0,2],[0,1]))
-                final = final + S[i] @ temp
+                final = final + self.S[i] @ temp
             return np.sum(final ** 2)
 
         self.grad_fn = jit(grad(the_complicated_loss_function))  # compiled gradient evaluation function
 
-    def plan(self,x_new):
+        def _plan(x_new, x_old, u_old, w_past, M, lr):
+            w_new = x_new - np.dot(self.A, x_old) - np.dot(self.B, u_old)
+            w_past_new = self._update_past(w_past, w_new)
+            u_new = -self.K @ x_new + np.tensordot(M, w_past[:self.H], axes=([0,2],[0,1]))
+            M_new = M - lr * self.grad_fn(M, w_past_new)
+            return x_new, u_new, w_past_new, M_new
+        self._plan = jit(_plan)
+
+    def plan(self, x_new):
         """
         Description: Updates internal parameters and then returns the estimated optimal action (only one)
         Args:
@@ -97,16 +103,8 @@ class GPC(ControlMethod):
         """
 
         self.T +=1
-        self.learning_rate = 1 / np.sqrt(self.T + 1)
-
-        w_new = x_new - np.dot(self.A , self.x)  - np.dot(self.B , self.u)
-        self.w_past = self._update_past(self.w_past, w_new)
-        self.x = x_new
-
-        self.u = - self.K @ x_new + np.tensordot(self.M, self.w_past[:self.H], axes=([0,2],[0,1]))
-        
-        self.M = self.M - self.learning_rate * self.grad_fn(self.M, self.w_past, self.S)
-        
+        lr = self.learning_rate / np.sqrt(self.T)
+        self.x, self.u, self.w_past, self.M = self._plan(x_new, self.x, self.u, self.w_past, self.M, lr)
         return self.u
 
 
