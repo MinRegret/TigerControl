@@ -45,6 +45,11 @@ problem_register(
     entry_point='tigercontrol.problems.control:LSTM_Control',
 )
 
+problem_register(
+    id='PlanarQuadrotor-v0',
+    entry_point='tigercontrol.problems.control:PlanarQuadrotor',
+)
+
 
 # ---------- Time-series ----------
 
