@@ -11,3 +11,4 @@ from tigercontrol.problems.time_series.unemployment import Unemployment
 from tigercontrol.problems.time_series.lds_time_series import LDS_TimeSeries
 from tigercontrol.problems.time_series.rnn_time_series import RNN_TimeSeries
 from tigercontrol.problems.time_series.lstm_time_series import LSTM_TimeSeries
+from tigercontrol.problems.time_series.my_problem import MyProblem

@@ -73,7 +73,7 @@ def create_full_problem_to_methods(problems_ids, method_ids):
     return full_problem_to_methods
 
 ##### CURRENTLY ONLY WORKS WITH TIME SERIES #######
-def run_experiment(problem, method, metric = 'mse', key = 0, timesteps = 100, verbose = True, load_bar = True):
+def run_experiment(problem, method, metric = 'mse', key = 0, timesteps = None, verbose = True, load_bar = True):
     '''
     Description: Initializes the experiment instance.
     
@@ -103,6 +103,11 @@ def run_experiment(problem, method, metric = 'mse', key = 0, timesteps = 100, ve
     else:
         init = problem.initialize(**problem_params)
 
+    if(timesteps is None):
+        timesteps = problem.max_T - 1
+    else:
+        timesteps = min(timesteps, problem.max_T - 1)
+
     # get first x and y
     if(problem.has_regressors):
         x, y = init
@@ -112,9 +117,10 @@ def run_experiment(problem, method, metric = 'mse', key = 0, timesteps = 100, ve
     # initialize method
     method = tigercontrol.method(method_id)
     if(method_params is None):
-        method.initialize()
-    else:
-        method.initialize(**method_params)
+        method_params = {}
+    method_params['n'] = x.shape[0]
+    method_params['m'] = y.shape[0]
+    method.initialize(**method_params)
 
     '''if(problem.has_regressors and not method.uses_regressors):
                     print("ERROR: %s has regressors but %s only uses output signal." % (problem_id, method_id))

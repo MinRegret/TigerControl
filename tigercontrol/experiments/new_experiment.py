@@ -8,7 +8,7 @@ class NewExperiment(object):
     def __init__(self):
         self.initialized = False
         
-    def initialize(self, problems, methods, problem_to_methods=None, metrics = 'mse', key = 0, timesteps = 1000, \
+    def initialize(self, problems, methods, problem_to_methods=None, metrics = 'mse', key = 0, timesteps = None, \
                          verbose = True, load_bar = True):
         '''
         Description: Initializes the new experiment instance. 

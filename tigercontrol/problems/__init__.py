@@ -60,6 +60,11 @@ problem_register(
 )
 
 problem_register(
+    id='MyProblem-v0',
+    entry_point='tigercontrol.problems.time_series:MyProblem',
+)
+
+problem_register(
     id='ARMA-v0',
     entry_point='tigercontrol.problems.time_series:ARMA',
 )

@@ -189,7 +189,6 @@ def sp500(verbose=True):
         os.remove(path_sp500_txt)
     return pd.read_csv(path_sp500_csv)
 
-
 def crypto():
     """
     Description: Checks if cryptocurrency data exists, downloads if not.
@@ -317,4 +316,34 @@ def enso(input_signals, include_month, output_signals, history, timeline):
         y = y.reshape((effective_length, np.array(output_signals).shape[0]))
 
     return (X, y)
+
+def dataset_to_problem(file, X_cols = None, y_cols = None, T = 1):
+    """
+        file (string or dataframe): file path or dataframe
+        X (list of strings):
+        y (list of strings):
+    """
+    if(type(file) is str):
+        tigercontrol_dir = get_tigercontrol_dir()
+        datapath = os.path.join(tigercontrol_dir, file)
+        df = pd.read_csv(datapath)
+    else:
+        df = file
+
+    if(X_cols is None):
+        X = df.values
+    else:
+        X = df[X_cols].values
+
+    if(y_cols is None):
+        y = df[T:].values
+    else:
+        y = df[y_cols][T:].values
+
+    return (X, y)
+
+
+
+
+
     
