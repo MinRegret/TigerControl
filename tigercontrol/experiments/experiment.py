@@ -15,7 +15,7 @@ class Experiment(object):
         self.initialized = False
         
     def initialize(self, problems = None, methods = None, problem_to_methods = None, metrics = ['mse'], \
-                   key = 0, use_precomputed = False, timesteps = 100, verbose = False, load_bar = False):
+                   key = 0, use_precomputed = False, timesteps = None, verbose = False, load_bar = False):
         '''
         Description: Initializes the experiment instance. 
 
