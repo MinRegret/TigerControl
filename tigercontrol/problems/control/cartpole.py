@@ -84,6 +84,7 @@ class CartPole(ControlProblem):
                 or theta > self.theta_threshold_radians
         done = bool(done)
 
+        reward = 0
         if not done:
             reward = 1.0
         elif self.steps_beyond_done is None:
@@ -99,7 +100,7 @@ class CartPole(ControlProblem):
     def reset(self):
         self.state = random.uniform(generate_key(),shape=(4,), minval=-0.05, maxval=0.05)
         self.steps_beyond_done = None
-        #self.state = np.array([0.0, 0.03, 0.03, 0.03]) # reproducible results
+        # self.state = np.array([0.0, 0.03, 0.03, 0.03]) # reproducible results
         return self.state
 
 
