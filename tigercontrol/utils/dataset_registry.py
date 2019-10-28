@@ -189,7 +189,7 @@ def sp500(verbose=True):
         os.remove(path_sp500_txt)
     return pd.read_csv(path_sp500_csv)
 
-def crypto():
+def crypto(verbose=True):
     """
     Description: Checks if cryptocurrency data exists, downloads if not.
 

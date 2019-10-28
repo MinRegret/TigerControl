@@ -92,74 +92,7 @@ class LQR(ControlMethod):
 
         return self.u
 
-
-    def help(self):
-        """
-        Description: Prints information about this class and its methods.
-        Args:
-            None
-        Returns:
-            None
-        """
-        print(LQR_help)
-
     def __str__(self):
         return "<LQR Method>"
 
 
-# string to print when calling help() method
-LQR_help = """
-
--------------------- *** --------------------
-
-Id: LQR
-
-Description: Computes optimal set of actions using the Linear Quadratic Regulator
-    algorithm.
-
-Methods:
-
-    initialize(F, f, C, c, T, x)
-        Description:
-            Initialize the dynamics of the method
-        Args:
-            F (float/numpy.ndarray): past value contribution coefficients
-            f (float/numpy.ndarray): bias coefficients
-            C (float/numpy.ndarray): quadratic cost coefficients
-            c (float/numpy.ndarray): linear cost coefficients
-            T (postive int): number of timesteps
-            x (float/numpy.ndarray): initial state
-
-    step()
-        Description: Updates internal parameters and then returns the
-        	estimated optimal set of actions
-        Args:
-            None
-        Returns:
-            Estimated optimal set of actions
-
-    predict()
-        Description:
-            Returns estimated optimal set of actions
-        Args:
-            None
-        Returns:
-            Estimated optimal set of actions
-
-    update()
-        Description:
-        	Updates internal parameters
-        Args:
-            None
-
-    help()
-        Description:
-            Prints information about this class and its methods.
-        Args:
-            None
-        Returns:
-            None
-
--------------------- *** --------------------
-
-"""
