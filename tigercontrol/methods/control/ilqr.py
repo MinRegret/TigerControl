@@ -19,7 +19,7 @@ class ILQR(ControlMethod):
         self.initialized = False
 
 
-    def initialize(self, problem_dynamics, L, dim_x, dim_u):
+    def initialize(self, problem_dynamics, L, dim_x, dim_u, update_period, max_iterations, lamb, threshold):
         """
         Description: Initialize the dynamics of the method
         Args:
@@ -43,6 +43,13 @@ class ILQR(ControlMethod):
         L_grad = jax.jit(jax.grad(L, argnums=(0,1)))
         L_hessian = jax.jit(jax.hessian(L, argnums=(0,1)))
         self.total_cost = jax.jit(lambda x, u: np.sum([self.L(x_t, u_t) for x_t, u_t in zip(x, u)])) # computes total cost over trajectory
+        
+        self.t = 0 # time counter
+        self.update_period = update_period # update when t % update_period == 0
+        self.current_plan = [] # stores currently planned trajectory
+        self.max_iterations = max_iterations
+        self.lamb = lamb
+        self.threshold = threshold
 
         """ 
         Description: run LQR on provided matrices (this version computes delta-x and delta-u).
@@ -111,7 +118,14 @@ class ILQR(ControlMethod):
         self._linearization = linearization
 
 
-    def plan(self, x_0, T, max_iterations=10, lamb=0.1, threshold=None):
+    def plan(self, x):
+        if self.t % self.update_period == 0:
+            self.current_plan = self.plan_trajectory(x, self.update_period, max_iterations=self.max_iterations, lamb=self.lamb, threshold=self.threshold)
+        next_u = self.current_plan[self.t % self.update_period]
+        self.t += 1
+        return next_u
+
+    def plan_trajectory(self, x_0, T, max_iterations=10, lamb=0.1, threshold=None):
         dim_x, dim_u = self.dim_x, self.dim_u
         u = [np.zeros((dim_u,)) for t in range(T)]
         x = [x_0]
