@@ -71,64 +71,6 @@ class Crypto(TimeSeriesProblem):
         """
         pass
 
-    def help(self):
-        """
-        Description: Prints information about this class and its methods.
-        Args:
-            None
-        Returns:
-            None
-        """
-        print(crypto_help)
-
     def __str__(self):
         return "<Crypto Problem>"
-
-
-# string to print when calling help() method
-crypto_help = """
-
--------------------- *** --------------------
-
-Id: Crypto-v0
-Description: Outputs the daily price of bitcoin
-        from 2013-04-28 to 2018-02-10
-
-Methods:
-
-    initialize()
-            Check if data exists, else download, clean, and setup.
-        Args:
-            None
-        Returns:
-            The first bitcoin price
-
-    step()
-        Description:
-            Moves time forward by one day and returns price of the bitcoin
-        Args:
-            None
-        Returns:
-            The next bitcoin price
-
-    hidden()
-        Description:
-            Return the date corresponding to the last price of bitcoin that was returned
-        Args:
-            None
-        Returns:
-            Date (string)
-
-    help()
-        Description:
-            Prints information about this class and its methods.
-        Args:
-            None
-        Returns:
-            None
-
--------------------- *** --------------------
-
-"""
-
 

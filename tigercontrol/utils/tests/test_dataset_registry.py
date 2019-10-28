@@ -1,13 +1,13 @@
 import tigercontrol
 import os
-from tigercontrol.utils.dataset_registry import sp500, uci_indoor
+from tigercontrol.utils.dataset_registry import sp500, uci_indoor, unemployment, crypto
 from tigercontrol.utils.download_tools import get_tigercontrol_dir
 
 # add all unit tests in datset_registry
 def test_dataset_registry(show=False):
     # test_sp500_download()
-    csv_paths = ['data/sp500.csv', 'data/uci_indoor_cleaned.csv']
-    download_fns = [sp500, uci_indoor]
+    csv_paths = ['data/sp500.csv', 'data/uci_indoor_cleaned.csv', 'data/unemployment.csv', 'data/crypto.csv']
+    download_fns = [sp500, uci_indoor, unemployment, crypto]
     for i in range (0, len(csv_paths)):
         test_dataset_download(csv_paths[i], download_fns[i], verbose=show)
     print("test_dataset_registry passed")
