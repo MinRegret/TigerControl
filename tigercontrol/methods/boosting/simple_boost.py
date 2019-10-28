@@ -18,7 +18,7 @@ class SimpleBoost:
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, method_id, method_params, N=3, loss=mse, reg=0.0):
+    def initialize(self, n = None, m = None, method_id, method_params, N=3, loss=mse, reg=0.0):
         """
         Description: Initializes autoregressive method parameters
         Args:
@@ -37,6 +37,8 @@ class SimpleBoost:
         assert N > 0
         self.N = N
         self.methods = []
+        method_params['n'] = n
+        method_params['m'] = m
         for _ in range(N):
             new_method = tigercontrol.method(method_id)
             new_method.initialize(**method_params)
