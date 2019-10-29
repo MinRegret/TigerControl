@@ -166,7 +166,7 @@ def precompute_environment_costs(numEnvs, K, L, params, husky, sphere, GUI, seed
     return costs
 
 # cartpole test
-def test_obstacles(verbose=False):
+def test_obstacles_improved(verbose=False):
     problem = tigercontrol.problem("Obstacles-v0")
     # obs = problem.initialize(render=verbose)
 
