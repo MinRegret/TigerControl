@@ -117,3 +117,8 @@ class ONS(Optimizer):
             new_params = [self.norm_project(p, A, norm) for (p, A) in zip(new_params, self.A)]
 
         return new_params if is_list else new_params[0]
+
+    def __str__(self):
+        return "<ONS Optimizer, lr={}>".format(self.lr)
+
+

@@ -13,3 +13,9 @@ class ControlProblem(Problem):
     def step(self, action=None):
         ''' Description: run one timestep of the problem's dynamics. '''
         raise NotImplementedError
+
+    def __str__(self):
+    	return "<ControlProblem>"
+
+    def __repr__(self):
+        return self.__str__()

@@ -12,3 +12,9 @@ class TimeSeriesMethod(Method):
     def initialize(self, **kwargs):
         pass
 
+    def __str__(self):
+    	return "<TimeSeriesMethod>"
+
+    def __repr__(self):
+        return self.__str__()
+

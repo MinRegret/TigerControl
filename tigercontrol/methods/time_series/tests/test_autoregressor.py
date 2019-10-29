@@ -12,7 +12,8 @@ def test_autoregressor(steps=1000, show_plot=True):
     cur_x = problem.initialize(p, q)
 
     method = tigercontrol.method("AutoRegressor")
-    method.initialize(p, optimizer = ONS)
+    #method.initialize(p, optimizer = ONS)
+    method.initialize(p, optimizer = Adagrad)
     loss = lambda y_true, y_pred: np.sum((y_true - y_pred)**2)
  
     results = []

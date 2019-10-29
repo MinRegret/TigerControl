@@ -40,3 +40,6 @@ class SGD(Optimizer):
         if (type(params) is list):
             return [w - self.lr * dw for (w, dw) in zip(params, grad)]
         return params - self.lr * grad
+
+    def __str__(self):
+        return "<SGD Optimizer, lr={}>".format(self.lr)
