@@ -27,7 +27,7 @@ class LDS(ControlProblem):
         Args:
             n (int): State dimension.
             m (int): control dimension.
-            d (int): Observation dimension. (Note: must specify partially_observable=True for d to be used!)
+            d (int): Observation dimension. (Note: MUST specify partially_observable=True for d to be used!)
             partially_observable (bool): whether to project x to y
             noise_distribution (None, string, func): if None then no noise. Valid strings include ['normal', 'uniform']. 
                 Valid noise functions must map inputs n (x dim), x (state), u (action), w (previous noise), and t (current time)

@@ -86,6 +86,8 @@ class GridSearch:
         smooth_losses = np.zeros(smoothing) # store previous losses to get smooth loss
         while True: # run method until worse than median loss, ignoring first 100 steps
             t += 1
+            if t < 10:
+                print("round t: ", t)
             y_pred = method.predict(x)
             if problem.has_regressors:
                 method.update(y_true)
