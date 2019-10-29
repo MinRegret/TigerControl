@@ -18,7 +18,7 @@ class SimpleBoost:
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, n = None, m = None, method_id, method_params, N=3, loss=mse, reg=0.0):
+    def initialize(self, method_id, method_params, n = None, m = None, N=3, loss=mse, reg=0.0):
         """
         Description: Initializes autoregressive method parameters
         Args:

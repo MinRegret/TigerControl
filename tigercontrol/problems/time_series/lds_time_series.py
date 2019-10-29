@@ -35,6 +35,7 @@ class LDS_TimeSeries(ControlProblem):
         """
         self.initialized = True
         self.T = 0
+        self.max_T = -1
         self.has_regressors = True
         self.n, self.m, self.d, self.noise = n, m, d, noise
 

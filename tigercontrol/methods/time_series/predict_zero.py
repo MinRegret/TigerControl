@@ -17,7 +17,7 @@ class PredictZero(TimeSeriesMethod):
         self.initialized = False
         self.uses_regressors = False
 
-    def initialize(self):
+    def initialize(self, n = None, m = None):
         """
         Description: Initialize the (non-existent) hidden dynamics of the method
         Args:

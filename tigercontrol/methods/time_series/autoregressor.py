@@ -23,7 +23,7 @@ class AutoRegressor(TimeSeriesMethod):
         self.initialized = False
         self.uses_regressors = False
 
-    def initialize(self, p = 3, optimizer = OGD):
+    def initialize(self, n = None, m = None, p = 3, optimizer = OGD):
         """
         Description: Initializes autoregressive method parameters
 

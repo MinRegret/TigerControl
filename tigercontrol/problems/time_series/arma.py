@@ -40,6 +40,7 @@ class ARMA(TimeSeriesProblem):
         """
         self.initialized = True
         self.T = 0
+        self.max_T = -1
         if type(p) == int:
             phi = random.normal(generate_key(), shape=(p,))
             self.phi = 0.99 * phi / np.linalg.norm(phi, ord=1)

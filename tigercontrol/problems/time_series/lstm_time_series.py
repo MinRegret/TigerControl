@@ -30,6 +30,7 @@ class LSTM_TimeSeries(ControlProblem):
         """
 
         self.T = 0
+        self.max_T = -1
         self.initialized = True
         self.has_regressors = True
         self.n, self.m, self.h = n, m, h

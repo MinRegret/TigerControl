@@ -8,7 +8,7 @@ from tigercontrol.problems.time_series import TimeSeriesProblem
 
 class MyProblem(TimeSeriesProblem):
     """
-    Description: 
+    Description: Make dataset into tigercontrol problem class.
     """
 
     compatibles = set(['TimeSeries'])
@@ -19,9 +19,11 @@ class MyProblem(TimeSeriesProblem):
 
     def initialize(self, file, X = None, y = None, T = 1):
         """
-        Description: 
+        Description: Initialize the problem class.
         Args:
-            T
+            file (string or dataframe): datapath to dataset or dataframe object 
+            X (list of strings): ids of columns to use as features
+            y (list of strings): ids of columns to use as y values
         Returns:
             X (numpy.ndarray): First observation
             y (numpy.ndarray): First label
