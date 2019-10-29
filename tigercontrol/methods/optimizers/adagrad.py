@@ -47,12 +47,17 @@ class Adagrad(Optimizer):
         self._custom_grad = jit(grad(_custom_loss), static_argnums=[3])
         self.initialized = True
 
-        @jit
+        #@jit
         def _update(params, grad, G, max_norm):
             new_G = [g + np.square(dw) for g, dw in zip(G, grad)]
             max_norm = np.where(max_norm, np.maximum(max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad])), max_norm)
             lr = self.lr / np.where(max_norm, max_norm, 1.)
             new_params = [w - lr * dw / np.sqrt(g) for w, dw, g in zip(params, grad, new_G)]
+
+            for w, dw, g in zip(new_params, grad, new_G):
+                assert(w.shape == dw.shape)
+                assert(g.shape == dw.shape)
+
             return new_params, new_G, max_norm
         self._update = _update
 
@@ -76,10 +81,14 @@ class Adagrad(Optimizer):
             params = [params]
             grad = [grad]
             is_list = False
+        if self.G == None: # first run
+            self.G = [1e-3 * np.ones(shape=g.shape) for g in grad]
 
-        if self.G is None: self.G = [1e-3 * np.ones(shape=w.shape) for w in params]
+        for w, dw, g in zip(params, grad, self.G): # debugging
+            assert w.shape == dw.shape
+            assert dw.shape == g.shape, "{}, {}".format(dw.shape, g.shape)
+
         new_params, self.G, self.max_norm = self._update(params, grad, self.G, self.max_norm)
-        
         return new_params if is_list else new_params[0]
 
     def __str__(self):

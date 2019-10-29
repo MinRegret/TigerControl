@@ -21,7 +21,8 @@ def test_grid_search_arma(show=False):
     method_params = {}
     loss = lambda a, b: np.sum((a-b)**2)
     search_space = {'p': [1,2,3,4,5], 'optimizer':[]} # parameters for ARMA method
-    opts = [Adam, Adagrad, ONS, OGD]
+    #opts = [Adam, Adagrad, ONS, OGD]
+    opts = [Adam, Adagrad]
     lr_start, lr_stop = 0, -4 # search learning rates from 10^start to 10^stop 
     learning_rates = np.logspace(lr_start, lr_stop, 1+2*np.abs(lr_start - lr_stop))
     for opt, lr in itertools.product(opts, learning_rates):

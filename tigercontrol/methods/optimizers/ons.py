@@ -44,13 +44,9 @@ class ONS(Optimizer):
 
 
     def norm_project(self, y, A, c):
-        """ 
-            Project y using norm A on the convex set bounded by c.
-        """
-
+        """ Project y using norm A on the convex set bounded by c. """
         if np.any(np.isnan(y)) or np.all(np.absolute(y) <= c):
             return y
-
         y_shape = y.shape
         y_reshaped = np.ravel(y)
         dim_y = y_reshaped.shape[0]
@@ -82,7 +78,9 @@ class ONS(Optimizer):
         """
         assert self.initialized
 
+        # get args
         grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
+        eta = self.lr
         
         # Make everything a list for generality
         is_list = True
@@ -91,22 +89,27 @@ class ONS(Optimizer):
             grad = [grad]
             is_list = False
 
-        # equivalent to adding L2 regularization, since grad(|w|**2) = 2*w
-        grad = [np.ravel(dw) for dw in grad]
+        # used to compute inverse matrix with respect to each parameter vector
+        flat_grad = [np.ravel(dw) for dw in grad]
 
         # initialize A
         if self.A is None:
-            self.A = [np.eye(dw.shape[0]) * self.eps for dw in grad]
-            self.Ainv = [np.eye(dw.shape[0]) * (1 / self.eps) for dw in grad]
-
-        eta = self.lr
+            self.A = [np.eye(dw.shape[0]) * self.eps for dw in flat_grad]
+            self.Ainv = [np.eye(dw.shape[0]) * (1 / self.eps) for dw in flat_grad]
 
         # compute max norm and normalize accordingly
         if(self.max_norm):                     
-            self.max_norm = np.maximum(self.max_norm, np.linalg.norm([self.general_norm(dw) for dw in grad]))
+            self.max_norm = np.maximum(self.max_norm, np.linalg.norm([self.general_norm(dw) for dw in flat_grad]))
             eta = eta * self.max_norm
+
+
+
+        assert (len(params) == len(grad) and len(grad) == len(self.A))
+        for w, dw in zip(params, grad): # debugging
+            assert w.shape == dw.shape
             
-        new_values = [self.partial_update(A, Ainv, grad, w) for (A, Ainv, grad, w) in zip(self.A, self.Ainv, grad, params)]
+        # partial_update automatically reshapes flat_grad into correct params shape
+        new_values = [self.partial_update(A, Ainv, g, w) for (A, Ainv, g, w) in zip(self.A, self.Ainv, flat_grad, params)]
         self.A, self.Ainv, new_grad = list(map(list, zip(*new_values)))
 
         new_params = [w - eta * dw for (w, dw) in zip(params, new_grad)]
