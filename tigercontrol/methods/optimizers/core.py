@@ -4,8 +4,8 @@ Core class for optimizers
 
 import inspect
 from jax import jit, grad
-from tigercontrol.methods.optimizers.losses import mse
-from tigercontrol import error
+from tigerforecast.methods.optimizers.losses import mse
+from tigerforecast import error
 
 class Optimizer():
     """
@@ -41,22 +41,25 @@ class Optimizer():
 
     def set_predict(self, pred, loss=None):
         """
-        Description: Updates internally stored pred and loss functions
+        Description: Updates internally stored pred and loss functions, resets internal parameters
+            CRITICAL that every optimizer implements this correctly!
         Args:
             pred (function): predict function, must take params and x as input
             loss (function): loss function. defaults to mse.
-        """
-        # check pred and loss input
+        """        
         self._is_valid_pred(pred, raise_error=True)
         self.pred = pred
         if loss != None: self.loss = loss
         self._is_valid_loss(self.loss, raise_error=True)
-
         _loss = lambda params, x, y: self.loss(self.pred(params=params, x=x), y)
         _custom_loss = lambda params, x, y, custom_loss: custom_loss(pred(params=params, x=x), y)
         self._grad = jit(grad(_loss))
         self._custom_grad = jit(grad(_custom_loss), static_argnums=[3])
+        self.reset() # reset internal parameters
         self.initialized = True
+
+    def reset(self):
+        raise NotImplementedError("{} has not yet implemented a reset method for resetting optimizer".format(self))
 
     def gradient(self, params, x, y, loss=None):
         """

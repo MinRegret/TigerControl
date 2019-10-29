@@ -1,9 +1,9 @@
 """
 Hyperparameter tuning using (optionally random) Grid Search.
-"""
+""" 
 
-import tigercontrol
-from tigercontrol.utils.random import generate_key
+import tigerforecast
+from tigerforecast.utils.random import generate_key
 import jax.numpy as np
 import jax
 from jax import jit, grad, random
@@ -19,7 +19,7 @@ class GridSearch:
         pass
 
     def search(self, method_id, method_params, problem_id, problem_params, loss, search_space, trials=None, 
-        smoothing=10, start_steps=100, verbose=0):
+        smoothing=10, min_steps=100, verbose=0):
         """
         Description: Search for optimal method parameters
         Args:
@@ -31,7 +31,7 @@ class GridSearch:
             search_space (dict): dict mapping parameter names to a finite set of options
             trials (int, None): number of random trials to sample from search space / try all parameters
             smoothing (int): loss computed over smoothing number of steps to decrease variance
-            start_steps (int): minimum number of steps that the method gets to run for
+            min_steps (int): minimum number of steps that the method gets to run for
             verbose (int): if 1, print progress and current parameters
         """
         self.method_id = method_id
@@ -59,7 +59,7 @@ class GridSearch:
             t += 1
             curr_params = method_params.copy()
             curr_params.update({k:v for k, v in zip(search_space.keys(), params)})
-            loss = self._run_test(curr_params, smoothing=smoothing, start_steps=start_steps, verbose=verbose)
+            loss = self._run_test(curr_params, smoothing=smoothing, min_steps=min_steps, verbose=verbose)
             if not optimal_loss or loss < optimal_loss:
                 optimal_params = curr_params
                 optimal_loss = loss
@@ -68,26 +68,24 @@ class GridSearch:
         return optimal_params, optimal_loss
 
 
-    def _run_test(self, method_params, smoothing, start_steps, verbose=0):
+    def _run_test(self, method_params, smoothing, min_steps, verbose=0):
         """ Run a single test with given method params, using median stopping rule """
         # initialize problem and method
         if verbose:
             print("Currently testing parameters: " + str(method_params))
-        method = tigercontrol.method(self.method_id)
+        method = tigerforecast.method(self.method_id)
         method.initialize(**method_params)
-        problem = tigercontrol.problem(self.problem_id)
+        problem = tigerforecast.problem(self.problem_id)
         if problem.has_regressors:
             x, y_true = problem.initialize(**self.problem_params)
         else:
             x = problem.initialize(**self.problem_params)
 
-        t = 0 # current time
+        t = 0
         losses = [] # sorted losses, used to get median
         smooth_losses = np.zeros(smoothing) # store previous losses to get smooth loss
         while True: # run method until worse than median loss, ignoring first 100 steps
             t += 1
-            if t < 10:
-                print("round t: ", t)
             y_pred = method.predict(x)
             if problem.has_regressors:
                 method.update(y_true)
@@ -104,7 +102,7 @@ class GridSearch:
             smooth_loss = np.mean(smooth_losses)
             if t % smoothing == 0:
                 self._add_to_list(losses, smooth_loss)
-                if self._halting_rule(losses, smooth_loss) and t >= start_steps: break
+                if self._halting_rule(losses, smooth_loss) and t >= min_steps: break
         if verbose:
             print("Final loss: ", smooth_loss)
         return smooth_loss

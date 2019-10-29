@@ -1,9 +1,9 @@
 '''
 AdaGrad optimizer
 '''
-from tigercontrol.methods.optimizers.core import Optimizer
-from tigercontrol.methods.optimizers.losses import mse
-from tigercontrol import error
+from tigerforecast.methods.optimizers.core import Optimizer
+from tigerforecast.methods.optimizers.losses import mse
+from tigerforecast import error
 from jax import jit, grad
 import jax.numpy as np
 
@@ -33,33 +33,17 @@ class Adagrad(Optimizer):
         if self._is_valid_pred(pred, raise_error=False) and self._is_valid_loss(loss, raise_error=False):
             self.set_predict(pred, loss=loss)
 
-    def set_predict(self, pred, loss=mse):
-        """
-        Description: Updates internally stored pred and loss functions
-        Args:
-            pred (function): predict function, must take params and x as input
-            loss (function): loss function. defaults to mse.
-        """
-        self._is_valid_pred(pred, raise_error=True)
-        _loss = lambda params, x, y: loss(pred(params=params, x=x), y)
-        _custom_loss = lambda params, x, y, custom_loss: custom_loss(pred(params= params, x=x), y)
-        self._grad = jit(grad(_loss))
-        self._custom_grad = jit(grad(_custom_loss), static_argnums=[3])
-        self.initialized = True
-
-        #@jit
+        @jit
         def _update(params, grad, G, max_norm):
             new_G = [g + np.square(dw) for g, dw in zip(G, grad)]
             max_norm = np.where(max_norm, np.maximum(max_norm, np.linalg.norm([np.linalg.norm(dw) for dw in grad])), max_norm)
             lr = self.lr / np.where(max_norm, max_norm, 1.)
             new_params = [w - lr * dw / np.sqrt(g) for w, dw, g in zip(params, grad, new_G)]
-
-            for w, dw, g in zip(new_params, grad, new_G):
-                assert(w.shape == dw.shape)
-                assert(g.shape == dw.shape)
-
             return new_params, new_G, max_norm
         self._update = _update
+
+    def reset(self): # reset internal parameters (self.G)
+        self.G = None
 
     def update(self, params, x, y, loss=None):
         """
@@ -83,10 +67,6 @@ class Adagrad(Optimizer):
             is_list = False
         if self.G == None: # first run
             self.G = [1e-3 * np.ones(shape=g.shape) for g in grad]
-
-        for w, dw, g in zip(params, grad, self.G): # debugging
-            assert w.shape == dw.shape
-            assert dw.shape == g.shape, "{}, {}".format(dw.shape, g.shape)
 
         new_params, self.G, self.max_norm = self._update(params, grad, self.G, self.max_norm)
         return new_params if is_list else new_params[0]

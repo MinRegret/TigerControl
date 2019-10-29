@@ -15,14 +15,13 @@ def test_grid_search(show=False):
 
 
 def test_grid_search_arma(show=False):
-    problem_id = "ARMA-v0"
-    method_id = "AutoRegressor"
-    problem_params = {'p':3, 'q':2}
+    problem_id = "LDS-v0"
+    method_id = "GPC"
+    problem_params = {'n':3, 'm':2}
     method_params = {}
     loss = lambda a, b: np.sum((a-b)**2)
-    search_space = {'p': [1,2,3,4,5], 'optimizer':[]} # parameters for ARMA method
-    #opts = [Adam, Adagrad, ONS, OGD]
-    opts = [Adam, Adagrad]
+    search_space = {'optimizer':[]} # parameters for ARMA method
+    opts = [Adam, Adagrad, ONS, OGD]
     lr_start, lr_stop = 0, -4 # search learning rates from 10^start to 10^stop 
     learning_rates = np.logspace(lr_start, lr_stop, 1+2*np.abs(lr_start - lr_stop))
     for opt, lr in itertools.product(opts, learning_rates):

@@ -1,8 +1,8 @@
 '''
 SGD optimizer
 '''
-from tigercontrol.methods.optimizers.core import Optimizer
-from tigercontrol.methods.optimizers.losses import mse
+from tigerforecast.methods.optimizers.core import Optimizer
+from tigerforecast.methods.optimizers.losses import mse
 
 class SGD(Optimizer):
     """
@@ -23,6 +23,8 @@ class SGD(Optimizer):
         if self._is_valid_pred(pred, raise_error=False) and self._is_valid_loss(loss, raise_error=False):
             self.set_predict(pred, loss=loss)
 
+    def reset(self): # mandatory for every function, but SGD doesn't make any changes
+        pass
 
     def update(self, params, x, y, loss=None):
         """

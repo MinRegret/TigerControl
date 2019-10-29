@@ -2,9 +2,9 @@
 OGD optimizer
 '''
 import jax.numpy as np
-from tigercontrol.methods.optimizers.core import Optimizer
-from tigercontrol.methods.optimizers.losses import mse
-from tigercontrol import error
+from tigerforecast.methods.optimizers.core import Optimizer
+from tigerforecast.methods.optimizers.losses import mse
+from tigerforecast import error
 
 class OGD(Optimizer):
     """
@@ -21,6 +21,7 @@ class OGD(Optimizer):
         self.lr = learning_rate
         self.hyperparameters = {'T':0, 'max_norm':True}
         self.hyperparameters.update(hyperparameters)
+        self.original_max_norm = self.hyperparameters['max_norm']
         for key, value in self.hyperparameters.items():
             if hasattr(self, key):
                 raise error.InvalidInput("key {} is already an attribute in {}".format(key, self))
@@ -30,6 +31,10 @@ class OGD(Optimizer):
         self.loss = loss
         if self._is_valid_pred(pred, raise_error=False) and self._is_valid_loss(loss, raise_error=False):
             self.set_predict(pred, loss=loss)
+
+    def reset(self): # reset internal parameters
+        self.T = 0
+        if self.original_max_norm: self.max_norm = self.original_max_norm
 
     def update(self, params, x, y, loss=None):
         """

@@ -2,9 +2,9 @@
 Newton Step optimizer
 '''
 
-from tigercontrol.methods.optimizers.core import Optimizer
-from tigercontrol.methods.optimizers.losses import mse
-from tigercontrol import error
+from tigerforecast.methods.optimizers.core import Optimizer
+from tigerforecast.methods.optimizers.losses import mse
+from tigerforecast import error
 from jax import jit, grad
 import jax.numpy as np
 
@@ -24,8 +24,11 @@ class ONS(Optimizer):
         self.lr = learning_rate
         self.hps = {'reg':0.00, 'eps':0.0001, 'max_norm':0, 'project':False, 'full_matrix':False}
         self.hps.update(hyperparameters)
-        self.eps, self.reg = self.hps['eps'], self.hps['reg']
-        self.max_norm, self.project, self.full_matrix = self.hps['max_norm'], self.hps['project'], self.hps['full_matrix']
+        self.original_max_norm = self.hps['max_norm']
+        for key, value in self.hps.items():
+            if hasattr(self, key):
+                raise error.InvalidInput("key {} is already an attribute in {}".format(key, self))
+            setattr(self, key, value) # store all hyperparameters
         self.A, self.Ainv = None, None
         self.pred, self.loss = pred, loss
         self.numpyify = lambda m: onp.array(m).astype(onp.double) # maps jax.numpy to regular numpy
@@ -42,6 +45,9 @@ class ONS(Optimizer):
             return A, Ainv, new_grad
         self.partial_update = partial_update
 
+    def reset(self):
+        self.A, self.Ainv = None, None
+        if self.original_max_norm: self.max_norm = self.original_max_norm
 
     def norm_project(self, y, A, c):
         """ Project y using norm A on the convex set bounded by c. """
@@ -57,13 +63,11 @@ class ONS(Optimizer):
         solution = np.array(onp.array(solvers.qp(P, q, G, h)['x'])).squeeze().reshape(y_shape)
         return solution
 
-
     def general_norm(self, x):
         x = np.asarray(x)
         if np.ndim(x) == 0:
             x = x[None]
         return np.linalg.norm(x)
-
 
     def update(self, params, x, y, loss=None):
         """
@@ -101,12 +105,6 @@ class ONS(Optimizer):
         if(self.max_norm):                     
             self.max_norm = np.maximum(self.max_norm, np.linalg.norm([self.general_norm(dw) for dw in flat_grad]))
             eta = eta * self.max_norm
-
-
-
-        assert (len(params) == len(grad) and len(grad) == len(self.A))
-        for w, dw in zip(params, grad): # debugging
-            assert w.shape == dw.shape
             
         # partial_update automatically reshapes flat_grad into correct params shape
         new_values = [self.partial_update(A, Ainv, g, w) for (A, Ainv, g, w) in zip(self.A, self.Ainv, flat_grad, params)]
