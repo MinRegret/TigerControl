@@ -2,7 +2,7 @@
 
 from tigercontrol.utils.random import set_key
 from tigercontrol.experiments.core import run_experiments, create_full_problem_to_methods
-from tigercontrol.utils.download_tools import get_tigercontrol_dir
+from tigercontrol.utils import get_tigercontrol_dir
 import jax.numpy as np
 import os
 import csv

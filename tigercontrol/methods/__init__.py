@@ -6,43 +6,6 @@ from tigercontrol.methods.custom import CustomMethod, register_custom_method
 from tigercontrol.methods.optimizers import losses
 
 
-# ---------- Time-Series Methods ----------
-
-method_register(
-    id='WaveFiltering',
-    entry_point='tigercontrol.methods.time_series:WaveFiltering',
-)
-
-method_register(
-    id='LastValue',
-    entry_point='tigercontrol.methods.time_series:LastValue',
-)
-
-method_register(
-    id='LeastSquares',
-    entry_point='tigercontrol.methods.time_series:LeastSquares',
-)
-
-method_register(
-    id='AutoRegressor',
-    entry_point='tigercontrol.methods.time_series:AutoRegressor',
-)
-
-method_register(
-    id='PredictZero',
-    entry_point='tigercontrol.methods.time_series:PredictZero',
-)
-
-method_register(
-    id='RNN',
-    entry_point='tigercontrol.methods.time_series:RNN',
-)
-
-method_register(
-    id='LSTM',
-    entry_point='tigercontrol.methods.time_series:LSTM',
-)
-
 
 # ---------- Boosting Methods ----------
 

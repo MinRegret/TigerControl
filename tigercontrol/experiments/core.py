@@ -4,8 +4,6 @@ import tigercontrol
 from tigercontrol.experiments import metrics as metrics_module
 from tigercontrol import error
 import jax.numpy as np
-from tigercontrol.problems.time_series import TimeSeriesProblem
-from tigercontrol.methods.time_series import TimeSeriesMethod
 from tigercontrol.utils.random import set_key
 from tqdm import tqdm
 import inspect

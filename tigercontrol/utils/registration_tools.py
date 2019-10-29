@@ -9,6 +9,18 @@ from tigercontrol import error
 # id_re = re.compile(r'^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$')
 
 
+def get_tigercontrol_dir():
+    """
+    Description:
+        Gets absolute path of package directory.
+    Returns:
+        Absolute path of package directory
+    """
+    init_dir = os.path.abspath(tigercontrol.__file__)
+    tigercontrol_dir = init_dir.rsplit('/', 1)[0]
+    return tigercontrol_dir
+
+
 def load(name):
     """
     Args:
@@ -119,8 +131,8 @@ class Registry(object):
             spec = self.spec(path)
             obj = spec.make(**kwargs)
         except ModuleNotFoundError as e:
-            s = "Not all dependencies have been installed.\nFull error: {}".format(path, e)
-            raise error.DependencyNotInstalled(s)
+            print("Not all dependencies have been installed.")
+            raise e
         return obj
 
     def list_ids(self):
