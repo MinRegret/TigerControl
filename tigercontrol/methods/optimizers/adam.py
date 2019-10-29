@@ -84,3 +84,8 @@ class Adam(Optimizer):
 
         return new_params if is_list else new_params[0]
 
+    def __str__(self):
+        return "<Adam Optimizer, lr={}>".format(self.lr)
+
+
+

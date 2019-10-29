@@ -68,7 +68,8 @@ class Adagrad(Optimizer):
             Updated parameters in same shape as input
         """
         assert self.initialized
-
+        grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
+        
         # Make everything a list for generality
         is_list = True
         if(type(params) is not list):
@@ -77,10 +78,11 @@ class Adagrad(Optimizer):
             is_list = False
 
         if self.G is None: self.G = [1e-3 * np.ones(shape=w.shape) for w in params]
-        grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
         new_params, self.G, self.max_norm = self._update(params, grad, self.G, self.max_norm)
         
         return new_params if is_list else new_params[0]
 
+    def __str__(self):
+        return "<AdaGrad Optimizer, lr={}>".format(self.lr)
 
 

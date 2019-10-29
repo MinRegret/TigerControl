@@ -126,5 +126,10 @@ class Optimizer():
             return False
         return True
 
+    def __str__(self):
+        return "<Optimizer>"
+
+    def __repr__(self):
+        return self.__str__()
 
 

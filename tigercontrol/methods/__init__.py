@@ -82,11 +82,6 @@ method_register(
 )
 
 method_register(
-    id='MPPI',
-    entry_point='tigercontrol.methods.control:MPPI',
-)
-
-method_register(
     id='CartPoleNN',
     entry_point='tigercontrol.methods.control:CartPoleNN',
 )

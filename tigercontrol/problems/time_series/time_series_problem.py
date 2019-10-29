@@ -15,3 +15,8 @@ class TimeSeriesProblem(Problem):
         ''' Description: Run one timestep of the problem's dynamics. '''
         raise NotImplementedError
 
+    def __str__(self):
+    	return "<TimeSeriesProblem>"
+
+    def __repr__(self):
+        return self.__str__()
