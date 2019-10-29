@@ -1,5 +1,5 @@
 """
-Linear dynamical system
+DEPRECATED: Linear dynamical system 
 """
 
 import jax
@@ -56,6 +56,11 @@ class LDS_Control(ControlProblem):
 
         def _step(u, h, eps):
             eps_h, eps_y = eps
+            print("--------------------------------")
+            print("A.shape: " + str(self.A.shape))
+            print("h.shape: " + str(h.shape))
+            print("B.shape: " + str(self.B.shape))
+            print("u.shape: " + str(u.shape))
             next_h = np.dot(self.A, h) + np.dot(self.B, u) + self.noise * eps_h
             y = np.dot(self.C, next_h) + np.dot(self.D, u) + self.noise * eps_y
             return (next_h, y)

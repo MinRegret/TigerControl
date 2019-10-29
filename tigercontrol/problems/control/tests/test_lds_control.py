@@ -1,4 +1,4 @@
-# test the LDS problem class
+# DEPRECATED: test the LDS problem class
 
 import jax.numpy as np
 import jax.random as random
