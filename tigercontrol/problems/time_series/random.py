@@ -27,6 +27,7 @@ class Random(TimeSeriesProblem):
             None
         """
         self.T = 0
+        self.max_T = -1
         self.initialized = True
         return random.normal(generate_key())
 

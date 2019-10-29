@@ -1,15 +1,15 @@
 # NewExperiment class
 
 from tigercontrol import error
-from tigercontrol.experiments.core import to_dict, run_experiments, create_full_problem_to_methods
+from tigercontrol.experiments.core import to_dict, run_experiment, create_full_problem_to_methods
 
 class NewExperiment(object):
     ''' Description: class for implementing algorithms with enforced modularity '''
     def __init__(self):
         self.initialized = False
         
-    def initialize(self, problems, methods, problem_to_methods=None, metrics='mse', \
-                n_runs = 1, timesteps = None, verbose = 0):
+    def initialize(self, problems, methods, problem_to_methods=None, metrics = 'mse', key = 0, timesteps = None, \
+                         verbose = False, load_bar = False):
         '''
         Description: Initializes the new experiment instance. 
 
@@ -23,7 +23,7 @@ class NewExperiment(object):
         '''
         self.intialized = True
         self.problems, self.methods, self.metrics = problems, methods, metrics
-        self.n_runs, self.timesteps, self.verbose = n_runs, timesteps, verbose
+        self.key, self.timesteps, self.verbose, self.load_bar = key, timesteps, verbose, load_bar
 
         if(problem_to_methods is None):
             self.problem_to_methods = create_full_problem_to_methods(self.problems.keys(), self.methods.keys())
@@ -47,8 +47,7 @@ class NewExperiment(object):
                 for (new_problem_id, problem_params) in self.problems[problem_id]:
                     for method_id in self.problem_to_methods[problem_id]:
                         for (new_method_id, method_params) in self.methods[method_id]:
-                            loss, time, memory = run_experiments((problem_id, problem_params), (method_id, method_params), \
-                                metric, n_runs = self.n_runs, timesteps = self.timesteps, verbose = self.verbose)
+                            loss, time, memory = run_experiment((problem_id, problem_params), (method_id, method_params), metric, key = self.key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
                             prob_method_to_result[(metric, problem_id, method_id)] = loss
                             prob_method_to_result[('time', problem_id, method_id)] = time
                             prob_method_to_result[('memory', problem_id, method_id)] = memory

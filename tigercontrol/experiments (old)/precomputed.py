@@ -1,7 +1,7 @@
 ''' Precompute '''
 
 from tigercontrol.utils.random import set_key
-from tigercontrol.experiments.core import run_experiments, create_full_problem_to_methods
+from tigercontrol.experiments.core import run_experiment, create_full_problem_to_methods
 from tigercontrol.utils.download_tools import get_tigercontrol_dir
 import jax.numpy as np
 import os
@@ -10,35 +10,45 @@ import csv
 ''' List of all problems and methods '''
 all_metrics = ['mse']
 
+## no uciindoor-v0 , ctrl indices has some problems##
 all_problems = ['ARMA-v0', 'Crypto-v0', 'SP500-v0']
-#
+
+####### LSTM AND RNN NOT INCLUDED BECAUSE THEY NEED INPUT SHAPE ###############
+####### and ArmaAdaGrad is not classified as timeseries & other problems ... ###########
 all_methods = ['LastValue', 'AutoRegressor', 'RNN', 'LSTM']
 
+####### NEED TO MAKE IT HARD TO CHANGE !!!!!! ########
 ''' Fix timesteps and key '''
 timesteps = 1500
-n_runs = 10
+key = 0
 
+''' Ensure repeatability '''
+set_key(key)
 
 ''' Functions '''
 def get_timesteps():
     '''
     Description: Returns number of timesteps used when obtaining precomputed results.
+
     Args:
         None
+
     Returns:
-        Number of timesteps used for obtaining precomputed results
+        timesteps used for obtaining precomputed results
     '''
     return timesteps
 
-def get_n_runs():
+def get_key():
     '''
     Description: Returns key used when obtaining precomputed results.
+
     Args:
         None
+
     Returns:
-        Number of runs used for obtaining average precomputed results
+        key used for obtaining precomputed results
     '''
-    return n_runs
+    return key
 
 def recompute(verbose = False, load_bar = False):
     '''
@@ -61,8 +71,8 @@ def recompute(verbose = False, load_bar = False):
                 writer = csv.writer(csvfile)
                 for method_id in all_methods:
                     try:
-                        loss, _, _ = run_experiments((problem_id, None), (method_id, None), metric, \
-                                                             n_runs = n_runs, timesteps = timesteps)
+                        loss, time, memory = run_experiment((problem_id, None), (method_id, None), metric, \
+                                                             key = key, timesteps = timesteps)
                     except:
                         loss = np.zeros(timesteps)
                     # save results for current problem #
@@ -80,8 +90,8 @@ def recompute(verbose = False, load_bar = False):
             writer = csv.writer(csvfile)
             for method_id in all_methods:
                 try:
-                    _, time, memory = run_experiments((problem_id, None), (method_id, None), \
-                        metric, n_runs = n_runs, timesteps = timesteps, verbose = verbose, load_bar = load_bar)
+                    _, time, memory = run_experiment((problem_id, None), (method_id, None), \
+                        metric, key = key, timesteps = timesteps, verbose = verbose, load_bar = load_bar)
                 except:
                     time, memory = 0.0, 0.0
                 # save results for current problem #
@@ -148,10 +158,6 @@ def load_prob_method_to_result(problem_ids = all_problems, method_ids = all_meth
         csvfile.close()
 
     return prob_method_to_result
-
-def hyperparameter_warning():
-    print("WARNING: when using precomputed results, any specified problem hyperparameters" + \
-                " will be disregarded and default ones will be used instead.")
 
 if __name__ == "__main__":
     recompute()

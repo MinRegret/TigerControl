@@ -1,6 +1,7 @@
 # Experiment class
 
-from tigercontrol.experiments.core import run_experiments, get_ids, to_dict
+from tigercontrol import error
+from tigercontrol.experiments.core import run_experiment, get_ids, to_dict
 from tigercontrol.experiments.new_experiment import NewExperiment
 from tigercontrol.experiments import precomputed
 import csv
@@ -9,13 +10,12 @@ import matplotlib.pyplot as plt
 from prettytable import PrettyTable
 
 class Experiment(object):
-    ''' Description: Streamlines the process of performing experiments and comparing results of methods across
-             a range of problems. '''
+    ''' Description: Experiment class '''
     def __init__(self):
         self.initialized = False
         
     def initialize(self, problems = None, methods = None, problem_to_methods = None, metrics = ['mse'], \
-                   n_runs = 1, use_precomputed = False, timesteps = None, verbose = 0):
+                   key = 0, use_precomputed = False, timesteps = None, verbose = False, load_bar = False):
         '''
         Description: Initializes the experiment instance. 
 
@@ -29,16 +29,14 @@ class Experiment(object):
                                        test every method in method_to_params against every
                                        problem in problem_to_params
             metrics (list): Specifies metrics we are interested in evaluating.
-            n_runs (int): Specifies the number of experiments to average over.
             use_precomputed (boolean): Specifies whether to use precomputed results.
             timesteps (int): Number of time steps to run experiment for
-            verbose (0, 1, 2): Specifies the verbosity of the experiment instance.
+            verbose (boolean): Specifies whether to print what experiment is currently running.
+            load_bar (boolean): Specifies whether to show a loading bar while the experiments are running.
         '''
 
-        self.problems, self.methods = to_dict(problems), to_dict(methods)
-        self.problem_to_methods, self.metrics = problem_to_methods, metrics
-        self.n_runs, self.use_precomputed = n_runs, use_precomputed
-        self.timesteps, self.verbose = timesteps, verbose
+        self.problems, self.methods, self.problem_to_methods, self.metrics = to_dict(problems), to_dict(methods), problem_to_methods, metrics
+        self.key, self.use_precomputed, self.timesteps, self.verbose, self.load_bar = key, use_precomputed, timesteps, verbose, load_bar
 
         self.n_problems, self.n_methods = {}, {}
 
@@ -50,18 +48,21 @@ class Experiment(object):
                 self.timesteps = precomputed.get_timesteps()
 
             # ensure problems and methods don't have specified hyperparameters
-            if(type(problems) is dict or type(methods) is dict):
-                precomputed.hyperparameter_warning()
+            if(problems is dict):
+                print("WARNING: when using precomputed results, " + \
+                      "any specified problem hyperparameters will be disregarded and default ones will be used instead.")
+            
+            if(methods is dict):
+                print("WARNING: when using precomputed results, " + \
+                      "any specified method hyperparameters will be disregarded and default ones will be used instead.")
 
             # map of the form [metric][problem][method] -> loss series + time + memory
-            self.prob_method_to_result = precomputed.load_prob_method_to_result(\
-                problem_ids = list(self.problems.keys()), method_ids = list(self.methods.keys()), \
-                problem_to_methods = problem_to_methods, metrics = metrics)
+            self.prob_method_to_result = precomputed.load_prob_method_to_result(problem_ids = list(self.problems.keys()), \
+                                            method_ids = list(self.methods.keys()), problem_to_methods = problem_to_methods, metrics = metrics)
 
         else:
             self.new_experiment = NewExperiment()
-            self.new_experiment.initialize(self.problems, self.methods, problem_to_methods, \
-                metrics, n_runs, timesteps, verbose)
+            self.new_experiment.initialize(self.problems, self.methods, problem_to_methods, metrics, key, timesteps, verbose, load_bar)
             # map of the form [metric][problem][method] -> loss series + time + memory
             self.prob_method_to_result = self.new_experiment.run_all_experiments()
 
@@ -75,6 +76,7 @@ class Experiment(object):
         '''
         assert method_id is not None, "ERROR: No Method ID given."
 
+        ### IS THIS USEFUL OR BAD ? ###
         if name is None and 'optimizer' in method_params:
             name = method_params['optimizer'].__name__
 
@@ -82,10 +84,10 @@ class Experiment(object):
         if(method_id in self.methods):
             if(method_id not in self.n_methods):
                 self.n_methods[method_id] = 0
-            self.n_methods[method_id] += 1
             if(name is not None):
                 new_id = method_id + '-' + name
             else:
+                self.n_methods[method_id] += 1
                 new_id = method_id + '-' + str(self.n_methods[method_id])
             self.methods[method_id].append((new_id, method_params))
         else:
@@ -93,7 +95,12 @@ class Experiment(object):
             if(name is not None):
                 new_id += '-' + name
             self.methods[method_id] = [(new_id, method_params)]
-            self.n_methods[method_id] = 1
+
+        if(self.use_precomputed):
+            print("WARNING: In precomputed mode, experiments for a new method will run for the predetermined key.")
+            key = precomputed.get_key()
+        else:
+            key = self.key
 
         ''' Evaluate performance of new method on all problems '''
         for metric in self.metrics:
@@ -102,12 +109,11 @@ class Experiment(object):
 
                     ''' If method is compatible with problem, run experiment and store results. '''
                     try:
-                        loss, time, memory = run_experiments((problem_id, problem_params), \
-                            (method_id, method_params), metric = metric, n_runs = self.n_runs, \
-                            timesteps = self.timesteps, verbose = self.verbose)
-                    except:
-                        print("ERROR: Could not run %s on %s." % (method_id, problem_id) + \
-                            " Please make sure method and problem are compatible.")
+                        loss, time, memory = run_experiment((problem_id, problem_params), (method_id, method_params), metric, \
+                                        key = key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
+                    except Exception as e:
+                        print("ERROR: Could not run %s on %s. Please make sure method and problem are compatible." % (method_id, problem_id))
+                        print(e)
                         loss, time, memory = 0, 0.0, 0.0
 
                     self.prob_method_to_result[(metric, new_problem_id, new_id)] = loss
@@ -125,26 +131,26 @@ class Experiment(object):
         assert problem_id is not None, "ERROR: No Problem ID given."
 
         new_id = ''
-
-        # AN INSTANCE OF THE PROBLEM ALREADY EXISTS
         if(problem_id in self.problems):
-            # COUNT NUMBER OF INSTANCES OF SAME MAIN PROBLEM
             if(problem_id not in self.n_problems):
                 self.n_problems[problem_id] = 0
-            self.n_problems[problem_id] += 1
-            # GET ID OF PROBLEM INSTANCE
             if(name is not None):
-                new_id = name
+                new_id = problem_id[:-2] + name
             else:
-                new_id = problem_id[:-2] + str(self.n_problems[problem_id])
+                self.n_problems[problem_id] += 1
+                new_id = problem_id + '-' + str(self.n_problems[problem_id])
             self.problems[problem_id].append((new_id, problem_params))
-        # NO INSTANCE OF THE PROBLEM EXISTS
         else:
-            new_id = problem_id[:-3]
+            new_id = problem_id[:-2]
             if(name is not None):
-                new_id = name
+                new_id += name
             self.problems[problem_id] = [(new_id, problem_params)]
-            self.n_problems[problem_id] = 1
+
+        if(self.use_precomputed):
+            print("WARNING: In precomputed mode, experiments for a new method will run for the predetermined key.")
+            key = precomputed.get_key()
+        else:
+            key = self.key
 
         ''' Evaluate performance of new method on all problems '''
         for metric in self.metrics:
@@ -153,11 +159,11 @@ class Experiment(object):
 
                     ''' If method is compatible with problem, run experiment and store results. '''
                     try:
-                        loss, time, memory = run_experiments((problem_id, problem_params), \
-                            (method_id, method_params), metric = metric, n_runs = self.n_runs, \
-                            timesteps = self.timesteps, verbose = self.verbose)
-                    except:
+                        loss, time, memory = run_experiment((problem_id, problem_params), (method_id, method_params), metric, \
+                                        key = key, timesteps = self.timesteps, verbose = self.verbose, load_bar = self.load_bar)
+                    except Exception as e:
                         print("ERROR: Could not run %s on %s. Please make sure method and problem are compatible." % (method_id, problem_id))
+                        print(e)
                         loss, time, memory = 0.0, 0.0, 0.0
 
                     self.prob_method_to_result[(metric, new_id, new_method_id)] = loss
@@ -294,7 +300,7 @@ class Experiment(object):
         ncols = n_problems // nrows + n_problems % nrows
 
         fig, ax = plt.subplots(figsize = (ncols * size, nrows * size), nrows=nrows, ncols=ncols)
-        fig.canvas.set_window_title('TigerSeries')
+        fig.canvas.set_window_title('TigerBench')
 
         if n_problems == 1:
             (problem, problem_result_plus_method, method_list) = all_problem_info[0]
