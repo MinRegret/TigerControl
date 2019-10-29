@@ -15,7 +15,7 @@ setuptools.setup(
     extras_require={ 'all': ['pybullet'] },
     version=version,
     license='Apache License 2.0',
-    description='Princeton control and time-series framework',
+    description='Princeton control framework',
     long_description=open('README.md').read(),
 	classifiers=[
 		"Programming Language :: Python :: 3",
