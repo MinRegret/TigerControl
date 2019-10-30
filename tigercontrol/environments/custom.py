@@ -10,7 +10,7 @@ class CustomEnvironment(object):
     ''' 
     Description: class for implementing algorithms with enforced modularity 
     '''
-
+    spec = None
     def __init__(self):
         pass
 

@@ -8,6 +8,7 @@ import jax.numpy as np
 
 # class for online control tests
 class Environment(object):
+    spec = None
 
     def __init__(self):
         self.initialized = False

@@ -2,7 +2,6 @@
 
 from tigercontrol.environments.core import Environment
 from tigercontrol.environments.registration import environment_registry, environment_register, environment
-from tigercontrol.environments import Environment
 from tigercontrol.environments.custom import register_custom_environment, CustomEnvironment
 
 
@@ -101,6 +100,3 @@ environment_register(
     id='PyBullet-Humanoid-v0',
     entry_point='tigercontrol.environments.pybullet:Humanoid'
 )
-
-
-

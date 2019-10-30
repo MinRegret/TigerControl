@@ -9,6 +9,8 @@ from tigercontrol.utils.optimizers import Optimizer
 
 # class for implementing algorithms with enforced modularity
 class CustomController(object):
+    spec = None
+    
     def __init__(self):
         pass
     
@@ -23,10 +25,7 @@ class CustomController(object):
         raise error.InvalidInput("Optimizer input cannot be stored")
 
     def __str__(self):
-        if self.spec is None:
-            return '<{} instance>'.format(type(self).__name__)
-        else:
-            return '<{}<{}>>'.format(type(self).__name__, self.spec.id)
+        return '<{} instance>'.format(type(self).__name__)
 
 # verifies that a given class has the necessary minimum controller controllers
 def verify_valid_controller(controller_class):

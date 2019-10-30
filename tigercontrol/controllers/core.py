@@ -1,4 +1,4 @@
-# Method class
+# Controller class
 # Author: John Hallman
 
 from tigercontrol import error
@@ -6,6 +6,7 @@ from tigercontrol.utils.optimizers import Optimizer
 
 # class for implementing algorithms with enforced modularity
 class Controller(object):
+    spec = None
 
     def initialize(self, T, **kwargs):
         # initializes method parameters
@@ -18,8 +19,9 @@ class Controller(object):
         # returns a series of actions (a plan), given current observation x
         raise NotImplementedError
 
-    def get_action(self, x, replan=False, horizon=self.T):
+    def get_action(self, x, replan=False, horizon=None):
         if replan or self.plan_pointer == len(self.plan_cache):
+            if horizon == None: horizon = self.T
             self.plan_cache = self.plan(x, horizon)
             self.plan_pointer = 0
         action = self.plan_cache[self.plan_pointer]

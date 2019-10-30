@@ -35,8 +35,7 @@ def test_registry():
 
 
 def test_tigercontrol_environment():
-    environment = tigercontrol.environments('Random-v0')
-    assert environment.spec.id == 'Random-v0'
+    environment = tigercontrol.environment('LDS-v0')
     return
 
 
