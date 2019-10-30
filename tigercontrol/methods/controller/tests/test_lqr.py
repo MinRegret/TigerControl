@@ -21,7 +21,7 @@ def test_lqr(steps=10, show_plot=True):
 
     method.initialize(F, f, C, c, T, x)
 
-    u = method.plan()
+    u = method.plan(x, T)
 
     # Plot control found
     if show_plot:
@@ -31,7 +31,7 @@ def test_lqr(steps=10, show_plot=True):
 
     method.initialize(F, f, C, c, T, x)
 
-    u = method.plan()
+    u = method.plan(x, T)
 
     # Plot control found
     if show_plot:
@@ -52,7 +52,7 @@ def test_lqr(steps=10, show_plot=True):
 
     method.initialize(F, f, C, c, T, x)
 
-    u = method.plan()
+    u = method.plan(x, T)
 
     # Plot control found
     if show_plot:
@@ -62,7 +62,7 @@ def test_lqr(steps=10, show_plot=True):
 
     method.initialize(F, f, C, c, T, x)
 
-    u = method.plan()
+    u = method.plan(x, T)
 
     # Plot control found
     if show_plot:
