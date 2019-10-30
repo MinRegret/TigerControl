@@ -1,0 +1,13 @@
+future
+numpy
+jax
+jaxlib
+setuptools
+memory_profiler
+matplotlib
+pandas
+xlrd
+tqdm
+PrettyTable
+gym
+cvxopt

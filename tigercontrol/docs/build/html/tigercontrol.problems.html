@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tigercontrol.problems package &mdash; tigercontrol 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tigercontrol.problems.Problem" href="_autosummary/tigercontrol.problems.Problem.html" />
+    <link rel="prev" title="tigercontrol.utils.get_global_key" href="_autosummary/tigercontrol.utils.get_global_key.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> tigercontrol
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tigercontrol.html">tigercontrol package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="tigercontrol.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tigercontrol.utils.html">tigercontrol.utils package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tigercontrol.problems package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#core">core</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#custom">custom</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#control">control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#time-series">time_series</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pybullet">pybullet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tigercontrol.methods.html">tigercontrol.methods package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tigercontrol.experiments.html">tigercontrol.experiments package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">help</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html#contact">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tigercontrol</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="tigercontrol.html">tigercontrol package</a> &raquo;</li>
+        
+      <li>tigercontrol.problems package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/tigercontrol.problems.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-tigercontrol.problems">
+<span id="tigercontrol-problems-package"></span><h1>tigercontrol.problems package<a class="headerlink" href="#module-tigercontrol.problems" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="core">
+<h2>core<a class="headerlink" href="#core" title="Permalink to this headline">¶</a></h2>
+<p>This is a core</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.Problem.html#tigercontrol.problems.Problem" title="tigercontrol.problems.Problem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Problem</span></code></a>()</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="custom">
+<h2>custom<a class="headerlink" href="#custom" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.CustomProblem.html#tigercontrol.problems.CustomProblem" title="tigercontrol.problems.CustomProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.CustomProblem</span></code></a>()</td>
+<td>Description: class for implementing algorithms with enforced modularity</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.register_custom_problem.html#tigercontrol.problems.register_custom_problem" title="tigercontrol.problems.register_custom_problem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.register_custom_problem</span></code></a>(…)</td>
+<td>Description: global custom problem method</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="control">
+<h2>control<a class="headerlink" href="#control" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+</div>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.ControlProblem.html#tigercontrol.problems.ControlProblem" title="tigercontrol.problems.ControlProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.ControlProblem</span></code></a>()</td>
+<td>Description: class for online control tests</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.control.LDS_Control.html#tigercontrol.problems.control.LDS_Control" title="tigercontrol.problems.control.LDS_Control"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.control.LDS_Control</span></code></a>()</td>
+<td>Description: Simulates a linear dynamical system.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.control.LSTM_Control.html#tigercontrol.problems.control.LSTM_Control" title="tigercontrol.problems.control.LSTM_Control"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.control.LSTM_Control</span></code></a>()</td>
+<td>Description: Produces outputs from a randomly initialized recurrent neural network.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.control.RNN_Control.html#tigercontrol.problems.control.RNN_Control" title="tigercontrol.problems.control.RNN_Control"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.control.RNN_Control</span></code></a>()</td>
+<td>Description: Produces outputs from a randomly initialized recurrent neural network.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.control.CartPole.html#tigercontrol.problems.control.CartPole" title="tigercontrol.problems.control.CartPole"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.control.CartPole</span></code></a>()</td>
+<td>Description:</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.control.DoublePendulum.html#tigercontrol.problems.control.DoublePendulum" title="tigercontrol.problems.control.DoublePendulum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.control.DoublePendulum</span></code></a>()</td>
+<td>Acrobot is a 2-link pendulum with only the second joint actuated.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.control.Pendulum.html#tigercontrol.problems.control.Pendulum" title="tigercontrol.problems.control.Pendulum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.control.Pendulum</span></code></a>([g])</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="time-series">
+<h2>time_series<a class="headerlink" href="#time-series" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.TimeSeriesProblem.html#tigercontrol.problems.TimeSeriesProblem" title="tigercontrol.problems.TimeSeriesProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.TimeSeriesProblem</span></code></a>()</td>
+<td>Description: class for online control tests</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.time_series.SP500.html#tigercontrol.problems.time_series.SP500" title="tigercontrol.problems.time_series.SP500"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.time_series.SP500</span></code></a>()</td>
+<td>Description: Outputs the daily opening price of the S&amp;P 500 stock market index from January 3, 1986 to June 29, 2018.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.time_series.UCI_Indoor.html#tigercontrol.problems.time_series.UCI_Indoor" title="tigercontrol.problems.time_series.UCI_Indoor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.time_series.UCI_Indoor</span></code></a>()</td>
+<td>Description: Outputs various weather metrics from a UCI dataset from 13/3/2012 to 11/4/2012</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.time_series.ENSO.html#tigercontrol.problems.time_series.ENSO" title="tigercontrol.problems.time_series.ENSO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.time_series.ENSO</span></code></a>()</td>
+<td>Description: Collection of monthly values of control indices useful for predicting La Nina/El Nino.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.time_series.Crypto.html#tigercontrol.problems.time_series.Crypto" title="tigercontrol.problems.time_series.Crypto"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.time_series.Crypto</span></code></a>()</td>
+<td>Description: Outputs the daily price of bitcoin from 2013-04-28 to 2018-02-10</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.time_series.Random.html#tigercontrol.problems.time_series.Random" title="tigercontrol.problems.time_series.Random"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.time_series.Random</span></code></a>()</td>
+<td>Description: A random sequence of scalar values taken from an i.i.d.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.time_series.ARMA.html#tigercontrol.problems.time_series.ARMA" title="tigercontrol.problems.time_series.ARMA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.time_series.ARMA</span></code></a>()</td>
+<td>Description: Simulates an autoregressive moving-average time-series.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.time_series.Unemployment.html#tigercontrol.problems.time_series.Unemployment" title="tigercontrol.problems.time_series.Unemployment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.time_series.Unemployment</span></code></a>()</td>
+<td>Description: Monthly unemployment rate since 1948.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.time_series.LDS_TimeSeries.html#tigercontrol.problems.time_series.LDS_TimeSeries" title="tigercontrol.problems.time_series.LDS_TimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.time_series.LDS_TimeSeries</span></code></a>()</td>
+<td>Description: Simulates a linear dynamical system.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.time_series.LSTM_TimeSeries.html#tigercontrol.problems.time_series.LSTM_TimeSeries" title="tigercontrol.problems.time_series.LSTM_TimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.time_series.LSTM_TimeSeries</span></code></a>()</td>
+<td>Description: Produces outputs from a randomly initialized recurrent neural network.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.time_series.RNN_TimeSeries.html#tigercontrol.problems.time_series.RNN_TimeSeries" title="tigercontrol.problems.time_series.RNN_TimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.time_series.RNN_TimeSeries</span></code></a>()</td>
+<td>Description: Produces outputs from a randomly initialized recurrent neural network.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="pybullet">
+<h2>pybullet<a class="headerlink" href="#pybullet" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.pybullet.PyBulletProblem.html#tigercontrol.problems.pybullet.PyBulletProblem" title="tigercontrol.problems.pybullet.PyBulletProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.pybullet.PyBulletProblem</span></code></a>([env])</td>
+<td>Description: class for online control tests</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.pybullet.Simulator.html#tigercontrol.problems.pybullet.Simulator" title="tigercontrol.problems.pybullet.Simulator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.pybullet.Simulator</span></code></a>([env])</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.pybullet.Ant.html#tigercontrol.problems.pybullet.Ant" title="tigercontrol.problems.pybullet.Ant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.pybullet.Ant</span></code></a>([env])</td>
+<td>Description: Simulates a minitaur environment</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.pybullet.CartPole.html#tigercontrol.problems.pybullet.CartPole" title="tigercontrol.problems.pybullet.CartPole"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.pybullet.CartPole</span></code></a>()</td>
+<td>Description: Simulates a pendulum balanced on a cartpole.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.pybullet.CartPoleDouble.html#tigercontrol.problems.pybullet.CartPoleDouble" title="tigercontrol.problems.pybullet.CartPoleDouble"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.pybullet.CartPoleDouble</span></code></a>()</td>
+<td>Descrtion: Simulates a pendulum balanced on a cartpole.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.pybullet.CartPoleSwingup.html#tigercontrol.problems.pybullet.CartPoleSwingup" title="tigercontrol.problems.pybullet.CartPoleSwingup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.pybullet.CartPoleSwingup</span></code></a>()</td>
+<td>Description: Simulates a pendulum balanced on a cartpole.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.pybullet.HalfCheetah.html#tigercontrol.problems.pybullet.HalfCheetah" title="tigercontrol.problems.pybullet.HalfCheetah"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.pybullet.HalfCheetah</span></code></a>([env])</td>
+<td>Description: Simulates a minitaur environment</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.pybullet.Humanoid.html#tigercontrol.problems.pybullet.Humanoid" title="tigercontrol.problems.pybullet.Humanoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.pybullet.Humanoid</span></code></a>([env])</td>
+<td>Description: Simulates a minitaur environment</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.pybullet.Kuka.html#tigercontrol.problems.pybullet.Kuka" title="tigercontrol.problems.pybullet.Kuka"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.pybullet.Kuka</span></code></a>()</td>
+<td>Description: Simulates a kuka arm picking up diverse objects</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.pybullet.KukaDiverse.html#tigercontrol.problems.pybullet.KukaDiverse" title="tigercontrol.problems.pybullet.KukaDiverse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.pybullet.KukaDiverse</span></code></a>()</td>
+<td>Description: Simulates a kuka arm picking up diverse objects</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.pybullet.Minitaur.html#tigercontrol.problems.pybullet.Minitaur" title="tigercontrol.problems.pybullet.Minitaur"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.pybullet.Minitaur</span></code></a>([env])</td>
+<td>Description: Simulates a minitaur environment</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.problems.pybullet.Obstacles.html#tigercontrol.problems.pybullet.Obstacles" title="tigercontrol.problems.pybullet.Obstacles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tigercontrol.problems.pybullet.Obstacles</span></code></a>()</td>
+<td>Description: Simulates a obstacles avoidance environment</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="_autosummary/tigercontrol.problems.Problem.html" class="btn btn-neutral float-right" title="tigercontrol.problems.Problem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="_autosummary/tigercontrol.utils.get_global_key.html" class="btn btn-neutral float-left" title="tigercontrol.utils.get_global_key" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, alexjyu
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
