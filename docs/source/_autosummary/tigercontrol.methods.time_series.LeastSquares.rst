@@ -1,15 +1,15 @@
-tigercontrol.methods.time\_series.LeastSquares
+tigercontrol.controllers.time\_series.LeastSquares
 =============================================
 
-.. currentmodule:: tigercontrol.methods.time_series
+.. currentmodule:: tigercontrol.controllers.time_series
 
 .. autoclass:: LeastSquares
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

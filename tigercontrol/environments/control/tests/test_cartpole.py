@@ -20,20 +20,20 @@ def test_cartpole(verbose=False):
     lamb = 0.1
     max_iterations = 25
 
-    method = tigercontrol.method("ILQR")
-    method.initialize(environment, L, dim_x, dim_u, update_period, max_iterations, lamb, threshold)
+    controller = tigercontrol.controllers("ILQR")
+    controller.initialize(environment, L, dim_x, dim_u, update_period, max_iterations, lamb, threshold)
 
     if verbose:
         print("Running iLQR...")
-    # u = method.plan(obs, T, max_iterations, lamb, threshold)
-    # u = method.plan_trajectory(obs, T, max_iterations, lamb, threshold)
+    # u = controller.plan(obs, T, max_iterations, lamb, threshold)
+    # u = controller.plan_trajectory(obs, T, max_iterations, lamb, threshold)
 
     index = 0
     for t in range(10 * T):
         if verbose: 
             environment.render()
             time.sleep(1. / 50.)
-        u = method.plan(obs)
+        u = controller.plan(obs)
         # obs, r, done, _ = environment.step(u[index])
         obs, r, done, _ = environment.step(u)
         index += 1
@@ -47,7 +47,7 @@ def test_cartpole(verbose=False):
         if done or index == T:
             if verbose:
                 print("recomputing u...")
-            u = method.plan(obs, T, max_iterations, lamb, threshold)
+            u = controller.plan(obs, T, max_iterations, lamb, threshold)
             index = 0'''
 
     environment.close()

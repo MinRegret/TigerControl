@@ -1,15 +1,15 @@
-tigercontrol.methods.time\_series.LastValue
+tigercontrol.controllers.time\_series.LastValue
 ==========================================
 
-.. currentmodule:: tigercontrol.methods.time_series
+.. currentmodule:: tigercontrol.controllers.time_series
 
 .. autoclass:: LastValue
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

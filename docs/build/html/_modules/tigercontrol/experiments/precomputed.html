@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -150,13 +150,13 @@
 <span></span><span class="sd">&#39;&#39;&#39; Precompute &#39;&#39;&#39;</span>
 
 <span class="kn">from</span> <span class="nn">tigercontrol.utils.random</span> <span class="k">import</span> <span class="n">set_key</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.experiments.core</span> <span class="k">import</span> <span class="n">run_experiment</span><span class="p">,</span> <span class="n">create_full_environment_to_methods</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.experiments.core</span> <span class="k">import</span> <span class="n">run_experiment</span><span class="p">,</span> <span class="n">create_full_environment_to_controllers</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.utils.download_tools</span> <span class="k">import</span> <span class="n">get_tigercontrol_dir</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">csv</span>
 
-<span class="sd">&#39;&#39;&#39; List of all environments and methods &#39;&#39;&#39;</span>
+<span class="sd">&#39;&#39;&#39; List of all environments and controllers &#39;&#39;&#39;</span>
 <span class="n">all_metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mse&#39;</span><span class="p">]</span>
 
 <span class="c1">## no uciindoor-v0 , ctrl indices has some environments##</span>
@@ -164,7 +164,7 @@
 
 <span class="c1">####### LSTM AND RNN NOT INCLUDED BECAUSE THEY NEED INPUT SHAPE ###############</span>
 <span class="c1">####### and ArmaAdaGrad is not classified as timeseries &amp; other environments ... ###########</span>
-<span class="n">all_methods</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;LastValue&#39;</span><span class="p">,</span> <span class="s1">&#39;AutoRegressor&#39;</span><span class="p">,</span> <span class="s1">&#39;RNN&#39;</span><span class="p">,</span> <span class="s1">&#39;LSTM&#39;</span><span class="p">]</span>
+<span class="n">all_controllers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;LastValue&#39;</span><span class="p">,</span> <span class="s1">&#39;AutoRegressor&#39;</span><span class="p">,</span> <span class="s1">&#39;RNN&#39;</span><span class="p">,</span> <span class="s1">&#39;LSTM&#39;</span><span class="p">]</span>
 
 <span class="c1">####### NEED TO MAKE IT HARD TO CHANGE !!!!!! ########</span>
 <span class="sd">&#39;&#39;&#39; Fix timesteps and key &#39;&#39;&#39;</span>
@@ -218,9 +218,9 @@
 
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">datapath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
                 <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">csvfile</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">method_id</span> <span class="ow">in</span> <span class="n">all_methods</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">controller_id</span> <span class="ow">in</span> <span class="n">all_controllers</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="n">loss</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">((</span><span class="n">environment_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="n">method_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">metric</span><span class="p">,</span> \
+                        <span class="n">loss</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">((</span><span class="n">environment_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="n">controller_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">metric</span><span class="p">,</span> \
                                                              <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">,</span> <span class="n">timesteps</span> <span class="o">=</span> <span class="n">timesteps</span><span class="p">)</span>
                     <span class="k">except</span><span class="p">:</span>
                         <span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">timesteps</span><span class="p">)</span>
@@ -237,9 +237,9 @@
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">datapath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
             <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">csvfile</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">method_id</span> <span class="ow">in</span> <span class="n">all_methods</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">controller_id</span> <span class="ow">in</span> <span class="n">all_controllers</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">_</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">((</span><span class="n">environment_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="n">method_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> \
+                    <span class="n">_</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">((</span><span class="n">environment_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="n">controller_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> \
                         <span class="n">metric</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">,</span> <span class="n">timesteps</span> <span class="o">=</span> <span class="n">timesteps</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">load_bar</span> <span class="o">=</span> <span class="n">load_bar</span><span class="p">)</span>
                 <span class="k">except</span><span class="p">:</span>
                     <span class="n">time</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
@@ -249,28 +249,28 @@
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SUCCESS: EVERYTHING HAS BEEN RECOMPUTED!&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="load_prob_method_to_result"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.experiments.load_prob_method_to_result.html#tigercontrol.experiments.load_prob_method_to_result">[docs]</a><span class="k">def</span> <span class="nf">load_prob_method_to_result</span><span class="p">(</span><span class="n">environment_ids</span> <span class="o">=</span> <span class="n">all_environments</span><span class="p">,</span> <span class="n">method_ids</span> <span class="o">=</span> <span class="n">all_methods</span><span class="p">,</span> <span class="n">environment_to_methods</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="s1">&#39;mse&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="load_prob_controller_to_result"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.experiments.load_prob_controller_to_result.html#tigercontrol.experiments.load_prob_controller_to_result">[docs]</a><span class="k">def</span> <span class="nf">load_prob_controller_to_result</span><span class="p">(</span><span class="n">environment_ids</span> <span class="o">=</span> <span class="n">all_environments</span><span class="p">,</span> <span class="n">controller_ids</span> <span class="o">=</span> <span class="n">all_controllers</span><span class="p">,</span> <span class="n">environment_to_controllers</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="s1">&#39;mse&#39;</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Description: Initializes the experiment instance. </span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        environment_ids (list): ids of environments to evaluate on</span>
-<span class="sd">        method_ids (list): ids of methods to use</span>
-<span class="sd">        environment_to_methods (dict): map of the form environment_id -&gt; list of method_id. If None,</span>
-<span class="sd">                                  then we assume that the user wants to test every method</span>
-<span class="sd">                                  in method_to_params against every environment in environment_to_params</span>
+<span class="sd">        controller_ids (list): ids of controllers to use</span>
+<span class="sd">        environment_to_controllers (dict): map of the form environment_id -&gt; list of controller_id. If None,</span>
+<span class="sd">                                  then we assume that the user wants to test every controller</span>
+<span class="sd">                                  in controller_to_params against every environment in environment_to_params</span>
 <span class="sd">        metrics (list): metrics to load</span>
 
 <span class="sd">     Returns:</span>
-<span class="sd">        prob_method_to_result (dict): Dictionary containing results for all specified metrics and</span>
-<span class="sd">                                     performance (time and memory usage) for all environment-method</span>
+<span class="sd">        prob_controller_to_result (dict): Dictionary containing results for all specified metrics and</span>
+<span class="sd">                                     performance (time and memory usage) for all environment-controller</span>
 <span class="sd">                                     associations.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">if</span><span class="p">(</span><span class="n">environment_to_methods</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="n">environment_to_methods</span> <span class="o">=</span> <span class="n">create_full_environment_to_methods</span><span class="p">(</span><span class="n">environment_ids</span><span class="p">,</span> <span class="n">method_ids</span><span class="p">)</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">environment_to_controllers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">environment_to_controllers</span> <span class="o">=</span> <span class="n">create_full_environment_to_controllers</span><span class="p">(</span><span class="n">environment_ids</span><span class="p">,</span> <span class="n">controller_ids</span><span class="p">)</span>
 
-    <span class="n">prob_method_to_result</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">prob_controller_to_result</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="sd">&#39;&#39;&#39; Get loss series &#39;&#39;&#39;</span>
     <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
@@ -282,11 +282,11 @@
 
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">datapath</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
                 <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">quoting</span><span class="o">=</span><span class="n">csv</span><span class="o">.</span><span class="n">QUOTE_NONNUMERIC</span><span class="p">)</span>
-                <span class="n">method_no</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">controller_no</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
-                    <span class="k">if</span><span class="p">(</span><span class="n">all_methods</span><span class="p">[</span><span class="n">method_no</span><span class="p">]</span> <span class="ow">in</span> <span class="n">method_ids</span><span class="p">):</span>
-                        <span class="n">prob_method_to_result</span><span class="p">[(</span><span class="n">metric</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">,</span> <span class="n">all_methods</span><span class="p">[</span><span class="n">method_no</span><span class="p">])]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-                    <span class="n">method_no</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span><span class="p">(</span><span class="n">all_controllers</span><span class="p">[</span><span class="n">controller_no</span><span class="p">]</span> <span class="ow">in</span> <span class="n">controller_ids</span><span class="p">):</span>
+                        <span class="n">prob_controller_to_result</span><span class="p">[(</span><span class="n">metric</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">,</span> <span class="n">all_controllers</span><span class="p">[</span><span class="n">controller_no</span><span class="p">])]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+                    <span class="n">controller_no</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">csvfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="sd">&#39;&#39;&#39; Get time and memory usage &#39;&#39;&#39;</span>
@@ -298,15 +298,15 @@
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">datapath</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
             <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">quoting</span><span class="o">=</span><span class="n">csv</span><span class="o">.</span><span class="n">QUOTE_NONNUMERIC</span><span class="p">)</span>
-            <span class="n">method_no</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">controller_no</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
-                <span class="k">if</span><span class="p">(</span><span class="n">all_methods</span><span class="p">[</span><span class="n">method_no</span><span class="p">]</span> <span class="ow">in</span> <span class="n">method_ids</span><span class="p">):</span>
-                    <span class="n">prob_method_to_result</span><span class="p">[(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">,</span> <span class="n">all_methods</span><span class="p">[</span><span class="n">method_no</span><span class="p">])]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="n">prob_method_to_result</span><span class="p">[(</span><span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">,</span> <span class="n">all_methods</span><span class="p">[</span><span class="n">method_no</span><span class="p">])]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">method_no</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">all_controllers</span><span class="p">[</span><span class="n">controller_no</span><span class="p">]</span> <span class="ow">in</span> <span class="n">controller_ids</span><span class="p">):</span>
+                    <span class="n">prob_controller_to_result</span><span class="p">[(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">,</span> <span class="n">all_controllers</span><span class="p">[</span><span class="n">controller_no</span><span class="p">])]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">prob_controller_to_result</span><span class="p">[(</span><span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">,</span> <span class="n">all_controllers</span><span class="p">[</span><span class="n">controller_no</span><span class="p">])]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">controller_no</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">csvfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="k">return</span> <span class="n">prob_method_to_result</span></div>
+    <span class="k">return</span> <span class="n">prob_controller_to_result</span></div>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">recompute</span><span class="p">()</span>

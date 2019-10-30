@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.boosting.SimpleBoost &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.utils.boosting.SimpleBoost &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="tigercontrol.experiments package" href="../tigercontrol.experiments.html" />
-    <link rel="prev" title="tigercontrol.methods.optimizers.cross_entropy" href="tigercontrol.methods.optimizers.cross_entropy.html" /> 
+    <link rel="prev" title="tigercontrol.utils.optimizers.cross_entropy" href="tigercontrol.utils.optimizers.cross_entropy.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -63,7 +63,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -86,12 +86,12 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../tigercontrol.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.utils.html">tigercontrol.utils package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.environments.html">tigercontrol.environments package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../tigercontrol.methods.html">tigercontrol.methods package</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.methods.html#core">core</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.methods.html#control">control</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.methods.html#time-series">time_series</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.methods.html#optimizers">optimizers</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="../tigercontrol.methods.html#boosting">boosting</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../tigercontrol.controllers.html">tigercontrol.controllers package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.controllers.html#core">core</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.controllers.html#control">control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.controllers.html#time-series">time_series</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.controllers.html#optimizers">optimizers</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../tigercontrol.controllers.html#boosting">boosting</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.experiments.html">tigercontrol.experiments package</a></li>
@@ -149,15 +149,15 @@
         
           <li><a href="../tigercontrol.html">tigercontrol package</a> &raquo;</li>
         
-          <li><a href="../tigercontrol.methods.html">tigercontrol.methods package</a> &raquo;</li>
+          <li><a href="../tigercontrol.controllers.html">tigercontrol.controllers package</a> &raquo;</li>
         
-      <li>tigercontrol.methods.boosting.SimpleBoost</li>
+      <li>tigercontrol.utils.boosting.SimpleBoost</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/_autosummary/tigercontrol.methods.boosting.SimpleBoost.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/_autosummary/tigercontrol.utils.boosting.SimpleBoost.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -170,34 +170,34 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="tigercontrol-methods-boosting-simpleboost">
-<h1>tigercontrol.methods.boosting.SimpleBoost<a class="headerlink" href="#tigercontrol-methods-boosting-simpleboost" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="tigercontrol-controllers-boosting-simpleboost">
+<h1>tigercontrol.utils.boosting.SimpleBoost<a class="headerlink" href="#tigercontrol-controllers-boosting-simpleboost" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="tigercontrol.methods.boosting.SimpleBoost">
-<em class="property">class </em><code class="descclassname">tigercontrol.methods.boosting.</code><code class="descname">SimpleBoost</code><a class="reference internal" href="../_modules/tigercontrol/methods/boosting/simple_boost.html#SimpleBoost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.methods.boosting.SimpleBoost" title="Permalink to this definition">¶</a></dt>
-<dd><p>Description: Implements the equivalent of an AR(p) method - predicts a linear
+<dt id="tigercontrol.utils.boosting.SimpleBoost">
+<em class="property">class </em><code class="descclassname">tigercontrol.utils.boosting.</code><code class="descname">SimpleBoost</code><a class="reference internal" href="../_modules/tigercontrol/controllers/boosting/simple_boost.html#SimpleBoost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.utils.boosting.SimpleBoost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description: Implements the equivalent of an AR(p) controller - predicts a linear
 combination of the previous p observed values in a time-series</p>
-<dl class="method">
-<dt id="tigercontrol.methods.boosting.SimpleBoost.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/methods/boosting/simple_boost.html#SimpleBoost.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.methods.boosting.SimpleBoost.__init__" title="Permalink to this definition">¶</a></dt>
+<dl class="controller">
+<dt id="tigercontrol.utils.boosting.SimpleBoost.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/controllers/boosting/simple_boost.html#SimpleBoost.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.utils.boosting.SimpleBoost.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
-<p class="rubric">Methods</p>
+<p class="rubric">Controllers</p>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#tigercontrol.methods.boosting.SimpleBoost.__init__" title="tigercontrol.methods.boosting.SimpleBoost.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="#tigercontrol.utils.boosting.SimpleBoost.__init__" title="tigercontrol.utils.boosting.SimpleBoost.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</td>
 <td>Initialize self.</td>
 </tr>
 <tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>()</td>
-<td>Description: Prints information about this class and its methods.</td>
+<td>Description: Prints information about this class and its controllers.</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code>(method_id,&nbsp;method_params[,&nbsp;N,&nbsp;…])</td>
-<td>Description: Initializes autoregressive method parameters :param method_id: id of weak learner method :type method_id: string :param method_params: dict of params to pass method :type method_params: dict :param N: default 3.</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code>(controller_id,&nbsp;controller_params[,&nbsp;N,&nbsp;…])</td>
+<td>Description: Initializes autoregressive controller parameters :param controller_id: id of weak learner controller :type controller_id: string :param controller_params: dict of params to pass controller :type controller_params: dict :param N: default 3.</td>
 </tr>
 <tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code>(x)</td>
 <td></td>
@@ -237,7 +237,7 @@ combination of the previous p observed values in a time-series</p>
         <a href="../tigercontrol.experiments.html" class="btn btn-neutral float-right" title="tigercontrol.experiments package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="tigercontrol.methods.optimizers.cross_entropy.html" class="btn btn-neutral float-left" title="tigercontrol.methods.optimizers.cross_entropy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tigercontrol.utils.optimizers.cross_entropy.html" class="btn btn-neutral float-left" title="tigercontrol.utils.optimizers.cross_entropy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

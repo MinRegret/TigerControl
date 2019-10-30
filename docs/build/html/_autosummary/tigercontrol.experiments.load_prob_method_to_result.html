@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.experiments.load_prob_method_to_result &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.experiments.load_prob_controller_to_result &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -86,7 +86,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../tigercontrol.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.utils.html">tigercontrol.utils package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.environments.html">tigercontrol.environments package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../tigercontrol.methods.html">tigercontrol.methods package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tigercontrol.controllers.html">tigercontrol.controllers package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../tigercontrol.experiments.html">tigercontrol.experiments package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="../tigercontrol.experiments.html#core">core</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../tigercontrol.experiments.html#metrics">metrics</a></li>
@@ -151,13 +151,13 @@
         
           <li><a href="../tigercontrol.experiments.html">tigercontrol.experiments package</a> &raquo;</li>
         
-      <li>tigercontrol.experiments.load_prob_method_to_result</li>
+      <li>tigercontrol.experiments.load_prob_controller_to_result</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/_autosummary/tigercontrol.experiments.load_prob_method_to_result.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/_autosummary/tigercontrol.experiments.load_prob_controller_to_result.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -170,11 +170,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="tigercontrol-experiments-load-prob-method-to-result">
-<h1>tigercontrol.experiments.load_prob_method_to_result<a class="headerlink" href="#tigercontrol-experiments-load-prob-method-to-result" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="tigercontrol-experiments-load-prob-controller-to-result">
+<h1>tigercontrol.experiments.load_prob_controller_to_result<a class="headerlink" href="#tigercontrol-experiments-load-prob-controller-to-result" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="tigercontrol.experiments.load_prob_method_to_result">
-<code class="descclassname">tigercontrol.experiments.</code><code class="descname">load_prob_method_to_result</code><span class="sig-paren">(</span><em>environment_ids=['ARMA-v0', 'Crypto-v0', 'SP500-v0'], method_ids=['LastValue', 'AutoRegressor', 'RNN', 'LSTM'], environment_to_methods=None, metrics='mse'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/experiments/precomputed.html#load_prob_method_to_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.experiments.load_prob_method_to_result" title="Permalink to this definition">¶</a></dt>
+<dt id="tigercontrol.experiments.load_prob_controller_to_result">
+<code class="descclassname">tigercontrol.experiments.</code><code class="descname">load_prob_controller_to_result</code><span class="sig-paren">(</span><em>environment_ids=['ARMA-v0', 'Crypto-v0', 'SP500-v0'], controller_ids=['LastValue', 'AutoRegressor', 'RNN', 'LSTM'], environment_to_controllers=None, metrics='mse'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/experiments/precomputed.html#load_prob_controller_to_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.experiments.load_prob_controller_to_result" title="Permalink to this definition">¶</a></dt>
 <dd><p>Description: Initializes the experiment instance.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -182,10 +182,10 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>environment_ids</strong> (<em>list</em>) – ids of environments to evaluate on</li>
-<li><strong>method_ids</strong> (<em>list</em>) – ids of methods to use</li>
-<li><strong>environment_to_methods</strong> (<em>dict</em>) – map of the form environment_id -&gt; list of method_id. If None,
-then we assume that the user wants to test every method
-in method_to_params against every environment in environment_to_params</li>
+<li><strong>controller_ids</strong> (<em>list</em>) – ids of controllers to use</li>
+<li><strong>environment_to_controllers</strong> (<em>dict</em>) – map of the form environment_id -&gt; list of controller_id. If None,
+then we assume that the user wants to test every controller
+in controller_to_params against every environment in environment_to_params</li>
 <li><strong>metrics</strong> – metrics to load</li>
 </ul>
 </td>

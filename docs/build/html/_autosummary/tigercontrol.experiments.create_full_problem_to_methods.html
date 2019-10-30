@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.experiments.create_full_environment_to_methods &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.experiments.create_full_environment_to_controllers &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -86,7 +86,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../tigercontrol.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.utils.html">tigercontrol.utils package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.environments.html">tigercontrol.environments package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../tigercontrol.methods.html">tigercontrol.methods package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tigercontrol.controllers.html">tigercontrol.controllers package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../tigercontrol.experiments.html">tigercontrol.experiments package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="../tigercontrol.experiments.html#core">core</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../tigercontrol.experiments.html#metrics">metrics</a></li>
@@ -151,13 +151,13 @@
         
           <li><a href="../tigercontrol.experiments.html">tigercontrol.experiments package</a> &raquo;</li>
         
-      <li>tigercontrol.experiments.create_full_environment_to_methods</li>
+      <li>tigercontrol.experiments.create_full_environment_to_controllers</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/_autosummary/tigercontrol.experiments.create_full_environment_to_methods.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/_autosummary/tigercontrol.experiments.create_full_environment_to_controllers.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -170,26 +170,26 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="tigercontrol-experiments-create-full-environment-to-methods">
-<h1>tigercontrol.experiments.create_full_environment_to_methods<a class="headerlink" href="#tigercontrol-experiments-create-full-environment-to-methods" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="tigercontrol-experiments-create-full-environment-to-controllers">
+<h1>tigercontrol.experiments.create_full_environment_to_controllers<a class="headerlink" href="#tigercontrol-experiments-create-full-environment-to-controllers" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="tigercontrol.experiments.create_full_environment_to_methods">
-<code class="descclassname">tigercontrol.experiments.</code><code class="descname">create_full_environment_to_methods</code><span class="sig-paren">(</span><em>environments_ids</em>, <em>method_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/experiments/core.html#create_full_environment_to_methods"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.experiments.create_full_environment_to_methods" title="Permalink to this definition">¶</a></dt>
-<dd><p>Description: Associate all given environments to all given methods.</p>
+<dt id="tigercontrol.experiments.create_full_environment_to_controllers">
+<code class="descclassname">tigercontrol.experiments.</code><code class="descname">create_full_environment_to_controllers</code><span class="sig-paren">(</span><em>environments_ids</em>, <em>controller_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/experiments/core.html#create_full_environment_to_controllers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.experiments.create_full_environment_to_controllers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description: Associate all given environments to all given controllers.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>environment_ids</strong> (<em>list</em>) – list of environment names</li>
-<li><strong>method_ids</strong> (<em>list</em>) – list of method names</li>
+<li><strong>controller_ids</strong> (<em>list</em>) – list of controller names</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">association environment -&gt; method</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">association environment -&gt; controller</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">full_environment_to_methods (dict)</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">full_environment_to_controllers (dict)</p>
 </td>
 </tr>
 </tbody>

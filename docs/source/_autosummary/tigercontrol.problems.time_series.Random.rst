@@ -6,10 +6,10 @@ tigercontrol.environments.time\_series.Random
 .. autoclass:: Random
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

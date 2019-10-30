@@ -702,7 +702,7 @@
         reStructured text markup: <i>*emph*</i>, <b>**strong**</b>, \
         <code>``code``</code>, \
         code blocks: <code>::</code> and an indented block after blank line</div>\
-      <form method="post" id="cf<%id%>" class="comment-form" action="">\
+      <form controller="post" id="cf<%id%>" class="comment-form" action="">\
         <textarea name="comment" cols="80"></textarea>\
         <p class="propose-button">\
           <a href="#" id="pc<%id%>" class="show-propose-change">\

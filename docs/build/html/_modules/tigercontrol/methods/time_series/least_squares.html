@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.time_series.least_squares &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.controllers.time_series.least_squares &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.methods.time_series.least_squares</li>
+      <li>tigercontrol.controllers.time_series.least_squares</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,29 +146,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.methods.time_series.least_squares</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.controllers.time_series.least_squares</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Online Least Squares</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">tigercontrol</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.methods.time_series</span> <span class="k">import</span> <span class="n">TimeSeriesMethod</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.controllers.time_series</span> <span class="k">import</span> <span class="n">TimeSeriesController</span>
 
-<div class="viewcode-block" id="LeastSquares"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.time_series.LeastSquares.html#tigercontrol.methods.time_series.LeastSquares">[docs]</a><span class="k">class</span> <span class="nc">LeastSquares</span><span class="p">(</span><span class="n">TimeSeriesMethod</span><span class="p">):</span>
+<div class="viewcode-block" id="LeastSquares"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.controllers.time_series.LeastSquares.html#tigercontrol.controllers.time_series.LeastSquares">[docs]</a><span class="k">class</span> <span class="nc">LeastSquares</span><span class="p">(</span><span class="n">TimeSeriesController</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Implements online least squares.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;TimeSeries&#39;</span><span class="p">])</span>
 
-<div class="viewcode-block" id="LeastSquares.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.time_series.LeastSquares.html#tigercontrol.methods.time_series.LeastSquares.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LeastSquares.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.controllers.time_series.LeastSquares.html#tigercontrol.controllers.time_series.LeastSquares.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uses_regressors</span> <span class="o">=</span> <span class="kc">True</span></div>
 
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Description: Initializes method parameters</span>
+<span class="sd">        Description: Initializes controller parameters</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x (float/numpy.ndarray): Observation</span>
@@ -190,7 +190,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Predicted value for the next time-step</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span><span class="p">,</span> <span class="s2">&quot;ERROR: Method not initialized!&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span><span class="p">,</span> <span class="s2">&quot;ERROR: Controller not initialized!&quot;</span>
         
         <span class="c1"># get prediction</span>
         <span class="n">pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
@@ -203,7 +203,7 @@
 
     <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Description: Prints information about this class and its methods.</span>
+<span class="sd">        Description: Prints information about this class and its controllers.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            None</span>
@@ -214,7 +214,7 @@
 
 
 
-<span class="c1"># string to print when calling help() method</span>
+<span class="c1"># string to print when calling help() controller</span>
 <span class="n">LeastSquares_help</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="s2">-------------------- *** --------------------</span>
@@ -222,10 +222,10 @@
 <span class="s2">Id: LeastSquares</span>
 <span class="s2">Description: Implements online least squares.</span>
 
-<span class="s2">Methods:</span>
+<span class="s2">Controllers:</span>
 
 <span class="s2">    initialize(x, y, reg)</span>
-<span class="s2">        Description: Initializes method parameters</span>
+<span class="s2">        Description: Initializes controller parameters</span>
 
 <span class="s2">        Args:</span>
 <span class="s2">            x (float/numpy.ndarray): Observation</span>
@@ -244,7 +244,7 @@
 
 <span class="s2">    help()</span>
 <span class="s2">        Description:</span>
-<span class="s2">            Prints information about this class and its methods.</span>
+<span class="s2">            Prints information about this class and its controllers.</span>
 <span class="s2">        Args:</span>
 <span class="s2">            None</span>
 <span class="s2">        Returns:</span>

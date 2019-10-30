@@ -35,12 +35,12 @@ def to_dict(x):
 
 def get_ids(x):
     '''
-    Description: Gets the ids of environments/methods
+    Description: Gets the ids of environments/controllers
 
     Args:
-        x (list / dict): list of ids of environments/methods or dictionary of environments/methods and parameters
+        x (list / dict): list of ids of environments/controllers or dictionary of environments/controllers and parameters
     Returns:
-        x (list): list of environment/methods ids
+        x (list): list of environment/controllers ids
     '''
     if(type(x) is dict):
         ids = []
@@ -51,32 +51,32 @@ def get_ids(x):
     else:
         return x
 
-def create_full_environment_to_methods(environments_ids, method_ids):
+def create_full_environment_to_controllers(environments_ids, controller_ids):
     '''
-    Description: Associate all given environments to all given methods.
+    Description: Associate all given environments to all given controllers.
 
     Args:
         environment_ids (list): list of environment names
-        method_ids (list): list of method names
+        controller_ids (list): list of controller names
     Returns:
-        full_environment_to_methods (dict): association environment -> method
+        full_environment_to_controllers (dict): association environment -> controller
     '''
-    full_environment_to_methods = {}
+    full_environment_to_controllers = {}
 
     for environment_id in environments_ids:
-        full_environment_to_methods[environment_id] = []
-        for method_id in method_ids:
-            full_environment_to_methods[environment_id].append(method_id)
+        full_environment_to_controllers[environment_id] = []
+        for controller_id in controller_ids:
+            full_environment_to_controllers[environment_id].append(controller_id)
 
-    return full_environment_to_methods
+    return full_environment_to_controllers
 
-def run_experiment(environment, method, metric = 'mse', key = 0, timesteps = None, verbose = 0):
+def run_experiment(environment, controller, metric = 'mse', key = 0, timesteps = None, verbose = 0):
     '''
     Description: Initializes the experiment instance.
     
     Args:
         environment (tuple): environment id and parameters to initialize the specific environment instance with
-        method (tuple): method id and parameters to initialize the specific method instance with
+        controller (tuple): controller id and parameters to initialize the specific controller instance with
         metric (string): metric we are interesting in computing for current experiment
         key (int): for reproducibility
         timesteps(int): number of time steps to run experiment for
@@ -89,7 +89,7 @@ def run_experiment(environment, method, metric = 'mse', key = 0, timesteps = Non
 
     # extract specifications
     (environment_id, environment_params) = environment
-    (method_id, method_params) = method
+    (controller_id, controller_params) = controller
     loss_fn = metrics[metric]
 
     # initialize environment
@@ -116,24 +116,24 @@ def run_experiment(environment, method, metric = 'mse', key = 0, timesteps = Non
     else:
         x, y = init, environment.step()
 
-    # initialize method
-    method = tigercontrol.method(method_id)
+    # initialize controller
+    controller = tigercontrol.controllers(controller_id)
     
-    if(method_params is None):
-        method_params = {}
+    if(controller_params is None):
+        controller_params = {}
     if(len(x.shape) == 0):
-        method_params['n'] = 1
+        controller_params['n'] = 1
     else:
-        method_params['n'] = x.shape[0]
+        controller_params['n'] = x.shape[0]
     if(len(y.shape) == 0):
-        method_params['m'] = 1
+        controller_params['m'] = 1
     else:
-        method_params['m'] = y.shape[0]
+        controller_params['m'] = y.shape[0]
 
-    method.initialize(**method_params)
+    controller.initialize(**controller_params)
 
     if(verbose):
-        print("Running %s on %s..." % (method_id, environment_id))
+        print("Running %s on %s..." % (controller_id, environment_id))
 
     loss = []
     time_start = time.time()
@@ -144,10 +144,10 @@ def run_experiment(environment, method, metric = 'mse', key = 0, timesteps = Non
 
     # get loss series
     for i in tqdm(range(timesteps), disable = (not load_bar)):
-        # get loss and update method
-        cur_loss = float(loss_fn(y, method.predict(x)))
+        # get loss and update controller
+        cur_loss = float(loss_fn(y, controller.predict(x)))
         loss.append(cur_loss)
-        method.update(y)
+        controller.update(y)
         # get new pair of observation and label
         new = environment.step()
         if(environment.has_regressors):
@@ -157,14 +157,14 @@ def run_experiment(environment, method, metric = 'mse', key = 0, timesteps = Non
 
     return np.array(loss), time.time() - time_start, memory
 
-def run_experiments(environment, method, metric = 'mse', n_runs = 1, timesteps = None, verbose = 0):
+def run_experiments(environment, controller, metric = 'mse', n_runs = 1, timesteps = None, verbose = 0):
     
     '''
     Description: Initializes the experiment instance.
     
     Args:
         environment (tuple): environment id and parameters to initialize the specific environment instance with
-        method (tuple): method id and parameters to initialize the specific method instance with
+        controller (tuple): controller id and parameters to initialize the specific controller instance with
         metric (string): metric we are interesting in computing for current experiment
         key (int): for reproducibility
         timesteps(int): number of time steps to run experiment for
@@ -174,11 +174,11 @@ def run_experiments(environment, method, metric = 'mse', n_runs = 1, timesteps =
         memory (float): memory used
     '''
 
-    results = tuple((1 / n_runs) * result for result in run_experiment(environment, method, metric = metric, \
+    results = tuple((1 / n_runs) * result for result in run_experiment(environment, controller, metric = metric, \
         key = 0, timesteps = timesteps, verbose = verbose))
 
     for i in range(1, n_runs):
-        new_results = tuple((1 / n_runs) * result for result in run_experiment(environment, method, metric = metric, \
+        new_results = tuple((1 / n_runs) * result for result in run_experiment(environment, controller, metric = metric, \
         key = i, timesteps = timesteps, verbose = verbose))
         results = tuple(map(operator.add, results, new_results))
 

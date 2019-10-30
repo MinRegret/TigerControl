@@ -1,14 +1,14 @@
-tigercontrol.methods package
+tigercontrol.controllers package
 ===========================
 
-.. automodule:: tigercontrol.methods
+.. automodule:: tigercontrol.controllers
 
 core
 ----
 .. autosummary::
   :toctree: _autosummary
 
-   Method
+   Controller
 
 control
 -------
@@ -16,13 +16,13 @@ control
 .. autosummary::
   :toctree: _autosummary
 
-   tigercontrol.methods.controller.ControlMethod
-   tigercontrol.methods.controller.KalmanFilter
-   tigercontrol.methods.controller.ODEShootingMethod
-   tigercontrol.methods.controller.LQR
-   tigercontrol.methods.controller.MPPI
-   tigercontrol.methods.controller.CartPoleNN
-   tigercontrol.methods.controller.ILQR
+   tigercontrol.controllers.ControlController
+   tigercontrol.controllers.KalmanFilter
+   tigercontrol.controllers.ODEShootingController
+   tigercontrol.controllers.LQR
+   tigercontrol.controllers.MPPI
+   tigercontrol.controllers.CartPoleNN
+   tigercontrol.controllers.ILQR
 
 
 time_series
@@ -31,13 +31,13 @@ time_series
 .. autosummary::
   :toctree: _autosummary
 
-   tigercontrol.methods.time_series.TimeSeriesMethod
-   tigercontrol.methods.time_series.AutoRegressor
-   tigercontrol.methods.time_series.LastValue
-   tigercontrol.methods.time_series.PredictZero
-   tigercontrol.methods.time_series.RNN
-   tigercontrol.methods.time_series.LSTM
-   tigercontrol.methods.time_series.LeastSquares
+   tigercontrol.controllers.time_series.TimeSeriesController
+   tigercontrol.controllers.time_series.AutoRegressor
+   tigercontrol.controllers.time_series.LastValue
+   tigercontrol.controllers.time_series.PredictZero
+   tigercontrol.controllers.time_series.RNN
+   tigercontrol.controllers.time_series.LSTM
+   tigercontrol.controllers.time_series.LeastSquares
 
 optimizers
 ----------
@@ -45,14 +45,14 @@ optimizers
 .. autosummary::
   :toctree: _autosummary
 
-   tigercontrol.methods.optimizers.Optimizer
-   tigercontrol.methods.optimizers.Adagrad
-   tigercontrol.methods.optimizers.Adam
-   tigercontrol.methods.optimizers.ONS
-   tigercontrol.methods.optimizers.SGD
-   tigercontrol.methods.optimizers.OGD
-   tigercontrol.methods.optimizers.mse
-   tigercontrol.methods.optimizers.cross_entropy
+   tigercontrol.utils.optimizers.Optimizer
+   tigercontrol.utils.optimizers.Adagrad
+   tigercontrol.utils.optimizers.Adam
+   tigercontrol.utils.optimizers.ONS
+   tigercontrol.utils.optimizers.SGD
+   tigercontrol.utils.optimizers.OGD
+   tigercontrol.utils.optimizers.mse
+   tigercontrol.utils.optimizers.cross_entropy
 
 boosting
 --------
@@ -60,4 +60,4 @@ boosting
 .. autosummary::
   :toctree: _autosummary
 
-  tigercontrol.methods.boosting.SimpleBoost
+  tigercontrol.utils.boosting.SimpleBoost

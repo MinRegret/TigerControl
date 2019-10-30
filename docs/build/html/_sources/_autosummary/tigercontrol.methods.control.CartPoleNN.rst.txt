@@ -1,15 +1,15 @@
-tigercontrol.methods.controller.CartPoleNN
+tigercontrol.controllers.CartPoleNN
 ======================================
 
-.. currentmodule:: tigercontrol.methods.control
+.. currentmodule:: tigercontrol.controllers.control
 
 .. autoclass:: CartPoleNN
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

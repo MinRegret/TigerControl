@@ -8,7 +8,7 @@ core
 .. autosummary::
   :toctree: _autosummary
 
-  create_full_environment_to_methods
+  create_full_environment_to_controllers
   run_experiment
 
 metrics
@@ -43,4 +43,4 @@ precomputed
   :toctree: _autosummary
 
   recompute
-  load_prob_method_to_result
+  load_prob_controller_to_result

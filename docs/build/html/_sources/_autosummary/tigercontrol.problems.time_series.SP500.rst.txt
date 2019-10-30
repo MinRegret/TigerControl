@@ -6,10 +6,10 @@ tigercontrol.environments.time\_series.SP500
 .. autoclass:: SP500
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

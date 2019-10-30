@@ -1,15 +1,15 @@
-tigercontrol.methods.controller.LQR
+tigercontrol.controllers.LQR
 ===============================
 
-.. currentmodule:: tigercontrol.methods.control
+.. currentmodule:: tigercontrol.controllers.control
 
 .. autoclass:: LQR
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

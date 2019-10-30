@@ -9,5 +9,5 @@ Subpackages
 
     tigercontrol.utils
     tigercontrol.environments
-    tigercontrol.methods
+    tigercontrol.controllers
     tigercontrol.experiments

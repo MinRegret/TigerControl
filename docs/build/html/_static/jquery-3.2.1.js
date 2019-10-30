@@ -186,7 +186,7 @@ jQuery.fn = jQuery.prototype = {
 	},
 
 	// For internal use only.
-	// Behaves like an Array's method, not like a jQuery method.
+	// Behaves like an Array's controller, not like a jQuery controller.
 	push: push,
 	sort: arr.sort,
 	splice: arr.splice
@@ -585,7 +585,7 @@ var i,
 		return 0;
 	},
 
-	// Instance methods
+	// Instance controllers
 	hasOwn = ({}).hasOwnProperty,
 	arr = [],
 	pop = arr.pop,
@@ -777,8 +777,8 @@ function Sizzle( selector, context, results, seed ) {
 
 		if ( documentIsHTML ) {
 
-			// If the selector is sufficiently simple, try using a "get*By*" DOM method
-			// (excepting DocumentFragment context, where the methods don't exist)
+			// If the selector is sufficiently simple, try using a "get*By*" DOM controller
+			// (excepting DocumentFragment context, where the controllers don't exist)
 			if ( nodeType !== 11 && (match = rquickExpr.exec( selector )) ) {
 
 				// ID selector
@@ -937,7 +937,7 @@ function assert( fn ) {
 /**
  * Adds the same handler for all of the specified attrs
  * @param {String} attrs Pipe-separated list of attributes
- * @param {Function} handler The method that will be applied
+ * @param {Function} handler The controller that will be applied
  */
 function addHandle( attrs, handler ) {
 	var arr = attrs.split("|"),
@@ -1159,7 +1159,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 
 	// Support: IE<10
 	// Check if getElementById returns elements by name
-	// The broken getElementById methods don't pick up programmatically-set names,
+	// The broken getElementById controllers don't pick up programmatically-set names,
 	// so use a roundabout getElementsByName test
 	support.getById = assert(function( el ) {
 		docElem.appendChild( el ).id = expando;
@@ -1419,7 +1419,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 			return 0;
 		}
 
-		// Sort on method existence if only one input has compareDocumentPosition
+		// Sort on controller existence if only one input has compareDocumentPosition
 		var compare = !a.compareDocumentPosition - !b.compareDocumentPosition;
 		if ( compare ) {
 			return compare;
@@ -1738,7 +1738,7 @@ Expr = Sizzle.selectors = {
 				match[2] = unquoted.slice( 0, excess );
 			}
 
-			// Return only captures needed by the pseudo filter method (type and argument)
+			// Return only captures needed by the pseudo filter controller (type and argument)
 			return match.slice( 0, 3 );
 		}
 	},
@@ -2965,7 +2965,7 @@ var rootjQuery,
 			return this;
 		}
 
-		// Method init() accepts an alternate rootjQuery
+		// Controller init() accepts an alternate rootjQuery
 		// so migrate can support jQuery.sub (gh-2101)
 		root = root || rootjQuery;
 
@@ -3001,7 +3001,7 @@ var rootjQuery,
 					if ( rsingleTag.test( match[ 1 ] ) && jQuery.isPlainObject( context ) ) {
 						for ( match in context ) {
 
-							// Properties of context are called as methods if possible
+							// Properties of context are called as controllers if possible
 							if ( jQuery.isFunction( this[ match ] ) ) {
 								this[ match ]( context[ match ] );
 
@@ -3065,7 +3065,7 @@ rootjQuery = jQuery( document );
 
 var rparentsprev = /^(?:parents|prev(?:Until|All))/,
 
-	// Methods guaranteed to produce a unique set when starting from a unique set
+	// Controllers guaranteed to produce a unique set when starting from a unique set
 	guaranteedUnique = {
 		children: true,
 		contents: true,
@@ -3474,17 +3474,17 @@ function Thrower( ex ) {
 }
 
 function adoptValue( value, resolve, reject, noValue ) {
-	var method;
+	var controller;
 
 	try {
 
 		// Check for promise aspect first to privilege synchronous behavior
-		if ( value && jQuery.isFunction( ( method = value.promise ) ) ) {
-			method.call( value ).done( resolve ).fail( reject );
+		if ( value && jQuery.isFunction( ( controller = value.promise ) ) ) {
+			controller.call( value ).done( resolve ).fail( reject );
 
 		// Other thenables
-		} else if ( value && jQuery.isFunction( ( method = value.then ) ) ) {
-			method.call( value, resolve, reject );
+		} else if ( value && jQuery.isFunction( ( controller = value.then ) ) ) {
+			controller.call( value, resolve, reject );
 
 		// Other non-thenables
 		} else {
@@ -3737,7 +3737,7 @@ jQuery.extend( {
 			},
 			deferred = {};
 
-		// Add list-specific methods
+		// Add list-specific controllers
 		jQuery.each( tuples, function( i, tuple ) {
 			var list = tuple[ 2 ],
 				stateString = tuple[ 5 ];
@@ -3923,7 +3923,7 @@ jQuery.extend( {
 
 jQuery.ready.then = readyList.then;
 
-// The ready event handler and self cleanup method
+// The ready event handler and self cleanup controller
 function completed() {
 	document.removeEventListener( "DOMContentLoaded", completed );
 	window.removeEventListener( "load", completed );
@@ -3952,7 +3952,7 @@ if ( document.readyState === "complete" ||
 
 
 
-// Multifunctional method to get and set values of a collection
+// Multifunctional controller to get and set values of a collection
 // The value/s can optionally be executed if it's a function
 var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 	var i = 0,
@@ -4100,7 +4100,7 @@ Data.prototype = {
 		//   1. No key was specified
 		//   2. A string key was specified, but no value provided
 		//
-		// Take the "read" path and allow the get method to determine
+		// Take the "read" path and allow the get controller to determine
 		// which value to return, respectively either:
 		//
 		//   1. The entire cache object
@@ -4257,7 +4257,7 @@ jQuery.extend( {
 	},
 
 	// TODO: Now that all calls to _data and _removeData have been replaced
-	// with direct calls to dataPriv methods, these can be deprecated.
+	// with direct calls to dataPriv controllers, these can be deprecated.
 	_data: function( elem, name, data ) {
 		return dataPriv.access( elem, name, data );
 	},
@@ -4725,7 +4725,7 @@ wrapMap.th = wrapMap.td;
 function getAll( context, tag ) {
 
 	// Support: IE <=9 - 11 only
-	// Use typeof to avoid zero-argument method invocation on host objects (#15151)
+	// Use typeof to avoid zero-argument controller invocation on host objects (#15151)
 	var ret;
 
 	if ( typeof context.getElementsByTagName !== "undefined" ) {
@@ -6010,7 +6010,7 @@ jQuery.fn.extend( {
 
 					elem = 0;
 
-				// If using innerHTML throws an exception, use the fallback method
+				// If using innerHTML throws an exception, use the fallback controller
 				} catch ( e ) {}
 			}
 
@@ -6309,7 +6309,7 @@ function augmentWidthOrHeight( elem, name, extra, isBorderBox, styles ) {
 
 	for ( ; i < 4; i += 2 ) {
 
-		// Both box methods exclude margin, so add it if we want it
+		// Both box controllers exclude margin, so add it if we want it
 		if ( extra === "margin" ) {
 			val += jQuery.css( elem, extra + cssExpand[ i ], true, styles );
 		}
@@ -6367,7 +6367,7 @@ function getWidthOrHeight( elem, name, extra ) {
 	// Normalize "", auto, and prepare for extra
 	val = parseFloat( val ) || 0;
 
-	// Use the active box-sizing method to add/subtract irrelevant styles
+	// Use the active box-sizing controller to add/subtract irrelevant styles
 	return ( val +
 		augmentWidthOrHeight(
 			elem,
@@ -8219,11 +8219,11 @@ jQuery.extend( jQuery.event, {
 				special._default.apply( eventPath.pop(), data ) === false ) &&
 				acceptData( elem ) ) {
 
-				// Call a native DOM method on the target with the same name as the event.
+				// Call a native DOM controller on the target with the same name as the event.
 				// Don't do default actions on window, that's where global variables be (#6170)
 				if ( ontype && jQuery.isFunction( elem[ type ] ) && !jQuery.isWindow( elem ) ) {
 
-					// Don't re-trigger an onFOO event when we call its FOO() method
+					// Don't re-trigger an onFOO event when we call its FOO() controller
 					tmp = elem[ ontype ];
 
 					if ( tmp ) {
@@ -8860,7 +8860,7 @@ jQuery.extend( {
 	ajaxPrefilter: addToPrefiltersOrTransports( prefilters ),
 	ajaxTransport: addToPrefiltersOrTransports( transports ),
 
-	// Main method
+	// Main controller
 	ajax: function( url, options ) {
 
 		// If url is an object, simulate pre-1.5 signature
@@ -9006,8 +9006,8 @@ jQuery.extend( {
 		s.url = ( ( url || s.url || location.href ) + "" )
 			.replace( rprotocol, location.protocol + "//" );
 
-		// Alias method option to type as per ticket #12004
-		s.type = options.method || options.type || s.method || s.type;
+		// Alias controller option to type as per ticket #12004
+		s.type = options.controller || options.type || s.controller || s.type;
 
 		// Extract dataTypes list
 		s.dataTypes = ( s.dataType || "*" ).toLowerCase().match( rnothtmlwhite ) || [ "" ];
@@ -9308,8 +9308,8 @@ jQuery.extend( {
 	}
 } );
 
-jQuery.each( [ "get", "post" ], function( i, method ) {
-	jQuery[ method ] = function( url, data, callback, type ) {
+jQuery.each( [ "get", "post" ], function( i, controller ) {
+	jQuery[ controller ] = function( url, data, callback, type ) {
 
 		// Shift arguments if data argument was omitted
 		if ( jQuery.isFunction( data ) ) {
@@ -9321,7 +9321,7 @@ jQuery.each( [ "get", "post" ], function( i, method ) {
 		// The url can be an options object (which then must have .url)
 		return jQuery.ajax( jQuery.extend( {
 			url: url,
-			type: method,
+			type: controller,
 			dataType: type,
 			data: data,
 			success: callback
@@ -9844,9 +9844,9 @@ jQuery.fn.load = function( url, params, callback ) {
 		jQuery.ajax( {
 			url: url,
 
-			// If "type" variable is undefined, then "GET" method will be used.
+			// If "type" variable is undefined, then "GET" controller will be used.
 			// Make value of this field explicit since
-			// user can override it through ajaxSetup method
+			// user can override it through ajaxSetup controller
 			type: type || "GET",
 			dataType: "html",
 			data: params
@@ -10038,8 +10038,8 @@ jQuery.fn.extend( {
 		};
 	},
 
-	// This method will return documentElement in the following cases:
-	// 1) For the element inside the iframe without offsetParent, this method will return
+	// This controller will return documentElement in the following cases:
+	// 1) For the element inside the iframe without offsetParent, this controller will return
 	//    documentElement of the parent window
 	// 2) For the hidden or detached element
 	// 3) For body or html element, i.e. in case of the html node - it will return itself
@@ -10061,12 +10061,12 @@ jQuery.fn.extend( {
 	}
 } );
 
-// Create scrollLeft and scrollTop methods
-jQuery.each( { scrollLeft: "pageXOffset", scrollTop: "pageYOffset" }, function( method, prop ) {
+// Create scrollLeft and scrollTop controllers
+jQuery.each( { scrollLeft: "pageXOffset", scrollTop: "pageYOffset" }, function( controller, prop ) {
 	var top = "pageYOffset" === prop;
 
-	jQuery.fn[ method ] = function( val ) {
-		return access( this, function( elem, method, val ) {
+	jQuery.fn[ controller ] = function( val ) {
+		return access( this, function( elem, controller, val ) {
 
 			// Coalesce documents and windows
 			var win;
@@ -10077,7 +10077,7 @@ jQuery.each( { scrollLeft: "pageXOffset", scrollTop: "pageYOffset" }, function( 
 			}
 
 			if ( val === undefined ) {
-				return win ? win[ prop ] : elem[ method ];
+				return win ? win[ prop ] : elem[ controller ];
 			}
 
 			if ( win ) {
@@ -10087,9 +10087,9 @@ jQuery.each( { scrollLeft: "pageXOffset", scrollTop: "pageYOffset" }, function( 
 				);
 
 			} else {
-				elem[ method ] = val;
+				elem[ controller ] = val;
 			}
-		}, method, val, arguments.length );
+		}, controller, val, arguments.length );
 	};
 } );
 
@@ -10115,7 +10115,7 @@ jQuery.each( [ "top", "left" ], function( i, prop ) {
 } );
 
 
-// Create innerHeight, innerWidth, height, width, outerHeight and outerWidth methods
+// Create innerHeight, innerWidth, height, width, outerHeight and outerWidth controllers
 jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 	jQuery.each( { padding: "inner" + name, content: type, "": "outer" + name },
 		function( defaultExtra, funcName ) {

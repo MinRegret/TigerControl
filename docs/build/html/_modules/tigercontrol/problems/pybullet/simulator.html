@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -164,7 +164,7 @@
         <span class="n">initial_obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">initial_obs</span>
 
-    <span class="c1"># state saving and loading methods</span>
+    <span class="c1"># state saving and loading controllers</span>
     <span class="k">def</span> <span class="nf">saveFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="n">p</span><span class="o">.</span><span class="n">saveBullet</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
@@ -179,7 +179,7 @@
     <span class="k">def</span> <span class="nf">loadState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ID</span><span class="p">):</span>
         <span class="n">p</span><span class="o">.</span><span class="n">restoreState</span><span class="p">(</span><span class="n">stateId</span> <span class="o">=</span> <span class="n">ID</span><span class="p">)</span>
 
-    <span class="c1"># gym environment methods</span>
+    <span class="c1"># gym environment controllers</span>
     <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 

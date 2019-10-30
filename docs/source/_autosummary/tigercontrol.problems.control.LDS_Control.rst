@@ -6,10 +6,10 @@ tigercontrol.environments.controller.LDS\_Control
 .. autoclass:: LDS_Control
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

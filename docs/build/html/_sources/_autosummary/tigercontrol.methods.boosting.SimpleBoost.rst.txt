@@ -1,15 +1,15 @@
-tigercontrol.methods.boosting.SimpleBoost
+tigercontrol.utils.boosting.SimpleBoost
 ========================================
 
-.. currentmodule:: tigercontrol.methods.boosting
+.. currentmodule:: tigercontrol.utils.boosting
 
 .. autoclass:: SimpleBoost
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.optimizers.cross_entropy &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.utils.optimizers.cross_entropy &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="tigercontrol.methods.boosting.SimpleBoost" href="tigercontrol.methods.boosting.SimpleBoost.html" />
-    <link rel="prev" title="tigercontrol.methods.optimizers.mse" href="tigercontrol.methods.optimizers.mse.html" /> 
+    <link rel="next" title="tigercontrol.utils.boosting.SimpleBoost" href="tigercontrol.utils.boosting.SimpleBoost.html" />
+    <link rel="prev" title="tigercontrol.utils.optimizers.mse" href="tigercontrol.utils.optimizers.mse.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -63,7 +63,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -86,12 +86,12 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../tigercontrol.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.utils.html">tigercontrol.utils package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.environments.html">tigercontrol.environments package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../tigercontrol.methods.html">tigercontrol.methods package</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.methods.html#core">core</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.methods.html#control">control</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.methods.html#time-series">time_series</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="../tigercontrol.methods.html#optimizers">optimizers</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.methods.html#boosting">boosting</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../tigercontrol.controllers.html">tigercontrol.controllers package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.controllers.html#core">core</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.controllers.html#control">control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.controllers.html#time-series">time_series</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../tigercontrol.controllers.html#optimizers">optimizers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.controllers.html#boosting">boosting</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.experiments.html">tigercontrol.experiments package</a></li>
@@ -149,15 +149,15 @@
         
           <li><a href="../tigercontrol.html">tigercontrol package</a> &raquo;</li>
         
-          <li><a href="../tigercontrol.methods.html">tigercontrol.methods package</a> &raquo;</li>
+          <li><a href="../tigercontrol.controllers.html">tigercontrol.controllers package</a> &raquo;</li>
         
-      <li>tigercontrol.methods.optimizers.cross_entropy</li>
+      <li>tigercontrol.utils.optimizers.cross_entropy</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/_autosummary/tigercontrol.methods.optimizers.cross_entropy.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/_autosummary/tigercontrol.utils.optimizers.cross_entropy.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -170,13 +170,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="tigercontrol-methods-optimizers-cross-entropy">
-<h1>tigercontrol.methods.optimizers.cross_entropy<a class="headerlink" href="#tigercontrol-methods-optimizers-cross-entropy" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="tigercontrol-controllers-optimizers-cross-entropy">
+<h1>tigercontrol.utils.optimizers.cross_entropy<a class="headerlink" href="#tigercontrol-controllers-optimizers-cross-entropy" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="tigercontrol.methods.optimizers.cross_entropy">
-<code class="descclassname">tigercontrol.methods.optimizers.</code><code class="descname">cross_entropy</code><span class="sig-paren">(</span><em>y_pred</em>, <em>y_true</em>, <em>eps=1e-09</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/methods/optimizers/losses.html#cross_entropy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.methods.optimizers.cross_entropy" title="Permalink to this definition">¶</a></dt>
+<dt id="tigercontrol.utils.optimizers.cross_entropy">
+<code class="descclassname">tigercontrol.utils.optimizers.</code><code class="descname">cross_entropy</code><span class="sig-paren">(</span><em>y_pred</em>, <em>y_true</em>, <em>eps=1e-09</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/controllers/optimizers/losses.html#cross_entropy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.utils.optimizers.cross_entropy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Description: cross entropy loss, y_pred is equivalent to logits and y_true to labels
-:param y_pred: value predicted by method
+:param y_pred: value predicted by controller
 :param y_true: ground truth value
 :param eps: some scalar</p>
 </dd></dl>
@@ -191,10 +191,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="tigercontrol.methods.boosting.SimpleBoost.html" class="btn btn-neutral float-right" title="tigercontrol.methods.boosting.SimpleBoost" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="tigercontrol.utils.boosting.SimpleBoost.html" class="btn btn-neutral float-right" title="tigercontrol.utils.boosting.SimpleBoost" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="tigercontrol.methods.optimizers.mse.html" class="btn btn-neutral float-left" title="tigercontrol.methods.optimizers.mse" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tigercontrol.utils.optimizers.mse.html" class="btn btn-neutral float-left" title="tigercontrol.utils.optimizers.mse" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

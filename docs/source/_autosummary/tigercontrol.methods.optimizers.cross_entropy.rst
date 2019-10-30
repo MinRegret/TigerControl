@@ -1,6 +1,6 @@
-tigercontrol.methods.optimizers.cross\_entropy
+tigercontrol.utils.optimizers.cross\_entropy
 =============================================
 
-.. currentmodule:: tigercontrol.methods.optimizers
+.. currentmodule:: tigercontrol.utils.optimizers
 
 .. autofunction:: cross_entropy

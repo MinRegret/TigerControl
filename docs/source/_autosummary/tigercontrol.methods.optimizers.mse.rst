@@ -1,6 +1,6 @@
-tigercontrol.methods.optimizers.mse
+tigercontrol.utils.optimizers.mse
 ==================================
 
-.. currentmodule:: tigercontrol.methods.optimizers
+.. currentmodule:: tigercontrol.utils.optimizers
 
 .. autofunction:: mse

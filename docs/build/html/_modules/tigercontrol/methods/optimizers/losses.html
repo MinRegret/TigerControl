@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.optimizers.losses &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.utils.optimizers.losses &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.methods.optimizers.losses</li>
+      <li>tigercontrol.utils.optimizers.losses</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,24 +146,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.methods.optimizers.losses</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.utils.optimizers.losses</h1><div class="highlight"><pre>
 <span></span><span class="c1"># loss functions</span>
 
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span> 
 
-<div class="viewcode-block" id="mse"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.optimizers.mse.html#tigercontrol.methods.optimizers.mse">[docs]</a><span class="k">def</span> <span class="nf">mse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">):</span>
+<div class="viewcode-block" id="mse"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.utils.optimizers.mse.html#tigercontrol.utils.optimizers.mse">[docs]</a><span class="k">def</span> <span class="nf">mse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Description: mean-square-error loss</span>
 <span class="sd">        Args:</span>
-<span class="sd">            y_pred : value predicted by method</span>
+<span class="sd">            y_pred : value predicted by controller</span>
 <span class="sd">            y_true : ground truth value</span>
 <span class="sd">            eps: some scalar</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y_pred</span> <span class="o">-</span> <span class="n">y_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
     
-<div class="viewcode-block" id="cross_entropy"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.optimizers.cross_entropy.html#tigercontrol.methods.optimizers.cross_entropy">[docs]</a><span class="k">def</span> <span class="nf">cross_entropy</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">):</span>
+<div class="viewcode-block" id="cross_entropy"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.utils.optimizers.cross_entropy.html#tigercontrol.utils.optimizers.cross_entropy">[docs]</a><span class="k">def</span> <span class="nf">cross_entropy</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Description: cross entropy loss, y_pred is equivalent to logits and y_true to labels</span>
 <span class="sd">        Args:</span>
-<span class="sd">            y_pred : value predicted by method</span>
+<span class="sd">            y_pred : value predicted by controller</span>
 <span class="sd">            y_true : ground truth value</span>
 <span class="sd">            eps: some scalar</span>
 <span class="sd">    &#39;&#39;&#39;</span>

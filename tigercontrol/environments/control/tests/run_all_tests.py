@@ -1,12 +1,12 @@
-from tigercontrol.environments.controller.tests.test_lds import test_lds
-from tigercontrol.environments.controller.tests.test_lstm_control import test_lstm_control
-from tigercontrol.environments.controller.tests.test_rnn_control import test_rnn_control
-from tigercontrol.environments.controller.tests.test_cartpole import test_cartpole
-from tigercontrol.environments.controller.tests.test_pendulum import test_pendulum
-from tigercontrol.environments.controller.tests.test_double_pendulum import test_double_pendulum
-from tigercontrol.environments.controller.tests.test_obstacles_improved import test_obstacles_improved
-from tigercontrol.environments.controller.tests.test_planar_quadrotor import test_planar_quadrotor
-from tigercontrol.environments.controller.tests.test_double_pendulum import test_double_pendulum
+from tigercontrol.environments.control.tests.test_lds import test_lds
+from tigercontrol.environments.control.tests.test_lstm_control import test_lstm_control
+from tigercontrol.environments.control.tests.test_rnn_control import test_rnn_control
+from tigercontrol.environments.control.tests.test_cartpole import test_cartpole
+from tigercontrol.environments.control.tests.test_pendulum import test_pendulum
+from tigercontrol.environments.control.tests.test_double_pendulum import test_double_pendulum
+from tigercontrol.environments.control.tests.test_obstacles_improved import test_obstacles_improved
+from tigercontrol.environments.control.tests.test_planar_quadrotor import test_planar_quadrotor
+from tigercontrol.environments.control.tests.test_double_pendulum import test_double_pendulum
 
 
 def run_all_tests(steps=1000, show=False):

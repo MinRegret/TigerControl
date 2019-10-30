@@ -6,10 +6,10 @@ tigercontrol.environments.pybullet.Ant
 .. autoclass:: Ant
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

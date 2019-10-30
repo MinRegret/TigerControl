@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.controller.lqr &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.controllers.lqr &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.methods.controller.lqr</li>
+      <li>tigercontrol.controllers.lqr</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,16 +146,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.methods.controller.lqr</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.controllers.lqr</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Linear Quadratic Regulator</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">tigercontrol</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.methods.control</span> <span class="k">import</span> <span class="n">ControlMethod</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.controllers.control</span> <span class="k">import</span> <span class="n">ControlController</span>
 
-<div class="viewcode-block" id="LQR"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.controller.LQR.html#tigercontrol.methods.controller.LQR">[docs]</a><span class="k">class</span> <span class="nc">LQR</span><span class="p">(</span><span class="n">ControlMethod</span><span class="p">):</span>
+<div class="viewcode-block" id="LQR"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.controllers.LQR.html#tigercontrol.controllers.LQR">[docs]</a><span class="k">class</span> <span class="nc">LQR</span><span class="p">(</span><span class="n">ControlController</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Computes optimal set of actions using the Linear Quadratic Regulator</span>
 <span class="sd">    algorithm.</span>
@@ -163,7 +163,7 @@
     
     <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([])</span>
 
-<div class="viewcode-block" id="LQR.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.controller.LQR.html#tigercontrol.methods.controller.LQR.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LQR.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.controllers.LQR.html#tigercontrol.controllers.LQR.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span></div>
 
     <span class="k">def</span> <span class="nf">to_ndarray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
@@ -194,7 +194,7 @@
 
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Description: Initialize the dynamics of the method</span>
+<span class="sd">        Description: Initialize the dynamics of the controller</span>
 <span class="sd">        Args:</span>
 <span class="sd">            F (float/numpy.ndarray): past value contribution coefficients</span>
 <span class="sd">            f (float/numpy.ndarray): bias coefficients</span>
@@ -249,7 +249,7 @@
 
     <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Description: Prints information about this class and its methods.</span>
+<span class="sd">        Description: Prints information about this class and its controllers.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            None</span>
 <span class="sd">        Returns:</span>
@@ -258,10 +258,10 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">LQR_help</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;LQR Method&gt;&quot;</span></div>
+        <span class="k">return</span> <span class="s2">&quot;&lt;LQR Controller&gt;&quot;</span></div>
 
 
-<span class="c1"># string to print when calling help() method</span>
+<span class="c1"># string to print when calling help() controller</span>
 <span class="n">LQR_help</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="s2">-------------------- *** --------------------</span>
@@ -271,11 +271,11 @@
 <span class="s2">Description: Computes optimal set of actions using the Linear Quadratic Regulator</span>
 <span class="s2">    algorithm.</span>
 
-<span class="s2">Methods:</span>
+<span class="s2">Controllers:</span>
 
 <span class="s2">    initialize(F, f, C, c, T, x)</span>
 <span class="s2">        Description:</span>
-<span class="s2">            Initialize the dynamics of the method</span>
+<span class="s2">            Initialize the dynamics of the controller</span>
 <span class="s2">        Args:</span>
 <span class="s2">            F (float/numpy.ndarray): past value contribution coefficients</span>
 <span class="s2">            f (float/numpy.ndarray): bias coefficients</span>
@@ -308,7 +308,7 @@
 
 <span class="s2">    help()</span>
 <span class="s2">        Description:</span>
-<span class="s2">            Prints information about this class and its methods.</span>
+<span class="s2">            Prints information about this class and its controllers.</span>
 <span class="s2">        Args:</span>
 <span class="s2">            None</span>
 <span class="s2">        Returns:</span>

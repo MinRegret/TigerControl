@@ -158,8 +158,8 @@ def test_obstacles(verbose=False):
     environment = tigercontrol.environment("PyBullet-Obstacles-v0")
     # obs = environment.initialize(render=verbose)
 
-    # method = tigercontrol.method("CartPoleNN")
-    # method.initialize(environment.get_observation_space(), environment.get_action_space())
+    # controller = tigercontrol.controllers("CartPoleNN")
+    # controller.initialize(environment.get_observation_space(), environment.get_action_space())
 
     # Initial setup
     # Flag that sets if things are visualized

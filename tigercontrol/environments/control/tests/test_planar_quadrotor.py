@@ -31,10 +31,10 @@ def test_planar_quadrotor(steps=10, show_plot=True):
     c = np.zeros((n+m, 1)) # linear cost
     x = environment.initialize() # np.ones((n,1)) # initial state
 
-    method = tigercontrol.method("LQR")
-    method.initialize(A, B, C, T, x)
+    controller = tigercontrol.controllers("LQR")
+    controller.initialize(A, B, C, T, x)
 
-    u = method.plan()
+    u = controller.plan()
 
     if show_plot:
         plt.plot([np.linalg.norm(ui) for ui in u], 'C0--', label = "LQR")
@@ -48,7 +48,7 @@ def test_planar_quadrotor(steps=10, show_plot=True):
     # trajectory = []
     # for i in range(steps):
     #     # Compute control input
-    #     u = u0 + method.plan(x) # nominal control input + LQR feedback: u0 + K*(x-x0)
+    #     u = u0 + controller.plan(x) # nominal control input + LQR feedback: u0 + K*(x-x0)
     #     # Apply control input
     #     x = environment.step(u)
     #     # Append to trajectory

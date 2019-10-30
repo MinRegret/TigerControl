@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -150,34 +150,34 @@
 <span></span><span class="c1"># NewExperiment class</span>
 
 <span class="kn">from</span> <span class="nn">tigercontrol</span> <span class="k">import</span> <span class="n">error</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.experiments.core</span> <span class="k">import</span> <span class="n">to_dict</span><span class="p">,</span> <span class="n">run_experiment</span><span class="p">,</span> <span class="n">create_full_environment_to_methods</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.experiments.core</span> <span class="k">import</span> <span class="n">to_dict</span><span class="p">,</span> <span class="n">run_experiment</span><span class="p">,</span> <span class="n">create_full_environment_to_controllers</span>
 
 <div class="viewcode-block" id="NewExperiment"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.experiments.NewExperiment.html#tigercontrol.experiments.NewExperiment">[docs]</a><span class="k">class</span> <span class="nc">NewExperiment</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Description: class for implementing algorithms with enforced modularity &#39;&#39;&#39;</span>
 <div class="viewcode-block" id="NewExperiment.__init__"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.experiments.NewExperiment.html#tigercontrol.experiments.NewExperiment.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span></div>
         
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environments</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">environment_to_methods</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">timesteps</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> \
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environments</span><span class="p">,</span> <span class="n">controllers</span><span class="p">,</span> <span class="n">environment_to_controllers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">timesteps</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> \
                          <span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">load_bar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Description: Initializes the new experiment instance. </span>
 
 <span class="sd">        Args:     </span>
 <span class="sd">            environments (dict): map of the form environment_id -&gt; hyperparameters for environment </span>
-<span class="sd">            methods (dict): map of the form method_id -&gt; hyperparameters for method</span>
-<span class="sd">            environment_to_methods (dict) : map of the form environment_id -&gt; list of method_id.</span>
+<span class="sd">            controllers (dict): map of the form controller_id -&gt; hyperparameters for controller</span>
+<span class="sd">            environment_to_controllers (dict) : map of the form environment_id -&gt; list of controller_id.</span>
 <span class="sd">                                       If None, then we assume that the user wants to</span>
-<span class="sd">                                       test every method in method_to_params against every</span>
+<span class="sd">                                       test every controller in controller_to_params against every</span>
 <span class="sd">                                       environment in environment_to_params</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">intialized</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">environments</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="n">environments</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">metrics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">environments</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">controllers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="n">environments</span><span class="p">,</span> <span class="n">controllers</span><span class="p">,</span> <span class="n">metrics</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesteps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_bar</span> <span class="o">=</span> <span class="n">key</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">load_bar</span>
 
-        <span class="k">if</span><span class="p">(</span><span class="n">environment_to_methods</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">environment_to_methods</span> <span class="o">=</span> <span class="n">create_full_environment_to_methods</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environments</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">environment_to_controllers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment_to_controllers</span> <span class="o">=</span> <span class="n">create_full_environment_to_controllers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">environments</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">controllers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">environment_to_methods</span> <span class="o">=</span> <span class="n">environment_to_methods</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment_to_controllers</span> <span class="o">=</span> <span class="n">environment_to_controllers</span>
 
     <span class="k">def</span> <span class="nf">run_all_experiments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -187,47 +187,47 @@
 <span class="sd">            None</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            prob_method_to_result (dict): Dictionary containing results for all specified metrics and performance</span>
-<span class="sd">                                         (time and memory usage) for all environment-method associations.</span>
+<span class="sd">            prob_controller_to_result (dict): Dictionary containing results for all specified metrics and performance</span>
+<span class="sd">                                         (time and memory usage) for all environment-controller associations.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">prob_method_to_result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">prob_controller_to_result</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">environment_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">environments</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="k">for</span> <span class="p">(</span><span class="n">new_environment_id</span><span class="p">,</span> <span class="n">environment_params</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">environments</span><span class="p">[</span><span class="n">environment_id</span><span class="p">]:</span>
-                    <span class="k">for</span> <span class="n">method_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_to_methods</span><span class="p">[</span><span class="n">environment_id</span><span class="p">]:</span>
-                        <span class="k">for</span> <span class="p">(</span><span class="n">new_method_id</span><span class="p">,</span> <span class="n">method_params</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="p">[</span><span class="n">method_id</span><span class="p">]:</span>
-                            <span class="n">loss</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">((</span><span class="n">environment_id</span><span class="p">,</span> <span class="n">environment_params</span><span class="p">),</span> <span class="p">(</span><span class="n">method_id</span><span class="p">,</span> <span class="n">method_params</span><span class="p">),</span> <span class="n">metric</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">timesteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="n">load_bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_bar</span><span class="p">)</span>
-                            <span class="n">prob_method_to_result</span><span class="p">[(</span><span class="n">metric</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">,</span> <span class="n">method_id</span><span class="p">)]</span> <span class="o">=</span> <span class="n">loss</span>
-                            <span class="n">prob_method_to_result</span><span class="p">[(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">,</span> <span class="n">method_id</span><span class="p">)]</span> <span class="o">=</span> <span class="n">time</span>
-                            <span class="n">prob_method_to_result</span><span class="p">[(</span><span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">,</span> <span class="n">method_id</span><span class="p">)]</span> <span class="o">=</span> <span class="n">memory</span>
+                    <span class="k">for</span> <span class="n">controller_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">environment_to_controllers</span><span class="p">[</span><span class="n">environment_id</span><span class="p">]:</span>
+                        <span class="k">for</span> <span class="p">(</span><span class="n">new_controller_id</span><span class="p">,</span> <span class="n">controller_params</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controllers</span><span class="p">[</span><span class="n">controller_id</span><span class="p">]:</span>
+                            <span class="n">loss</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">memory</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">((</span><span class="n">environment_id</span><span class="p">,</span> <span class="n">environment_params</span><span class="p">),</span> <span class="p">(</span><span class="n">controller_id</span><span class="p">,</span> <span class="n">controller_params</span><span class="p">),</span> <span class="n">metric</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="n">timesteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="n">load_bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_bar</span><span class="p">)</span>
+                            <span class="n">prob_controller_to_result</span><span class="p">[(</span><span class="n">metric</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">,</span> <span class="n">controller_id</span><span class="p">)]</span> <span class="o">=</span> <span class="n">loss</span>
+                            <span class="n">prob_controller_to_result</span><span class="p">[(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">,</span> <span class="n">controller_id</span><span class="p">)]</span> <span class="o">=</span> <span class="n">time</span>
+                            <span class="n">prob_controller_to_result</span><span class="p">[(</span><span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="n">environment_id</span><span class="p">,</span> <span class="n">controller_id</span><span class="p">)]</span> <span class="o">=</span> <span class="n">memory</span>
 
-        <span class="k">return</span> <span class="n">prob_method_to_result</span>
+        <span class="k">return</span> <span class="n">prob_controller_to_result</span>
 
     <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Description: Prints information about this class and its methods.</span>
+<span class="sd">        Description: Prints information about this class and its controllers.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">NewExperiment_help</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;NewExperiment Method&gt;&quot;</span></div>
+        <span class="k">return</span> <span class="s2">&quot;&lt;NewExperiment Controller&gt;&quot;</span></div>
 
-<span class="c1"># string to print when calling help() method</span>
+<span class="c1"># string to print when calling help() controller</span>
 <span class="n">NewExperiment_help</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="s2">-------------------- *** --------------------</span>
 
-<span class="s2">Methods:</span>
+<span class="s2">Controllers:</span>
 
 <span class="s2">    initialize()</span>
 <span class="s2">        Description: Initializes the new experiment instance. </span>
 
 <span class="s2">        Args:     </span>
 <span class="s2">            environments (dict): map of the form environment_id -&gt; hyperparameters for environment </span>
-<span class="s2">            methods (dict): map of the form method_id -&gt; hyperparameters for method</span>
-<span class="s2">            environment_to_methods (dict) : map of the form environment_id -&gt; list of method_id.</span>
+<span class="s2">            controllers (dict): map of the form controller_id -&gt; hyperparameters for controller</span>
+<span class="s2">            environment_to_controllers (dict) : map of the form environment_id -&gt; list of controller_id.</span>
 <span class="s2">                                       If None, then we assume that the user wants to</span>
-<span class="s2">                                       test every method in method_to_params against every</span>
+<span class="s2">                                       test every controller in controller_to_params against every</span>
 <span class="s2">                                       environment in environment_to_params</span>
 
 <span class="s2">    def run_all_experiments():</span>
@@ -237,12 +237,12 @@
 <span class="s2">            None</span>
 
 <span class="s2">        Returns:</span>
-<span class="s2">            prob_method_to_result (dict): Dictionary containing results for all specified metrics and performance</span>
-<span class="s2">                                         (time and memory usage) for all environment-method associations.</span>
+<span class="s2">            prob_controller_to_result (dict): Dictionary containing results for all specified metrics and performance</span>
+<span class="s2">                                         (time and memory usage) for all environment-controller associations.</span>
 
 
 <span class="s2">    help()</span>
-<span class="s2">        Description: Prints information about this class and its methods</span>
+<span class="s2">        Description: Prints information about this class and its controllers</span>
 
 <span class="s2">-------------------- *** --------------------</span>
 

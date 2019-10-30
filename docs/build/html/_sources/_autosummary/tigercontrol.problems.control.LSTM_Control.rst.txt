@@ -6,10 +6,10 @@ tigercontrol.environments.controller.LSTM\_Control
 .. autoclass:: LSTM_Control
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

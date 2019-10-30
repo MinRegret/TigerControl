@@ -6,10 +6,10 @@ tigercontrol.environments.controller.Pendulum
 .. autoclass:: Pendulum
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

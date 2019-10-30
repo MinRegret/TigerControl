@@ -209,11 +209,11 @@
     return found;
   };
 
-  // Invoke a method (with arguments) on every item in a collection.
-  _.invoke = function(obj, method) {
+  // Invoke a controller (with arguments) on every item in a collection.
+  _.invoke = function(obj, controller) {
     var args = slice.call(arguments, 2);
     return _.map(obj, function(value) {
-      return (_.isFunction(method) ? method || value : value[method]).apply(value, args);
+      return (_.isFunction(controller) ? controller || value : value[controller]).apply(value, args);
     });
   };
 
@@ -491,7 +491,7 @@
     };
   };
 
-  // Bind all of an object's methods to that object. Useful for ensuring that
+  // Bind all of an object's controllers to that object. Useful for ensuring that
   // all callbacks defined on an object belong to it.
   _.bindAll = function(obj) {
     var funcs = slice.call(arguments, 1);
@@ -622,8 +622,8 @@
   };
 
   // Return a sorted list of the function names available on the object.
-  // Aliased as `methods`
-  _.functions = _.methods = function(obj) {
+  // Aliased as `controllers`
+  _.functions = _.controllers = function(obj) {
     var names = [];
     for (var key in obj) {
       if (_.isFunction(obj[key])) names.push(key);
@@ -658,7 +658,7 @@
   };
 
   // Invokes interceptor with the obj, and then returns obj.
-  // The primary purpose of this method is to "tap into" a method chain, in
+  // The primary purpose of this controller is to "tap into" a controller chain, in
   // order to perform operations on intermediate results within the chain.
   _.tap = function(obj, interceptor) {
     interceptor(obj);
@@ -675,7 +675,7 @@
     // Unwrap any wrapped objects.
     if (a._chain) a = a._wrapped;
     if (b._chain) b = b._wrapped;
-    // Invoke a custom `isEqual` method if one is provided.
+    // Invoke a custom `isEqual` controller if one is provided.
     if (a.isEqual && _.isFunction(a.isEqual)) return a.isEqual(b);
     if (b.isEqual && _.isFunction(b.isEqual)) return b.isEqual(a);
     // Compare `[[Class]]` names.
@@ -953,7 +953,7 @@
     return chain ? _(obj).chain() : obj;
   };
 
-  // A method to easily add functions to the OOP wrapper.
+  // A controller to easily add functions to the OOP wrapper.
   var addToWrapper = function(name, func) {
     wrapper.prototype[name] = function() {
       var args = slice.call(arguments);
@@ -967,10 +967,10 @@
 
   // Add all mutator Array functions to the wrapper.
   each(['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'], function(name) {
-    var method = ArrayProto[name];
+    var controller = ArrayProto[name];
     wrapper.prototype[name] = function() {
       var wrapped = this._wrapped;
-      method.apply(wrapped, arguments);
+      controller.apply(wrapped, arguments);
       var length = wrapped.length;
       if ((name == 'shift' || name == 'splice') && length === 0) delete wrapped[0];
       return result(wrapped, this._chain);
@@ -979,9 +979,9 @@
 
   // Add all accessor Array functions to the wrapper.
   each(['concat', 'join', 'slice'], function(name) {
-    var method = ArrayProto[name];
+    var controller = ArrayProto[name];
     wrapper.prototype[name] = function() {
-      return result(method.apply(this._wrapped, arguments), this._chain);
+      return result(controller.apply(this._wrapped, arguments), this._chain);
     };
   });
 

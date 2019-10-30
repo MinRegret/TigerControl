@@ -6,10 +6,10 @@ tigercontrol.environments.time\_series.UCI\_Indoor
 .. autoclass:: UCI_Indoor
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

@@ -6,10 +6,10 @@ tigercontrol.environments.time\_series.LDS\_TimeSeries
 .. autoclass:: LDS_TimeSeries
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

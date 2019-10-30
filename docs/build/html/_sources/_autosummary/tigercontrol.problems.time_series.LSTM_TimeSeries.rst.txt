@@ -6,10 +6,10 @@ tigercontrol.environments.time\_series.LSTM\_TimeSeries
 .. autoclass:: LSTM_TimeSeries
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

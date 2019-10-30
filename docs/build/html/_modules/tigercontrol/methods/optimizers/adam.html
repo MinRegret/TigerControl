@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.optimizers.adam &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.utils.optimizers.adam &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.methods.optimizers.adam</li>
+      <li>tigercontrol.utils.optimizers.adam</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,18 +146,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.methods.optimizers.adam</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.utils.optimizers.adam</h1><div class="highlight"><pre>
 <span></span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">Adam optimizer</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
-<span class="kn">from</span> <span class="nn">tigercontrol.methods.optimizers.core</span> <span class="k">import</span> <span class="n">Optimizer</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.methods.optimizers.losses</span> <span class="k">import</span> <span class="n">mse</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.utils.optimizers.core</span> <span class="k">import</span> <span class="n">Optimizer</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.utils.optimizers.losses</span> <span class="k">import</span> <span class="n">mse</span>
 <span class="kn">from</span> <span class="nn">tigercontrol</span> <span class="k">import</span> <span class="n">error</span>
 <span class="kn">from</span> <span class="nn">jax</span> <span class="k">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">grad</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<div class="viewcode-block" id="Adam"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.optimizers.Adam.html#tigercontrol.methods.optimizers.Adam">[docs]</a><span class="k">class</span> <span class="nc">Adam</span><span class="p">(</span><span class="n">Optimizer</span><span class="p">):</span>
+<div class="viewcode-block" id="Adam"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.utils.optimizers.Adam.html#tigercontrol.utils.optimizers.Adam">[docs]</a><span class="k">class</span> <span class="nc">Adam</span><span class="p">(</span><span class="n">Optimizer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Ordinary Gradient Descent optimizer.</span>
 <span class="sd">    Args:</span>
@@ -167,7 +167,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Adam.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.optimizers.Adam.html#tigercontrol.methods.optimizers.Adam.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">mse</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="o">=</span><span class="p">{}):</span>
+<div class="viewcode-block" id="Adam.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.utils.optimizers.Adam.html#tigercontrol.utils.optimizers.Adam.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">mse</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="o">=</span><span class="p">{}):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">learning_rate</span>
 
@@ -185,7 +185,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_valid_pred</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_valid_loss</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_predict</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
 
-        <span class="nd">@jit</span> <span class="c1"># helper update method</span>
+        <span class="nd">@jit</span> <span class="c1"># helper update controller</span>
         <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">max_norm</span><span class="p">,</span> <span class="n">beta_1_t</span><span class="p">,</span> <span class="n">beta_2_t</span><span class="p">):</span>
             <span class="n">m</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">beta_1</span> <span class="o">*</span> <span class="n">m_i</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta_1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dw</span> <span class="k">for</span> <span class="p">(</span><span class="n">m_i</span><span class="p">,</span> <span class="n">dw</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">grad</span><span class="p">)]</span>
             <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">beta_2</span> <span class="o">*</span> <span class="n">v_i</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta_2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">dw</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">v_i</span><span class="p">,</span> <span class="n">dw</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">grad</span><span class="p">)]</span>
@@ -206,8 +206,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Description: Updates parameters based on correct value, loss and learning rate.</span>
 <span class="sd">        Args:</span>
-<span class="sd">            params (list/numpy.ndarray): Parameters of method pred method</span>
-<span class="sd">            x (float): input to method</span>
+<span class="sd">            params (list/numpy.ndarray): Parameters of controller pred controller</span>
+<span class="sd">            x (float): input to controller</span>
 <span class="sd">            y (float): true label</span>
 <span class="sd">            loss (function): loss function. defaults to input value.</span>
 <span class="sd">        Returns:</span>

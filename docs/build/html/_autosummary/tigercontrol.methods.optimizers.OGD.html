@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.optimizers.OGD &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.utils.optimizers.OGD &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="tigercontrol.methods.optimizers.mse" href="tigercontrol.methods.optimizers.mse.html" />
-    <link rel="prev" title="tigercontrol.methods.optimizers.SGD" href="tigercontrol.methods.optimizers.SGD.html" /> 
+    <link rel="next" title="tigercontrol.utils.optimizers.mse" href="tigercontrol.utils.optimizers.mse.html" />
+    <link rel="prev" title="tigercontrol.utils.optimizers.SGD" href="tigercontrol.utils.optimizers.SGD.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -63,7 +63,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -86,12 +86,12 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../tigercontrol.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.utils.html">tigercontrol.utils package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.environments.html">tigercontrol.environments package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../tigercontrol.methods.html">tigercontrol.methods package</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.methods.html#core">core</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.methods.html#control">control</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.methods.html#time-series">time_series</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="../tigercontrol.methods.html#optimizers">optimizers</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.methods.html#boosting">boosting</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../tigercontrol.controllers.html">tigercontrol.controllers package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.controllers.html#core">core</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.controllers.html#control">control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.controllers.html#time-series">time_series</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../tigercontrol.controllers.html#optimizers">optimizers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../tigercontrol.controllers.html#boosting">boosting</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.experiments.html">tigercontrol.experiments package</a></li>
@@ -149,15 +149,15 @@
         
           <li><a href="../tigercontrol.html">tigercontrol package</a> &raquo;</li>
         
-          <li><a href="../tigercontrol.methods.html">tigercontrol.methods package</a> &raquo;</li>
+          <li><a href="../tigercontrol.controllers.html">tigercontrol.controllers package</a> &raquo;</li>
         
-      <li>tigercontrol.methods.optimizers.OGD</li>
+      <li>tigercontrol.utils.optimizers.OGD</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/_autosummary/tigercontrol.methods.optimizers.OGD.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/_autosummary/tigercontrol.utils.optimizers.OGD.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -170,11 +170,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="tigercontrol-methods-optimizers-ogd">
-<h1>tigercontrol.methods.optimizers.OGD<a class="headerlink" href="#tigercontrol-methods-optimizers-ogd" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="tigercontrol-controllers-optimizers-ogd">
+<h1>tigercontrol.utils.optimizers.OGD<a class="headerlink" href="#tigercontrol-controllers-optimizers-ogd" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="tigercontrol.methods.optimizers.OGD">
-<em class="property">class </em><code class="descclassname">tigercontrol.methods.optimizers.</code><code class="descname">OGD</code><span class="sig-paren">(</span><em>pred=None</em>, <em>loss=&lt;function mse&gt;</em>, <em>learning_rate=1.0</em>, <em>hyperparameters={}</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/methods/optimizers/ogd.html#OGD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.methods.optimizers.OGD" title="Permalink to this definition">¶</a></dt>
+<dt id="tigercontrol.utils.optimizers.OGD">
+<em class="property">class </em><code class="descclassname">tigercontrol.utils.optimizers.</code><code class="descname">OGD</code><span class="sig-paren">(</span><em>pred=None</em>, <em>loss=&lt;function mse&gt;</em>, <em>learning_rate=1.0</em>, <em>hyperparameters={}</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/controllers/optimizers/ogd.html#OGD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.utils.optimizers.OGD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Description: Ordinary Gradient Descent optimizer.
 :param pred: a prediction function implemented with jax.numpy
 :type pred: function
@@ -190,20 +190,20 @@
 </tr>
 </tbody>
 </table>
-<dl class="method">
-<dt id="tigercontrol.methods.optimizers.OGD.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>pred=None</em>, <em>loss=&lt;function mse&gt;</em>, <em>learning_rate=1.0</em>, <em>hyperparameters={}</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/methods/optimizers/ogd.html#OGD.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.methods.optimizers.OGD.__init__" title="Permalink to this definition">¶</a></dt>
+<dl class="controller">
+<dt id="tigercontrol.utils.optimizers.OGD.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>pred=None</em>, <em>loss=&lt;function mse&gt;</em>, <em>learning_rate=1.0</em>, <em>hyperparameters={}</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/controllers/optimizers/ogd.html#OGD.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.utils.optimizers.OGD.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
-<p class="rubric">Methods</p>
+<p class="rubric">Controllers</p>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#tigercontrol.methods.optimizers.OGD.__init__" title="tigercontrol.methods.optimizers.OGD.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([pred,&nbsp;loss,&nbsp;learning_rate,&nbsp;…])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#tigercontrol.utils.optimizers.OGD.__init__" title="tigercontrol.utils.optimizers.OGD.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([pred,&nbsp;loss,&nbsp;learning_rate,&nbsp;…])</td>
 <td>Initialize self.</td>
 </tr>
 <tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">gradient</span></code>(params,&nbsp;x,&nbsp;y[,&nbsp;loss])</td>
@@ -232,10 +232,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="tigercontrol.methods.optimizers.mse.html" class="btn btn-neutral float-right" title="tigercontrol.methods.optimizers.mse" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="tigercontrol.utils.optimizers.mse.html" class="btn btn-neutral float-right" title="tigercontrol.utils.optimizers.mse" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="tigercontrol.methods.optimizers.SGD.html" class="btn btn-neutral float-left" title="tigercontrol.methods.optimizers.SGD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tigercontrol.utils.optimizers.SGD.html" class="btn btn-neutral float-left" title="tigercontrol.utils.optimizers.SGD" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -1,15 +1,15 @@
-tigercontrol.methods.time\_series.RNN
+tigercontrol.controllers.time\_series.RNN
 ====================================
 
-.. currentmodule:: tigercontrol.methods.time_series
+.. currentmodule:: tigercontrol.controllers.time_series
 
 .. autoclass:: RNN
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

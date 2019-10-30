@@ -9,12 +9,12 @@ import matplotlib.pyplot as plt
 from prettytable import PrettyTable
 
 class Experiment(object):
-    ''' Description: Streamlines the process of performing experiments and comparing results of methods across
+    ''' Description: Streamlines the process of performing experiments and comparing results of controllers across
              a range of environments. '''
     def __init__(self):
         self.initialized = False
         
-    def initialize(self, environments = None, methods = None, environment_to_methods = None, metrics = ['mse'], \
+    def initialize(self, environments = None, controllers = None, environment_to_controllers = None, metrics = ['mse'], \
                    n_runs = 1, use_precomputed = False, timesteps = None, verbose = 0):
         '''
         Description: Initializes the experiment instance. 
@@ -22,11 +22,11 @@ class Experiment(object):
         Args:
             environments (dict/list): map of the form environment_id -> hyperparameters for environment or list of environment ids;
                                   in the latter case, default parameters will be used for initialization
-            methods (dict/list): map of the form method_id -> hyperparameters for method or list of method ids;
+            controllers (dict/list): map of the form controller_id -> hyperparameters for controller or list of controller ids;
                                 in the latter case, default parameters will be used for initialization
-            environment_to_methods (dict) : map of the form environment_id -> list of method_id.
+            environment_to_controllers (dict) : map of the form environment_id -> list of controller_id.
                                        If None, then we assume that the user wants to
-                                       test every method in method_to_params against every
+                                       test every controller in controller_to_params against every
                                        environment in environment_to_params
             metrics (list): Specifies metrics we are interested in evaluating.
             n_runs (int): Specifies the number of experiments to average over.
@@ -35,12 +35,12 @@ class Experiment(object):
             verbose (0, 1, 2): Specifies the verbosity of the experiment instance.
         '''
 
-        self.environments, self.methods = to_dict(environments), to_dict(methods)
-        self.environment_to_methods, self.metrics = environment_to_methods, metrics
+        self.environments, self.controllers = to_dict(environments), to_dict(controllers)
+        self.environment_to_controllers, self.metrics = environment_to_controllers, metrics
         self.n_runs, self.use_precomputed = n_runs, use_precomputed
         self.timesteps, self.verbose = timesteps, verbose
 
-        self.n_environments, self.n_methods = {}, {}
+        self.n_environments, self.n_controllers = {}, {}
 
         if(use_precomputed):
 
@@ -49,78 +49,78 @@ class Experiment(object):
                     "Will use %d instead of the specified %d" % (precomputed.get_timesteps(), timesteps))
                 self.timesteps = precomputed.get_timesteps()
 
-            # ensure environments and methods don't have specified hyperparameters
-            if(type(environments) is dict or type(methods) is dict):
+            # ensure environments and controllers don't have specified hyperparameters
+            if(type(environments) is dict or type(controllers) is dict):
                 precomputed.hyperparameter_warning()
 
-            # map of the form [metric][environment][method] -> loss series + time + memory
-            self.prob_method_to_result = precomputed.load_prob_method_to_result(\
-                environment_ids = list(self.environments.keys()), method_ids = list(self.methods.keys()), \
-                environment_to_methods = environment_to_methods, metrics = metrics)
+            # map of the form [metric][environment][controller] -> loss series + time + memory
+            self.prob_controller_to_result = precomputed.load_prob_controller_to_result(\
+                environment_ids = list(self.environments.keys()), controller_ids = list(self.controllers.keys()), \
+                environment_to_controllers = environment_to_controllers, metrics = metrics)
 
         else:
             self.new_experiment = NewExperiment()
-            self.new_experiment.initialize(self.environments, self.methods, environment_to_methods, \
+            self.new_experiment.initialize(self.environments, self.controllers, environment_to_controllers, \
                 metrics, n_runs, timesteps, verbose)
-            # map of the form [metric][environment][method] -> loss series + time + memory
-            self.prob_method_to_result = self.new_experiment.run_all_experiments()
+            # map of the form [metric][environment][controller] -> loss series + time + memory
+            self.prob_controller_to_result = self.new_experiment.run_all_experiments()
 
-    def add_method(self, method_id, method_params = None, name = None):
+    def add_controller(self, controller_id, controller_params = None, name = None):
         '''
-        Description: Add a new method to the experiment instance.
+        Description: Add a new controller to the experiment instance.
         
         Args:
-            method_id (string): ID of new method.
-            method_params (dict): Parameters to use for initialization of new method.
+            controller_id (string): ID of new controller.
+            controller_params (dict): Parameters to use for initialization of new controller.
         '''
-        assert method_id is not None, "ERROR: No Method ID given."
+        assert controller_id is not None, "ERROR: No Controller ID given."
 
-        if name is None and 'optimizer' in method_params:
-            name = method_params['optimizer'].__name__
+        if name is None and 'optimizer' in controller_params:
+            name = controller_params['optimizer'].__name__
 
         new_id = ''
-        if(method_id in self.methods):
-            if(method_id not in self.n_methods):
-                self.n_methods[method_id] = 0
-            self.n_methods[method_id] += 1
+        if(controller_id in self.controllers):
+            if(controller_id not in self.n_controllers):
+                self.n_controllers[controller_id] = 0
+            self.n_controllers[controller_id] += 1
             if(name is not None):
-                new_id = method_id + '-' + name
+                new_id = controller_id + '-' + name
             else:
-                new_id = method_id + '-' + str(self.n_methods[method_id])
-            self.methods[method_id].append((new_id, method_params))
+                new_id = controller_id + '-' + str(self.n_controllers[controller_id])
+            self.controllers[controller_id].append((new_id, controller_params))
         else:
-            new_id = method_id
+            new_id = controller_id
             if(name is not None):
                 new_id += '-' + name
-            self.methods[method_id] = [(new_id, method_params)]
-            self.n_methods[method_id] = 1
+            self.controllers[controller_id] = [(new_id, controller_params)]
+            self.n_controllers[controller_id] = 1
 
-        ''' Evaluate performance of new method on all environments '''
+        ''' Evaluate performance of new controller on all environments '''
         for metric in self.metrics:
             for environment_id in self.environments.keys():
                 for (new_environment_id, environment_params) in self.environments[environment_id]:
 
-                    ''' If method is compatible with environment, run experiment and store results. '''
+                    ''' If controller is compatible with environment, run experiment and store results. '''
                     try:
                         loss, time, memory = run_experiments((environment_id, environment_params), \
-                            (method_id, method_params), metric = metric, n_runs = self.n_runs, \
+                            (controller_id, controller_params), metric = metric, n_runs = self.n_runs, \
                             timesteps = self.timesteps, verbose = self.verbose)
                     except:
-                        print("ERROR: Could not run %s on %s." % (method_id, environment_id) + \
-                            " Please make sure method and environment are compatible.")
+                        print("ERROR: Could not run %s on %s." % (controller_id, environment_id) + \
+                            " Please make sure controller and environment are compatible.")
                         loss, time, memory = 0, 0.0, 0.0
 
-                    self.prob_method_to_result[(metric, new_environment_id, new_id)] = loss
-                    self.prob_method_to_result[('time', new_environment_id, new_id)] = time
-                    self.prob_method_to_result[('memory', new_environment_id, new_id)] = memory
+                    self.prob_controller_to_result[(metric, new_environment_id, new_id)] = loss
+                    self.prob_controller_to_result[('time', new_environment_id, new_id)] = time
+                    self.prob_controller_to_result[('memory', new_environment_id, new_id)] = memory
 
     def add_environment(self, environment_id, environment_params = None, name = None):
         '''
         Description: Add a new environment to the experiment instance.
         
         Args:
-            environment_id (string): ID of new method.
-            environment_params (dict): Parameters to use for initialization of new method.
+            environment_id (string): ID of new controller.
+            environment_params (dict): Parameters to use for initialization of new controller.
         '''
         assert environment_id is not None, "ERROR: No Environment ID given."
 
@@ -146,23 +146,23 @@ class Experiment(object):
             self.environments[environment_id] = [(new_id, environment_params)]
             self.n_environments[environment_id] = 1
 
-        ''' Evaluate performance of new method on all environments '''
+        ''' Evaluate performance of new controller on all environments '''
         for metric in self.metrics:
-            for method_id in self.methods.keys():
-                for (new_method_id, method_params) in self.methods[method_id]:
+            for controller_id in self.controllers.keys():
+                for (new_controller_id, controller_params) in self.controllers[controller_id]:
 
-                    ''' If method is compatible with environment, run experiment and store results. '''
+                    ''' If controller is compatible with environment, run experiment and store results. '''
                     try:
                         loss, time, memory = run_experiments((environment_id, environment_params), \
-                            (method_id, method_params), metric = metric, n_runs = self.n_runs, \
+                            (controller_id, controller_params), metric = metric, n_runs = self.n_runs, \
                             timesteps = self.timesteps, verbose = self.verbose)
                     except:
-                        print("ERROR: Could not run %s on %s. Please make sure method and environment are compatible." % (method_id, environment_id))
+                        print("ERROR: Could not run %s on %s. Please make sure controller and environment are compatible." % (controller_id, environment_id))
                         loss, time, memory = 0.0, 0.0, 0.0
 
-                    self.prob_method_to_result[(metric, new_id, new_method_id)] = loss
-                    self.prob_method_to_result[('time', new_id, new_method_id)] = time
-                    self.prob_method_to_result[('memory', new_id, new_method_id)] = memory
+                    self.prob_controller_to_result[(metric, new_id, new_controller_id)] = loss
+                    self.prob_controller_to_result[('time', new_id, new_controller_id)] = time
+                    self.prob_controller_to_result[('memory', new_id, new_controller_id)] = memory
 
     def to_csv(self, table_dict, save_as):
         ''' Save to csv file '''
@@ -183,9 +183,9 @@ class Experiment(object):
             verbose (boolean): Specifies whether to print the description of the scoreboard entries
         '''
 
-        if(self.use_precomputed and metric == 'time' and len(self.n_methods.keys()) > 0):
-            print("WARNING: Time comparison between precomputed methods and" + \
-                  "any added method may be irrelevant due to hardware differences.")
+        if(self.use_precomputed and metric == 'time' and len(self.n_controllers.keys()) > 0):
+            print("WARNING: Time comparison between precomputed controllers and" + \
+                  "any added controller may be irrelevant due to hardware differences.")
 
         if(verbose and metric in self.metrics):
             print("Average " + metric + ":")
@@ -196,11 +196,11 @@ class Experiment(object):
         table_dict = {}
 
         environment_ids = get_ids(self.environments)
-        method_ids = get_ids(self.methods)
+        controller_ids = get_ids(self.controllers)
 
         table_dict['Environments'] = environment_ids
 
-        field_names = ['Method\Environments']
+        field_names = ['Controller\Environments']
         for environment_id in environment_ids:
             if(truncate_ids and len(environment_id) > 9):
                 field_names.append(environment_id[:4] + '..' + environment_id[-3:])
@@ -209,18 +209,18 @@ class Experiment(object):
 
         table.field_names = field_names
 
-        for method_id in method_ids:
-            method_scores = [method_id]
+        for controller_id in controller_ids:
+            controller_scores = [controller_id]
             # get scores for each environment
             for environment_id in environment_ids:
-                score = np.mean((self.prob_method_to_result\
-                    [(metric, environment_id, method_id)])[start_time:self.timesteps])
+                score = np.mean((self.prob_controller_to_result\
+                    [(metric, environment_id, controller_id)])[start_time:self.timesteps])
                 score = round(float(score), n_digits)
                 if(score == 0.0):
                     score = '—'
-                method_scores.append(score)
-            table.add_row(method_scores)
-            table_dict[method_id] = method_scores[1:]
+                controller_scores.append(score)
+            table.add_row(controller_scores)
+            table_dict[controller_id] = controller_scores[1:]
 
         print(table)
 
@@ -235,14 +235,14 @@ class Experiment(object):
             avg_regret.append(cur_avg)
         return avg_regret
 
-    def _plot(self, ax, environment, environment_result_plus_method, n_environments, metric, \
+    def _plot(self, ax, environment, environment_result_plus_controller, n_environments, metric, \
                 avg_regret, start_time, cutoffs, yscale, show_legend = True):
 
-        for (loss, method) in environment_result_plus_method:
+        for (loss, controller) in environment_result_plus_controller:
             if(avg_regret):
-                ax.plot(self.avg_regret(loss[start_time:self.timesteps]), label=str(method))
+                ax.plot(self.avg_regret(loss[start_time:self.timesteps]), label=str(controller))
             else:
-                ax.plot(loss, label=str(method))
+                ax.plot(loss, label=str(controller))
         if(show_legend):
             ax.legend(loc="upper right", fontsize=5 + 5//n_environments)
         ax.set_title("Environment:" + str(environment))
@@ -272,10 +272,10 @@ class Experiment(object):
         # check metric exists
         assert metric in self.metrics
 
-        # get environment and method ids
+        # get environment and controller ids
         if(environment_ids is None):
             environment_ids = get_ids(self.environments)
-        method_ids = get_ids(self.methods)
+        controller_ids = get_ids(self.controllers)
 
         # get number of environments
         n_environments = len(environment_ids)
@@ -283,12 +283,12 @@ class Experiment(object):
         all_environment_info = []
 
         for environment_id in environment_ids:
-            environment_result_plus_method = []
-            method_list = []
-            for method_id in method_ids:
-                method_list.append(method_id)
-                environment_result_plus_method.append((self.prob_method_to_result[(metric, environment_id, method_id)], method_id))
-            all_environment_info.append((environment_id, environment_result_plus_method, method_list))
+            environment_result_plus_controller = []
+            controller_list = []
+            for controller_id in controller_ids:
+                controller_list.append(controller_id)
+                environment_result_plus_controller.append((self.prob_controller_to_result[(metric, environment_id, controller_id)], controller_id))
+            all_environment_info.append((environment_id, environment_result_plus_controller, controller_list))
 
         nrows = max(int(np.sqrt(n_environments)), 1)
         ncols = n_environments // nrows + n_environments % nrows
@@ -297,13 +297,13 @@ class Experiment(object):
         fig.canvas.set_window_title('TigerSeries')
 
         if n_environments == 1:
-            (environment, environment_result_plus_method, method_list) = all_environment_info[0]
-            ax = self._plot(ax, environment, environment_result_plus_method, n_environments, \
+            (environment, environment_result_plus_controller, controller_list) = all_environment_info[0]
+            ax = self._plot(ax, environment, environment_result_plus_controller, n_environments, \
                 metric, avg_regret, start_time, cutoffs, yscale)
         elif nrows == 1:
             for j in range(ncols):
-                (environment, environment_result_plus_method, method_list) = all_environment_info[j]
-                ax[j] = self._plot(ax[j], environment, environment_result_plus_method, n_environments, \
+                (environment, environment_result_plus_controller, controller_list) = all_environment_info[j]
+                ax[j] = self._plot(ax[j], environment, environment_result_plus_controller, n_environments, \
                                           metric, avg_regret, start_time, cutoffs, yscale)
         else:
             cur_pb = 0
@@ -312,8 +312,8 @@ class Experiment(object):
 
                     if(cur_pb == n_environments):
                         legend = []
-                        for method_id in method_ids:
-                            legend.append((0, method_id))
+                        for controller_id in controller_ids:
+                            legend.append((0, controller_id))
                         ax[i, j] = self._plot(ax[i, j], 'LEGEND', legend,\
                                 n_environments, metric, False, cutoffs, None, show_legend = True)
                         continue
@@ -323,9 +323,9 @@ class Experiment(object):
                         ax[i, j].legend(loc="center", fontsize=8 + 10//n_environments)
                         continue
 
-                    (environment, environment_result_plus_method, method_list) = all_environment_info[cur_pb]
+                    (environment, environment_result_plus_controller, controller_list) = all_environment_info[cur_pb]
                     cur_pb += 1
-                    ax[i, j] = self._plot(ax[i, j], environment, environment_result_plus_method,\
+                    ax[i, j] = self._plot(ax[i, j], environment, environment_result_plus_controller,\
                                 n_environments, metric, avg_regret, start_time, cutoffs, yscale, show_legend = False)
 
         #fig.tight_layout()
@@ -342,24 +342,24 @@ class Experiment(object):
 
     def help(self):
         '''
-        Description: Prints information about this class and its methods.
+        Description: Prints information about this class and its controllers.
         '''
         print(Experiment_help)
 
     def __str__(self):
-        return "<Experiment Method>"
+        return "<Experiment Controller>"
 
-# string to print when calling help() method
+# string to print when calling help() controller
 Experiment_help = """
 
 -------------------- *** --------------------
 
-Description: Streamlines the process of performing experiments and comparing results of methods across
+Description: Streamlines the process of performing experiments and comparing results of controllers across
              a range of environments.
 
-Methods:
+Controllers:
 
-    initialize(environments = None, methods = None, environment_to_methods = None, metrics = ['mse'],
+    initialize(environments = None, controllers = None, environment_to_controllers = None, metrics = ['mse'],
                use_precomputed = True, timesteps = 100, verbose = True, load_bar = True):
 
         Description: Initializes the experiment instance. 
@@ -368,12 +368,12 @@ Methods:
             environments (dict/list): map of the form environment_id -> hyperparameters for environment or list of environment ids;
                                   in the latter case, default parameters will be used for initialization
 
-            methods (dict/list): map of the form method_id -> hyperparameters for method or list of method ids;
+            controllers (dict/list): map of the form controller_id -> hyperparameters for controller or list of controller ids;
                                 in the latter case, default parameters will be used for initialization
 
-            environment_to_methods (dict) : map of the form environment_id -> list of method_id.
+            environment_to_controllers (dict) : map of the form environment_id -> list of controller_id.
                                        If None, then we assume that the user wants to
-                                       test every method in method_to_params against every
+                                       test every controller in controller_to_params against every
                                        environment in environment_to_params
 
             metrics (list): Specifies metrics we are interested in evaluating.
@@ -387,14 +387,14 @@ Methods:
             load_bar (boolean): Specifies whether to show a loading bar while the experiments are running.
 
 
-    add_method(method_id, method_params = None):
+    add_controller(controller_id, controller_params = None):
 
-        Description: Add a new method to the experiment instance.
+        Description: Add a new controller to the experiment instance.
         
         Args:
-            method_id (string): ID of new method.
+            controller_id (string): ID of new controller.
 
-            method_params: Parameters to use for initialization of new method.
+            controller_params: Parameters to use for initialization of new controller.
 
 
     scoreboard(save_as = None, metric = 'mse'):
@@ -422,7 +422,7 @@ Methods:
 
     help()
 
-        Description: Prints information about this class and its methods
+        Description: Prints information about this class and its controllers
 
 -------------------- *** --------------------
 

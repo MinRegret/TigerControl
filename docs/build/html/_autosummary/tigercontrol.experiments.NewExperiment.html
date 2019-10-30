@@ -63,7 +63,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -86,7 +86,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../tigercontrol.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.utils.html">tigercontrol.utils package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.environments.html">tigercontrol.environments package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../tigercontrol.methods.html">tigercontrol.methods package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tigercontrol.controllers.html">tigercontrol.controllers package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../tigercontrol.experiments.html">tigercontrol.experiments package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="../tigercontrol.experiments.html#core">core</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../tigercontrol.experiments.html#metrics">metrics</a></li>
@@ -176,13 +176,13 @@
 <dt id="tigercontrol.experiments.NewExperiment">
 <em class="property">class </em><code class="descclassname">tigercontrol.experiments.</code><code class="descname">NewExperiment</code><a class="reference internal" href="../_modules/tigercontrol/experiments/new_experiment.html#NewExperiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.experiments.NewExperiment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Description: class for implementing algorithms with enforced modularity</p>
-<dl class="method">
+<dl class="controller">
 <dt id="tigercontrol.experiments.NewExperiment.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/experiments/new_experiment.html#NewExperiment.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.experiments.NewExperiment.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
-<p class="rubric">Methods</p>
+<p class="rubric">Controllers</p>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
@@ -193,9 +193,9 @@
 <td>Initialize self.</td>
 </tr>
 <tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>()</td>
-<td>Description: Prints information about this class and its methods.</td>
+<td>Description: Prints information about this class and its controllers.</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code>(environments,&nbsp;methods[,&nbsp;…])</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code>(environments,&nbsp;controllers[,&nbsp;…])</td>
 <td>Description: Initializes the new experiment instance.</td>
 </tr>
 <tr class="row-even"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_all_experiments</span></code>()</td>

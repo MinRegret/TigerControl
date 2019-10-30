@@ -6,15 +6,15 @@ tigercontrol.experiments.Experiment
 .. autoclass:: Experiment
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    
       ~Experiment.__init__
-      ~Experiment.add_method
+      ~Experiment.add_controller
       ~Experiment.add_environment
       ~Experiment.avg_regret
       ~Experiment.graph

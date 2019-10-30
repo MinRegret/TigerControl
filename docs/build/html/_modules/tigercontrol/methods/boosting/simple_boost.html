@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.boosting.simple_boost &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.utils.boosting.simple_boost &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.methods.boosting.simple_boost</li>
+      <li>tigercontrol.utils.boosting.simple_boost</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,7 +146,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.methods.boosting.simple_boost</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.utils.boosting.simple_boost</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">AR(p): Linear combination of previous values</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -154,27 +154,27 @@
 <span class="kn">import</span> <span class="nn">tigercontrol</span>
 <span class="kn">import</span> <span class="nn">jax</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.methods.optimizers.losses</span> <span class="k">import</span> <span class="n">mse</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.utils.optimizers.losses</span> <span class="k">import</span> <span class="n">mse</span>
 
-<div class="viewcode-block" id="SimpleBoost"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.boosting.SimpleBoost.html#tigercontrol.methods.boosting.SimpleBoost">[docs]</a><span class="k">class</span> <span class="nc">SimpleBoost</span><span class="p">:</span>
+<div class="viewcode-block" id="SimpleBoost"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.utils.boosting.SimpleBoost.html#tigercontrol.utils.boosting.SimpleBoost">[docs]</a><span class="k">class</span> <span class="nc">SimpleBoost</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Description: Implements the equivalent of an AR(p) method - predicts a linear</span>
+<span class="sd">    Description: Implements the equivalent of an AR(p) controller - predicts a linear</span>
 <span class="sd">    combination of the previous p observed values in a time-series</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;TimeSeries&#39;</span><span class="p">])</span>
 
-<div class="viewcode-block" id="SimpleBoost.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.boosting.SimpleBoost.html#tigercontrol.methods.boosting.SimpleBoost.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SimpleBoost.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.utils.boosting.SimpleBoost.html#tigercontrol.utils.boosting.SimpleBoost.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_id</span><span class="p">,</span> <span class="n">method_params</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">mse</span><span class="p">,</span> <span class="n">reg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controller_id</span><span class="p">,</span> <span class="n">controller_params</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">mse</span><span class="p">,</span> <span class="n">reg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Description: Initializes autoregressive method parameters</span>
+<span class="sd">        Description: Initializes autoregressive controller parameters</span>
 <span class="sd">        Args:</span>
-<span class="sd">            method_id (string): id of weak learner method</span>
-<span class="sd">            method_params (dict): dict of params to pass method</span>
+<span class="sd">            controller_id (string): id of weak learner controller</span>
+<span class="sd">            controller_params (dict): dict of params to pass controller</span>
 <span class="sd">            N (int): default 3. Number of weak learners</span>
-<span class="sd">            loss (function): loss function for boosting method</span>
+<span class="sd">            loss (function): loss function for boosting controller</span>
 <span class="sd">            reg (float): default 1.0. constant for regularization.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">True</span>
@@ -185,19 +185,19 @@
         <span class="c1"># 1. Maintain N copies of the algorithm </span>
         <span class="k">assert</span> <span class="n">N</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">N</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">methods</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controllers</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-            <span class="n">new_method</span> <span class="o">=</span> <span class="n">tigercontrol</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="n">method_id</span><span class="p">)</span>
-            <span class="n">new_method</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="o">**</span><span class="n">method_params</span><span class="p">)</span>
-            <span class="n">new_method</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">set_loss</span><span class="p">(</span><span class="n">proxy_loss</span><span class="p">)</span> <span class="c1"># proxy loss</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_method</span><span class="p">)</span>
+            <span class="n">new_controller</span> <span class="o">=</span> <span class="n">tigercontrol</span><span class="o">.</span><span class="n">controller</span><span class="p">(</span><span class="n">controller_id</span><span class="p">)</span>
+            <span class="n">new_controller</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="o">**</span><span class="n">controller_params</span><span class="p">)</span>
+            <span class="n">new_controller</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">set_loss</span><span class="p">(</span><span class="n">proxy_loss</span><span class="p">)</span> <span class="c1"># proxy loss</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controllers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_controller</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">_prev_predict</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
             <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">cur_y</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">method_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">controller_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controllers</span><span class="p">):</span>
                 <span class="n">eta_i</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
-                <span class="n">y_pred</span> <span class="o">=</span> <span class="n">method_i</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">y_pred</span> <span class="o">=</span> <span class="n">controller_i</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
                 <span class="n">cur_y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">eta_i</span><span class="p">)</span> <span class="o">*</span> <span class="n">cur_y</span> <span class="o">+</span> <span class="n">eta_i</span> <span class="o">*</span> <span class="n">y_pred</span>
                 <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_y</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)]</span> <span class="o">+</span> <span class="n">y</span>
@@ -235,13 +235,13 @@
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span>
         <span class="n">grads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_grads</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prev_predicts</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">grad_i</span><span class="p">,</span> <span class="n">method_i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">grads</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="p">):</span>
-            <span class="n">method_i</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">grad_i</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">grad_i</span><span class="p">,</span> <span class="n">controller_i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">grads</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">controllers</span><span class="p">):</span>
+            <span class="n">controller_i</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">grad_i</span><span class="p">)</span>
 
 
     <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Description: Prints information about this class and its methods.</span>
+<span class="sd">        Description: Prints information about this class and its controllers.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            None</span>
 <span class="sd">        Returns:</span>
@@ -251,26 +251,26 @@
 
 
 
-<span class="c1"># string to print when calling help() method</span>
+<span class="c1"># string to print when calling help() controller</span>
 <span class="n">AutoRegressor_help</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="s2">-------------------- *** --------------------</span>
 
 <span class="s2">Id: AutoRegressor</span>
-<span class="s2">Description: Implements the equivalent of an AR(p) method - predicts a linear</span>
+<span class="s2">Description: Implements the equivalent of an AR(p) controller - predicts a linear</span>
 <span class="s2">    combination of the previous p observed values in a time-series</span>
 
-<span class="s2">Methods:</span>
+<span class="s2">Controllers:</span>
 
 <span class="s2">    initialize()</span>
 <span class="s2">        Description:</span>
-<span class="s2">            Initializes autoregressive method parameters</span>
+<span class="s2">            Initializes autoregressive controller parameters</span>
 <span class="s2">        Args:</span>
 <span class="s2">            p (int): Length of history used for prediction</span>
 
 <span class="s2">    step(x)</span>
 <span class="s2">        Description:</span>
-<span class="s2">            Run one timestep of the method in its environment then update internal parameters</span>
+<span class="s2">            Run one timestep of the controller in its environment then update internal parameters</span>
 <span class="s2">        Args:</span>
 <span class="s2">            x (int/numpy.ndarray):  Value at current time-step</span>
 <span class="s2">        Returns:</span>
@@ -296,7 +296,7 @@
 
 <span class="s2">    help()</span>
 <span class="s2">        Description:</span>
-<span class="s2">            Prints information about this class and its methods.</span>
+<span class="s2">            Prints information about this class and its controllers.</span>
 <span class="s2">        Args:</span>
 <span class="s2">            None</span>
 <span class="s2">        Returns:</span>

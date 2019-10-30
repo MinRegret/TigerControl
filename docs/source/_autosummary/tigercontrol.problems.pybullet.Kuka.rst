@@ -6,10 +6,10 @@ tigercontrol.environments.pybullet.Kuka
 .. autoclass:: Kuka
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

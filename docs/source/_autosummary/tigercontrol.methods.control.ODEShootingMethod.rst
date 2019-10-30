@@ -1,25 +1,25 @@
-tigercontrol.methods.controller.ODEShootingMethod
+tigercontrol.controllers.ODEShootingController
 =============================================
 
-.. currentmodule:: tigercontrol.methods.control
+.. currentmodule:: tigercontrol.controllers.control
 
-.. autoclass:: ODEShootingMethod
-
-   
-   .. automethod:: __init__
+.. autoclass:: ODEShootingController
 
    
-   .. rubric:: Methods
+   .. autocontroller:: __init__
+
+   
+   .. rubric:: Controllers
 
    .. autosummary::
    
-      ~ODEShootingMethod.__init__
-      ~ODEShootingMethod.euler
-      ~ODEShootingMethod.help
-      ~ODEShootingMethod.initialize
-      ~ODEShootingMethod.predict
-      ~ODEShootingMethod.step
-      ~ODEShootingMethod.update
+      ~ODEShootingController.__init__
+      ~ODEShootingController.euler
+      ~ODEShootingController.help
+      ~ODEShootingController.initialize
+      ~ODEShootingController.predict
+      ~ODEShootingController.step
+      ~ODEShootingController.update
    
    
 
@@ -29,7 +29,7 @@ tigercontrol.methods.controller.ODEShootingMethod
 
    .. autosummary::
    
-      ~ODEShootingMethod.compatibles
-      ~ODEShootingMethod.spec
+      ~ODEShootingController.compatibles
+      ~ODEShootingController.spec
    
    

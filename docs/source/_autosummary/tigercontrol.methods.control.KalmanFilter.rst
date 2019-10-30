@@ -1,15 +1,15 @@
-tigercontrol.methods.controller.KalmanFilter
+tigercontrol.controllers.KalmanFilter
 ========================================
 
-.. currentmodule:: tigercontrol.methods.control
+.. currentmodule:: tigercontrol.controllers.control
 
 .. autoclass:: KalmanFilter
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

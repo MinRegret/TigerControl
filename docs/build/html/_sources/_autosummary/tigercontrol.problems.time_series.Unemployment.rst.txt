@@ -6,10 +6,10 @@ tigercontrol.environments.time\_series.Unemployment
 .. autoclass:: Unemployment
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

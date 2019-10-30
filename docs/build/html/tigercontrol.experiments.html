@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="tigercontrol.experiments.create_full_environment_to_methods" href="_autosummary/tigercontrol.experiments.create_full_environment_to_methods.html" />
-    <link rel="prev" title="tigercontrol.methods.boosting.SimpleBoost" href="_autosummary/tigercontrol.methods.boosting.SimpleBoost.html" /> 
+    <link rel="next" title="tigercontrol.experiments.create_full_environment_to_controllers" href="_autosummary/tigercontrol.experiments.create_full_environment_to_controllers.html" />
+    <link rel="prev" title="tigercontrol.utils.boosting.SimpleBoost" href="_autosummary/tigercontrol.utils.boosting.SimpleBoost.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -63,7 +63,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -86,7 +86,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="tigercontrol.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="tigercontrol.utils.html">tigercontrol.utils package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tigercontrol.environments.html">tigercontrol.environments package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tigercontrol.methods.html">tigercontrol.methods package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tigercontrol.controllers.html">tigercontrol.controllers package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">tigercontrol.experiments package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#core">core</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#metrics">metrics</a></li>
@@ -178,10 +178,10 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.experiments.create_full_environment_to_methods.html#tigercontrol.experiments.create_full_environment_to_methods" title="tigercontrol.experiments.create_full_environment_to_methods"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_environment_to_methods</span></code></a>(environments_ids,&nbsp;…)</td>
-<td>Description: Associate all given environments to all given methods.</td>
+<tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.experiments.create_full_environment_to_controllers.html#tigercontrol.experiments.create_full_environment_to_controllers" title="tigercontrol.experiments.create_full_environment_to_controllers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_full_environment_to_controllers</span></code></a>(environments_ids,&nbsp;…)</td>
+<td>Description: Associate all given environments to all given controllers.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.experiments.run_experiment.html#tigercontrol.experiments.run_experiment" title="tigercontrol.experiments.run_experiment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_experiment</span></code></a>(environment,&nbsp;method[,&nbsp;metric,&nbsp;…])</td>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.experiments.run_experiment.html#tigercontrol.experiments.run_experiment" title="tigercontrol.experiments.run_experiment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_experiment</span></code></a>(environment,&nbsp;controller[,&nbsp;metric,&nbsp;…])</td>
 <td>Description: Initializes the experiment instance.</td>
 </tr>
 </tbody>
@@ -243,7 +243,7 @@
 <tr class="row-odd"><td><a class="reference internal" href="_autosummary/tigercontrol.experiments.recompute.html#tigercontrol.experiments.recompute" title="tigercontrol.experiments.recompute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">recompute</span></code></a>([verbose,&nbsp;load_bar])</td>
 <td>Description: Recomputes all the results.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.experiments.load_prob_method_to_result.html#tigercontrol.experiments.load_prob_method_to_result" title="tigercontrol.experiments.load_prob_method_to_result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_prob_method_to_result</span></code></a>([environment_ids,&nbsp;…])</td>
+<tr class="row-even"><td><a class="reference internal" href="_autosummary/tigercontrol.experiments.load_prob_controller_to_result.html#tigercontrol.experiments.load_prob_controller_to_result" title="tigercontrol.experiments.load_prob_controller_to_result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_prob_controller_to_result</span></code></a>([environment_ids,&nbsp;…])</td>
 <td>Description: Initializes the experiment instance.</td>
 </tr>
 </tbody>
@@ -259,10 +259,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="_autosummary/tigercontrol.experiments.create_full_environment_to_methods.html" class="btn btn-neutral float-right" title="tigercontrol.experiments.create_full_environment_to_methods" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="_autosummary/tigercontrol.experiments.create_full_environment_to_controllers.html" class="btn btn-neutral float-right" title="tigercontrol.experiments.create_full_environment_to_controllers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="_autosummary/tigercontrol.methods.boosting.SimpleBoost.html" class="btn btn-neutral float-left" title="tigercontrol.methods.boosting.SimpleBoost" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="_autosummary/tigercontrol.utils.boosting.SimpleBoost.html" class="btn btn-neutral float-left" title="tigercontrol.utils.boosting.SimpleBoost" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

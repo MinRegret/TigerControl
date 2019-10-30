@@ -6,10 +6,10 @@ tigercontrol.environments.controller.RNN\_Control
 .. autoclass:: RNN_Control
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

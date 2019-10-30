@@ -5,7 +5,7 @@ from tigercontrol.environments import Environment
 import tigercontrol.environments.controller.quadcopter as quadcopter
 import tigercontrol.environments.controller.quadcopter_controller as quadcopter_controller
 import tigercontrol.environments.controller.quadcopter_gui as quadcopter_gui
-import tigercontrol.methods.controller.quadcopter_model as quadcopter_model
+import tigercontrol.controllers.quadcopter_model as quadcopter_model
 # import quadcopter, quadcopter_gui, quadcopter_controller
 import signal
 import sys

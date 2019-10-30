@@ -1,15 +1,15 @@
-tigercontrol.methods.optimizers.Adam
+tigercontrol.utils.optimizers.Adam
 ===================================
 
-.. currentmodule:: tigercontrol.methods.optimizers
+.. currentmodule:: tigercontrol.utils.optimizers
 
 .. autoclass:: Adam
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

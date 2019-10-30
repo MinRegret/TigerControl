@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -165,18 +165,18 @@
 
 <span class="k">def</span> <span class="nf">_verify_valid_environment</span><span class="p">(</span><span class="n">environment_class</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; </span>
-<span class="sd">    Description: verifies that a given class has the necessary minimum environment methods</span>
+<span class="sd">    Description: verifies that a given class has the necessary minimum environment controllers</span>
 
 <span class="sd">    Args: a class</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">environment_class</span><span class="p">,</span> <span class="n">CustomEnvironment</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="s1">&#39;step&#39;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">environment_class</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="kc">None</span><span class="p">)):</span>
-            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">InvalidClass</span><span class="p">(</span><span class="s2">&quot;CustomEnvironment is missing required method </span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">InvalidClass</span><span class="p">(</span><span class="s2">&quot;CustomEnvironment is missing required controller </span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
 
 <div class="viewcode-block" id="register_custom_environment"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.environments.register_custom_environment.html#tigercontrol.environments.register_custom_environment">[docs]</a><span class="k">def</span> <span class="nf">register_custom_environment</span><span class="p">(</span><span class="n">custom_environment_class</span><span class="p">,</span> <span class="n">custom_environment_id</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Description: global custom environment method</span>
+<span class="sd">    Description: global custom environment controller</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">custom_environment_id</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span>
     <span class="n">_verify_valid_environment</span><span class="p">(</span><span class="n">custom_environment_class</span><span class="p">)</span>

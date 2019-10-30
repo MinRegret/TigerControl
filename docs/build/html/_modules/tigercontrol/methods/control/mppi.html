@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.controller.mppi &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.controllers.mppi &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.methods.controller.mppi</li>
+      <li>tigercontrol.controllers.mppi</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,7 +146,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.methods.controller.mppi</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.controllers.mppi</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">MPPI</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -156,21 +156,21 @@
 <span class="kn">import</span> <span class="nn">jax.random</span> <span class="k">as</span> <span class="nn">random</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.utils</span> <span class="k">import</span> <span class="n">generate_key</span>
 <span class="kn">import</span> <span class="nn">tigercontrol</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.methods.control</span> <span class="k">import</span> <span class="n">ControlMethod</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.controllers.control</span> <span class="k">import</span> <span class="n">ControlController</span>
 
-<div class="viewcode-block" id="MPPI"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.controller.MPPI.html#tigercontrol.methods.controller.MPPI">[docs]</a><span class="k">class</span> <span class="nc">MPPI</span><span class="p">(</span><span class="n">ControlMethod</span><span class="p">):</span>
+<div class="viewcode-block" id="MPPI"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.controllers.MPPI.html#tigercontrol.controllers.MPPI">[docs]</a><span class="k">class</span> <span class="nc">MPPI</span><span class="p">(</span><span class="n">ControlController</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Description: Implements Method Predictive Path Integral Control to compute optimal control sequence.</span>
+<span class="sd">    Description: Implements Controller Predictive Path Integral Control to compute optimal control sequence.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;PyBullet&#39;</span><span class="p">])</span>
 
-<div class="viewcode-block" id="MPPI.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.controller.MPPI.html#tigercontrol.methods.controller.MPPI.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MPPI.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.controllers.MPPI.html#tigercontrol.controllers.MPPI.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span></div>
 
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">noise_mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise_sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">u_init</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Description: Initialize the dynamics of the method.</span>
+<span class="sd">        Description: Initialize the dynamics of the controller.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            env (environment): The environment instance</span>
 <span class="sd">            K (non-negative int): Number of trajectory samples</span>
@@ -252,7 +252,7 @@
 
     <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Description: Prints information about this class and its methods.</span>
+<span class="sd">        Description: Prints information about this class and its controllers.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            None</span>
 <span class="sd">        Returns:</span>
@@ -261,23 +261,23 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">MPPI_help</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;MPPI Method&gt;&quot;</span></div>
+        <span class="k">return</span> <span class="s2">&quot;&lt;MPPI Controller&gt;&quot;</span></div>
 
 
-<span class="c1"># string to print when calling help() method</span>
+<span class="c1"># string to print when calling help() controller</span>
 <span class="n">MPPI_help</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="s2">-------------------- *** --------------------</span>
 
 <span class="s2">Id: MPPI</span>
 
-<span class="s2">Description: Implements Method Predictive Path Integral Control to compute optimal control sequence.</span>
+<span class="s2">Description: Implements Controller Predictive Path Integral Control to compute optimal control sequence.</span>
 
-<span class="s2">Methods:</span>
+<span class="s2">Controllers:</span>
 
 <span class="s2">    initialize(env, K, T, U, lambda_=1.0, noise_mu=0, noise_sigma=1, u_init=1)</span>
 <span class="s2">        Description:</span>
-<span class="s2">            Initialize the dynamics of the method</span>
+<span class="s2">            Initialize the dynamics of the controller</span>
 <span class="s2">        Args:</span>
 <span class="s2">            env (environment): The environment instance</span>
 <span class="s2">            K (non-negative int): Number of trajectory samples</span>
@@ -312,7 +312,7 @@
 
 <span class="s2">    help()</span>
 <span class="s2">        Description:</span>
-<span class="s2">            Prints information about this class and its methods.</span>
+<span class="s2">            Prints information about this class and its controllers.</span>
 <span class="s2">        Args:</span>
 <span class="s2">            None</span>
 <span class="s2">        Returns:</span>

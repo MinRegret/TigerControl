@@ -1,15 +1,15 @@
-tigercontrol.methods.time\_series.AutoRegressor
+tigercontrol.controllers.time\_series.AutoRegressor
 ==============================================
 
-.. currentmodule:: tigercontrol.methods.time_series
+.. currentmodule:: tigercontrol.controllers.time_series
 
 .. autoclass:: AutoRegressor
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

@@ -1,52 +1,52 @@
 import tigercontrol
 from tigercontrol.experiments import Experiment
 from tigercontrol.utils.download_tools import get_tigercontrol_dir
-from tigercontrol.methods.optimizers import *
+from tigercontrol.utils.optimizers import *
 import os
 
 def test_new_experiment(steps=5000, show=False):
     exp = Experiment()
-    exp.initialize(environments = ['SP500-v0'], methods =  ['LastValue'], \
+    exp.initialize(environments = ['SP500-v0'], controllers =  ['LastValue'], \
                     use_precomputed = False, timesteps = steps, verbose = show, load_bar = show)
 
-    '''exp.add_method('AutoRegressor', {'p' : 3, 'optimizer' : OGD}, name = 'OGD')
-                exp.add_method('AutoRegressor', {'p' : 3, 'optimizer' : Adagrad})
-                exp.add_method('AutoRegressor', {'p' : 3, 'optimizer' : ONS})
-                exp.add_method('AutoRegressor', {'p' : 3, 'optimizer' : Adam})
+    '''exp.add_controller('AutoRegressor', {'p' : 3, 'optimizer' : OGD}, name = 'OGD')
+                exp.add_controller('AutoRegressor', {'p' : 3, 'optimizer' : Adagrad})
+                exp.add_controller('AutoRegressor', {'p' : 3, 'optimizer' : ONS})
+                exp.add_controller('AutoRegressor', {'p' : 3, 'optimizer' : Adam})
             
-                exp.add_method('SimpleBoost', {'method_id': 'AutoRegressor', \
-                    'method_params': {'p' : 3, 'optimizer' : OGD}}, name = 'AR-OGD')
-                exp.add_method('SimpleBoost', {'method_id': 'AutoRegressor', \
-                    'method_params': {'p' : 3, 'optimizer' : Adagrad}}, name = 'AR-Adagrad')
-                exp.add_method('SimpleBoost', {'method_id': 'AutoRegressor', \
-                    'method_params': {'p' : 3, 'optimizer' : ONS}}, name = 'AR-ONS')
-                exp.add_method('SimpleBoost', {'method_id': 'AutoRegressor', \
-                    'method_params': {'p' : 3, 'optimizer' : Adam}}, name = 'AR-Adam')'''
+                exp.add_controller('SimpleBoost', {'controller_id': 'AutoRegressor', \
+                    'controller_params': {'p' : 3, 'optimizer' : OGD}}, name = 'AR-OGD')
+                exp.add_controller('SimpleBoost', {'controller_id': 'AutoRegressor', \
+                    'controller_params': {'p' : 3, 'optimizer' : Adagrad}}, name = 'AR-Adagrad')
+                exp.add_controller('SimpleBoost', {'controller_id': 'AutoRegressor', \
+                    'controller_params': {'p' : 3, 'optimizer' : ONS}}, name = 'AR-ONS')
+                exp.add_controller('SimpleBoost', {'controller_id': 'AutoRegressor', \
+                    'controller_params': {'p' : 3, 'optimizer' : Adam}}, name = 'AR-Adam')'''
 
-    '''exp.add_method('RNN', {'n' : 1, 'm' : 1, 'optimizer' : OGD}, name = 'OGD')
-                exp.add_method('RNN', {'n' : 1, 'm' : 1, 'optimizer' : Adagrad})
-                #exp.add_method('RNN', {'n' : 1, 'm' : 1, 'optimizer' : ONS})
-                exp.add_method('RNN', {'n' : 1, 'm' : 1, 'optimizer' : Adam})
+    '''exp.add_controller('RNN', {'n' : 1, 'm' : 1, 'optimizer' : OGD}, name = 'OGD')
+                exp.add_controller('RNN', {'n' : 1, 'm' : 1, 'optimizer' : Adagrad})
+                #exp.add_controller('RNN', {'n' : 1, 'm' : 1, 'optimizer' : ONS})
+                exp.add_controller('RNN', {'n' : 1, 'm' : 1, 'optimizer' : Adam})
             
-                exp.add_method('SimpleBoost', {'method_id': 'RNN', \
-                    'method_params': {'n' : 1, 'm' : 1, 'optimizer' : OGD}}, name = 'RNN-OGD')
-                exp.add_method('SimpleBoost', {'method_id': 'RNN', \
-                    'method_params': {'n' : 1, 'm' : 1, 'optimizer' : Adagrad}}, name = 'RNN-Adagrad')
-                exp.add_method('SimpleBoost', {'method_id': 'RNN', \
-                    'method_params': {'n' : 1, 'm' : 1, 'optimizer' : ONS}}, name = 'RNN-ONS')
-                exp.add_method('SimpleBoost', {'method_id': 'RNN', \
-                    'method_params': {'n' : 1, 'm' : 1, 'optimizer' : Adam}}, name = 'RNN-Adam')'''
+                exp.add_controller('SimpleBoost', {'controller_id': 'RNN', \
+                    'controller_params': {'n' : 1, 'm' : 1, 'optimizer' : OGD}}, name = 'RNN-OGD')
+                exp.add_controller('SimpleBoost', {'controller_id': 'RNN', \
+                    'controller_params': {'n' : 1, 'm' : 1, 'optimizer' : Adagrad}}, name = 'RNN-Adagrad')
+                exp.add_controller('SimpleBoost', {'controller_id': 'RNN', \
+                    'controller_params': {'n' : 1, 'm' : 1, 'optimizer' : ONS}}, name = 'RNN-ONS')
+                exp.add_controller('SimpleBoost', {'controller_id': 'RNN', \
+                    'controller_params': {'n' : 1, 'm' : 1, 'optimizer' : Adam}}, name = 'RNN-Adam')'''
 
-    exp.add_method('LSTM', {'n' : 1, 'm' : 1, 'l' : 32, 'h' : 64, 'optimizer' : OGD}, name = '32-64-OGD')
-    exp.add_method('LSTM', {'n' : 1, 'm' : 1, 'l' : 32, 'h' : 64, 'optimizer' : Adagrad}, name = '32-64-Adagrad')
-    exp.add_method('LSTM', {'n' : 1, 'm' : 1, 'l' : 32, 'h' : 64,  'optimizer' : Adam}, name = '32-64-Adam')
+    exp.add_controller('LSTM', {'n' : 1, 'm' : 1, 'l' : 32, 'h' : 64, 'optimizer' : OGD}, name = '32-64-OGD')
+    exp.add_controller('LSTM', {'n' : 1, 'm' : 1, 'l' : 32, 'h' : 64, 'optimizer' : Adagrad}, name = '32-64-Adagrad')
+    exp.add_controller('LSTM', {'n' : 1, 'm' : 1, 'l' : 32, 'h' : 64,  'optimizer' : Adam}, name = '32-64-Adam')
 
-    exp.add_method('SimpleBoost', {'method_id': 'LSTM', \
-        'method_params': {'n' : 1, 'm' : 1, 'optimizer' : OGD}}, name = 'LSTM-OGD')
-    exp.add_method('SimpleBoost', {'method_id': 'LSTM', \
-        'method_params': {'n' : 1, 'm' : 1, 'optimizer' : Adagrad}}, name = 'LSTM-Adagrad')
-    exp.add_method('SimpleBoost', {'method_id': 'LSTM', \
-        'method_params': {'n' : 1, 'm' : 1, 'optimizer' : Adam}}, name = 'LSTM-Adam')
+    exp.add_controller('SimpleBoost', {'controller_id': 'LSTM', \
+        'controller_params': {'n' : 1, 'm' : 1, 'optimizer' : OGD}}, name = 'LSTM-OGD')
+    exp.add_controller('SimpleBoost', {'controller_id': 'LSTM', \
+        'controller_params': {'n' : 1, 'm' : 1, 'optimizer' : Adagrad}}, name = 'LSTM-Adagrad')
+    exp.add_controller('SimpleBoost', {'controller_id': 'LSTM', \
+        'controller_params': {'n' : 1, 'm' : 1, 'optimizer' : Adam}}, name = 'LSTM-Adam')
 
     exp.add_environment('ARMA-v0', {'p':2, 'q':0}, name = '20')
     #exp.add_environment('ARMA-v0', {'p':3, 'q':3}, name = '33')

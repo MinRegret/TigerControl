@@ -13,7 +13,7 @@ class InvalidInput(Error):
     pass
 
 class ObjectNotInitialized(Error):
-    """Raised when the user calls class method before initializing
+    """Raised when the user calls class controller before initializing
     """
     pass
 # Local errors
@@ -66,7 +66,7 @@ class ResetNotAllowed(Exception):
 
 class InvalidClass(Exception):
     """Raised when the user tries to register a class without sufficient
-    preimplemented methods
+    preimplemented controllers
     """
     pass
 

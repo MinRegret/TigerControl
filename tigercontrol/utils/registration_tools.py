@@ -214,7 +214,7 @@ class Registry(object):
             raise error.Error('Cannot re-register ID {} for {}'.format(id, self))
         self.specs[id] = Spec(id, self.regexp, **kwargs)
 
-    # register a custom method class
+    # register a custom controller class
     def register_custom(self, id, custom_class):
         self.custom[id] = custom_class
 

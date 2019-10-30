@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.core &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.controllers.core &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -131,7 +131,7 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.methods.core</li>
+      <li>tigercontrol.controllers.core</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,23 +146,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.methods.core</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Method class</span>
+  <h1>Source code for tigercontrol.controllers.core</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Controller class</span>
 <span class="c1"># Author: John Hallman</span>
 
 <span class="kn">from</span> <span class="nn">tigercontrol</span> <span class="k">import</span> <span class="n">error</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.methods.optimizers</span> <span class="k">import</span> <span class="n">Optimizer</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.utils.optimizers</span> <span class="k">import</span> <span class="n">Optimizer</span>
 
 <span class="c1"># class for implementing algorithms with enforced modularity</span>
-<div class="viewcode-block" id="Method"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.methods.Method.html#tigercontrol.methods.Method">[docs]</a><span class="k">class</span> <span class="nc">Method</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Controller"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.controllers.Controller.html#tigercontrol.controllers.Controller">[docs]</a><span class="k">class</span> <span class="nc">Controller</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">spec</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># initializes method parameters</span>
+        <span class="c1"># initializes controller parameters</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># returns method prediction for given input</span>
+        <span class="c1"># returns controller prediction for given input</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -180,7 +180,7 @@
         <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">InvalidInput</span><span class="p">(</span><span class="s2">&quot;Optimizer input cannot be stored&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># prints information about this class and its methods</span>
+        <span class="c1"># prints information about this class and its controllers</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

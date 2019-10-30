@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.controller.kalman_filter &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.controllers.kalman_filter &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.methods.controller.kalman_filter</li>
+      <li>tigercontrol.controllers.kalman_filter</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,16 +146,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.methods.controller.kalman_filter</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.controllers.kalman_filter</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Kalman Filter</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">tigercontrol</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.methods.control</span> <span class="k">import</span> <span class="n">ControlMethod</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.controllers.control</span> <span class="k">import</span> <span class="n">ControlController</span>
 
-<div class="viewcode-block" id="KalmanFilter"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.controller.KalmanFilter.html#tigercontrol.methods.controller.KalmanFilter">[docs]</a><span class="k">class</span> <span class="nc">KalmanFilter</span><span class="p">(</span><span class="n">ControlMethod</span><span class="p">):</span>
+<div class="viewcode-block" id="KalmanFilter"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.controllers.KalmanFilter.html#tigercontrol.controllers.KalmanFilter">[docs]</a><span class="k">class</span> <span class="nc">KalmanFilter</span><span class="p">(</span><span class="n">ControlController</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Kalman Filter adjusts measurements of a signal based on prior states and</span>
 <span class="sd">    knowledge of intrinsic equations of the system.</span>
@@ -166,7 +166,7 @@
 <span class="sd">    measurement at time t is a linear combination of the signal value and</span>
 <span class="sd">    the measurement noise v(t), i.e. z(t) = H x(t) + v(t).</span>
 
-<span class="sd">    Based on these, the method can advance by itself in time using a &#39;time&#39;</span>
+<span class="sd">    Based on these, the controller can advance by itself in time using a &#39;time&#39;</span>
 <span class="sd">    update and/or incorporate and correct a measurement using a &#39;measurement&#39;</span>
 <span class="sd">    update:</span>
 
@@ -187,7 +187,7 @@
 
     <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([])</span>
 
-<div class="viewcode-block" id="KalmanFilter.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.controller.KalmanFilter.html#tigercontrol.methods.controller.KalmanFilter.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="KalmanFilter.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.controllers.KalmanFilter.html#tigercontrol.controllers.KalmanFilter.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span></div>
 
     <span class="k">def</span> <span class="nf">to_ndarray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
@@ -207,14 +207,14 @@
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">R</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Description:</span>
-<span class="sd">            Initialize the dynamics of the method.</span>
+<span class="sd">            Initialize the dynamics of the controller.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            x (float/numpy.ndarray): estimate of x(0)</span>
 <span class="sd">            A (float/numpy.ndarray): past value contribution coefficient</span>
 <span class="sd">            B (float/numpy.ndarray): control signal contribution coefficient</span>
 <span class="sd">            H (float/numpy.ndarray): true signal contribution coefficient</span>
 <span class="sd">            P (float/numpy.ndarray): initial estimate of error covariance P(0)</span>
-<span class="sd">            Q (float/numpy.ndarray): covariance of method noise w(t)</span>
+<span class="sd">            Q (float/numpy.ndarray): covariance of controller noise w(t)</span>
 <span class="sd">            R (float/numpy.ndarray): covariance of environment noise v(t)</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            None</span>
@@ -291,7 +291,7 @@
     <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Description:</span>
-<span class="sd">            Prints information about this class and its methods.</span>
+<span class="sd">            Prints information about this class and its controllers.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            None</span>
 <span class="sd">        Returns:</span>
@@ -300,10 +300,10 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">KalmanFilter_help</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;KalmanFilter Method&gt;&quot;</span></div>
+        <span class="k">return</span> <span class="s2">&quot;&lt;KalmanFilter Controller&gt;&quot;</span></div>
 
 
-<span class="c1"># string to print when calling help() method</span>
+<span class="c1"># string to print when calling help() controller</span>
 <span class="n">KalmanFilter_help</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="s2">-------------------- *** --------------------</span>
@@ -321,7 +321,7 @@
 <span class="s2">    measurement at time t is a linear combination of the signal value and</span>
 <span class="s2">    the measurement noise v(t), i.e. z(t) = H x(t) + v(t).</span>
 
-<span class="s2">    Based on these, the method can advance by itself in time using a &#39;time&#39;</span>
+<span class="s2">    Based on these, the controller can advance by itself in time using a &#39;time&#39;</span>
 <span class="s2">    update and/or incorporate and correct a measurement using a &#39;measurement&#39;</span>
 <span class="s2">    update:</span>
 
@@ -339,18 +339,18 @@
 <span class="s2">    The user must provides estimates for A, B, H, Q and R, as well as initial</span>
 <span class="s2">    estimates for x(0) and P(0).</span>
 
-<span class="s2">Methods:</span>
+<span class="s2">Controllers:</span>
 
 <span class="s2">    initialize(x, A, B, H, P, Q, R)</span>
 <span class="s2">        Description:</span>
-<span class="s2">            Initialize the dynamics of the method.</span>
+<span class="s2">            Initialize the dynamics of the controller.</span>
 <span class="s2">        Args:</span>
 <span class="s2">            x (float/numpy.ndarray): estimate of x(0)</span>
 <span class="s2">            A (float/numpy.ndarray): past value contribution coefficient</span>
 <span class="s2">            B (float/numpy.ndarray): control signal contribution coefficient</span>
 <span class="s2">            H (float/numpy.ndarray): true signal contribution coefficient</span>
 <span class="s2">            P (float/numpy.ndarray): initial estimate of error covariance P(0)</span>
-<span class="s2">            Q (float/numpy.ndarray): covariance of method noise w(t)</span>
+<span class="s2">            Q (float/numpy.ndarray): covariance of controller noise w(t)</span>
 <span class="s2">            R (float/numpy.ndarray): covariance of environment noise v(t)</span>
 <span class="s2">        Returns:</span>
 <span class="s2">            None</span>
@@ -382,7 +382,7 @@
 
 <span class="s2">    help()</span>
 <span class="s2">        Description:</span>
-<span class="s2">            Prints information about this class and its methods.</span>
+<span class="s2">            Prints information about this class and its controllers.</span>
 <span class="s2">        Args:</span>
 <span class="s2">            None</span>
 <span class="s2">        Returns:</span>

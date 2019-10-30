@@ -6,10 +6,10 @@ tigercontrol.environments.time\_series.ENSO
 .. autoclass:: ENSO
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

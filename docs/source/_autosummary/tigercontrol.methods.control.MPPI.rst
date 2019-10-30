@@ -1,15 +1,15 @@
-tigercontrol.methods.controller.MPPI
+tigercontrol.controllers.MPPI
 ================================
 
-.. currentmodule:: tigercontrol.methods.control
+.. currentmodule:: tigercontrol.controllers.control
 
 .. autoclass:: MPPI
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

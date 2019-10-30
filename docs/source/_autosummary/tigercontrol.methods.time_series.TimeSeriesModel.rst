@@ -1,23 +1,23 @@
-tigercontrol.methods.time\_series.TimeSeriesMethod
+tigercontrol.controllers.time\_series.TimeSeriesController
 ================================================
 
-.. currentmodule:: tigercontrol.methods.time_series
+.. currentmodule:: tigercontrol.controllers.time_series
 
-.. autoclass:: TimeSeriesMethod
-
-   
-   .. automethod:: __init__
+.. autoclass:: TimeSeriesController
 
    
-   .. rubric:: Methods
+   .. autocontroller:: __init__
+
+   
+   .. rubric:: Controllers
 
    .. autosummary::
    
-      ~TimeSeriesMethod.__init__
-      ~TimeSeriesMethod.help
-      ~TimeSeriesMethod.initialize
-      ~TimeSeriesMethod.predict
-      ~TimeSeriesMethod.update
+      ~TimeSeriesController.__init__
+      ~TimeSeriesController.help
+      ~TimeSeriesController.initialize
+      ~TimeSeriesController.predict
+      ~TimeSeriesController.update
    
    
 
@@ -27,6 +27,6 @@ tigercontrol.methods.time\_series.TimeSeriesMethod
 
    .. autosummary::
    
-      ~TimeSeriesMethod.spec
+      ~TimeSeriesController.spec
    
    

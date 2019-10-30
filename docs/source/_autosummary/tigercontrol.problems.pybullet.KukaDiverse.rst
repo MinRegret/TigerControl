@@ -6,10 +6,10 @@ tigercontrol.environments.pybullet.KukaDiverse
 .. autoclass:: KukaDiverse
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

@@ -6,10 +6,10 @@ tigercontrol.environments.time\_series.RNN\_TimeSeries
 .. autoclass:: RNN_TimeSeries
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

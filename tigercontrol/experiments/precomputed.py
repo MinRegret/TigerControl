@@ -1,18 +1,18 @@
 ''' Precompute '''
 
 from tigercontrol.utils.random import set_key
-from tigercontrol.experiments.core import run_experiments, create_full_environment_to_methods
+from tigercontrol.experiments.core import run_experiments, create_full_environment_to_controllers
 from tigercontrol.utils import get_tigercontrol_dir
 import jax.numpy as np
 import os
 import csv
 
-''' List of all environments and methods '''
+''' List of all environments and controllers '''
 all_metrics = ['mse']
 
 all_environments = ['ARMA-v0', 'Crypto-v0', 'SP500-v0']
 #
-all_methods = ['LastValue', 'AutoRegressor', 'RNN', 'LSTM']
+all_controllers = ['LastValue', 'AutoRegressor', 'RNN', 'LSTM']
 
 ''' Fix timesteps and key '''
 timesteps = 1500
@@ -59,9 +59,9 @@ def recompute(verbose = False, load_bar = False):
 
             with open(datapath, 'w') as csvfile:
                 writer = csv.writer(csvfile)
-                for method_id in all_methods:
+                for controller_id in all_controllers:
                     try:
-                        loss, _, _ = run_experiments((environment_id, None), (method_id, None), metric, \
+                        loss, _, _ = run_experiments((environment_id, None), (controller_id, None), metric, \
                                                              n_runs = n_runs, timesteps = timesteps)
                     except:
                         loss = np.zeros(timesteps)
@@ -78,9 +78,9 @@ def recompute(verbose = False, load_bar = False):
 
         with open(datapath, 'w') as csvfile:
             writer = csv.writer(csvfile)
-            for method_id in all_methods:
+            for controller_id in all_controllers:
                 try:
-                    _, time, memory = run_experiments((environment_id, None), (method_id, None), \
+                    _, time, memory = run_experiments((environment_id, None), (controller_id, None), \
                         metric, n_runs = n_runs, timesteps = timesteps, verbose = verbose, load_bar = load_bar)
                 except:
                     time, memory = 0.0, 0.0
@@ -90,28 +90,28 @@ def recompute(verbose = False, load_bar = False):
 
     print("SUCCESS: EVERYTHING HAS BEEN RECOMPUTED!")
 
-def load_prob_method_to_result(environment_ids = all_environments, method_ids = all_methods, environment_to_methods = None, metrics = 'mse'):
+def load_prob_controller_to_result(environment_ids = all_environments, controller_ids = all_controllers, environment_to_controllers = None, metrics = 'mse'):
     '''
     Description: Initializes the experiment instance. 
 
     Args:
         environment_ids (list): ids of environments to evaluate on
-        method_ids (list): ids of methods to use
-        environment_to_methods (dict): map of the form environment_id -> list of method_id. If None,
-                                  then we assume that the user wants to test every method
-                                  in method_to_params against every environment in environment_to_params
+        controller_ids (list): ids of controllers to use
+        environment_to_controllers (dict): map of the form environment_id -> list of controller_id. If None,
+                                  then we assume that the user wants to test every controller
+                                  in controller_to_params against every environment in environment_to_params
         metrics (list): metrics to load
 
      Returns:
-        prob_method_to_result (dict): Dictionary containing results for all specified metrics and
-                                     performance (time and memory usage) for all environment-method
+        prob_controller_to_result (dict): Dictionary containing results for all specified metrics and
+                                     performance (time and memory usage) for all environment-controller
                                      associations.
     '''
 
-    if(environment_to_methods is None):
-        environment_to_methods = create_full_environment_to_methods(environment_ids, method_ids)
+    if(environment_to_controllers is None):
+        environment_to_controllers = create_full_environment_to_controllers(environment_ids, controller_ids)
 
-    prob_method_to_result = {}
+    prob_controller_to_result = {}
 
     ''' Get loss series '''
     for metric in metrics:
@@ -123,11 +123,11 @@ def load_prob_method_to_result(environment_ids = all_environments, method_ids = 
 
             with open(datapath) as csvfile:
                 reader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
-                method_no = 0
+                controller_no = 0
                 for row in reader:
-                    if(all_methods[method_no] in method_ids):
-                        prob_method_to_result[(metric, environment_id, all_methods[method_no])] = np.array(row)
-                    method_no += 1
+                    if(all_controllers[controller_no] in controller_ids):
+                        prob_controller_to_result[(metric, environment_id, all_controllers[controller_no])] = np.array(row)
+                    controller_no += 1
             csvfile.close()
 
     ''' Get time and memory usage '''
@@ -139,15 +139,15 @@ def load_prob_method_to_result(environment_ids = all_environments, method_ids = 
 
         with open(datapath) as csvfile:
             reader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
-            method_no = 0
+            controller_no = 0
             for row in reader:
-                if(all_methods[method_no] in method_ids):
-                    prob_method_to_result[('time', environment_id, all_methods[method_no])] = row[0]
-                    prob_method_to_result[('memory', environment_id, all_methods[method_no])] = row[1]
-                method_no += 1
+                if(all_controllers[controller_no] in controller_ids):
+                    prob_controller_to_result[('time', environment_id, all_controllers[controller_no])] = row[0]
+                    prob_controller_to_result[('memory', environment_id, all_controllers[controller_no])] = row[1]
+                controller_no += 1
         csvfile.close()
 
-    return prob_method_to_result
+    return prob_controller_to_result
 
 def hyperparameter_warning():
     print("WARNING: when using precomputed results, any specified environment hyperparameters" + \

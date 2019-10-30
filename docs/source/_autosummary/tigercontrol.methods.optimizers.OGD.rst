@@ -1,15 +1,15 @@
-tigercontrol.methods.optimizers.OGD
+tigercontrol.utils.optimizers.OGD
 ==================================
 
-.. currentmodule:: tigercontrol.methods.optimizers
+.. currentmodule:: tigercontrol.utils.optimizers
 
 .. autoclass:: OGD
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

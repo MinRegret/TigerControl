@@ -1,15 +1,15 @@
-tigercontrol.methods.optimizers.Adagrad
+tigercontrol.utils.optimizers.Adagrad
 ======================================
 
-.. currentmodule:: tigercontrol.methods.optimizers
+.. currentmodule:: tigercontrol.utils.optimizers
 
 .. autoclass:: Adagrad
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

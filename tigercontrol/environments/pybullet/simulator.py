@@ -15,7 +15,7 @@ class Simulator(object):
         initial_obs = self._env.reset()
         return initial_obs
 
-    # state saving and loading methods
+    # state saving and loading controllers
     def saveFile(self, filename):
         p.saveBullet(filename)
 
@@ -30,7 +30,7 @@ class Simulator(object):
     def loadState(self, ID):
         p.restoreState(stateId = ID)
 
-    # gym environment methods
+    # gym environment controllers
     def reset(self):
         return self._env.reset()
 

@@ -6,10 +6,10 @@ tigercontrol.environments.pybullet.HalfCheetah
 .. autoclass:: HalfCheetah
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

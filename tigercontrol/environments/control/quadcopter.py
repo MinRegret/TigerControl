@@ -29,7 +29,7 @@ class Quadcopter():
         self.g = gravity
         self.b = b
         self.thread_object = None
-        self.ode =  scipy.integrate.ode(self.state_dot).set_integrator('vode',nsteps=500,method='bdf')
+        self.ode =  scipy.integrate.ode(self.state_dot).set_integrator('vode',nsteps=500,controller='bdf')
         self.time = datetime.datetime.now()
         for key in self.quads:
             self.quads[key]['state'] = np.zeros(12)

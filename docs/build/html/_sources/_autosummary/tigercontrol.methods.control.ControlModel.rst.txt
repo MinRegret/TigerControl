@@ -1,23 +1,23 @@
-tigercontrol.methods.controller.ControlMethod
+tigercontrol.controllers.ControlController
 ========================================
 
-.. currentmodule:: tigercontrol.methods.control
+.. currentmodule:: tigercontrol.controllers.control
 
-.. autoclass:: ControlMethod
-
-   
-   .. automethod:: __init__
+.. autoclass:: ControlController
 
    
-   .. rubric:: Methods
+   .. autocontroller:: __init__
+
+   
+   .. rubric:: Controllers
 
    .. autosummary::
    
-      ~ControlMethod.__init__
-      ~ControlMethod.help
-      ~ControlMethod.initialize
-      ~ControlMethod.predict
-      ~ControlMethod.update
+      ~ControlController.__init__
+      ~ControlController.help
+      ~ControlController.initialize
+      ~ControlController.predict
+      ~ControlController.update
    
    
 
@@ -27,6 +27,6 @@ tigercontrol.methods.controller.ControlMethod
 
    .. autosummary::
    
-      ~ControlMethod.spec
+      ~ControlController.spec
    
    

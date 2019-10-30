@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.time_series.time_series_method &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.controllers.time_series.time_series_controller &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.methods.time_series.time_series_method</li>
+      <li>tigercontrol.controllers.time_series.time_series_controller</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,16 +146,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.methods.time_series.time_series_method</h1><div class="highlight"><pre>
-<span></span><span class="c1"># TimeSeriesMethod class</span>
+  <h1>Source code for tigercontrol.controllers.time_series.time_series_controller</h1><div class="highlight"><pre>
+<span></span><span class="c1"># TimeSeriesController class</span>
 <span class="c1"># Author: John Hallman</span>
 
 <span class="kn">from</span> <span class="nn">tigercontrol</span> <span class="k">import</span> <span class="n">error</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.methods</span> <span class="k">import</span> <span class="n">Method</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.controllers</span> <span class="k">import</span> <span class="n">Controller</span>
 
-<div class="viewcode-block" id="TimeSeriesMethod"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.time_series.TimeSeriesMethod.html#tigercontrol.methods.time_series.TimeSeriesMethod">[docs]</a><span class="k">class</span> <span class="nc">TimeSeriesMethod</span><span class="p">(</span><span class="n">Method</span><span class="p">):</span>
+<div class="viewcode-block" id="TimeSeriesController"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.controllers.time_series.TimeSeriesController.html#tigercontrol.controllers.time_series.TimeSeriesController">[docs]</a><span class="k">class</span> <span class="nc">TimeSeriesController</span><span class="p">(</span><span class="n">Controller</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Description: class for implementing algorithms with enforced modularity &#39;&#39;&#39;</span>
-<div class="viewcode-block" id="TimeSeriesMethod.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.time_series.TimeSeriesMethod.html#tigercontrol.methods.time_series.TimeSeriesMethod.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TimeSeriesController.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.controllers.time_series.TimeSeriesController.html#tigercontrol.controllers.time_series.TimeSeriesController.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

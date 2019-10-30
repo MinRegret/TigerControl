@@ -11,8 +11,8 @@ def test_simulator(verbose=False):
     environment = tigercontrol.environment("PyBullet-CartPole-v0")
     obs = environment.initialize(render=verbose)
 
-    method = tigercontrol.method("CartPoleNN")
-    method.initialize(environment.get_observation_space(), environment.get_action_space())
+    controller = tigercontrol.controllers("CartPoleNN")
+    controller.initialize(environment.get_observation_space(), environment.get_action_space())
 
     t_start = time.time()
     save_to_mem_ID = -1
@@ -21,7 +21,7 @@ def test_simulator(verbose=False):
     score = 0
     restart_delay = 0
     while time.time() - t_start < 3:
-        a = method.predict(obs)
+        a = controller.predict(obs)
         obs, r, done, _ = environment.step(a)
         score += r
         frame += 1
@@ -45,7 +45,7 @@ def test_simulator(verbose=False):
     while time.time() - t_start < 3:
         if verbose:
             time.sleep(1. / 60.)
-        a = method.predict(obs)
+        a = controller.predict(obs)
         obs, r, done, _ = environment.step(a)
         sim_score += r
         sim_frame += 1
@@ -55,7 +55,7 @@ def test_simulator(verbose=False):
     if verbose:
         print("environment.loadState worked")
     while time.time() - t_start < 3:
-        a = method.predict(obs)
+        a = controller.predict(obs)
         obs, r, done, _ = environment.step(a)
         score += r
         frame += 1

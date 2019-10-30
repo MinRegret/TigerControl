@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.optimizers.ons &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.utils.optimizers.ons &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" controller="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.methods.optimizers.ons</li>
+      <li>tigercontrol.utils.optimizers.ons</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,13 +146,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.methods.optimizers.ons</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.utils.optimizers.ons</h1><div class="highlight"><pre>
 <span></span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">Newton Step optimizer</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
-<span class="kn">from</span> <span class="nn">tigercontrol.methods.optimizers.core</span> <span class="k">import</span> <span class="n">Optimizer</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.methods.optimizers.losses</span> <span class="k">import</span> <span class="n">mse</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.utils.optimizers.core</span> <span class="k">import</span> <span class="n">Optimizer</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.utils.optimizers.losses</span> <span class="k">import</span> <span class="n">mse</span>
 <span class="kn">from</span> <span class="nn">tigercontrol</span> <span class="k">import</span> <span class="n">error</span>
 <span class="kn">from</span> <span class="nn">jax</span> <span class="k">import</span> <span class="n">jit</span><span class="p">,</span> <span class="n">grad</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -163,12 +163,12 @@
 <span class="n">solvers</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;show_progress&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
 
-<div class="viewcode-block" id="ONS"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.optimizers.ONS.html#tigercontrol.methods.optimizers.ONS">[docs]</a><span class="k">class</span> <span class="nc">ONS</span><span class="p">(</span><span class="n">Optimizer</span><span class="p">):</span>
+<div class="viewcode-block" id="ONS"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.utils.optimizers.ONS.html#tigercontrol.utils.optimizers.ONS">[docs]</a><span class="k">class</span> <span class="nc">ONS</span><span class="p">(</span><span class="n">Optimizer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Online newton step algorithm.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ONS.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.optimizers.ONS.html#tigercontrol.methods.optimizers.ONS.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">mse</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="o">=</span><span class="p">{}):</span>
+<div class="viewcode-block" id="ONS.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.utils.optimizers.ONS.html#tigercontrol.utils.optimizers.ONS.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">mse</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="o">=</span><span class="p">{}):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">learning_rate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hps</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;reg&#39;</span><span class="p">:</span><span class="mf">0.00</span><span class="p">,</span> <span class="s1">&#39;eps&#39;</span><span class="p">:</span><span class="mf">0.0001</span><span class="p">,</span> <span class="s1">&#39;use_max_norm&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;project&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;full_matrix&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">}</span>
@@ -182,7 +182,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_valid_pred</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_valid_loss</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_predict</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
 
-        <span class="nd">@jit</span> <span class="c1"># partial update step for every matrix in method weights list</span>
+        <span class="nd">@jit</span> <span class="c1"># partial update step for every matrix in controller weights list</span>
         <span class="k">def</span> <span class="nf">partial_update</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">Ainv</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
             <span class="n">A</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="n">grad</span><span class="p">)</span>
             <span class="n">inv_grad</span> <span class="o">=</span> <span class="n">Ainv</span> <span class="o">@</span> <span class="n">grad</span>
@@ -222,8 +222,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Description: Updates parameters based on correct value, loss and learning rate.</span>
 <span class="sd">        Args:</span>
-<span class="sd">            params (list/numpy.ndarray): Parameters of method pred method</span>
-<span class="sd">            x (float): input to method</span>
+<span class="sd">            params (list/numpy.ndarray): Parameters of controller pred controller</span>
+<span class="sd">            x (float): input to controller</span>
 <span class="sd">            y (float): true label</span>
 <span class="sd">            loss (function): loss function. defaults to input value.</span>
 <span class="sd">        Returns:</span>

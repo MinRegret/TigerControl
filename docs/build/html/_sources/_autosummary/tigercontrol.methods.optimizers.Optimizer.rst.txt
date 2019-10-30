@@ -1,15 +1,15 @@
-tigercontrol.methods.optimizers.Optimizer
+tigercontrol.utils.optimizers.Optimizer
 ========================================
 
-.. currentmodule:: tigercontrol.methods.optimizers
+.. currentmodule:: tigercontrol.utils.optimizers
 
 .. autoclass:: Optimizer
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

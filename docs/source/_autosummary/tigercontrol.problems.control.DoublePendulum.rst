@@ -6,10 +6,10 @@ tigercontrol.environments.controller.DoublePendulum
 .. autoclass:: DoublePendulum
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

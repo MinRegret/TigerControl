@@ -1,34 +1,34 @@
 # NewExperiment class
 
 from tigercontrol import error
-from tigercontrol.experiments.core import to_dict, run_experiments, create_full_environment_to_methods
+from tigercontrol.experiments.core import to_dict, run_experiments, create_full_environment_to_controllers
 
 class NewExperiment(object):
     ''' Description: class for implementing algorithms with enforced modularity '''
     def __init__(self):
         self.initialized = False
         
-    def initialize(self, environments, methods, environment_to_methods=None, metrics='mse', \
+    def initialize(self, environments, controllers, environment_to_controllers=None, metrics='mse', \
                 n_runs = 1, timesteps = None, verbose = 0):
         '''
         Description: Initializes the new experiment instance. 
 
         Args:     
             environments (dict): map of the form environment_id -> hyperparameters for environment 
-            methods (dict): map of the form method_id -> hyperparameters for method
-            environment_to_methods (dict) : map of the form environment_id -> list of method_id.
+            controllers (dict): map of the form controller_id -> hyperparameters for controller
+            environment_to_controllers (dict) : map of the form environment_id -> list of controller_id.
                                        If None, then we assume that the user wants to
-                                       test every method in method_to_params against every
+                                       test every controller in controller_to_params against every
                                        environment in environment_to_params
         '''
         self.intialized = True
-        self.environments, self.methods, self.metrics = environments, methods, metrics
+        self.environments, self.controllers, self.metrics = environments, controllers, metrics
         self.n_runs, self.timesteps, self.verbose = n_runs, timesteps, verbose
 
-        if(environment_to_methods is None):
-            self.environment_to_methods = create_full_environment_to_methods(self.environments.keys(), self.methods.keys())
+        if(environment_to_controllers is None):
+            self.environment_to_controllers = create_full_environment_to_controllers(self.environments.keys(), self.controllers.keys())
         else:
-            self.environment_to_methods = environment_to_methods
+            self.environment_to_controllers = environment_to_controllers
 
     def run_all_experiments(self):
         '''
@@ -38,48 +38,48 @@ class NewExperiment(object):
             None
 
         Returns:
-            prob_method_to_result (dict): Dictionary containing results for all specified metrics and performance
-                                         (time and memory usage) for all environment-method associations.
+            prob_controller_to_result (dict): Dictionary containing results for all specified metrics and performance
+                                         (time and memory usage) for all environment-controller associations.
         '''
-        prob_method_to_result = {}
+        prob_controller_to_result = {}
         for metric in self.metrics:
             for environment_id in self.environments.keys():
                 for (new_environment_id, environment_params) in self.environments[environment_id]:
-                    for method_id in self.environment_to_methods[environment_id]:
-                        for (new_method_id, method_params) in self.methods[method_id]:
-                            loss, time, memory = run_experiments((environment_id, environment_params), (method_id, method_params), \
+                    for controller_id in self.environment_to_controllers[environment_id]:
+                        for (new_controller_id, controller_params) in self.controllers[controller_id]:
+                            loss, time, memory = run_experiments((environment_id, environment_params), (controller_id, controller_params), \
                                 metric, n_runs = self.n_runs, timesteps = self.timesteps, verbose = self.verbose)
-                            prob_method_to_result[(metric, environment_id, method_id)] = loss
-                            prob_method_to_result[('time', environment_id, method_id)] = time
-                            prob_method_to_result[('memory', environment_id, method_id)] = memory
+                            prob_controller_to_result[(metric, environment_id, controller_id)] = loss
+                            prob_controller_to_result[('time', environment_id, controller_id)] = time
+                            prob_controller_to_result[('memory', environment_id, controller_id)] = memory
 
-        return prob_method_to_result
+        return prob_controller_to_result
 
     def help(self):
         '''
-        Description: Prints information about this class and its methods.
+        Description: Prints information about this class and its controllers.
         '''
         print(NewExperiment_help)
 
     def __str__(self):
-        return "<NewExperiment Method>"
+        return "<NewExperiment Controller>"
 
-# string to print when calling help() method
+# string to print when calling help() controller
 NewExperiment_help = """
 
 -------------------- *** --------------------
 
-Methods:
+Controllers:
 
     initialize()
         Description: Initializes the new experiment instance. 
 
         Args:     
             environments (dict): map of the form environment_id -> hyperparameters for environment 
-            methods (dict): map of the form method_id -> hyperparameters for method
-            environment_to_methods (dict) : map of the form environment_id -> list of method_id.
+            controllers (dict): map of the form controller_id -> hyperparameters for controller
+            environment_to_controllers (dict) : map of the form environment_id -> list of controller_id.
                                        If None, then we assume that the user wants to
-                                       test every method in method_to_params against every
+                                       test every controller in controller_to_params against every
                                        environment in environment_to_params
 
     def run_all_experiments():
@@ -89,12 +89,12 @@ Methods:
             None
 
         Returns:
-            prob_method_to_result (dict): Dictionary containing results for all specified metrics and performance
-                                         (time and memory usage) for all environment-method associations.
+            prob_controller_to_result (dict): Dictionary containing results for all specified metrics and performance
+                                         (time and memory usage) for all environment-controller associations.
 
 
     help()
-        Description: Prints information about this class and its methods
+        Description: Prints information about this class and its controllers
 
 -------------------- *** --------------------
 

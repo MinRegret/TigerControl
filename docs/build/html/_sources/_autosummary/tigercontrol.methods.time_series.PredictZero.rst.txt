@@ -1,15 +1,15 @@
-tigercontrol.methods.time\_series.PredictZero
+tigercontrol.controllers.time\_series.PredictZero
 ============================================
 
-.. currentmodule:: tigercontrol.methods.time_series
+.. currentmodule:: tigercontrol.controllers.time_series
 
 .. autoclass:: PredictZero
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

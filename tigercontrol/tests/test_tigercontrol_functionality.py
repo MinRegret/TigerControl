@@ -4,7 +4,7 @@ Run all tests for the TigerControl framework
 
 import tigercontrol
 
-# test all tigercontrol.* methods
+# test all tigercontrol.* controllers
 def test_tigercontrol_functionality(show_results=False):
     print("\nrunning all tigercontrol functionality tests...\n")
     test_help()
@@ -12,7 +12,7 @@ def test_tigercontrol_functionality(show_results=False):
     print("\nall tigercontrol functionality tests passed\n")
 
 
-# test tigercontrol.help() method
+# test tigercontrol.help() controller
 def test_help():
     tigercontrol.help()
 

@@ -6,10 +6,10 @@ tigercontrol.environments.Environment
 .. autoclass:: Environment
 
    
-   .. automethod:: __init__
+   .. autocontroller:: __init__
 
    
-   .. rubric:: Methods
+   .. rubric:: Controllers
 
    .. autosummary::
    

@@ -1,32 +1,56 @@
-# tigercontrol init file
+# controllers init file
 
-import os
-import sys
-import warnings
-
-import tigercontrol
-from tigercontrol import error
-from tigercontrol.environments import environment, CustomEnvironment, environment_registry, register_custom_environment
-from tigercontrol.methods import method, CustomMethod, method_registry, register_custom_method
-from tigercontrol.methods.optimizers import losses
-from tigercontrol.help import help
-from tigercontrol.utils import set_key
-from tigercontrol.experiments import Experiment
-
-# initialize global random key by seeding the jax random number generator
-# note: numpy is necessary because jax RNG is deterministic
-import jax.random as random
-GLOBAL_RANDOM_KEY = random.PRNGKey(0)
-set_key()
+from tigercontrol.controllers.registration import controller_registry, controller_register, controller
+from tigercontrol.controllers.core import Controller
+from tigercontrol.controllers.custom import CustomController, register_custom_controller
+from tigercontrol.utils.optimizers import losses
 
 
-__all__ = [
-	"environment", 
-	"method", 
-	"CustomMethod", 
-	"Experiment", 
-	"register_custom_method", 
-	"register_custom_environment", 
-	"help", 
-	"set_key"
-]
+
+# ---------- Boosting Controllers ----------
+
+
+controller_register(
+    id='SimpleBoost',
+    entry_point='tigercontrol.utils.boosting:SimpleBoost',
+)
+
+controller_register(
+    id='SimpleBoostAdj',
+    entry_point='tigercontrol.utils.boosting:SimpleBoostAdj',
+)
+
+
+# ---------- Control Controllers ----------
+
+
+controller_register(
+    id='KalmanFilter',
+    entry_point='tigercontrol.controllers.control:KalmanFilter',
+)
+
+controller_register(
+    id='ODEShootingMethod',
+    entry_point='tigercontrol.controllers.control:ODEShootingMethod',
+)
+
+controller_register(
+    id='LQR',
+    entry_point='tigercontrol.controllers.control:LQR',
+)
+
+controller_register(
+    id='ILQR',
+    entry_point='tigercontrol.controllers.control:ILQR',
+)
+
+controller_register(
+    id='CartPoleNN',
+    entry_point='tigercontrol.controllers.control:CartPoleNN',
+)
+
+controller_register(
+    id='GPC',
+    entry_point='tigercontrol.controllers.control:GPC',
+)
+
