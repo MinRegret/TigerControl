@@ -24,7 +24,7 @@ def get_trajectory(environment, controller, T = 100):
     avg_regret = []
     cur_avg = 0
     
-    u = controller.plan()
+    u = controller.plan(x, T)
 
     for i in range(T):
         x = environment.step(u[i])

@@ -29,7 +29,7 @@ class ILQR(Controller):
         """
         self.initialized = True
 
-        self.env = env.
+        # self.env = env.
         # initialize dynamics, loss, and derivatives
         '''
         if callable(problem_dynamics):
@@ -37,7 +37,7 @@ class ILQR(Controller):
         else:
             dyn = problem_dynamics.dynamics
         self.dyn = dyn'''
-        self.L = env.loss
+        # self.L = env.loss
         self.dim_x = dim_x
         self.dim_u = dim_u
         # dyn_jacobian = jax.jit(jax.jacrev(dyn, argnums=(0,1)))
