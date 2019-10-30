@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.problems.control.cartpole &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.environments.controller.cartpole &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.problems.control.cartpole</li>
+      <li>tigercontrol.environments.controller.cartpole</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,7 +146,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.problems.control.cartpole</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.environments.controller.cartpole</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Non-PyBullet implementation of CartPole</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -156,13 +156,13 @@
 
 <span class="kn">import</span> <span class="nn">tigercontrol</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.utils</span> <span class="k">import</span> <span class="n">generate_key</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.problems.control</span> <span class="k">import</span> <span class="n">ControlProblem</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.environments.control</span> <span class="k">import</span> <span class="n">ControlEnvironment</span>
 
 <span class="c1"># necessary for rendering</span>
 <span class="kn">from</span> <span class="nn">gym.envs.classic_control</span> <span class="k">import</span> <span class="n">rendering</span>
 
 
-<div class="viewcode-block" id="CartPole"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.control.CartPole.html#tigercontrol.problems.control.CartPole">[docs]</a><span class="k">class</span> <span class="nc">CartPole</span><span class="p">(</span><span class="n">ControlProblem</span><span class="p">):</span>
+<div class="viewcode-block" id="CartPole"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.controller.CartPole.html#tigercontrol.environments.controller.CartPole">[docs]</a><span class="k">class</span> <span class="nc">CartPole</span><span class="p">(</span><span class="n">ControlEnvironment</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description:</span>
 <span class="sd">        A pole is attached by an un-actuated joint to a cart, which moves along a frictionless track. </span>
@@ -175,7 +175,7 @@
         <span class="s1">&#39;video.frames_per_second&#39;</span> <span class="p">:</span> <span class="mi">50</span>
     <span class="p">}</span>
 
-<div class="viewcode-block" id="CartPole.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.control.CartPole.html#tigercontrol.problems.control.CartPole.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CartPole.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.controller.CartPole.html#tigercontrol.environments.controller.CartPole.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gravity</span> <span class="o">=</span> <span class="mf">9.8</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">masscart</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -240,7 +240,7 @@
             <span class="n">reward</span> <span class="o">=</span> <span class="mf">1.0</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_beyond_done</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: step() called after problem is &#39;done&#39;.&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: step() called after environment is &#39;done&#39;.&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="p">{}</span>
 

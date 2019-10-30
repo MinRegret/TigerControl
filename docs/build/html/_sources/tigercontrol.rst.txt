@@ -8,6 +8,6 @@ Subpackages
     :maxdepth: 1
 
     tigercontrol.utils
-    tigercontrol.problems
+    tigercontrol.environments
     tigercontrol.methods
     tigercontrol.experiments

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.problems.time_series.uci_indoor &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.environments.time_series.uci_indoor &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.problems.time_series.uci_indoor</li>
+      <li>tigercontrol.environments.time_series.uci_indoor</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,7 +146,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.problems.time_series.uci_indoor</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.environments.time_series.uci_indoor</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">UCI indoor temperature data</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -157,16 +157,16 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.utils</span> <span class="k">import</span> <span class="n">uci_indoor</span><span class="p">,</span> <span class="n">get_tigercontrol_dir</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.error</span> <span class="k">import</span> <span class="n">StepOutOfBounds</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.problems.time_series</span> <span class="k">import</span> <span class="n">TimeSeriesProblem</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.environments.time_series</span> <span class="k">import</span> <span class="n">TimeSeriesEnvironment</span>
 
-<div class="viewcode-block" id="UCI_Indoor"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.time_series.UCI_Indoor.html#tigercontrol.problems.time_series.UCI_Indoor">[docs]</a><span class="k">class</span> <span class="nc">UCI_Indoor</span><span class="p">(</span><span class="n">TimeSeriesProblem</span><span class="p">):</span>
+<div class="viewcode-block" id="UCI_Indoor"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.time_series.UCI_Indoor.html#tigercontrol.environments.time_series.UCI_Indoor">[docs]</a><span class="k">class</span> <span class="nc">UCI_Indoor</span><span class="p">(</span><span class="n">TimeSeriesEnvironment</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Outputs various weather metrics from a UCI dataset from 13/3/2012 to 11/4/2012</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;UCI-Indoor-v0&#39;</span><span class="p">,</span> <span class="s1">&#39;TimeSeries&#39;</span><span class="p">])</span>
 
-<div class="viewcode-block" id="UCI_Indoor.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.time_series.UCI_Indoor.html#tigercontrol.problems.time_series.UCI_Indoor.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UCI_Indoor.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.time_series.UCI_Indoor.html#tigercontrol.environments.time_series.UCI_Indoor.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="c1"># self.data_path = os.path.join(get_tigercontrol_dir(), &quot;data/uci_indoor_cleaned.csv&quot;)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pred_indices</span> <span class="o">=</span> <span class="p">[]</span>

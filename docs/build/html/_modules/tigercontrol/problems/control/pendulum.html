@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.problems.control.pendulum &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.environments.controller.pendulum &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.problems.control.pendulum</li>
+      <li>tigercontrol.environments.controller.pendulum</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,7 +146,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.problems.control.pendulum</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.environments.controller.pendulum</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Non-PyBullet implementation of Pendulum</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -157,19 +157,19 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">tigercontrol</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.utils</span> <span class="k">import</span> <span class="n">generate_key</span><span class="p">,</span> <span class="n">get_tigercontrol_dir</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.problems.control</span> <span class="k">import</span> <span class="n">ControlProblem</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.environments.control</span> <span class="k">import</span> <span class="n">ControlEnvironment</span>
 
 <span class="c1"># necessary for rendering</span>
 <span class="kn">from</span> <span class="nn">gym.envs.classic_control</span> <span class="k">import</span> <span class="n">rendering</span>
 
 
-<div class="viewcode-block" id="Pendulum"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.control.Pendulum.html#tigercontrol.problems.control.Pendulum">[docs]</a><span class="k">class</span> <span class="nc">Pendulum</span><span class="p">(</span><span class="n">ControlProblem</span><span class="p">):</span>
+<div class="viewcode-block" id="Pendulum"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.controller.Pendulum.html#tigercontrol.environments.controller.Pendulum">[docs]</a><span class="k">class</span> <span class="nc">Pendulum</span><span class="p">(</span><span class="n">ControlEnvironment</span><span class="p">):</span>
     <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;render.modes&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;human&#39;</span><span class="p">,</span> <span class="s1">&#39;rgb_array&#39;</span><span class="p">],</span>
         <span class="s1">&#39;video.frames_per_second&#39;</span> <span class="p">:</span> <span class="mi">30</span>
     <span class="p">}</span>
 
-<div class="viewcode-block" id="Pendulum.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.control.Pendulum.html#tigercontrol.problems.control.Pendulum.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mf">10.0</span><span class="p">):</span>
+<div class="viewcode-block" id="Pendulum.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.controller.Pendulum.html#tigercontrol.environments.controller.Pendulum.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mf">10.0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_speed</span><span class="o">=</span><span class="mi">8</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_torque</span><span class="o">=</span><span class="mf">2.</span>
@@ -232,7 +232,7 @@
             <span class="n">axle</span> <span class="o">=</span> <span class="n">rendering</span><span class="o">.</span><span class="n">make_circle</span><span class="p">(</span><span class="o">.</span><span class="mi">05</span><span class="p">)</span>
             <span class="n">axle</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">add_geom</span><span class="p">(</span><span class="n">axle</span><span class="p">)</span>
-            <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_tigercontrol_dir</span><span class="p">(),</span> <span class="s2">&quot;problems/control/assets/clockwise.png&quot;</span><span class="p">)</span>
+            <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_tigercontrol_dir</span><span class="p">(),</span> <span class="s2">&quot;environments/controller/assets/clockwise.png&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">img</span> <span class="o">=</span> <span class="n">rendering</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">imgtrans</span> <span class="o">=</span> <span class="n">rendering</span><span class="o">.</span><span class="n">Transform</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">add_attr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imgtrans</span><span class="p">)</span>

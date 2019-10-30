@@ -1,4 +1,4 @@
-from tigercontrol.methods.control.tests.run_all_tests import run_all_tests as control_method_tests
+from tigercontrol.methods.controller.tests.run_all_tests import run_all_tests as control_method_tests
 from tigercontrol.methods.time_series.tests.run_all_tests import run_all_tests as time_series_method_tests
 from tigercontrol.methods.optimizers.tests.run_all_tests import run_all_tests as optimizers_tests
 from tigercontrol.methods.tests.test_custom_method import test_custom_method

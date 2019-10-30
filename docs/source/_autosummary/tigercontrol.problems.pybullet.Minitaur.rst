@@ -1,7 +1,7 @@
-tigercontrol.problems.pybullet.Minitaur
+tigercontrol.environments.pybullet.Minitaur
 =======================================
 
-.. currentmodule:: tigercontrol.problems.pybullet
+.. currentmodule:: tigercontrol.environments.pybullet
 
 .. autoclass:: Minitaur
 

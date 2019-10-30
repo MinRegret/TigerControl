@@ -6,7 +6,7 @@ import warnings
 
 import tigercontrol
 from tigercontrol import error
-from tigercontrol.problems import problem, CustomProblem, problem_registry, register_custom_problem
+from tigercontrol.environments import environment, CustomEnvironment, environment_registry, register_custom_environment
 from tigercontrol.methods import method, CustomMethod, method_registry, register_custom_method
 from tigercontrol.methods.optimizers import losses
 from tigercontrol.help import help
@@ -21,12 +21,12 @@ set_key()
 
 
 __all__ = [
-	"problem", 
+	"environment", 
 	"method", 
 	"CustomMethod", 
 	"Experiment", 
 	"register_custom_method", 
-	"register_custom_problem", 
+	"register_custom_environment", 
 	"help", 
 	"set_key"
 ]

@@ -5,7 +5,7 @@ from difflib import get_close_matches
 from tigercontrol import error
 
 # This format is true today, but it's *not* an official spec.
-# [username/](problem-name)-v(version)    problem-name is group 1, version is group 2
+# [username/](environment-name)-v(version)    environment-name is group 1, version is group 2
 # id_re = re.compile(r'^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$')
 
 

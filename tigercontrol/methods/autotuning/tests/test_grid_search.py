@@ -15,9 +15,9 @@ def test_grid_search(show=False):
 
 
 def test_grid_search_arma(show=False):
-    problem_id = "LDS-v0"
+    environment_id = "LDS-v0"
     method_id = "GPC"
-    problem_params = {'n':3, 'm':2}
+    environment_params = {'n':3, 'm':2}
     method_params = {}
     loss = lambda a, b: np.sum((a-b)**2)
     search_space = {'optimizer':[]} # parameters for ARMA method
@@ -29,7 +29,7 @@ def test_grid_search_arma(show=False):
 
     trials = 15
     hpo = GridSearch() # hyperparameter optimizer
-    optimal_params, optimal_loss = hpo.search(method_id, method_params, problem_id, problem_params, loss, 
+    optimal_params, optimal_loss = hpo.search(method_id, method_params, environment_id, environment_params, loss, 
         search_space, trials=trials, smoothing=10, start_steps=100, verbose=show)
 
     if show:
@@ -39,14 +39,14 @@ def test_grid_search_arma(show=False):
     # test resulting method params
     method = tigercontrol.method(method_id)
     method.initialize(**optimal_params)
-    problem = tigercontrol.problem(problem_id)
-    x = problem.initialize(**problem_params)
+    environment = tigercontrol.environment(environment_id)
+    x = environment.initialize(**environment_params)
     loss = []
     if show:
         print("run final test with optimal parameters")
     for t in range(5000):
         y_pred = method.predict(x)
-        y_true = problem.step()
+        y_true = environment.step()
         loss.append(mse(y_pred, y_true))
         method.update(y_true)
         x = y_true

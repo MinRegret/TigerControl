@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.problems.pybullet.pybullet_problem &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.environments.pybullet.pybullet_environment &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.problems.pybullet.pybullet_problem</li>
+      <li>tigercontrol.environments.pybullet.pybullet_environment</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,15 +146,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.problems.pybullet.pybullet_problem</h1><div class="highlight"><pre>
-<span></span><span class="c1"># PyBullet Problems</span>
+  <h1>Source code for tigercontrol.environments.pybullet.pybullet_environment</h1><div class="highlight"><pre>
+<span></span><span class="c1"># PyBullet Environments</span>
 
 <span class="kn">from</span> <span class="nn">tigercontrol</span> <span class="k">import</span> <span class="n">error</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.problems</span> <span class="k">import</span> <span class="n">Problem</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.problems.pybullet.simulator</span> <span class="k">import</span> <span class="n">Simulator</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.environments</span> <span class="k">import</span> <span class="n">Environment</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.environments.pybullet.simulator</span> <span class="k">import</span> <span class="n">Simulator</span>
 
 
-<div class="viewcode-block" id="PyBulletProblem"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.pybullet.PyBulletProblem.html#tigercontrol.problems.pybullet.PyBulletProblem">[docs]</a><span class="k">class</span> <span class="nc">PyBulletProblem</span><span class="p">(</span><span class="n">Simulator</span><span class="p">):</span>
+<div class="viewcode-block" id="PyBulletEnvironment"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.pybullet.PyBulletEnvironment.html#tigercontrol.environments.pybullet.PyBulletEnvironment">[docs]</a><span class="k">class</span> <span class="nc">PyBulletEnvironment</span><span class="p">(</span><span class="n">Simulator</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Description: class for online control tests &#39;&#39;&#39;</span>
   
     <span class="k">def</span> <span class="nf">get_simulator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># same as calling fork()</span>

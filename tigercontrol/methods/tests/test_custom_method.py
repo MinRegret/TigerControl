@@ -10,8 +10,8 @@ def test_custom_method(steps=1000, show_plot=True):
     T = steps 
     p, q = 3, 3
     loss = lambda y_true, y_pred: (y_true - y_pred)**2
-    problem = tigercontrol.problem("ARMA-v0")
-    cur_x = problem.initialize(p, q)
+    environment = tigercontrol.environment("ARMA-v0")
+    cur_x = environment.initialize(p, q)
 
     # simple LastValue custom method implementation
     class Custom(tigercontrol.CustomMethod):
@@ -37,7 +37,7 @@ def test_custom_method(steps=1000, show_plot=True):
         cur_y_pred = custom_method.predict(cur_x)
         reg_y_pred = reg_method.predict(cur_x)
         assert cur_y_pred == reg_y_pred # check that CustomMethod outputs the correct thing
-        cur_y_true = problem.step()
+        cur_y_true = environment.step()
         custom_method.update(cur_y_true)
         reg_method.update(cur_y_true)
         results.append(loss(cur_y_true, cur_y_pred))
@@ -45,7 +45,7 @@ def test_custom_method(steps=1000, show_plot=True):
 
     if show_plot:
         plt.plot(results)
-        plt.title("Custom (last value) method on ARMA problem")
+        plt.title("Custom (last value) method on ARMA environment")
         plt.show(block=False)
         plt.pause(1)
         plt.close()

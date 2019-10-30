@@ -1,4 +1,4 @@
-tigercontrol.methods.control.ODEShootingMethod
+tigercontrol.methods.controller.ODEShootingMethod
 =============================================
 
 .. currentmodule:: tigercontrol.methods.control

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.problems.pybullet.cartpole_swingup &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.environments.pybullet.cartpole_swingup &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.problems.pybullet.cartpole_swingup</li>
+      <li>tigercontrol.environments.pybullet.cartpole_swingup</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,23 +146,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.problems.pybullet.cartpole_swingup</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.environments.pybullet.cartpole_swingup</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">PyBullet Swingup Pendulum enviornment</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">pybullet_envs.gym_pendulum_envs</span> <span class="k">import</span> <span class="n">InvertedPendulumSwingupBulletEnv</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.problems.pybullet.pybullet_problem</span> <span class="k">import</span> <span class="n">PyBulletProblem</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.environments.pybullet.pybullet_environment</span> <span class="k">import</span> <span class="n">PyBulletEnvironment</span>
 
 
-<div class="viewcode-block" id="CartPoleSwingup"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.pybullet.CartPoleSwingup.html#tigercontrol.problems.pybullet.CartPoleSwingup">[docs]</a><span class="k">class</span> <span class="nc">CartPoleSwingup</span><span class="p">(</span><span class="n">PyBulletProblem</span><span class="p">):</span>
+<div class="viewcode-block" id="CartPoleSwingup"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.pybullet.CartPoleSwingup.html#tigercontrol.environments.pybullet.CartPoleSwingup">[docs]</a><span class="k">class</span> <span class="nc">CartPoleSwingup</span><span class="p">(</span><span class="n">PyBulletEnvironment</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Simulates a pendulum balanced on a cartpole.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;CartPoleSwingup-v0&#39;</span><span class="p">,</span> <span class="s1">&#39;PyBullet&#39;</span><span class="p">])</span>
     
-<div class="viewcode-block" id="CartPoleSwingup.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.pybullet.CartPoleSwingup.html#tigercontrol.problems.pybullet.CartPoleSwingup.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CartPoleSwingup.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.pybullet.CartPoleSwingup.html#tigercontrol.environments.pybullet.CartPoleSwingup.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span></div>
 
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">render</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>

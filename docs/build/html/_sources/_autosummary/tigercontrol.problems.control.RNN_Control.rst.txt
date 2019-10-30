@@ -1,7 +1,7 @@
-tigercontrol.problems.control.RNN\_Control
+tigercontrol.environments.controller.RNN\_Control
 ==========================================
 
-.. currentmodule:: tigercontrol.problems.control
+.. currentmodule:: tigercontrol.environments.control
 
 .. autoclass:: RNN_Control
 

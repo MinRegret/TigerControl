@@ -1,7 +1,7 @@
-tigercontrol.problems.control.LSTM\_Control
+tigercontrol.environments.controller.LSTM\_Control
 ===========================================
 
-.. currentmodule:: tigercontrol.problems.control
+.. currentmodule:: tigercontrol.environments.control
 
 .. autoclass:: LSTM_Control
 

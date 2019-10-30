@@ -1,6 +1,6 @@
-tigercontrol.problems.register\_custom\_problem
+tigercontrol.environments.register\_custom\_environment
 ===============================================
 
-.. currentmodule:: tigercontrol.problems
+.. currentmodule:: tigercontrol.environments
 
-.. autofunction:: register_custom_problem
+.. autofunction:: register_custom_environment

@@ -35,12 +35,12 @@ def to_dict(x):
 
 def get_ids(x):
     '''
-    Description: Gets the ids of problems/methods
+    Description: Gets the ids of environments/methods
 
     Args:
-        x (list / dict): list of ids of problems/methods or dictionary of problems/methods and parameters
+        x (list / dict): list of ids of environments/methods or dictionary of environments/methods and parameters
     Returns:
-        x (list): list of problem/methods ids
+        x (list): list of environment/methods ids
     '''
     if(type(x) is dict):
         ids = []
@@ -51,31 +51,31 @@ def get_ids(x):
     else:
         return x
 
-def create_full_problem_to_methods(problems_ids, method_ids):
+def create_full_environment_to_methods(environments_ids, method_ids):
     '''
-    Description: Associate all given problems to all given methods.
+    Description: Associate all given environments to all given methods.
 
     Args:
-        problem_ids (list): list of problem names
+        environment_ids (list): list of environment names
         method_ids (list): list of method names
     Returns:
-        full_problem_to_methods (dict): association problem -> method
+        full_environment_to_methods (dict): association environment -> method
     '''
-    full_problem_to_methods = {}
+    full_environment_to_methods = {}
 
-    for problem_id in problems_ids:
-        full_problem_to_methods[problem_id] = []
+    for environment_id in environments_ids:
+        full_environment_to_methods[environment_id] = []
         for method_id in method_ids:
-            full_problem_to_methods[problem_id].append(method_id)
+            full_environment_to_methods[environment_id].append(method_id)
 
-    return full_problem_to_methods
+    return full_environment_to_methods
 
-def run_experiment(problem, method, metric = 'mse', key = 0, timesteps = None, verbose = 0):
+def run_experiment(environment, method, metric = 'mse', key = 0, timesteps = None, verbose = 0):
     '''
     Description: Initializes the experiment instance.
     
     Args:
-        problem (tuple): problem id and parameters to initialize the specific problem instance with
+        environment (tuple): environment id and parameters to initialize the specific environment instance with
         method (tuple): method id and parameters to initialize the specific method instance with
         metric (string): metric we are interesting in computing for current experiment
         key (int): for reproducibility
@@ -88,33 +88,33 @@ def run_experiment(problem, method, metric = 'mse', key = 0, timesteps = None, v
     set_key(key)
 
     # extract specifications
-    (problem_id, problem_params) = problem
+    (environment_id, environment_params) = environment
     (method_id, method_params) = method
     loss_fn = metrics[metric]
 
-    # initialize problem
-    problem = tigercontrol.problem(problem_id)
-    if(problem_params is None):
-        init = problem.initialize()
+    # initialize environment
+    environment = tigercontrol.environment(environment_id)
+    if(environment_params is None):
+        init = environment.initialize()
     else:
-        init = problem.initialize(**problem_params)
+        init = environment.initialize(**environment_params)
 
     if(timesteps is None):
-        if(problem.max_T == -1):
-            print("WARNING: On simulated problem, the number of timesteps should be specified. Will default to 10000.")
+        if(environment.max_T == -1):
+            print("WARNING: On simulated environment, the number of timesteps should be specified. Will default to 10000.")
             timesteps = 10000
         else:
-            timesteps = problem.max_T - 1
-    elif(problem.max_T != -1):
-        if(timesteps > problem.max_T - 1):
-            print("WARNING: Number of specified timesteps exceeds the length of the dataset. Will run %d timesteps instead." % problem.max_T - 1)
-        timesteps = min(timesteps, problem.max_T - 1)
+            timesteps = environment.max_T - 1
+    elif(environment.max_T != -1):
+        if(timesteps > environment.max_T - 1):
+            print("WARNING: Number of specified timesteps exceeds the length of the dataset. Will run %d timesteps instead." % environment.max_T - 1)
+        timesteps = min(timesteps, environment.max_T - 1)
 
     # get first x and y
-    if(problem.has_regressors):
+    if(environment.has_regressors):
         x, y = init
     else:
-        x, y = init, problem.step()
+        x, y = init, environment.step()
 
     # initialize method
     method = tigercontrol.method(method_id)
@@ -133,7 +133,7 @@ def run_experiment(problem, method, metric = 'mse', key = 0, timesteps = None, v
     method.initialize(**method_params)
 
     if(verbose):
-        print("Running %s on %s..." % (method_id, problem_id))
+        print("Running %s on %s..." % (method_id, environment_id))
 
     loss = []
     time_start = time.time()
@@ -149,21 +149,21 @@ def run_experiment(problem, method, metric = 'mse', key = 0, timesteps = None, v
         loss.append(cur_loss)
         method.update(y)
         # get new pair of observation and label
-        new = problem.step()
-        if(problem.has_regressors):
+        new = environment.step()
+        if(environment.has_regressors):
             x, y = new
         else:
             x, y = y, new
 
     return np.array(loss), time.time() - time_start, memory
 
-def run_experiments(problem, method, metric = 'mse', n_runs = 1, timesteps = None, verbose = 0):
+def run_experiments(environment, method, metric = 'mse', n_runs = 1, timesteps = None, verbose = 0):
     
     '''
     Description: Initializes the experiment instance.
     
     Args:
-        problem (tuple): problem id and parameters to initialize the specific problem instance with
+        environment (tuple): environment id and parameters to initialize the specific environment instance with
         method (tuple): method id and parameters to initialize the specific method instance with
         metric (string): metric we are interesting in computing for current experiment
         key (int): for reproducibility
@@ -174,11 +174,11 @@ def run_experiments(problem, method, metric = 'mse', n_runs = 1, timesteps = Non
         memory (float): memory used
     '''
 
-    results = tuple((1 / n_runs) * result for result in run_experiment(problem, method, metric = metric, \
+    results = tuple((1 / n_runs) * result for result in run_experiment(environment, method, metric = metric, \
         key = 0, timesteps = timesteps, verbose = verbose))
 
     for i in range(1, n_runs):
-        new_results = tuple((1 / n_runs) * result for result in run_experiment(problem, method, metric = metric, \
+        new_results = tuple((1 / n_runs) * result for result in run_experiment(environment, method, metric = metric, \
         key = i, timesteps = timesteps, verbose = verbose))
         results = tuple(map(operator.add, results, new_results))
 

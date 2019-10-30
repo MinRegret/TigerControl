@@ -18,8 +18,8 @@ def test_ons(show=False):
 
     #tigercontrol.set_key(0) # consistent randomness
 
-    problem = tigercontrol.problem('ARMA-v0')
-    x, y_true = problem.initialize()
+    environment = tigercontrol.environment('ARMA-v0')
+    x, y_true = environment.initialize()
 
     methods = []
     labels = ['OGD', 'ONS', 'Adam'] # don't run deprecated ONS
@@ -51,7 +51,7 @@ def test_ons(show=False):
             t = time.time()
             method.update(y_true)
             update_time[i] += time.time() - t
-        x, y_true = problem.step()
+        x, y_true = environment.step()
 
     print("time taken:")
     for t, label in zip(update_time, labels):

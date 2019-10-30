@@ -1,7 +1,7 @@
-tigercontrol.problems.pybullet.Ant
+tigercontrol.environments.pybullet.Ant
 ==================================
 
-.. currentmodule:: tigercontrol.problems.pybullet
+.. currentmodule:: tigercontrol.environments.pybullet
 
 .. autoclass:: Ant
 

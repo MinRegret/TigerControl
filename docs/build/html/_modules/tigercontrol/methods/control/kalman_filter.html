@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.control.kalman_filter &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.methods.controller.kalman_filter &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.methods.control.kalman_filter</li>
+      <li>tigercontrol.methods.controller.kalman_filter</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,7 +146,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.methods.control.kalman_filter</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.methods.controller.kalman_filter</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Kalman Filter</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -155,7 +155,7 @@
 <span class="kn">import</span> <span class="nn">tigercontrol</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.methods.control</span> <span class="k">import</span> <span class="n">ControlMethod</span>
 
-<div class="viewcode-block" id="KalmanFilter"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.control.KalmanFilter.html#tigercontrol.methods.control.KalmanFilter">[docs]</a><span class="k">class</span> <span class="nc">KalmanFilter</span><span class="p">(</span><span class="n">ControlMethod</span><span class="p">):</span>
+<div class="viewcode-block" id="KalmanFilter"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.controller.KalmanFilter.html#tigercontrol.methods.controller.KalmanFilter">[docs]</a><span class="k">class</span> <span class="nc">KalmanFilter</span><span class="p">(</span><span class="n">ControlMethod</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Kalman Filter adjusts measurements of a signal based on prior states and</span>
 <span class="sd">    knowledge of intrinsic equations of the system.</span>
@@ -187,7 +187,7 @@
 
     <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([])</span>
 
-<div class="viewcode-block" id="KalmanFilter.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.control.KalmanFilter.html#tigercontrol.methods.control.KalmanFilter.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="KalmanFilter.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.controller.KalmanFilter.html#tigercontrol.methods.controller.KalmanFilter.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span></div>
 
     <span class="k">def</span> <span class="nf">to_ndarray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>

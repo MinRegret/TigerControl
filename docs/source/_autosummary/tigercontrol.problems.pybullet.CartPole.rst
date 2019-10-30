@@ -1,7 +1,7 @@
-tigercontrol.problems.pybullet.CartPole
+tigercontrol.environments.pybullet.CartPole
 =======================================
 
-.. currentmodule:: tigercontrol.problems.pybullet
+.. currentmodule:: tigercontrol.environments.pybullet
 
 .. autoclass:: CartPole
 

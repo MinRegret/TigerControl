@@ -1,7 +1,7 @@
-tigercontrol.problems.pybullet.Simulator
+tigercontrol.environments.pybullet.Simulator
 ========================================
 
-.. currentmodule:: tigercontrol.problems.pybullet
+.. currentmodule:: tigercontrol.environments.pybullet
 
 .. autoclass:: Simulator
 

@@ -1,7 +1,7 @@
-tigercontrol.problems.pybullet.CartPoleDouble
+tigercontrol.environments.pybullet.CartPoleDouble
 =============================================
 
-.. currentmodule:: tigercontrol.problems.pybullet
+.. currentmodule:: tigercontrol.environments.pybullet
 
 .. autoclass:: CartPoleDouble
 

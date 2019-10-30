@@ -1,4 +1,4 @@
-tigercontrol.methods.control.KalmanFilter
+tigercontrol.methods.controller.KalmanFilter
 ========================================
 
 .. currentmodule:: tigercontrol.methods.control

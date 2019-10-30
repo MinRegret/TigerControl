@@ -1,4 +1,4 @@
-tigercontrol.methods.control.MPPI
+tigercontrol.methods.controller.MPPI
 ================================
 
 .. currentmodule:: tigercontrol.methods.control

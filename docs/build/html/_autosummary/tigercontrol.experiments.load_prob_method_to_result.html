@@ -85,7 +85,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../tigercontrol.html">tigercontrol package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../tigercontrol.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.utils.html">tigercontrol.utils package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../tigercontrol.problems.html">tigercontrol.problems package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tigercontrol.environments.html">tigercontrol.environments package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.methods.html">tigercontrol.methods package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../tigercontrol.experiments.html">tigercontrol.experiments package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="../tigercontrol.experiments.html#core">core</a></li>
@@ -174,18 +174,18 @@
 <h1>tigercontrol.experiments.load_prob_method_to_result<a class="headerlink" href="#tigercontrol-experiments-load-prob-method-to-result" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="tigercontrol.experiments.load_prob_method_to_result">
-<code class="descclassname">tigercontrol.experiments.</code><code class="descname">load_prob_method_to_result</code><span class="sig-paren">(</span><em>problem_ids=['ARMA-v0', 'Crypto-v0', 'SP500-v0'], method_ids=['LastValue', 'AutoRegressor', 'RNN', 'LSTM'], problem_to_methods=None, metrics='mse'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/experiments/precomputed.html#load_prob_method_to_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.experiments.load_prob_method_to_result" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tigercontrol.experiments.</code><code class="descname">load_prob_method_to_result</code><span class="sig-paren">(</span><em>environment_ids=['ARMA-v0', 'Crypto-v0', 'SP500-v0'], method_ids=['LastValue', 'AutoRegressor', 'RNN', 'LSTM'], environment_to_methods=None, metrics='mse'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/experiments/precomputed.html#load_prob_method_to_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.experiments.load_prob_method_to_result" title="Permalink to this definition">¶</a></dt>
 <dd><p>Description: Initializes the experiment instance.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>problem_ids</strong> (<em>list</em>) – ids of problems to evaluate on</li>
+<li><strong>environment_ids</strong> (<em>list</em>) – ids of environments to evaluate on</li>
 <li><strong>method_ids</strong> (<em>list</em>) – ids of methods to use</li>
-<li><strong>problem_to_methods</strong> (<em>dict</em>) – map of the form problem_id -&gt; list of method_id. If None,
+<li><strong>environment_to_methods</strong> (<em>dict</em>) – map of the form environment_id -&gt; list of method_id. If None,
 then we assume that the user wants to test every method
-in method_to_params against every problem in problem_to_params</li>
+in method_to_params against every environment in environment_to_params</li>
 <li><strong>metrics</strong> – metrics to load</li>
 </ul>
 </td>

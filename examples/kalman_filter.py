@@ -4,9 +4,9 @@ Kalman Filter
 
 import jax.numpy as np
 import tigercontrol
-from tigercontrol.methods.control import ControlMethod
+from tigercontrol.methods import Method
 
-class KalmanFilter(ControlMethod):
+class KalmanFilter(Method):
     """
     Description: Kalman Filter adjusts measurements of a signal based on prior states and
     knowledge of intrinsic equations of the system.

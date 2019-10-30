@@ -1,7 +1,7 @@
-tigercontrol.problems.time\_series.SP500
+tigercontrol.environments.time\_series.SP500
 ========================================
 
-.. currentmodule:: tigercontrol.problems.time_series
+.. currentmodule:: tigercontrol.environments.time_series
 
 .. autoclass:: SP500
 

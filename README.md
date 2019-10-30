@@ -15,7 +15,7 @@ Installation
 
 ### Quick install (excluding PyBullet)
 
-Clone the directory and use pip or pip3 to set up a minimal installation of TigerControl, which excludes PyBullet control problems.
+Clone the directory and use pip or pip3 to set up a minimal installation of TigerControl, which excludes PyBullet control environments.
 
 ```
     git clone https://github.com/MinRegret/tigercontrol.git
@@ -44,7 +44,7 @@ Next, clone the GitHub repository and install the full package.
 Finally, run a demo to verify that the installation was successful!
 
 ```
-    python tigercontrol/problems/control/tests/test_minitaur.py
+    python tigercontrol/environments/controller/tests/test_minitaur.py
 ```
 
 

@@ -8,7 +8,7 @@ core
 .. autosummary::
   :toctree: _autosummary
 
-  create_full_problem_to_methods
+  create_full_environment_to_methods
   run_experiment
 
 metrics

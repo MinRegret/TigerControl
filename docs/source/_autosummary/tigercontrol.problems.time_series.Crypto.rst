@@ -1,7 +1,7 @@
-tigercontrol.problems.time\_series.Crypto
+tigercontrol.environments.time\_series.Crypto
 =========================================
 
-.. currentmodule:: tigercontrol.problems.time_series
+.. currentmodule:: tigercontrol.environments.time_series
 
 .. autoclass:: Crypto
 

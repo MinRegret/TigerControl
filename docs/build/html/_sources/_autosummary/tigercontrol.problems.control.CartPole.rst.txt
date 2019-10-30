@@ -1,7 +1,7 @@
-tigercontrol.problems.control.CartPole
+tigercontrol.environments.controller.CartPole
 ======================================
 
-.. currentmodule:: tigercontrol.problems.control
+.. currentmodule:: tigercontrol.environments.control
 
 .. autoclass:: CartPole
 

@@ -1,9 +1,9 @@
-tigercontrol.problems.TimeSeriesProblem
+tigercontrol.environments.TimeSeriesEnvironment
 =======================================
 
-.. currentmodule:: tigercontrol.problems
+.. currentmodule:: tigercontrol.environments
 
-.. autoclass:: TimeSeriesProblem
+.. autoclass:: TimeSeriesEnvironment
 
    
    .. automethod:: __init__
@@ -13,11 +13,11 @@ tigercontrol.problems.TimeSeriesProblem
 
    .. autosummary::
    
-      ~TimeSeriesProblem.__init__
-      ~TimeSeriesProblem.close
-      ~TimeSeriesProblem.help
-      ~TimeSeriesProblem.initialize
-      ~TimeSeriesProblem.step
+      ~TimeSeriesEnvironment.__init__
+      ~TimeSeriesEnvironment.close
+      ~TimeSeriesEnvironment.help
+      ~TimeSeriesEnvironment.initialize
+      ~TimeSeriesEnvironment.step
    
    
 
@@ -27,6 +27,6 @@ tigercontrol.problems.TimeSeriesProblem
 
    .. autosummary::
    
-      ~TimeSeriesProblem.spec
+      ~TimeSeriesEnvironment.spec
    
    

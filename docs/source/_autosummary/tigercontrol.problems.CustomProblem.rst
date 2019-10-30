@@ -1,9 +1,9 @@
-tigercontrol.problems.CustomProblem
+tigercontrol.environments.CustomEnvironment
 ===================================
 
-.. currentmodule:: tigercontrol.problems
+.. currentmodule:: tigercontrol.environments
 
-.. autoclass:: CustomProblem
+.. autoclass:: CustomEnvironment
 
    
    .. automethod:: __init__
@@ -13,7 +13,7 @@ tigercontrol.problems.CustomProblem
 
    .. autosummary::
    
-      ~CustomProblem.__init__
+      ~CustomEnvironment.__init__
    
    
 

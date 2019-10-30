@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 
 def test_ogd(show=False):
     
-    problem = tigercontrol.problem('ARMA-v0')
-    x = problem.initialize(p=2,q=0)
+    environment = tigercontrol.environment('ARMA-v0')
+    x = environment.initialize(p=2,q=0)
 
     method = tigercontrol.method('LSTM')
     method.initialize(n=1, m=1, l=5, h=10, optimizer=OGD) # initialize with class
@@ -20,7 +20,7 @@ def test_ogd(show=False):
     loss = []
     for t in range(1000):
         y_pred = method.predict(x)
-        y_true = problem.step()
+        y_true = environment.step()
         loss.append(mse(y_pred, y_true))
         method.update(y_true)
         x = y_true

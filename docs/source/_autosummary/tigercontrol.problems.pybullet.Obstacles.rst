@@ -1,7 +1,7 @@
-tigercontrol.problems.pybullet.Obstacles
+tigercontrol.environments.pybullet.Obstacles
 ========================================
 
-.. currentmodule:: tigercontrol.problems.pybullet
+.. currentmodule:: tigercontrol.environments.pybullet
 
 .. autoclass:: Obstacles
 

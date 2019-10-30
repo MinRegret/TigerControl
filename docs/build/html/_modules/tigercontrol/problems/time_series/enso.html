@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.problems.time_series.enso &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.environments.time_series.enso &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.problems.time_series.enso</li>
+      <li>tigercontrol.environments.time_series.enso</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,7 +146,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.problems.time_series.enso</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.environments.time_series.enso</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Monthly values of control indices useful for predicting La Nina/El Nino</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -157,20 +157,20 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.utils.dataset_registry</span> <span class="k">import</span> <span class="n">enso</span><span class="p">,</span> <span class="n">get_tigercontrol_dir</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.error</span> <span class="k">import</span> <span class="n">StepOutOfBounds</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.problems.time_series</span> <span class="k">import</span> <span class="n">TimeSeriesProblem</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.environments.time_series</span> <span class="k">import</span> <span class="n">TimeSeriesEnvironment</span>
 
-<div class="viewcode-block" id="ENSO"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.time_series.ENSO.html#tigercontrol.problems.time_series.ENSO">[docs]</a><span class="k">class</span> <span class="nc">ENSO</span><span class="p">(</span><span class="n">TimeSeriesProblem</span><span class="p">):</span>
+<div class="viewcode-block" id="ENSO"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.time_series.ENSO.html#tigercontrol.environments.time_series.ENSO">[docs]</a><span class="k">class</span> <span class="nc">ENSO</span><span class="p">(</span><span class="n">TimeSeriesEnvironment</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Collection of monthly values of control indices useful for predicting</span>
 <span class="sd">    La Nina/El Nino. More specifically, the user can choose any of pna, ea,</span>
 <span class="sd">    wa, wp, eu, soi, esoi, nino12, nino34, nino4, oni of nino34 (useful for</span>
 <span class="sd">    La Nino/El Nino identification) to be used as input and/or output in</span>
-<span class="sd">    the problem instance.</span>
+<span class="sd">    the environment instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;ENSO-v0&#39;</span><span class="p">,</span> <span class="s1">&#39;TimeSeries&#39;</span><span class="p">])</span>
 
-<div class="viewcode-block" id="ENSO.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.time_series.ENSO.html#tigercontrol.problems.time_series.ENSO.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ENSO.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.time_series.ENSO.html#tigercontrol.environments.time_series.ENSO.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_regressors</span> <span class="o">=</span> <span class="kc">False</span></div>
 
@@ -244,7 +244,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">ENSO_help</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;ENSO Problem&gt;&quot;</span></div>
+        <span class="k">return</span> <span class="s2">&quot;&lt;ENSO Environment&gt;&quot;</span></div>
 
 
 <span class="c1"># string to print when calling help() method</span>
@@ -258,7 +258,7 @@
 <span class="s2">             La Nina/El Nino. More specifically, the user can choose any of pna, ea,</span>
 <span class="s2">             wa, wp, eu, soi, esoi, nino12, nino34, nino4, oni of nino34 (useful for</span>
 <span class="s2">             La Nino/El Nino identification) to be used as input and/or output in</span>
-<span class="s2">             the problem instance.</span>
+<span class="s2">             the environment instance.</span>
 
 <span class="s2">Methods:</span>
 

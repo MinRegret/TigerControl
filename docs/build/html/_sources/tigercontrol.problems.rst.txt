@@ -1,7 +1,7 @@
-tigercontrol.problems package
+tigercontrol.environments package
 =============================
 
-.. automodule:: tigercontrol.problems
+.. automodule:: tigercontrol.environments
 
 core
 ----
@@ -11,7 +11,7 @@ This is a core
 .. autosummary::
   :toctree: _autosummary
 
-   Problem
+   Environment
 
 custom
 ------
@@ -19,8 +19,8 @@ custom
 .. autosummary::
   :toctree: _autosummary
 
-   tigercontrol.problems.CustomProblem
-   tigercontrol.problems.register_custom_problem
+   tigercontrol.environments.CustomEnvironment
+   tigercontrol.environments.register_custom_environment
 
 
 control
@@ -32,13 +32,13 @@ control
 .. autosummary::
   :toctree: _autosummary
 
-   tigercontrol.problems.ControlProblem
-   tigercontrol.problems.control.LDS_Control
-   tigercontrol.problems.control.LSTM_Control
-   tigercontrol.problems.control.RNN_Control
-   tigercontrol.problems.control.CartPole
-   tigercontrol.problems.control.DoublePendulum
-   tigercontrol.problems.control.Pendulum
+   tigercontrol.environments.ControlEnvironment
+   tigercontrol.environments.controller.LDS_Control
+   tigercontrol.environments.controller.LSTM_Control
+   tigercontrol.environments.controller.RNN_Control
+   tigercontrol.environments.controller.CartPole
+   tigercontrol.environments.controller.DoublePendulum
+   tigercontrol.environments.controller.Pendulum
 
 
 time_series
@@ -47,17 +47,17 @@ time_series
 .. autosummary::
   :toctree: _autosummary
 
-   tigercontrol.problems.TimeSeriesProblem
-   tigercontrol.problems.time_series.SP500
-   tigercontrol.problems.time_series.UCI_Indoor
-   tigercontrol.problems.time_series.ENSO
-   tigercontrol.problems.time_series.Crypto
-   tigercontrol.problems.time_series.Random
-   tigercontrol.problems.time_series.ARMA
-   tigercontrol.problems.time_series.Unemployment
-   tigercontrol.problems.time_series.LDS_TimeSeries
-   tigercontrol.problems.time_series.LSTM_TimeSeries
-   tigercontrol.problems.time_series.RNN_TimeSeries
+   tigercontrol.environments.TimeSeriesEnvironment
+   tigercontrol.environments.time_series.SP500
+   tigercontrol.environments.time_series.UCI_Indoor
+   tigercontrol.environments.time_series.ENSO
+   tigercontrol.environments.time_series.Crypto
+   tigercontrol.environments.time_series.Random
+   tigercontrol.environments.time_series.ARMA
+   tigercontrol.environments.time_series.Unemployment
+   tigercontrol.environments.time_series.LDS_TimeSeries
+   tigercontrol.environments.time_series.LSTM_TimeSeries
+   tigercontrol.environments.time_series.RNN_TimeSeries
 
 pybullet
 --------
@@ -65,17 +65,17 @@ pybullet
 .. autosummary::
   :toctree: _autosummary
 
-  tigercontrol.problems.pybullet.PyBulletProblem
-  tigercontrol.problems.pybullet.Simulator
-  tigercontrol.problems.pybullet.Ant
-  tigercontrol.problems.pybullet.CartPole
-  tigercontrol.problems.pybullet.CartPoleDouble
-  tigercontrol.problems.pybullet.CartPoleSwingup
-  tigercontrol.problems.pybullet.HalfCheetah
-  tigercontrol.problems.pybullet.Humanoid
-  tigercontrol.problems.pybullet.Kuka
-  tigercontrol.problems.pybullet.KukaDiverse
-  tigercontrol.problems.pybullet.Minitaur
-  tigercontrol.problems.pybullet.Obstacles
+  tigercontrol.environments.pybullet.PyBulletEnvironment
+  tigercontrol.environments.pybullet.Simulator
+  tigercontrol.environments.pybullet.Ant
+  tigercontrol.environments.pybullet.CartPole
+  tigercontrol.environments.pybullet.CartPoleDouble
+  tigercontrol.environments.pybullet.CartPoleSwingup
+  tigercontrol.environments.pybullet.HalfCheetah
+  tigercontrol.environments.pybullet.Humanoid
+  tigercontrol.environments.pybullet.Kuka
+  tigercontrol.environments.pybullet.KukaDiverse
+  tigercontrol.environments.pybullet.Minitaur
+  tigercontrol.environments.pybullet.Obstacles
   
 

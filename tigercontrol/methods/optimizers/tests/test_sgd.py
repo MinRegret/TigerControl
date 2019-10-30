@@ -9,8 +9,8 @@ def test_sgd(show=False):
     print("test_sgd passed")
 
 def test_sgd_lstm(show=False):
-    problem = tigercontrol.problem('ARMA-v0')
-    x = problem.initialize(p=2,q=0)
+    environment = tigercontrol.environment('ARMA-v0')
+    x = environment.initialize(p=2,q=0)
 
     method = tigercontrol.method('LSTM')
     method.initialize(n=1, m=1, l=3, h=10, optimizer=SGD) # initialize with class
@@ -24,7 +24,7 @@ def test_sgd_lstm(show=False):
     loss = []
     for t in range(1000):
         y_pred = method.predict(x)
-        y_true = problem.step()
+        y_true = environment.step()
         loss.append(mse(y_pred, y_true))
         method.update(y_true)
         x = y_true
@@ -37,8 +37,8 @@ def test_sgd_lstm(show=False):
         plt.close()
 
 def test_sgd_autoregressor(show=False):
-    problem = tigercontrol.problem('ARMA-v0')
-    x = problem.initialize(p=2,q=0)
+    environment = tigercontrol.environment('ARMA-v0')
+    x = environment.initialize(p=2,q=0)
 
     optimizer = SGD(learning_rate=0.0003)
     method = tigercontrol.method('AutoRegressor')
@@ -47,7 +47,7 @@ def test_sgd_autoregressor(show=False):
     loss = []
     for t in range(1000):
         y_pred = method.predict(x)
-        y_true = problem.step()
+        y_true = environment.step()
         loss.append(mse(y_pred, y_true))
         method.update(y_true)
         x = y_true

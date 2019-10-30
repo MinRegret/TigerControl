@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.problems.custom &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.environments.custom &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.problems.custom</li>
+      <li>tigercontrol.environments.custom</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,44 +146,44 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.problems.custom</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Problem class</span>
+  <h1>Source code for tigercontrol.environments.custom</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Environment class</span>
 <span class="c1"># Author: John Hallman</span>
 
 <span class="kn">from</span> <span class="nn">tigercontrol</span> <span class="k">import</span> <span class="n">error</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.problems</span> <span class="k">import</span> <span class="n">Problem</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.problems.registration</span> <span class="k">import</span> <span class="n">problem_registry</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.environments</span> <span class="k">import</span> <span class="n">Environment</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.environments.registration</span> <span class="k">import</span> <span class="n">environment_registry</span>
 
  
-<div class="viewcode-block" id="CustomProblem"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.problems.CustomProblem.html#tigercontrol.problems.CustomProblem">[docs]</a><span class="k">class</span> <span class="nc">CustomProblem</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomEnvironment"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.environments.CustomEnvironment.html#tigercontrol.environments.CustomEnvironment">[docs]</a><span class="k">class</span> <span class="nc">CustomEnvironment</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; </span>
 <span class="sd">    Description: class for implementing algorithms with enforced modularity </span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-<div class="viewcode-block" id="CustomProblem.__init__"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.problems.CustomProblem.html#tigercontrol.problems.CustomProblem.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomEnvironment.__init__"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.environments.CustomEnvironment.html#tigercontrol.environments.CustomEnvironment.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div></div>
 
-<span class="k">def</span> <span class="nf">_verify_valid_problem</span><span class="p">(</span><span class="n">problem_class</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_verify_valid_environment</span><span class="p">(</span><span class="n">environment_class</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; </span>
-<span class="sd">    Description: verifies that a given class has the necessary minimum problem methods</span>
+<span class="sd">    Description: verifies that a given class has the necessary minimum environment methods</span>
 
 <span class="sd">    Args: a class</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">problem_class</span><span class="p">,</span> <span class="n">CustomProblem</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">environment_class</span><span class="p">,</span> <span class="n">CustomEnvironment</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="s1">&#39;step&#39;</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">problem_class</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="kc">None</span><span class="p">)):</span>
-            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">InvalidClass</span><span class="p">(</span><span class="s2">&quot;CustomProblem is missing required method </span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">environment_class</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="kc">None</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="n">error</span><span class="o">.</span><span class="n">InvalidClass</span><span class="p">(</span><span class="s2">&quot;CustomEnvironment is missing required method </span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
 
-<div class="viewcode-block" id="register_custom_problem"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.problems.register_custom_problem.html#tigercontrol.problems.register_custom_problem">[docs]</a><span class="k">def</span> <span class="nf">register_custom_problem</span><span class="p">(</span><span class="n">custom_problem_class</span><span class="p">,</span> <span class="n">custom_problem_id</span><span class="p">):</span>
+<div class="viewcode-block" id="register_custom_environment"><a class="viewcode-back" href="../../../_autosummary/tigercontrol.environments.register_custom_environment.html#tigercontrol.environments.register_custom_environment">[docs]</a><span class="k">def</span> <span class="nf">register_custom_environment</span><span class="p">(</span><span class="n">custom_environment_class</span><span class="p">,</span> <span class="n">custom_environment_id</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Description: global custom problem method</span>
+<span class="sd">    Description: global custom environment method</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">custom_problem_id</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span>
-    <span class="n">_verify_valid_problem</span><span class="p">(</span><span class="n">custom_problem_class</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">custom_environment_id</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span>
+    <span class="n">_verify_valid_environment</span><span class="p">(</span><span class="n">custom_environment_class</span><span class="p">)</span>
 
-    <span class="n">problem_registry</span><span class="o">.</span><span class="n">register_custom</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="n">custom_problem_id</span><span class="p">,</span>
-        <span class="n">custom_class</span><span class="o">=</span><span class="n">custom_problem_class</span><span class="p">,</span>
+    <span class="n">environment_registry</span><span class="o">.</span><span class="n">register_custom</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="n">custom_environment_id</span><span class="p">,</span>
+        <span class="n">custom_class</span><span class="o">=</span><span class="n">custom_environment_class</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 </pre></div>

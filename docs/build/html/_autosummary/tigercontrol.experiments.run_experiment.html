@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="tigercontrol.experiments.mse" href="tigercontrol.experiments.mse.html" />
-    <link rel="prev" title="tigercontrol.experiments.create_full_problem_to_methods" href="tigercontrol.experiments.create_full_problem_to_methods.html" /> 
+    <link rel="prev" title="tigercontrol.experiments.create_full_environment_to_methods" href="tigercontrol.experiments.create_full_environment_to_methods.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,7 +85,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../tigercontrol.html">tigercontrol package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../tigercontrol.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.utils.html">tigercontrol.utils package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../tigercontrol.problems.html">tigercontrol.problems package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tigercontrol.environments.html">tigercontrol.environments package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../tigercontrol.methods.html">tigercontrol.methods package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../tigercontrol.experiments.html">tigercontrol.experiments package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="../tigercontrol.experiments.html#core">core</a></li>
@@ -174,14 +174,14 @@
 <h1>tigercontrol.experiments.run_experiment<a class="headerlink" href="#tigercontrol-experiments-run-experiment" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="tigercontrol.experiments.run_experiment">
-<code class="descclassname">tigercontrol.experiments.</code><code class="descname">run_experiment</code><span class="sig-paren">(</span><em>problem</em>, <em>method</em>, <em>metric='mse'</em>, <em>key=0</em>, <em>timesteps=100</em>, <em>verbose=True</em>, <em>load_bar=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/experiments/core.html#run_experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.experiments.run_experiment" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tigercontrol.experiments.</code><code class="descname">run_experiment</code><span class="sig-paren">(</span><em>environment</em>, <em>method</em>, <em>metric='mse'</em>, <em>key=0</em>, <em>timesteps=100</em>, <em>verbose=True</em>, <em>load_bar=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tigercontrol/experiments/core.html#run_experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tigercontrol.experiments.run_experiment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Description: Initializes the experiment instance.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>problem</strong> (<em>tuple</em>) – problem id and parameters to initialize the specific problem instance with</li>
+<li><strong>environment</strong> (<em>tuple</em>) – environment id and parameters to initialize the specific environment instance with</li>
 <li><strong>method</strong> (<em>tuple</em>) – method id and parameters to initialize the specific method instance with</li>
 <li><strong>metric</strong> (<em>string</em>) – metric we are interesting in computing for current experiment</li>
 <li><strong>key</strong> (<em>int</em>) – for reproducibility</li>
@@ -214,7 +214,7 @@ memory (float): memory used</p>
         <a href="tigercontrol.experiments.mse.html" class="btn btn-neutral float-right" title="tigercontrol.experiments.mse" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="tigercontrol.experiments.create_full_problem_to_methods.html" class="btn btn-neutral float-left" title="tigercontrol.experiments.create_full_problem_to_methods" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tigercontrol.experiments.create_full_environment_to_methods.html" class="btn btn-neutral float-left" title="tigercontrol.experiments.create_full_environment_to_methods" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

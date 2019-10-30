@@ -1,7 +1,7 @@
-tigercontrol.problems.time\_series.Unemployment
+tigercontrol.environments.time\_series.Unemployment
 ===============================================
 
-.. currentmodule:: tigercontrol.problems.time_series
+.. currentmodule:: tigercontrol.environments.time_series
 
 .. autoclass:: Unemployment
 

@@ -1,7 +1,7 @@
-tigercontrol.problems.pybullet.Kuka
+tigercontrol.environments.pybullet.Kuka
 ===================================
 
-.. currentmodule:: tigercontrol.problems.pybullet
+.. currentmodule:: tigercontrol.environments.pybullet
 
 .. autoclass:: Kuka
 

@@ -4,7 +4,7 @@ import tigercontrol as tc
 import numpy.random as random
 import matplotlib.pyplot as plt
 from scipy.linalg import solve_discrete_are as dare
-from tigercontrol.methods.control import ControlMethod
+from tigercontrol.methods import Method
 
 T, H, M, lr = 200, 10, 10, 0.001
 n, m, A, B = 2, 1, np.array([[1., 1.], [0., 1.]]), np.array([[0.], [1.]])
@@ -14,9 +14,9 @@ x0 = np.zeros((n, 1))
 Wproc = lambda n, x, u, w, t: random.normal(size = (n, 1))
 Wproc = lambda n, x, u, w, t: np.sin(t/(2*np.pi))*np.ones((2, 1))
 
-env = tc.problem('LDS-v0')
+env = tc.environment('LDS-v0')
 
-class LQR(ControlMethod):
+class LQR(Method):
     def __init__(self, A, B, Q, R):
         P = dare(A, B, Q, R)
         self.K = np.linalg.inv(R + B.T @ P @ B) @ (B.T @ P @ A)
@@ -31,7 +31,7 @@ for t in range(T):
     loss_lqr.append(np.linalg.norm(x)**2 + np.linalg.norm(u)**2)
     x = env.step(u)
 
-class GPC(ControlMethod):
+class GPC(Method):
     def __init__(self, A, B, Q, R, M, H, lr):
         n, m = B.shape
         self.M, self.H = M, H

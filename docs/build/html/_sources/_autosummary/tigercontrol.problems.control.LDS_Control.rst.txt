@@ -1,7 +1,7 @@
-tigercontrol.problems.control.LDS\_Control
+tigercontrol.environments.controller.LDS\_Control
 ==========================================
 
-.. currentmodule:: tigercontrol.problems.control
+.. currentmodule:: tigercontrol.environments.control
 
 .. autoclass:: LDS_Control
 

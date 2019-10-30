@@ -1,7 +1,7 @@
-tigercontrol.problems.time\_series.LDS\_TimeSeries
+tigercontrol.environments.time\_series.LDS\_TimeSeries
 ==================================================
 
-.. currentmodule:: tigercontrol.problems.time_series
+.. currentmodule:: tigercontrol.environments.time_series
 
 .. autoclass:: LDS_TimeSeries
 

@@ -5,9 +5,10 @@ AR(p): Linear combination of previous values
 import tigercontrol
 import jax
 import jax.numpy as np
+from tigercontrol.methods import Method
 from tigercontrol.methods.optimizers.losses import mse
 
-class SimpleBoost:
+class SimpleBoost(Method):
     """
     Description: Implements the equivalent of an AR(p) method - predicts a linear
     combination of the previous p observed values in a time-series
@@ -92,69 +93,4 @@ class SimpleBoost:
             method_i.update(grad_i)
 
 
-    def help(self):
-        """
-        Description: Prints information about this class and its methods.
-        Args:
-            None
-        Returns:
-            None
-        """
-        print(AutoRegressor_help)
 
-
-
-# string to print when calling help() method
-AutoRegressor_help = """
-
--------------------- *** --------------------
-
-Id: AutoRegressor
-Description: Implements the equivalent of an AR(p) method - predicts a linear
-    combination of the previous p observed values in a time-series
-
-Methods:
-
-    initialize()
-        Description:
-            Initializes autoregressive method parameters
-        Args:
-            p (int): Length of history used for prediction
-
-    step(x)
-        Description:
-            Run one timestep of the method in its environment then update internal parameters
-        Args:
-            x (int/numpy.ndarray):  Value at current time-step
-        Returns:
-            Predicted value for the next time-step
-
-    predict(x)
-        Description:
-            Predict next value given present value
-        Args:
-            x (int/numpy.ndarray):  Value at current time-step
-        Returns:
-            Predicted value for the next time-step
-
-    update(y, loss, lr)
-        Description:
-            Updates parameters based on correct value, loss and learning rate.
-        Args:
-            y (int/numpy.ndarray): True value at current time-step
-            loss (function): (optional)
-            lr (float):
-        Returns:
-            None
-
-    help()
-        Description:
-            Prints information about this class and its methods.
-        Args:
-            None
-        Returns:
-            None
-
--------------------- *** --------------------
-
-"""

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.problems.control.double_pendulum &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.environments.controller.double_pendulum &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.problems.control.double_pendulum</li>
+      <li>tigercontrol.environments.controller.double_pendulum</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,9 +146,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.problems.control.double_pendulum</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.environments.controller.double_pendulum</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Double pendulum problem, taken from OpenAI Gym</span>
+<span class="sd">Double pendulum environment, taken from OpenAI Gym</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">jax</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -156,7 +156,7 @@
 <span class="kn">from</span> <span class="nn">jax.numpy</span> <span class="k">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span>
 
 <span class="kn">from</span> <span class="nn">tigercontrol.utils</span> <span class="k">import</span> <span class="n">generate_key</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.problems.control</span> <span class="k">import</span> <span class="n">ControlProblem</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.environments.control</span> <span class="k">import</span> <span class="n">ControlEnvironment</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2013, RLPy http://acl.mit.edu/RLPy&quot;</span>
 <span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Alborz Geramifard&quot;</span><span class="p">,</span> <span class="s2">&quot;Robert H. Klein&quot;</span><span class="p">,</span> <span class="s2">&quot;Christoph Dann&quot;</span><span class="p">,</span>
@@ -167,7 +167,7 @@
 <span class="c1"># SOURCE:</span>
 <span class="c1"># https://github.com/rlpy/rlpy/blob/master/rlpy/Domains/Acrobot.py</span>
 
-<div class="viewcode-block" id="DoublePendulum"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.control.DoublePendulum.html#tigercontrol.problems.control.DoublePendulum">[docs]</a><span class="k">class</span> <span class="nc">DoublePendulum</span><span class="p">(</span><span class="n">ControlProblem</span><span class="p">):</span>
+<div class="viewcode-block" id="DoublePendulum"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.controller.DoublePendulum.html#tigercontrol.environments.controller.DoublePendulum">[docs]</a><span class="k">class</span> <span class="nc">DoublePendulum</span><span class="p">(</span><span class="n">ControlEnvironment</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Acrobot is a 2-link pendulum with only the second joint actuated.</span>
@@ -211,7 +211,7 @@
     <span class="n">domain_fig</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">actions_num</span> <span class="o">=</span> <span class="mi">3</span>
 
-<div class="viewcode-block" id="DoublePendulum.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.control.DoublePendulum.html#tigercontrol.problems.control.DoublePendulum.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DoublePendulum.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.controller.DoublePendulum.html#tigercontrol.environments.controller.DoublePendulum.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1">#high = np.array([1.0, 1.0, 1.0, 1.0, self.MAX_VEL_1, self.MAX_VEL_2])</span>

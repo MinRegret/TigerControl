@@ -1,7 +1,7 @@
-tigercontrol.problems.time\_series.RNN\_TimeSeries
+tigercontrol.environments.time\_series.RNN\_TimeSeries
 ==================================================
 
-.. currentmodule:: tigercontrol.problems.time_series
+.. currentmodule:: tigercontrol.environments.time_series
 
 .. autoclass:: RNN_TimeSeries
 

@@ -17,11 +17,11 @@ class MethodSpec(Spec):
 
     Args:
         id (str): The official method ID
-        entry_point (Optional[str]): The Python entrypoint of the problem class (e.g. module.name:Class)
+        entry_point (Optional[str]): The Python entrypoint of the environment class (e.g. module.name:Class)
         kwargs (dict): The kwargs to pass to the method class
 
     Attributes:
-        id (str): The official problem ID
+        id (str): The official environment ID
     """
     def __str__(self):
         return "<TigerControl Method Spec>"

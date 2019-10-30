@@ -1,0 +1,47 @@
+# test the CustomEnvironment class
+
+import tigercontrol
+import jax.numpy as np
+import matplotlib.pyplot as plt
+
+# test a simple CustomEnvironment that returns last value by storing a single param
+def test_custom_environment(steps=1000, show=True):
+    # initial preparation
+    T = steps
+    loss = lambda y_true, y_pred: (y_true - y_pred)**2
+    method = tigercontrol.method("LastValue")
+    method.initialize()
+
+    # simple custom Environment that returns alternating +/- 1.0
+    class Custom(tigercontrol.CustomEnvironment):
+        def initialize(self):
+            self.T = 0
+            return -1
+        def step(self):
+            self.T += 1
+            return 2 * (self.T % 2) - 1
+
+    # try registering and calling the custom environment
+    tigercontrol.register_custom_environment(Custom, "TestCustomEnvironment")
+    custom_environment = tigercontrol.environment("TestCustomEnvironment")
+    cur_x = custom_environment.initialize()
+ 
+    results = []
+    for i in range(T):
+        cur_y_pred = method.predict(cur_x)
+        cur_y_true = custom_environment.step()
+        results.append(loss(cur_y_true, cur_y_pred))
+        cur_x = cur_y_true
+
+    if show:
+        plt.plot(results)
+        plt.title("LastValue method on custom alternating environment")
+        plt.show(block=False)
+        plt.pause(2)
+        plt.close()
+    print("test_custom_environment passed")
+    return
+
+if __name__=="__main__":
+    test_custom_environment()
+

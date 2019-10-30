@@ -1,9 +1,9 @@
-tigercontrol.problems.ControlProblem
+tigercontrol.environments.ControlEnvironment
 ====================================
 
-.. currentmodule:: tigercontrol.problems
+.. currentmodule:: tigercontrol.environments
 
-.. autoclass:: ControlProblem
+.. autoclass:: ControlEnvironment
 
    
    .. automethod:: __init__
@@ -13,11 +13,11 @@ tigercontrol.problems.ControlProblem
 
    .. autosummary::
    
-      ~ControlProblem.__init__
-      ~ControlProblem.close
-      ~ControlProblem.help
-      ~ControlProblem.initialize
-      ~ControlProblem.step
+      ~ControlEnvironment.__init__
+      ~ControlEnvironment.close
+      ~ControlEnvironment.help
+      ~ControlEnvironment.initialize
+      ~ControlEnvironment.step
    
    
 
@@ -27,6 +27,6 @@ tigercontrol.problems.ControlProblem
 
    .. autosummary::
    
-      ~ControlProblem.spec
+      ~ControlEnvironment.spec
    
    

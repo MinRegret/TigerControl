@@ -1,7 +1,7 @@
-tigercontrol.problems.pybullet.HalfCheetah
+tigercontrol.environments.pybullet.HalfCheetah
 ==========================================
 
-.. currentmodule:: tigercontrol.problems.pybullet
+.. currentmodule:: tigercontrol.environments.pybullet
 
 .. autoclass:: HalfCheetah
 

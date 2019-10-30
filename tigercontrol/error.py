@@ -3,6 +3,10 @@ import sys
 class Error(Exception):
     pass
 
+class JAXCompilationError(Error):
+    """ Raised when JAX fails to compile an input object """
+    pass
+
 class InvalidInput(Error):
     """Raised when the user calls step at the end of the data-set stream
     """

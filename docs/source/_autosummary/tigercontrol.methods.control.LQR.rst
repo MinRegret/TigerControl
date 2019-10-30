@@ -1,4 +1,4 @@
-tigercontrol.methods.control.LQR
+tigercontrol.methods.controller.LQR
 ===============================
 
 .. currentmodule:: tigercontrol.methods.control

@@ -6,7 +6,7 @@ import os
 
 def test_new_experiment(steps=5000, show=False):
     exp = Experiment()
-    exp.initialize(problems = ['SP500-v0'], methods =  ['LastValue'], \
+    exp.initialize(environments = ['SP500-v0'], methods =  ['LastValue'], \
                     use_precomputed = False, timesteps = steps, verbose = show, load_bar = show)
 
     '''exp.add_method('AutoRegressor', {'p' : 3, 'optimizer' : OGD}, name = 'OGD')
@@ -48,20 +48,20 @@ def test_new_experiment(steps=5000, show=False):
     exp.add_method('SimpleBoost', {'method_id': 'LSTM', \
         'method_params': {'n' : 1, 'm' : 1, 'optimizer' : Adam}}, name = 'LSTM-Adam')
 
-    exp.add_problem('ARMA-v0', {'p':2, 'q':0}, name = '20')
-    #exp.add_problem('ARMA-v0', {'p':3, 'q':3}, name = '33')
-    #exp.add_problem('ARMA-v0', {'p':5, 'q':4}, name = '54')
+    exp.add_environment('ARMA-v0', {'p':2, 'q':0}, name = '20')
+    #exp.add_environment('ARMA-v0', {'p':3, 'q':3}, name = '33')
+    #exp.add_environment('ARMA-v0', {'p':5, 'q':4}, name = '54')
 
-    #exp.add_problem('LDS-TimeSeries-v0', {'n': 1, 'm': 1, 'd':3}, name = '3')
-    #exp.add_problem('LDS-TimeSeries-v0', {'n': 1, 'm': 1, 'd':10}, name = '10')
+    #exp.add_environment('LDS-TimeSeries-v0', {'n': 1, 'm': 1, 'd':3}, name = '3')
+    #exp.add_environment('LDS-TimeSeries-v0', {'n': 1, 'm': 1, 'd':10}, name = '10')
 
-    #exp.add_problem('LSTM-TimeSeries-v0', {'n': 1, 'm': 1, 'h':32}, name = '32')
-    #exp.add_problem('LSTM-TimeSeries-v0', {'n': 1, 'm': 1, 'h':64}, name = '64')
+    #exp.add_environment('LSTM-TimeSeries-v0', {'n': 1, 'm': 1, 'h':32}, name = '32')
+    #exp.add_environment('LSTM-TimeSeries-v0', {'n': 1, 'm': 1, 'h':64}, name = '64')
 
-    exp.add_problem('ENSO-v0', {'input_signals': ['oni']}, name = 'T1')
-    exp.add_problem('ENSO-v0', {'input_signals': ['oni'], 'timeline' : 3}, name = 'T3')
-    exp.add_problem('ENSO-v0', {'input_signals': ['oni'], 'timeline' : 6}, name = 'T6')
-    exp.add_problem('ENSO-v0', {'input_signals': ['oni'], 'timeline' : 12}, name = 'T12')
+    exp.add_environment('ENSO-v0', {'input_signals': ['oni']}, name = 'T1')
+    exp.add_environment('ENSO-v0', {'input_signals': ['oni'], 'timeline' : 3}, name = 'T3')
+    exp.add_environment('ENSO-v0', {'input_signals': ['oni'], 'timeline' : 6}, name = 'T6')
+    exp.add_environment('ENSO-v0', {'input_signals': ['oni'], 'timeline' : 12}, name = 'T12')
 
     tigercontrol_dir = get_tigercontrol_dir()
     datapath = 'data/results/scoreboard_sim_LSTM.csv'
@@ -78,7 +78,7 @@ def test_new_experiment(steps=5000, show=False):
     '''datapath = 'data/results/graph_sim_autoregressors.png'
                 datapath = os.path.join(tigercontrol_dir, datapath)
             
-                exp.graph(problem_ids = ['SP500-v0', 'ENSO-T1', 'ENSO-T3', 'ENSO-T6', 'ENSO-T12'], \
+                exp.graph(environment_ids = ['SP500-v0', 'ENSO-T1', 'ENSO-T3', 'ENSO-T6', 'ENSO-T12'], \
                     yscale = 'log', save_as = datapath, dpi = 200)'''
 
     print("test_new_experiment passed")

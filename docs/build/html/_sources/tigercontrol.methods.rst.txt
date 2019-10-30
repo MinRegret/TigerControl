@@ -16,13 +16,13 @@ control
 .. autosummary::
   :toctree: _autosummary
 
-   tigercontrol.methods.control.ControlMethod
-   tigercontrol.methods.control.KalmanFilter
-   tigercontrol.methods.control.ODEShootingMethod
-   tigercontrol.methods.control.LQR
-   tigercontrol.methods.control.MPPI
-   tigercontrol.methods.control.CartPoleNN
-   tigercontrol.methods.control.ILQR
+   tigercontrol.methods.controller.ControlMethod
+   tigercontrol.methods.controller.KalmanFilter
+   tigercontrol.methods.controller.ODEShootingMethod
+   tigercontrol.methods.controller.LQR
+   tigercontrol.methods.controller.MPPI
+   tigercontrol.methods.controller.CartPoleNN
+   tigercontrol.methods.controller.ILQR
 
 
 time_series

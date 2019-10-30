@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.problems.control.control_problem &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.environments.controller.control_environment &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.problems.control.control_problem</li>
+      <li>tigercontrol.environments.controller.control_environment</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,21 +146,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.problems.control.control_problem</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Problem class</span>
+  <h1>Source code for tigercontrol.environments.controller.control_environment</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Environment class</span>
 <span class="c1"># Author: John Hallman</span>
 
-<span class="kn">from</span> <span class="nn">tigercontrol.problems</span> <span class="k">import</span> <span class="n">Problem</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.environments</span> <span class="k">import</span> <span class="n">Environment</span>
 
-<div class="viewcode-block" id="ControlProblem"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.ControlProblem.html#tigercontrol.problems.ControlProblem">[docs]</a><span class="k">class</span> <span class="nc">ControlProblem</span><span class="p">(</span><span class="n">Problem</span><span class="p">):</span>
+<div class="viewcode-block" id="ControlEnvironment"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.ControlEnvironment.html#tigercontrol.environments.ControlEnvironment">[docs]</a><span class="k">class</span> <span class="nc">ControlEnvironment</span><span class="p">(</span><span class="n">Environment</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Description: class for online control tests &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39; Description: resets problem to time 0 &#39;&#39;&#39;</span>
+        <span class="sd">&#39;&#39;&#39; Description: resets environment to time 0 &#39;&#39;&#39;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39; Description: run one timestep of the problem&#39;s dynamics. &#39;&#39;&#39;</span>
+        <span class="sd">&#39;&#39;&#39; Description: run one timestep of the environment&#39;s dynamics. &#39;&#39;&#39;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </pre></div>
 

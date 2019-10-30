@@ -1,7 +1,7 @@
-tigercontrol.problems.control.DoublePendulum
+tigercontrol.environments.controller.DoublePendulum
 ============================================
 
-.. currentmodule:: tigercontrol.problems.control
+.. currentmodule:: tigercontrol.environments.control
 
 .. autoclass:: DoublePendulum
 

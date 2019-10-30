@@ -1,7 +1,7 @@
-tigercontrol.problems.control.Pendulum
+tigercontrol.environments.controller.Pendulum
 ======================================
 
-.. currentmodule:: tigercontrol.problems.control
+.. currentmodule:: tigercontrol.environments.control
 
 .. autoclass:: Pendulum
 

@@ -1,7 +1,7 @@
-tigercontrol.problems.pybullet.Humanoid
+tigercontrol.environments.pybullet.Humanoid
 =======================================
 
-.. currentmodule:: tigercontrol.problems.pybullet
+.. currentmodule:: tigercontrol.environments.pybullet
 
 .. autoclass:: Humanoid
 

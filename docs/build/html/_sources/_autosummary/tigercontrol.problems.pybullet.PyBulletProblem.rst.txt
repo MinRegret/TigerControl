@@ -1,9 +1,9 @@
-tigercontrol.problems.pybullet.PyBulletProblem
+tigercontrol.environments.pybullet.PyBulletEnvironment
 ==============================================
 
-.. currentmodule:: tigercontrol.problems.pybullet
+.. currentmodule:: tigercontrol.environments.pybullet
 
-.. autoclass:: PyBulletProblem
+.. autoclass:: PyBulletEnvironment
 
    
    .. automethod:: __init__
@@ -13,20 +13,20 @@ tigercontrol.problems.pybullet.PyBulletProblem
 
    .. autosummary::
    
-      ~PyBulletProblem.__init__
-      ~PyBulletProblem.close
-      ~PyBulletProblem.fork
-      ~PyBulletProblem.getState
-      ~PyBulletProblem.get_action_space
-      ~PyBulletProblem.get_observation_space
-      ~PyBulletProblem.get_simulator
-      ~PyBulletProblem.initialize
-      ~PyBulletProblem.loadFile
-      ~PyBulletProblem.loadState
-      ~PyBulletProblem.render
-      ~PyBulletProblem.reset
-      ~PyBulletProblem.saveFile
-      ~PyBulletProblem.step
+      ~PyBulletEnvironment.__init__
+      ~PyBulletEnvironment.close
+      ~PyBulletEnvironment.fork
+      ~PyBulletEnvironment.getState
+      ~PyBulletEnvironment.get_action_space
+      ~PyBulletEnvironment.get_observation_space
+      ~PyBulletEnvironment.get_simulator
+      ~PyBulletEnvironment.initialize
+      ~PyBulletEnvironment.loadFile
+      ~PyBulletEnvironment.loadState
+      ~PyBulletEnvironment.render
+      ~PyBulletEnvironment.reset
+      ~PyBulletEnvironment.saveFile
+      ~PyBulletEnvironment.step
    
    
 

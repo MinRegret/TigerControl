@@ -1,7 +1,7 @@
-tigercontrol.problems.time\_series.ENSO
+tigercontrol.environments.time\_series.ENSO
 =======================================
 
-.. currentmodule:: tigercontrol.problems.time_series
+.. currentmodule:: tigercontrol.environments.time_series
 
 .. autoclass:: ENSO
 

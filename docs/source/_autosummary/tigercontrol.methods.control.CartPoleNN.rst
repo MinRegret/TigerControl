@@ -1,4 +1,4 @@
-tigercontrol.methods.control.CartPoleNN
+tigercontrol.methods.controller.CartPoleNN
 ======================================
 
 .. currentmodule:: tigercontrol.methods.control

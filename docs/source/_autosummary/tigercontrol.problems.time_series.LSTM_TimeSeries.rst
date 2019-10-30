@@ -1,7 +1,7 @@
-tigercontrol.problems.time\_series.LSTM\_TimeSeries
+tigercontrol.environments.time\_series.LSTM\_TimeSeries
 ===================================================
 
-.. currentmodule:: tigercontrol.problems.time_series
+.. currentmodule:: tigercontrol.environments.time_series
 
 .. autoclass:: LSTM_TimeSeries
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.methods.control.cartpole_nn &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.methods.controller.cartpole_nn &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.methods.control.cartpole_nn</li>
+      <li>tigercontrol.methods.controller.cartpole_nn</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,17 +146,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.methods.control.cartpole_nn</h1><div class="highlight"><pre>
-<span></span><span class="c1"># neural network policy class trained specifically for the cartpole problem</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.methods.control.control_method</span> <span class="k">import</span> <span class="n">ControlMethod</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.methods.control.cartpole_weights</span> <span class="k">import</span> <span class="o">*</span>
+  <h1>Source code for tigercontrol.methods.controller.cartpole_nn</h1><div class="highlight"><pre>
+<span></span><span class="c1"># neural network policy class trained specifically for the cartpole environment</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.methods.controller.control_method</span> <span class="k">import</span> <span class="n">ControlMethod</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.methods.controller.cartpole_weights</span> <span class="k">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="CartPoleNN"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.control.CartPoleNN.html#tigercontrol.methods.control.CartPoleNN">[docs]</a><span class="k">class</span> <span class="nc">CartPoleNN</span><span class="p">(</span><span class="n">ControlMethod</span><span class="p">):</span>
+<div class="viewcode-block" id="CartPoleNN"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.controller.CartPoleNN.html#tigercontrol.methods.controller.CartPoleNN">[docs]</a><span class="k">class</span> <span class="nc">CartPoleNN</span><span class="p">(</span><span class="n">ControlMethod</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Description: Simple multi-layer perceptron policy, no internal state &#39;&#39;&#39;</span>
 
     <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;CartPole-v0&#39;</span><span class="p">,</span> <span class="s1">&#39;CartPoleSwingup-v0&#39;</span><span class="p">])</span>
 
-<div class="viewcode-block" id="CartPoleNN.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.control.CartPoleNN.html#tigercontrol.methods.control.CartPoleNN.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CartPoleNN.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.methods.controller.CartPoleNN.html#tigercontrol.methods.controller.CartPoleNN.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span></div>
 
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation_space</span><span class="p">,</span> <span class="n">action_space</span><span class="p">):</span>

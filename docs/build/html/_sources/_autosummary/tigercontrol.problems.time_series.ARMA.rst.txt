@@ -1,7 +1,7 @@
-tigercontrol.problems.time\_series.ARMA
+tigercontrol.environments.time\_series.ARMA
 =======================================
 
-.. currentmodule:: tigercontrol.problems.time_series
+.. currentmodule:: tigercontrol.environments.time_series
 
 .. autoclass:: ARMA
 

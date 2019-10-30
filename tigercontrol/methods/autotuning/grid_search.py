@@ -18,15 +18,15 @@ class GridSearch:
     def __init__(self):
         pass
 
-    def search(self, method_id, method_params, problem_id, problem_params, loss, search_space, trials=None, 
+    def search(self, method_id, method_params, environment_id, environment_params, loss, search_space, trials=None, 
         smoothing=10, min_steps=100, verbose=0):
         """
         Description: Search for optimal method parameters
         Args:
             method_id (string): id of method
             method_params (dict): initial method parameters dict (updated by search space)
-            problem_id (string): id of problem to try on
-            problem_params (dict): problem parameters dict
+            environment_id (string): id of environment to try on
+            environment_params (dict): environment parameters dict
             loss (function): a function mapping y_pred, y_true -> scalar loss
             search_space (dict): dict mapping parameter names to a finite set of options
             trials (int, None): number of random trials to sample from search space / try all parameters
@@ -36,8 +36,8 @@ class GridSearch:
         """
         self.method_id = method_id
         self.method_params = method_params
-        self.problem_id = problem_id
-        self.problem_params = problem_params
+        self.environment_id = environment_id
+        self.environment_params = environment_params
         self.loss = loss
 
         # store the order to test parameters
@@ -70,16 +70,16 @@ class GridSearch:
 
     def _run_test(self, method_params, smoothing, min_steps, verbose=0):
         """ Run a single test with given method params, using median stopping rule """
-        # initialize problem and method
+        # initialize environment and method
         if verbose:
             print("Currently testing parameters: " + str(method_params))
         method = tigerforecast.method(self.method_id)
         method.initialize(**method_params)
-        problem = tigerforecast.problem(self.problem_id)
-        if problem.has_regressors:
-            x, y_true = problem.initialize(**self.problem_params)
+        environment = tigerforecast.environment(self.environment_id)
+        if environment.has_regressors:
+            x, y_true = environment.initialize(**self.environment_params)
         else:
-            x = problem.initialize(**self.problem_params)
+            x = environment.initialize(**self.environment_params)
 
         t = 0
         losses = [] # sorted losses, used to get median
@@ -87,11 +87,11 @@ class GridSearch:
         while True: # run method until worse than median loss, ignoring first 100 steps
             t += 1
             y_pred = method.predict(x)
-            if problem.has_regressors:
+            if environment.has_regressors:
                 method.update(y_true)
                 loss = self.loss(y_pred, y_true)
             else:
-                x = problem.step()
+                x = environment.step()
                 method.update(x)
                 loss = self.loss(y_pred, x)
             if t == 1: # fill all of smooth_losses with the first loss

@@ -6,14 +6,17 @@ from tigercontrol.methods.optimizers import Optimizer
 
 # class for implementing algorithms with enforced modularity
 class Method(object):
-    spec = None
 
     def initialize(self, **kwargs):
         # initializes method parameters
         raise NotImplementedError
 
-    def predict(self, x=None):
-        # returns method prediction for given input
+    def get_acttion(self, **kwargs):
+        # returns action u given input observation x
+        raise NotImplementedError
+
+    def plan(self, **kwargs):
+        # returns a series of actions (a plan), given current observation x
         raise NotImplementedError
 
     def update(self, **kwargs):
@@ -30,16 +33,9 @@ class Method(object):
             return
         raise error.InvalidInput("Optimizer input cannot be stored")
 
-    def help(self):
-        # prints information about this class and its methods
-        raise NotImplementedError
-
     def __str__(self):
-        if self.spec is None:
-            return '<{} instance>'.format(type(self).__name__)
-        else:
-            return '<{}<{}>>'.format(type(self).__name__, self.spec.id)
-
-    def __enter__(self):
-        return self
-
+        return '<{} instance>'.format(type(self).__name__)
+        
+    def __repr__(self):
+        return self.__str__()
+        

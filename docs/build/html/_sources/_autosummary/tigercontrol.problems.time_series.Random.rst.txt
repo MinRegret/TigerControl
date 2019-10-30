@@ -1,7 +1,7 @@
-tigercontrol.problems.time\_series.Random
+tigercontrol.environments.time\_series.Random
 =========================================
 
-.. currentmodule:: tigercontrol.problems.time_series
+.. currentmodule:: tigercontrol.environments.time_series
 
 .. autoclass:: Random
 

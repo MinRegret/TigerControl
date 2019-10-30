@@ -48,17 +48,17 @@ def test_simple_boost_lstm(steps=500, show=True):
     autoreg = tigercontrol.method("AutoRegressor")
     autoreg.initialize(p=4) # regularization
 
-    # problem initialize
+    # environment initialize
     p, q = 4, 0
-    problem = tigercontrol.problem("ARMA-v0")
-    y_true = problem.initialize(p, q, noise_magnitude=0.1)
+    environment = tigercontrol.environment("ARMA-v0")
+    y_true = environment.initialize(p, q, noise_magnitude=0.1)
  
     # run all boosting method
     result_list = [[] for n in Ns]
     last_value = []
     autoreg_loss = []
     for i in range(T):
-        y_next = problem.step()
+        y_next = environment.step()
 
         # predictions for every boosting method
         for result_i, method_i in zip(result_list, methods):
@@ -89,7 +89,7 @@ def test_simple_boost_lstm(steps=500, show=True):
         print("Mean loss for AutoRegressor: {}".format(np.mean(np.array(autoreg_loss[start:]))))
         plt.plot(x, avg_regret(autoreg_loss[start:]), label="AutoRegressor method")
 
-        plt.title("SimpleBoost method on ARMA problem")
+        plt.title("SimpleBoost method on ARMA environment")
         plt.legend()
         plt.show(block=False)
         plt.pause(10)
@@ -114,9 +114,9 @@ def test_simple_boost_arma(steps=500, show=True):
     # run all boosting method
     for timeline in timelines:
 
-        # problem initialize
-        problem = tigercontrol.problem("ENSO-v0")
-        x, y_true = problem.initialize(input_signals = ['oni'], timeline = timeline)
+        # environment initialize
+        environment = tigercontrol.environment("ENSO-v0")
+        x, y_true = environment.initialize(input_signals = ['oni'], timeline = timeline)
         methods = []
 
         for n in Ns: # number of weak learners
@@ -138,7 +138,7 @@ def test_simple_boost_arma(steps=500, show=True):
             # last value and autoregressor predictions
             autoreg_loss.append(mse(autoreg.predict(x), y_true))
             autoreg.update(y_true)
-            x, y_true = problem.step()
+            x, y_true = environment.step()
             
         # plot performance
         if show:

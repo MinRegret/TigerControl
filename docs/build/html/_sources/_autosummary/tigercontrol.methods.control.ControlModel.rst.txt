@@ -1,4 +1,4 @@
-tigercontrol.methods.control.ControlMethod
+tigercontrol.methods.controller.ControlMethod
 ========================================
 
 .. currentmodule:: tigercontrol.methods.control

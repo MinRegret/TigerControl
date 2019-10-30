@@ -15,7 +15,7 @@ tigercontrol.experiments.Experiment
    
       ~Experiment.__init__
       ~Experiment.add_method
-      ~Experiment.add_problem
+      ~Experiment.add_environment
       ~Experiment.avg_regret
       ~Experiment.graph
       ~Experiment.help

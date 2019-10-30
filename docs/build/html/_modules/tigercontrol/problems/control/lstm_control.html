@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.problems.control.lstm_control &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.environments.controller.lstm_control &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.problems.control.lstm_control</li>
+      <li>tigercontrol.environments.controller.lstm_control</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,7 +146,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.problems.control.lstm_control</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.environments.controller.lstm_control</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Long-short term memory output</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -155,14 +155,14 @@
 <span class="kn">import</span> <span class="nn">jax.experimental.stax</span> <span class="k">as</span> <span class="nn">stax</span>
 <span class="kn">import</span> <span class="nn">tigercontrol</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.utils.random</span> <span class="k">import</span> <span class="n">generate_key</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.problems.control</span> <span class="k">import</span> <span class="n">ControlProblem</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.environments.control</span> <span class="k">import</span> <span class="n">ControlEnvironment</span>
 
-<div class="viewcode-block" id="LSTM_Control"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.control.LSTM_Control.html#tigercontrol.problems.control.LSTM_Control">[docs]</a><span class="k">class</span> <span class="nc">LSTM_Control</span><span class="p">(</span><span class="n">ControlProblem</span><span class="p">):</span>
+<div class="viewcode-block" id="LSTM_Control"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.controller.LSTM_Control.html#tigercontrol.environments.controller.LSTM_Control">[docs]</a><span class="k">class</span> <span class="nc">LSTM_Control</span><span class="p">(</span><span class="n">ControlEnvironment</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Produces outputs from a randomly initialized recurrent neural network.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="LSTM_Control.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.control.LSTM_Control.html#tigercontrol.problems.control.LSTM_Control.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LSTM_Control.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.controller.LSTM_Control.html#tigercontrol.environments.controller.LSTM_Control.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span></div>
 
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>

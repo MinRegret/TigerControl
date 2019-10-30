@@ -204,7 +204,7 @@
        ul.slideDown(speed);
      },
      error: function(request, textStatus, error) {
-       showError('Oops, there was a problem retrieving the comments.');
+       showError('Oops, there was a environment retrieving the comments.');
      },
      dataType: 'json'
     });
@@ -263,7 +263,7 @@
       },
       error: function(request, textStatus, error) {
         form.find('textarea,input').removeAttr('disabled');
-        showError('Oops, there was a problem adding the comment.');
+        showError('Oops, there was a environment adding the comment.');
       }
     });
   }
@@ -327,7 +327,7 @@
         $('#cd' + id).removeClass('moderate');
       },
       error: function(request, textStatus, error) {
-        showError('Oops, there was a problem accepting the comment.');
+        showError('Oops, there was a environment accepting the comment.');
       }
     });
   }
@@ -361,7 +361,7 @@
         div.data('comment', comment);
       },
       error: function(request, textStatus, error) {
-        showError('Oops, there was a problem deleting the comment.');
+        showError('Oops, there was a environment deleting the comment.');
       }
     });
   }
@@ -477,7 +477,7 @@
       url: opts.processVoteURL,
       data: d,
       error: function(request, textStatus, error) {
-        showError('Oops, there was a problem casting that vote.');
+        showError('Oops, there was a environment casting that vote.');
       }
     });
   }

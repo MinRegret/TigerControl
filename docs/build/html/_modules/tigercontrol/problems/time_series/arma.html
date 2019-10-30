@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.problems.time_series.arma &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.environments.time_series.arma &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.problems.time_series.arma</li>
+      <li>tigercontrol.environments.time_series.arma</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,7 +146,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.problems.time_series.arma</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.environments.time_series.arma</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Autoregressive moving-average</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -157,17 +157,17 @@
 
 <span class="kn">import</span> <span class="nn">tigercontrol</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.utils</span> <span class="k">import</span> <span class="n">generate_key</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.problems.time_series</span> <span class="k">import</span> <span class="n">TimeSeriesProblem</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.environments.time_series</span> <span class="k">import</span> <span class="n">TimeSeriesEnvironment</span>
 
 
-<div class="viewcode-block" id="ARMA"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.time_series.ARMA.html#tigercontrol.problems.time_series.ARMA">[docs]</a><span class="k">class</span> <span class="nc">ARMA</span><span class="p">(</span><span class="n">TimeSeriesProblem</span><span class="p">):</span>
+<div class="viewcode-block" id="ARMA"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.time_series.ARMA.html#tigercontrol.environments.time_series.ARMA">[docs]</a><span class="k">class</span> <span class="nc">ARMA</span><span class="p">(</span><span class="n">TimeSeriesEnvironment</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Simulates an autoregressive moving-average time-series.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;ARMA-v0&#39;</span><span class="p">,</span> <span class="s1">&#39;TimeSeries&#39;</span><span class="p">])</span>
 
-<div class="viewcode-block" id="ARMA.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.problems.time_series.ARMA.html#tigercontrol.problems.time_series.ARMA.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ARMA.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.environments.time_series.ARMA.html#tigercontrol.environments.time_series.ARMA.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_regressors</span> <span class="o">=</span> <span class="kc">False</span></div>
 
@@ -287,7 +287,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">ARMA_help</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;ARMA Problem&gt;&quot;</span></div>
+        <span class="k">return</span> <span class="s2">&quot;&lt;ARMA Environment&gt;&quot;</span></div>
 
 
 <span class="c1"># string to print when calling help() method</span>
