@@ -1,0 +1,26 @@
+tigercontrol.methods.optimizers.Adagrad
+======================================
+
+.. currentmodule:: tigercontrol.methods.optimizers
+
+.. autoclass:: Adagrad
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Adagrad.__init__
+      ~Adagrad.gradient
+      ~Adagrad.set_loss
+      ~Adagrad.set_predict
+      ~Adagrad.update
+   
+   
+
+   
+   
+   

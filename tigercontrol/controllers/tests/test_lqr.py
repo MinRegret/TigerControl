@@ -21,7 +21,7 @@ def test_lqr(steps=10, show_plot=True):
 
     controller.initialize(F, f, C, c, T, x)
 
-    u = controller.plan()
+    u = controller.plan(x, T)
 
     # Plot control found
     if show_plot:
@@ -31,7 +31,7 @@ def test_lqr(steps=10, show_plot=True):
 
     controller.initialize(F, f, C, c, T, x)
 
-    u = controller.plan()
+    u = controller.plan(x, T)
 
     # Plot control found
     if show_plot:
@@ -52,7 +52,7 @@ def test_lqr(steps=10, show_plot=True):
 
     controller.initialize(F, f, C, c, T, x)
 
-    u = controller.plan()
+    u = controller.plan(x, T)
 
     # Plot control found
     if show_plot:
@@ -62,7 +62,7 @@ def test_lqr(steps=10, show_plot=True):
 
     controller.initialize(F, f, C, c, T, x)
 
-    u = controller.plan()
+    u = controller.plan(x, T)
 
     # Plot control found
     if show_plot:
@@ -80,3 +80,4 @@ def test_lqr(steps=10, show_plot=True):
 
 if __name__=="__main__":
     test_lqr()
+    
