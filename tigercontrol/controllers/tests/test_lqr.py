@@ -3,7 +3,6 @@
 import tigercontrol
 import jax.numpy as np
 import matplotlib.pyplot as plt
-from tigercontrol.controllers import Controller
 import jax
 
 def get_trajectory(environment, controller, T = 100):
@@ -17,7 +16,7 @@ def get_trajectory(environment, controller, T = 100):
     controller_params['A'], controller_params['B'] = environment.A, environment.B
     controller_params['x'] = x
     
-    controller = tigercontrol.controllers(controller_id)
+    controller = tigercontrol.controller(controller_id)
     controller.initialize(**controller_params)
     
     trajectory = []
