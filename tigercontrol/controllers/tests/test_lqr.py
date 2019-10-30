@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 def test_lqr(steps=10, show_plot=True):
 
-    controller = tigercontrol.controllers("LQR")
+    controller = tigercontrol.controller("LQR")
     lambda1 = 0.5
     lambda2 = 10
 
@@ -21,7 +21,7 @@ def test_lqr(steps=10, show_plot=True):
 
     controller.initialize(F, f, C, c, T, x)
 
-    u = controller.plan()
+    u = controller.plan(x, T)
 
     # Plot control found
     if show_plot:
@@ -31,7 +31,7 @@ def test_lqr(steps=10, show_plot=True):
 
     controller.initialize(F, f, C, c, T, x)
 
-    u = controller.plan()
+    u = controller.plan(x, T)
 
     # Plot control found
     if show_plot:
@@ -52,7 +52,7 @@ def test_lqr(steps=10, show_plot=True):
 
     controller.initialize(F, f, C, c, T, x)
 
-    u = controller.plan()
+    u = controller.plan(x, T)
 
     # Plot control found
     if show_plot:
@@ -62,7 +62,7 @@ def test_lqr(steps=10, show_plot=True):
 
     controller.initialize(F, f, C, c, T, x)
 
-    u = controller.plan()
+    u = controller.plan(x, T)
 
     # Plot control found
     if show_plot:

@@ -45,7 +45,7 @@ class LQR(Controller):
 
     def initialize(self, A, B, C, T, x):
         """
-        Description: Initialize the dynamics of the controller
+        Description: Initialize the dynamics of the method
         Args:
             A (float/numpy.ndarray): past value contribution coefficients
             B (float/numpy.ndarray): control value contribution coefficients
@@ -65,7 +65,7 @@ class LQR(Controller):
 
         self.is_online = False
 
-    def plan(self):
+    def plan(self, x, T):
         """
         Description: Updates internal parameters and then returns the estimated optimal set of actions
         Args:
@@ -73,7 +73,8 @@ class LQR(Controller):
         Returns:
             Estimated optimal set of actions
         """
-
+        self.x = x
+        self.T = T
         ## Initialize V and Q Functions ##
         V = np.zeros((self.F[0].shape[0], self.F[0].shape[0]))
         Q = np.zeros((self.C[0].shape[0], self.C[0].shape[1]))
@@ -93,6 +94,5 @@ class LQR(Controller):
         return self.u
 
     def __str__(self):
-        return "<LQR Controller>"
-
+        return "<LQR Method>"
 

@@ -6,7 +6,6 @@ import jax.numpy as np
 import tigercontrol
 from tigercontrol.controllers import Controller
 
-
 class ILQR(Controller):
     """
     Description: Computes optimal set of actions using the Linear Quadratic Regulator
@@ -19,11 +18,11 @@ class ILQR(Controller):
         self.initialized = False
 
 
-    def initialize(self, environment_dynamics, L, dim_x, dim_u, update_period, max_iterations, lamb, threshold):
+    def initialize(self, problem_dynamics, L, dim_x, dim_u, max_iterations, lamb, threshold):
         """
-        Description: Initialize the dynamics of the controller
+        Description: Initialize the dynamics of the method
         Args:
-            environment (instance/function): environment instance *OR* dynamics of environment
+            problem (instance/function): problem instance *OR* dynamics of problem
             L (function): loss function
             dim_x (int): state_space dimension
             dim_u (int): action_space dimension
@@ -31,10 +30,10 @@ class ILQR(Controller):
         self.initialized = True
 
         # initialize dynamics, loss, and derivatives
-        if callable(environment_dynamics):
-            dyn = environment_dynamics
+        if callable(problem_dynamics):
+            dyn = problem_dynamics
         else:
-            dyn = environment_dynamics.dynamics
+            dyn = problem_dynamics.dynamics
         self.dyn = dyn
         self.L = L
         self.dim_x = dim_x
@@ -44,9 +43,6 @@ class ILQR(Controller):
         L_hessian = jax.jit(jax.hessian(L, argnums=(0,1)))
         self.total_cost = jax.jit(lambda x, u: np.sum([self.L(x_t, u_t) for x_t, u_t in zip(x, u)])) # computes total cost over trajectory
         
-        self.t = 0 # time counter
-        self.update_period = update_period # update when t % update_period == 0
-        self.current_plan = [] # stores currently planned trajectory
         self.max_iterations = max_iterations
         self.lamb = lamb
         self.threshold = threshold
@@ -117,15 +113,7 @@ class ILQR(Controller):
             return F, C, c
         self._linearization = linearization
 
-
-    def plan(self, x):
-        if self.t % self.update_period == 0:
-            self.current_plan = self.plan_trajectory(x, self.update_period, max_iterations=self.max_iterations, lamb=self.lamb, threshold=self.threshold)
-        next_u = self.current_plan[self.t % self.update_period]
-        self.t += 1
-        return next_u
-
-    def plan_trajectory(self, x_0, T, max_iterations=10, lamb=0.1, threshold=None):
+    def plan(self, x_0, T):
         dim_x, dim_u = self.dim_x, self.dim_u
         u = [np.zeros((dim_u,)) for t in range(T)]
         x = [x_0]
@@ -133,22 +121,24 @@ class ILQR(Controller):
 
         old_cost = self.total_cost(x, u)
         count = 0
-        while count < max_iterations:
+        while count < self.max_iterations:
             count += 1
             F, C, c = self._linearization(T, x, u)
-            x_new, u_new = self._lqr(T, x, u, F, C, c, lamb)
+            x_new, u_new = self._lqr(T, x, u, F, C, c, self.lamb)
 
             new_cost = self.total_cost(x_new, u_new)
             if new_cost < old_cost:
                 x, u = x_new, u_new
-                if threshold and (old_cost - new_cost) / old_cost < threshold:
+                if self.threshold and (old_cost - new_cost) / old_cost < self.threshold:
                     break
-                lamb /= 2.0
+                self.lamb /= 2.0
                 old_cost = new_cost
             else:
-                lamb *= 2.0
+                self.lamb *= 2.0
         return u
 
-    def __str__(self):
-        return "<iLQR Controller>"
+    def update(self):
+        pass
 
+    def __str__(self):
+        return "<iLQR Method>"
