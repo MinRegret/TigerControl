@@ -26,6 +26,9 @@ class CartPole(Environment):
         'video.frames_per_second' : 50
     }
 
+    def get_loss(self):
+        return self.L
+
     def __init__(self):
         self.initialized = False
         self.gravity = 9.8
@@ -46,6 +49,10 @@ class CartPole(Environment):
         self.viewer = None
         self.state = None
         self.steps_beyond_done = None
+        C_x, C_u = np.diag(np.array([0.1, 0.0, 1.0, 0.0])), np.diag(np.array([0.1]))
+        L = lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u
+        self.L = jax.jit(L)
+
 
         @jax.jit
         def _dynamics(x_0, u):
