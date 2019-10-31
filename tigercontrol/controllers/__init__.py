@@ -6,7 +6,7 @@ from tigercontrol.controllers.core import Controller
 
 # controllers
 from tigercontrol.controllers.kalman_filter import KalmanFilter
-from tigercontrol.controllers.ode_shooting_method import ODEShootingMethod
+from tigercontrol.controllers.shooting import Shooting
 from tigercontrol.controllers.lqr import LQR
 from tigercontrol.controllers.lqr_infinite_horizon import LQRInfiniteHorizon
 from tigercontrol.controllers.ilqr import ILQR
@@ -30,17 +30,17 @@ controller_register(
 
 controller_register(
     id='KalmanFilter',
-    entry_point='tigercontrol.controllers.control:KalmanFilter',
+    entry_point='tigercontrol.controllers:KalmanFilter',
 )
 
 controller_register(
-    id='ODEShootingMethod',
-    entry_point='tigercontrol.controllers.control:ODEShootingMethod',
+    id='Shooting',
+    entry_point='tigercontrol.controllers.control:Shooting',
 )
 
 controller_register(
     id='LQR',
-    entry_point='tigercontrol.controllers.control:LQR',
+    entry_point='tigercontrol.controllers:LQR',
 )
 
 controller_register(
@@ -50,16 +50,16 @@ controller_register(
 
 controller_register(
     id='ILQR',
-    entry_point='tigercontrol.controllers.control:ILQR',
+    entry_point='tigercontrol.controllers:ILQR',
 )
 
 controller_register(
     id='CartPoleNN',
-    entry_point='tigercontrol.controllers.control:CartPoleNN',
+    entry_point='tigercontrol.controllers:CartPoleNN',
 )
 
 controller_register(
     id='GPC',
-    entry_point='tigercontrol.controllers.control:GPC',
+    entry_point='tigercontrol.controllers:GPC',
 )
 

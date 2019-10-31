@@ -18,7 +18,7 @@ class ILQR(Controller):
         self.initialized = False
 
 
-    def initialize(self, problem_dynamics, L, dim_x, dim_u, max_iterations, lamb, threshold):
+    def initialize(self, env, dim_x, dim_u, max_iterations, lamb, threshold):
         """
         Description: Initialize the dynamics of the method
         Args:
@@ -29,18 +29,20 @@ class ILQR(Controller):
         """
         self.initialized = True
 
+        # self.env = env.
         # initialize dynamics, loss, and derivatives
+        '''
         if callable(problem_dynamics):
             dyn = problem_dynamics
         else:
             dyn = problem_dynamics.dynamics
-        self.dyn = dyn
-        self.L = L
+        self.dyn = dyn'''
+        # self.L = env.loss
         self.dim_x = dim_x
         self.dim_u = dim_u
-        dyn_jacobian = jax.jit(jax.jacrev(dyn, argnums=(0,1)))
-        L_grad = jax.jit(jax.grad(L, argnums=(0,1)))
-        L_hessian = jax.jit(jax.hessian(L, argnums=(0,1)))
+        # dyn_jacobian = jax.jit(jax.jacrev(dyn, argnums=(0,1)))
+        # L_grad = jax.jit(jax.grad(self.L, argnums=(0,1)))
+        # L_hessian = jax.jit(jax.hessian(self.L, argnums=(0,1)))
         self.total_cost = jax.jit(lambda x, u: np.sum([self.L(x_t, u_t) for x_t, u_t in zip(x, u)])) # computes total cost over trajectory
         
         self.max_iterations = max_iterations

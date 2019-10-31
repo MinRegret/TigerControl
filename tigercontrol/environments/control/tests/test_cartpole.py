@@ -20,8 +20,8 @@ def test_cartpole(verbose=False):
     lamb = 0.1
     max_iterations = 25
 
-    controller = tigercontrol.controllers("ILQR")
-    controller.initialize(environment, L, dim_x, dim_u, update_period, max_iterations, lamb, threshold)
+    controller = tigercontrol.controller("ILQR")
+    controller.initialize(environment, L, dim_x, dim_u, max_iterations, lamb, threshold)
 
     if verbose:
         print("Running iLQR...")
