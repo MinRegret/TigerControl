@@ -43,7 +43,6 @@ class Shooting(Controller):
         u = np.zeros((T, self.m)) # T copies of m-dimensional zero action vector
         trajectory = None
 
-
     def __str__(self):
         return "<Shooting Controller>"
 

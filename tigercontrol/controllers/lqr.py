@@ -8,7 +8,7 @@ from tigercontrol.controllers import Controller
 
 class LQR(Controller):
     """
-    Description: Computes optimal set of actions using the Linear Quadratic Regulator
+    Description: Computes optimal set of actions for finite horizon using the Linear Quadratic Regulator
     algorithm.
     """
     
@@ -17,7 +17,7 @@ class LQR(Controller):
     def __init__(self):
         self.initialized = False
 
-    def to_ndarray(self, x):
+    def _to_ndarray(self, x):
         """
         Description: If x is a scalar, transform it to a (1, 1) numpy.ndarray;
         otherwise, leave it unchanged.
@@ -31,7 +31,7 @@ class LQR(Controller):
             x = x[None, None]
         return x
 
-    def extend(self, x, T):
+    def _extend(self, x, T):
         """
         Description: If x is not in the correct form, convert it; otherwise, leave it unchanged.
         Args:
@@ -40,12 +40,24 @@ class LQR(Controller):
         Returns:
             A numpy.ndarray representation of x
         """
-        #x = self.to_ndarray(x)
+        #x = self._to_ndarray(x)
         return [x for i in range(T)]
 
-    def initialize(self, A, B, C, T, x):
+    def _get_dims(self, B):
+        try:
+            n = B.shape[0] ## dimension of  the state x 
+        except:
+            n = 1
+        try:
+            m = B.shape[1] ## dimension of the control u
+        except:
+            m = 1
+        return (n, m)
+
+    def initialize(self, A, B, C, T):
         """
         Description: Initialize the dynamics of the method
+
         Args:
             A (float/numpy.ndarray): past value contribution coefficients
             B (float/numpy.ndarray): control value contribution coefficients
@@ -57,13 +69,21 @@ class LQR(Controller):
         
         F = np.hstack((A, B))
 
-        n, m = B.shape[0], B.shape[1]
+        n, self.m = self._get_dims(B)
         
-        self.F, self.C, self.T, self.x = self.extend(F, T), self.extend(C, T), T, self.to_ndarray(x)
-        self.u = self.extend(np.zeros((m, 1)), T)     
-        self.K = self.extend(np.zeros((m, n)), T)
+        self.F, C, self.T = self._extend(F, T), self._extend(C, T), T
+        self.K = self._extend(np.zeros((self.m, n)), T)
 
-        self.is_online = False
+        ## Initialize V and Q Functions ##
+        V = np.zeros((self.F[0].shape[0], self.F[0].shape[0]))
+        Q = np.zeros((C[0].shape[0], C[0].shape[1]))
+
+        ## Backward Recursion ##
+        for t in range(self.T - 1, -1, -1):
+
+            Q = C[t] + self.F[t].T @ V @ self.F[t]
+            self.K[t] = -np.linalg.inv(Q[n :, n :]) @ Q[n :, : n]
+            V = Q[: n, : n] + Q[: n, n :] @ self.K[t] + self.K[t].T @ Q[n :, : n] + self.K[t].T @ Q[n :, n :] @ self.K[t]
 
     def plan(self, x, T):
         """
@@ -73,25 +93,17 @@ class LQR(Controller):
         Returns:
             Estimated optimal set of actions
         """
-        self.x = x
-        self.T = T
-        ## Initialize V and Q Functions ##
-        V = np.zeros((self.F[0].shape[0], self.F[0].shape[0]))
-        Q = np.zeros((self.C[0].shape[0], self.C[0].shape[1]))
 
-        ## Backward Recursion ##
-        for t in range(self.T - 1, -1, -1):
+        assert T == self.T, "ERROR: Can only plan for the initial timeline provided."
 
-            Q = self.C[t] + self.F[t].T @ V @ self.F[t]
-            self.K[t] = -np.linalg.inv(Q[self.x.shape[0] :, self.x.shape[0] :]) @ Q[self.x.shape[0] :, : self.x.shape[0]]
-            V = Q[: self.x.shape[0], : self.x.shape[0]] + Q[: self.x.shape[0], self.x.shape[0] :] @ self.K[t] + self.K[t].T @ Q[self.x.shape[0] :, : self.x.shape[0]] + self.K[t].T @ Q[self.x.shape[0] :, self.x.shape[0] :] @ self.K[t]
-        
+        u = self._extend(np.zeros((self.m, 1)), T) 
+
         ## Forward Recursion ##
-        for t in range(self.T):
-            self.u[t] = self.K[t] @ self.x
-            self.x = self.F[t] @ np.hstack((self.x, self.u[t]))
+        for t in range(T):
+            u[t] = self.K[t] @ x
+            x = self.F[t] @ np.hstack((x, u[t]))
 
-        return self.u
+        return u
 
     def __str__(self):
         return "<LQR Method>"
