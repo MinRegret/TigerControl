@@ -8,6 +8,7 @@ from tigercontrol.controllers.core import Controller
 from tigercontrol.controllers.kalman_filter import KalmanFilter
 from tigercontrol.controllers.ode_shooting_method import ODEShootingMethod
 from tigercontrol.controllers.lqr import LQR
+from tigercontrol.controllers.lqr_infinite_horizon import LQRInfiniteHorizon
 from tigercontrol.controllers.ilqr import ILQR
 from tigercontrol.controllers.cartpole_nn import CartPoleNN
 from tigercontrol.controllers.gpc import GPC
@@ -40,6 +41,11 @@ controller_register(
 controller_register(
     id='LQR',
     entry_point='tigercontrol.controllers.control:LQR',
+)
+
+controller_register(
+    id='LQRInfiniteHorizon',
+    entry_point='tigercontrol.controllers:LQRInfiniteHorizon',
 )
 
 controller_register(
