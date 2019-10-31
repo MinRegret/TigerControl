@@ -6,7 +6,7 @@ from tigercontrol.controllers.core import Controller
 
 # controllers
 from tigercontrol.controllers.kalman_filter import KalmanFilter
-from tigercontrol.controllers.ode_shooting_method import ODEShootingMethod
+from tigercontrol.controllers.shooting import Shooting
 from tigercontrol.controllers.lqr import LQR
 from tigercontrol.controllers.ilqr import ILQR
 from tigercontrol.controllers.cartpole_nn import CartPoleNN
@@ -33,8 +33,8 @@ controller_register(
 )
 
 controller_register(
-    id='ODEShootingMethod',
-    entry_point='tigercontrol.controllers.control:ODEShootingMethod',
+    id='Shooting',
+    entry_point='tigercontrol.controllers.control:Shooting',
 )
 
 controller_register(
