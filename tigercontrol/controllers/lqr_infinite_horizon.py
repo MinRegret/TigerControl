@@ -38,7 +38,7 @@ class LQRInfiniteHorizon(Controller):
         if(Q is None):
             Q = np.identity(n)
         if(R is None):
-        	R = np.identity(m)
+            R = np.identity(m)
 
         # solve the ricatti equation 
         X = scipy.linalg.solve_continuous_are(A, B, Q, R)

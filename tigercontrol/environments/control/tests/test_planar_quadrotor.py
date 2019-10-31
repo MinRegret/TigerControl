@@ -34,7 +34,7 @@ def test_planar_quadrotor(steps=10, show_plot=True):
     controller = tigercontrol.controllers("LQR")
     controller.initialize(A, B, C, T, x)
 
-    u = controller.plan()
+    u = controller.plan(x, T)
 
     if show_plot:
         plt.plot([np.linalg.norm(ui) for ui in u], 'C0--', label = "LQR")

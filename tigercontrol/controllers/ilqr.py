@@ -12,18 +12,34 @@ class ILQR(Controller):
     algorithm.
     """
     
-    class baby_controller(Controller):
+    class Baby_controller(Controller):
         def __init__(self, u_old, x_old, K, k):
-            self.u = u_old
+            self.u_old = u_old
             self.x_old = x_old
             self.K = K
             self.k = k
             self.t = 0
-        def get_action(x):
-            u_next = u_old[self.t] + K[self.t] @ (x - x_old[self.t]) + k[self.t]
+        def get_action(self, x):
+            assert(self.t < len(self.x_old))
+            '''
+            print("self.u_old: " + str(self.u_old))
+            print("self.x_old: " + str(self.x_old))
+            print("self.K: " + str(self.K))
+            print("self.k: " + str(self.k))
+            print("self.t " + str(self.t))'''
+            '''
+            print("*********************************************************")
+            print("self.t: " + str(self.t))
+            print("self.K[self.t].shape: " + str(self.K[self.t].shape))
+            print("type(x) : " + str(type(x)))
+            print("type(self.x_old[self.t]) : " + str(type(self.x_old[self.t])))
+            print("x: " + str(x))
+            print("self.x_old[self.t] : " + str(self.x_old[self.t]))
+            print("(x - self.x_old[self.t]).shape: " + str((x - self.x_old[self.t]).shape))'''
+            u_next = self.u_old[self.t] + self.K[self.t] @ (x - self.x_old[self.t]) + self.k[self.t]
             self.t += 1
             return u_next
-    
+
     compatibles = set([])
 
     def __init__(self):
@@ -52,6 +68,7 @@ class ILQR(Controller):
         # self.L = env.loss
         self.dim_x = dim_x
         self.dim_u = dim_u
+        self.env = env
         # dyn_jacobian = jax.jit(jax.jacrev(dyn, argnums=(0,1)))
         # L_grad = jax.jit(jax.grad(self.L, argnums=(0,1)))
         # L_hessian = jax.jit(jax.hessian(self.L, argnums=(0,1)))
@@ -128,9 +145,9 @@ class ILQR(Controller):
             return F, C, c
         self._linearization = linearization
 
-    
-
-    def _form_next_controller(transcript):
+    def _form_next_controller(self, transcript):
+        print("+++++++++++++++++++++++++++++++++++")
+        print("transcript: " + str(transcript.keys()))
         T = len(transcript['x'])
         x_old = transcript['x']
         u_old = transcript['u']
@@ -148,26 +165,36 @@ class ILQR(Controller):
             K_t, k_t, V, v = lqr_iteration(F[t], C[t], c[t], V, v, lamb)
             K[t] = K_t
             k[t] = k_t
-        return baby_controller(u_old, x_old, K, k)
+        return self.Baby_controller(u_old, x_old, K, k)
 
     def plan(self, x_0, T):
         dim_x, dim_u = self.dim_x, self.dim_u
         u_old = [np.zeros((dim_u,)) for t in range(T)]
-        x_old = T * [x_0]
+        # x_0 = np.array([x_0[t] for t in range(len(x_0))])
+        x_old = [x_0 for t in range(T)]
+        # K, k = T * [np.zeros((dim_u, dim_x))], T * [np.zeros((dim_u,))]
         K, k = T * [np.zeros((dim_u, dim_x))], T * [np.zeros((dim_u,))]
-        controller = baby_controller(u_old, x_old, K, k)
-        
+        controller = self.Baby_controller(u_old, x_old, K, k)
+        '''
+        print("=====================================")
+        print("dim_x = " + str(dim_x))
+        print("dim_u = " + str(dim_u))
+        print("type(x_0) = " + str(type(x_0)))
+        print("x_0.shape = " + str(x_0.shape))
+        print("x_0.T.shape = " + str(x_0.T.shape))
+        print("x_old[0].shape = " + str(x_old[0].shape))
+        print("u_old[0].shape = " + str(u_old[0].shape))'''
         old_cost = self.total_cost(x_old, u_old)
         count = 0
         transcript_old = {'x' : x_old, 'u' : u_old}
 
         while count < self.max_iterations:
             count += 1
-            transcript = self.env.rollout(controller, T, True, True, True)
+            transcript = self.env.rollout(controller, T, dynamics_grad=True, loss_grad=True, loss_hessian=True)
             x_new, u_new = transcript['x'], transcript['u']
-
+            
             new_cost = self.total_cost(x_new, u_new)
-            if new_cost < old_cost:
+            if new_cost < old_cost or count == 1:
                 transcript_old = transcript
                 if self.threshold and (old_cost - new_cost) / old_cost < self.threshold:
                     break
@@ -176,6 +203,7 @@ class ILQR(Controller):
             else:
                 transcript = transcript_old
                 self.lamb *= 2.0
+
             controller = self._form_next_controller(transcript)
         return transcript['u']
 
