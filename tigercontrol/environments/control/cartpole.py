@@ -94,7 +94,7 @@ class CartPole(Environment):
         """ Description: Reset the environment and return the start state """
         self._state = random.uniform(generate_key(),shape=(4,), minval=-0.05, maxval=0.05)
         self.steps_beyond_done = None
-        # self._state = np.array([0.0, 0.03, 0.03, 0.03]) # reproducible results
+        self._state = np.array([0.0, 0.03, 0.03, 0.03]) # reproducible results
         return self._state
 
     def render(self, mode='human'):
