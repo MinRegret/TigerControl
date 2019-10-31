@@ -25,6 +25,19 @@ class Environment(object):
         """ Description: Roll out and return trajectory of given baby_controller. """
         raise NotImplementedError
 
+    def get_loss(self):
+        return self._loss
+
+    def close(self):
+        ''' Description: closes the environment and returns used memory '''
+        pass
+
+    def __str__(self):
+        return '<{} instance>'.format(type(self).__name__)
+
+    def __repr__(self):
+        return self.__str__()
+        
 """ # OLD CODE
     def rollout(self, baby_controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
         # Description: Roll out trajectory of given baby_controller.
@@ -44,6 +57,7 @@ class Environment(object):
                 # block the hessian of environment loss
                 block_hessian = lambda A: np.vstack([np.hstack([A[0][0], A[0][1]]), np.hstack([A[1][0], A[1][1]])])
                 hessian = jax.hessian(self._loss, argnums=(0,1))
+                self._loss_hessian = jax.jit(lambda x, u: block_hessian(hessian(x,u)))
             except Exception as e:
                 print(e)
                 raise error.JAXCompilationError("jax.jit failed to compile environment dynamics or loss")
@@ -65,17 +79,5 @@ class Environment(object):
             x = self.step(u)[0] # move to next state
         self._state = x_origin # return to original state
         return transcript
-"""
+    """
 
-    def get_loss(self):
-        return self._loss
-
-    def close(self):
-        ''' Description: closes the environment and returns used memory '''
-        pass
-
-    def __str__(self):
-        return '<{} instance>'.format(type(self).__name__)
-
-    def __repr__(self):
-        return self.__str__()

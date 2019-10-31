@@ -47,13 +47,6 @@ class CartPole(Environment):
         self.viewer = None
         self._state = None
         self.steps_beyond_done = None
-        C_x, C_u = np.diag(np.array([0.1, 0.0, 1.0, 0.0])), np.diag(np.array([0.1]))
-        print("-----------------------------------------")
-        print("C_x.shape = " + str(C_x.shape))
-        print("C_u.shape = " + str(C_u.shape))
-        L = lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u
-        self.L = jax.jit(L)
-
 
         def _dynamics(x_0, u): # dynamics
             x, x_dot, theta, theta_dot = np.split(x_0, 4)
@@ -72,6 +65,19 @@ class CartPole(Environment):
         self._dynamics = jax.jit(_dynamics) # MUST store as self._dynamics for default rollout implementation to work
         C_x, C_u = (np.diag(np.array([0.2, 0.05, 1.0, 0.05])), np.diag(np.array([0.05])))
         self._loss = jax.jit(lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u) # MUST store as self._loss
+
+        # stack the jacobians of environment dynamics gradient
+        jacobian = jax.jacrev(self._dynamics, argnums=(0,1))
+        self._dynamics_jacobian = jax.jit(lambda x, u: np.hstack(jacobian(x, u)))
+
+        # stack the gradients of environment loss
+        loss_grad = jax.grad(self._loss, argnums=(0,1))
+        self._loss_grad = jax.jit(lambda x, u: np.hstack(loss_grad(x, u)))
+
+        # block the hessian of environment loss
+        block_hessian = lambda A: np.vstack([np.hstack([A[0][0], A[0][1]]), np.hstack([A[1][0], A[1][1]])])
+        hessian = jax.hessian(self._loss, argnums=(0,1))
+        self._loss_hessian = jax.jit(lambda x, u: block_hessian(hessian(x,u)))
 
     def initialize(self):
         """ Initialize or reset the CartPole environment """
@@ -96,6 +102,25 @@ class CartPole(Environment):
         self.steps_beyond_done = None
         # self._state = np.array([0.0, 0.03, 0.03, 0.03]) # reproducible results
         return self._state
+
+    def rollout(self, baby_controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
+        # Description: Roll out trajectory of given baby_controller.
+        transcript = {'x': [], 'u': []} # return transcript
+        if dynamics_grad: transcript['dynamics_grad'] = [] # optional derivatives
+        if loss_grad: transcript['loss_grad'] = []
+        if loss_hessian: transcript['loss_hessian'] = []
+
+        x_origin, x = self._state, self._state
+        for t in range(T):
+            u = baby_controller.get_action(x)
+            transcript['x'].append(x)
+            transcript['u'].append(u)
+            if dynamics_grad: transcript['dynamics_grad'].append(self._dynamics_jacobian(x, u))
+            if loss_grad: transcript['loss_grad'].append(self._loss_grad(x, u))
+            if loss_hessian: transcript['loss_hessian'].append(self._loss_hessian(x, u))
+            x = self.step(u)[0] # move to next state
+        self._state = x_origin # return to original state
+        return transcript
 
     def render(self, mode='human'):
         """ Description: Renders on screen an image of the current cartpole state """
