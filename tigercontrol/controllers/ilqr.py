@@ -12,13 +12,25 @@ class ILQR(Controller):
     algorithm.
     """
     
+    class baby_controller(Controller):
+        def __init__(self, u_old, x_old, K, k):
+            self.u = u_old
+            self.x_old = x_old
+            self.K = K
+            self.k = k
+            self.t = 0
+        def get_action(x):
+            u_next = u_old[self.t] + K[self.t] @ (x - x_old[self.t]) + k[self.t]
+            self.t += 1
+            return u_next
+    
     compatibles = set([])
 
     def __init__(self):
         self.initialized = False
 
 
-    def initialize(self, env, dim_x, dim_u, max_iterations, lamb, threshold):
+    def initialize(self, env, dim_x, dim_u, max_iterations, lamb, threshold, loss=None):
         """
         Description: Initialize the dynamics of the method
         Args:
@@ -43,6 +55,7 @@ class ILQR(Controller):
         # dyn_jacobian = jax.jit(jax.jacrev(dyn, argnums=(0,1)))
         # L_grad = jax.jit(jax.grad(self.L, argnums=(0,1)))
         # L_hessian = jax.jit(jax.hessian(self.L, argnums=(0,1)))
+        self.L = self.env.get_loss()
         self.total_cost = jax.jit(lambda x, u: np.sum([self.L(x_t, u_t) for x_t, u_t in zip(x, u)])) # computes total cost over trajectory
         
         self.max_iterations = max_iterations
@@ -115,29 +128,56 @@ class ILQR(Controller):
             return F, C, c
         self._linearization = linearization
 
+    
+
+    def _form_next_controller(transcript):
+        T = len(transcript['x'])
+        x_old = transcript['x']
+        u_old = transcript['u']
+        F = transcript['dynamics_grad']
+        C = transcript['loss_hessian']
+        c = transcript['loss_grad']
+        lamb = self.lamb
+
+        dim_x, dim_u = self.dim_x, self.dim_u
+        V, v = np.zeros((dim_x, dim_x)), np.zeros((dim_x,))
+        K, k = T * [None], T * [None]
+
+        ## Backward Recursion ##
+        for t in reversed(range(T)):
+            K_t, k_t, V, v = lqr_iteration(F[t], C[t], c[t], V, v, lamb)
+            K[t] = K_t
+            k[t] = k_t
+        return baby_controller(u_old, x_old, K, k)
+
     def plan(self, x_0, T):
         dim_x, dim_u = self.dim_x, self.dim_u
-        u = [np.zeros((dim_u,)) for t in range(T)]
-        x = [x_0]
-        [x.append(self.dyn(x[-1], u_t)) for u_t in u]
-
-        old_cost = self.total_cost(x, u)
+        u_old = [np.zeros((dim_u,)) for t in range(T)]
+        x_old = T * [x_0]
+        K, k = T * [np.zeros((dim_u, dim_x))], T * [np.zeros((dim_u,))]
+        controller = baby_controller(u_old, x_old, K, k)
+        
+        old_cost = self.total_cost(x_old, u_old)
         count = 0
+        transcript_old = {'x' : x_old, 'u' : u_old}
+
         while count < self.max_iterations:
             count += 1
-            F, C, c = self._linearization(T, x, u)
-            x_new, u_new = self._lqr(T, x, u, F, C, c, self.lamb)
+            transcript = self.env.rollout(controller, T, True, True, True)
+            x_new, u_new = transcript['x'], transcript['u']
 
             new_cost = self.total_cost(x_new, u_new)
             if new_cost < old_cost:
-                x, u = x_new, u_new
+                transcript_old = transcript
                 if self.threshold and (old_cost - new_cost) / old_cost < self.threshold:
                     break
                 self.lamb /= 2.0
                 old_cost = new_cost
             else:
+                transcript = transcript_old
                 self.lamb *= 2.0
-        return u
+            controller = self._form_next_controller(transcript)
+        return transcript['u']
 
     def update(self):
         pass
