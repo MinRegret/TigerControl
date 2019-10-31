@@ -28,6 +28,7 @@ class CartPole(Environment):
 
     def __init__(self):
         self.initialized = False
+        self.compiled = False
         self.gravity = 9.8
         self.masscart = 1.0
         self.masspole = 0.1
@@ -47,6 +48,9 @@ class CartPole(Environment):
         self._state = None
         self.steps_beyond_done = None
         C_x, C_u = np.diag(np.array([0.1, 0.0, 1.0, 0.0])), np.diag(np.array([0.1]))
+        print("-----------------------------------------")
+        print("C_x.shape = " + str(C_x.shape))
+        print("C_u.shape = " + str(C_u.shape))
         L = lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u
         self.L = jax.jit(L)
 

@@ -41,7 +41,7 @@ class Shooting(Controller):
 
     def plan(self, x, T):
         u = np.zeros((T, self.m)) # T copies of m-dimensional zero action vector
-        trajectory = 
+        trajectory = None
 
 
     def __str__(self):
