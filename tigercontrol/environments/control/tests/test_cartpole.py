@@ -28,7 +28,7 @@ def test_cartpole(verbose=False):
     # u = controller.plan(obs, T, max_iterations, lamb, threshold)
     # u = controller.plan_trajectory(obs, T, max_iterations, lamb, threshold)
     u = controller.plan(obs, T)
-    print("u : " + str(u))
+    # print("u : " + str(u))
 
     index = 0
     for t in range(10 * T):
@@ -37,9 +37,11 @@ def test_cartpole(verbose=False):
             time.sleep(1. / 50.)
         # u = controller.plan(obs)
         # obs, r, done, _ = environment.step(u[index])
-        obs, r, done = environment.step(u[t])
-        index += 1
+        print("index = " + str(index))
+        print("len(u) : " + str(len(u)))
 
+        obs, r, done = environment.step(u[index])
+        index += 1
         
         if done:
             if verbose:
@@ -50,6 +52,7 @@ def test_cartpole(verbose=False):
             if verbose:
                 print("recomputing u...")
             u = controller.plan(obs, T)
+            # print("u : " + str(u))
             index = 0
 
     environment.close()

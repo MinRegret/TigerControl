@@ -123,6 +123,7 @@ class ILQR(Controller):
                 x_t = dyn(x_t, u_t)
             return x_stack, u_stack
         self._lqr = lqr
+        self._lqr_iteration = lqr_iteration
 
         """ 
         Description: linearize provided system dynamics and loss, given initial state and actions. 
@@ -162,7 +163,7 @@ class ILQR(Controller):
 
         ## Backward Recursion ##
         for t in reversed(range(T)):
-            K_t, k_t, V, v = lqr_iteration(F[t], C[t], c[t], V, v, lamb)
+            K_t, k_t, V, v = self._lqr_iteration(F[t], C[t], c[t], V, v, lamb)
             K[t] = K_t
             k[t] = k_t
         return self.Baby_controller(u_old, x_old, K, k)
@@ -194,9 +195,12 @@ class ILQR(Controller):
             x_new, u_new = transcript['x'], transcript['u']
             
             new_cost = self.total_cost(x_new, u_new)
+            print("=================================")
+            print("old_cost = " + str(old_cost))
+            print("new_cost = " + str(new_cost))
             if new_cost < old_cost or count == 1:
                 transcript_old = transcript
-                if self.threshold and (old_cost - new_cost) / old_cost < self.threshold:
+                if self.threshold and count > 1 and (old_cost - new_cost) / old_cost < self.threshold:
                     break
                 self.lamb /= 2.0
                 old_cost = new_cost
