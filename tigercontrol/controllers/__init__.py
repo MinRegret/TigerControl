@@ -29,7 +29,7 @@ controller_register(
 
 controller_register(
     id='KalmanFilter',
-    entry_point='tigercontrol.controllers.control:KalmanFilter',
+    entry_point='tigercontrol.controllers:KalmanFilter',
 )
 
 controller_register(
@@ -39,21 +39,21 @@ controller_register(
 
 controller_register(
     id='LQR',
-    entry_point='tigercontrol.controllers.control:LQR',
+    entry_point='tigercontrol.controllers:LQR',
 )
 
 controller_register(
     id='ILQR',
-    entry_point='tigercontrol.controllers.control:ILQR',
+    entry_point='tigercontrol.controllers:ILQR',
 )
 
 controller_register(
     id='CartPoleNN',
-    entry_point='tigercontrol.controllers.control:CartPoleNN',
+    entry_point='tigercontrol.controllers:CartPoleNN',
 )
 
 controller_register(
     id='GPC',
-    entry_point='tigercontrol.controllers.control:GPC',
+    entry_point='tigercontrol.controllers:GPC',
 )
 
