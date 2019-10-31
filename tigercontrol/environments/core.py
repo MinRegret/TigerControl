@@ -32,13 +32,16 @@ class Environment(object):
                 raise NotImplementedError("rollout not possible: no loss in {}".format(self))
             try:
                 # stack the jacobians of environment dynamics gradient
-                self._dynamics_jacobian = jax.jit(np.hstack(jax.jacrev(self._dynamics, argnums=(0,1))))
+                jacobian = jax.jacrev(self._dynamics, argnums=(0,1))
+                self._dynamics_jacobian = jax.jit(lambda x, u: np.hstack(jacobian(x, u)))
                 # stack the gradients of environment loss
-                self._loss_grad = jax.jit(np.hstack(jax.grad(self._loss, argnums=(0,1))))
+                loss_grad = jax.grad(self._loss, argnums=(0,1))
+                self._loss_grad = jax.jit(lambda x, u: np.hstack(loss_grad(x, u)))
                 # block the hessian of environment loss
                 block_hessian = lambda A: np.vstack([np.hstack([A[0][0], A[0][1]]), np.hstack([A[1][0], A[1][1]])])
-                self._loss_hessian = jax.jit(block_hessian(jax.hessian(self._loss, argnums=(0,1))))
-            except e:
+                hessian = jax.hessian(self._loss, argnums=(0,1))
+                self._loss_hessian = jax.jit(lambda x, u: block_hessian(hessian(x, u)))
+            except Exception as e:
                 print(e)
                 raise error.JAXCompilationError("jax.jit failed to compile environment dynamics or loss")
             self.compiled = True
@@ -48,7 +51,7 @@ class Environment(object):
         if loss_grad: transcript['loss_grad'] = []
         if loss_hessian: transcript['loss_hessian'] = []
 
-        x_origin, x = self.state, self.state
+        x_origin, x = self._state, self._state
         for t in range(T):
             u = baby_controller.get_action(x)
             transcript['x'].append(x)
@@ -56,8 +59,8 @@ class Environment(object):
             if dynamics_grad: transcript['dynamics_grad'].append(self._dynamics_jacobian(x, u))
             if loss_grad: transcript['loss_grad'].append(self._loss_grad(x, u))
             if loss_hessian: transcript['loss_hessian'].append(self._loss_hessian(x, u))
-            x = self.step(x, u) # move to next state
-        self.state = x_origin # return to original state
+            x = self.step(u)[0] # move to next state
+        self._state = x_origin # return to original state
         return transcript
 
     def get_loss(self):

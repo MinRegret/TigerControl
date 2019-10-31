@@ -1,5 +1,5 @@
 # neural network policy class trained specifically for the cartpole environment
-from tigercontrol.controllers.control_controller import ControlController
+from tigercontrol.controllers_controller import ControlController
 from tigercontrol.controllers.cartpole_weights import *
 import math
 import numpy as np
