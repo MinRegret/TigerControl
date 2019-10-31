@@ -11,14 +11,14 @@ def y(t):
 def f(y, t):
     return y + 4 * math.exp(t)
 
-def test_ode_shooting_method(steps=10, show_plot=True):
+def test_shooting(steps=10, show_plot=True):
     T = steps 
     L = 1
     
     t = L / 2
     y_true = y(t)
 
-    controller = tigercontrol.controllers("ODEShootingController")
+    controller = tigercontrol.controllers("Shooting")
     controller.initialize(f, y(0), y(L), 3.0, 4.0, t)
 
     loss = lambda x_true, x_pred: (x_true - x_pred)**2
@@ -32,12 +32,12 @@ def test_ode_shooting_method(steps=10, show_plot=True):
 
     if show_plot:
         plt.plot(results)
-        plt.title("ODEShootingController")
+        plt.title("Shooting controller")
         plt.show(block=False)
         plt.pause(5)
         plt.close()
-    print("test_ode_shooting_controller passed")
+    print("test_shooting passed")
     return
 
 if __name__=="__main__":
-    test_ode_shooting_method()
+    test_shooting()

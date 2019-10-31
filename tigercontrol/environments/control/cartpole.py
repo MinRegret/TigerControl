@@ -44,11 +44,10 @@ class CartPole(Environment):
         self.action_space = (1,)
         self.observation_space = (4,)
         self.viewer = None
-        self.state = None
+        self._state = None
         self.steps_beyond_done = None
 
-        @jax.jit
-        def _dynamics(x_0, u):
+        def _dynamics(x_0, u): # dynamics
             x, x_dot, theta, theta_dot = np.split(x_0, 4)
             force = self.force_mag * np.clip(u, -1.0, 1.0)[0] # iLQR may struggle with clipping due to lack of gradient
             costh = np.cos(theta)
@@ -62,47 +61,36 @@ class CartPole(Environment):
             theta_dot = theta_dot + self.tau * thetaacc
             state = np.concatenate((x, x_dot, theta, theta_dot))
             return state
-        self._dynamics = _dynamics
+        self._dynamics = jax.jit(_dynamics) # MUST store as self._dynamics for default rollout implementation to work
+        C_x, C_u = (np.diag(np.array([0.2, 0.05, 1.0, 0.05])), np.diag(np.array([0.05])))
+        self._loss = jax.jit(lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u) # MUST store as self._loss
 
     def initialize(self):
+        """ Initialize or reset the CartPole environment """
         self.initialized = True
-        return self.reset()
-
+        return self._reset()
 
     def step(self, action):
+        """ Description: updates internal state <- dynamcics(state, action) and returns state, cost, and done boolean """
         assert self.initialized
-        if type(action) == np.ndarray:
-            action = action[0]
-        self.state = self._dynamics(self.state, action)
-        x, _ , theta, _ = np.split(self.state, 4)
-        
-        done =  x < -self.x_threshold \
-                or x > self.x_threshold \
-                or theta < -self.theta_threshold_radians \
-                or theta > self.theta_threshold_radians
-        done = bool(done)
+        if type(action) == np.ndarray: action = action[0]
+        old_state = self._state
+        self._state = self._dynamics(self._state, action)
+        x, theta = self._state[0], self._state[2]
+        x_lim, th_lim = self.x_threshold, self.theta_threshold_radians
+        done = bool(x < -x_lim or x > x_lim or theta < -th_lim or theta > th_lim)
+        cost = self._loss(old_state)
+        return self._state, cost, done
 
-        reward = 0
-        if not done:
-            reward = 1.0
-        elif self.steps_beyond_done is None:
-            self.steps_beyond_done = 0 # Pole just fell!
-            reward = 1.0
-        else:
-            if self.steps_beyond_done == 0:
-                print("Warning: step() called after environment is 'done'.")
-
-        return self.state, reward, done, {}
-
-
-    def reset(self):
-        self.state = random.uniform(generate_key(),shape=(4,), minval=-0.05, maxval=0.05)
+    def _reset(self):
+        """ Description: Reset the environment and return the start state """
+        self._state = random.uniform(generate_key(),shape=(4,), minval=-0.05, maxval=0.05)
         self.steps_beyond_done = None
-        # self.state = np.array([0.0, 0.03, 0.03, 0.03]) # reproducible results
-        return self.state
-
+        # self._state = np.array([0.0, 0.03, 0.03, 0.03]) # reproducible results
+        return self._state
 
     def render(self, mode='human'):
+        """ Description: Renders on screen an image of the current cartpole state """
         screen_width = 600
         screen_height = 400
 
@@ -138,23 +126,20 @@ class CartPole(Environment):
             self.track.set_color(0,0,0)
             self.viewer.add_geom(self.track)
             self._pole_geom = pole
-
-        if self.state is None: return None
+        if self._state is None: return None
 
         # Edit the pole polygon vertex
         pole = self._pole_geom
         l,r,t,b = -polewidth/2,polewidth/2,polelen-polewidth/2,-polewidth/2
         pole.v = [(l,b), (l,t), (r,t), (r,b)]
-
-        x = self.state
+        x = self._state
         cartx = x[0]*scale+screen_width/2.0 # MIDDLE OF CART
         self.carttrans.set_translation(cartx, carty)
         self.poletrans.set_rotation(-x[2])
-
         return self.viewer.render(return_rgb_array = mode=='rgb_array')
 
-
     def close(self):
+        """ Description: Close the environment and return memory """
         if self.viewer:
             self.viewer.close()
             self.viewer = None
