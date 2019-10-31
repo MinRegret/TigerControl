@@ -26,9 +26,6 @@ class CartPole(Environment):
         'video.frames_per_second' : 50
     }
 
-    def get_loss(self):
-        return self.L
-
     def __init__(self):
         self.initialized = False
         self.gravity = 9.8
@@ -86,7 +83,7 @@ class CartPole(Environment):
         x, theta = self._state[0], self._state[2]
         x_lim, th_lim = self.x_threshold, self.theta_threshold_radians
         done = bool(x < -x_lim or x > x_lim or theta < -th_lim or theta > th_lim)
-        cost = self._loss(old_state)
+        cost = self._loss(old_state, action)
         return self._state, cost, done
 
     def _reset(self):
