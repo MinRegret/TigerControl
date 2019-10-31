@@ -14,7 +14,6 @@ def get_trajectory(environment, controller, T = 100):
     x = environment.initialize(**environment_params)
     
     controller_params['A'], controller_params['B'] = environment.A, environment.B
-    controller_params['x'] = x
     
     controller = tigercontrol.controller(controller_id)
     controller.initialize(**controller_params)
@@ -37,7 +36,7 @@ def get_trajectory(environment, controller, T = 100):
 
 def test_lqr(steps=10, show_plot=True):
 
-    T = 500
+    T = steps
 
     n = 1 # dimension of  the state x 
     m = 1 # control dimension
