@@ -5,39 +5,30 @@ import jax.numpy as np
 import math
 import matplotlib.pyplot as plt
 
-def y(t):
-    return math.exp(t) * (1 + 2 * t)
+def test_shooting(steps=1000, show=False):
+    env = tigercontrol.environment("CartPole-v0")
+    obs = env.initialize()
+    n, m, T = 4, 1, 10 # dimensions of obs, actions
 
-def f(y, t):
-    return y + 4 * math.exp(t)
+    shooting = tigercontrol.controller("Shooting")
+    shooting.initialize(n, m, T, env, optimizer=None, update_steps=25, learning_rate=0.01)
 
-def test_shooting(steps=10, show_plot=True):
-    T = steps 
-    L = 1
-    
-    t = L / 2
-    y_true = y(t)
-
-    controller = tigercontrol.controllers("Shooting")
-    controller.initialize(f, y(0), y(L), 3.0, 4.0, t)
-
-    loss = lambda x_true, x_pred: (x_true - x_pred)**2
-
-    results = []
-
-    for i in range(T):
-        y_pred = controller.step()
-        cur_loss = float(loss(y_true, y_pred))
-        results.append(cur_loss)
-
-    if show_plot:
-        plt.plot(results)
-        plt.title("Shooting controller")
-        plt.show(block=False)
-        plt.pause(5)
-        plt.close()
+    count = 0
+    for t in range(steps):
+        count += 1
+        u = shooting.get_action(obs)
+        obs, r, done = env.step(u)
+        if show: 
+            env.render()
+            time.sleep(1. / 50.)
+        if done:
+            if show:
+                print("lasted {} time steps".format(count))
+                count = 0
+            obs = env.initialize()
+    env.close()
     print("test_shooting passed")
     return
 
 if __name__=="__main__":
-    test_shooting()
+    test_shooting(show=True)

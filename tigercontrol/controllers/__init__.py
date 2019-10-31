@@ -35,7 +35,7 @@ controller_register(
 
 controller_register(
     id='Shooting',
-    entry_point='tigercontrol.controllers.control:Shooting',
+    entry_point='tigercontrol.controllers:Shooting',
 )
 
 controller_register(

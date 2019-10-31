@@ -11,8 +11,6 @@ class Controller(object):
     def initialize(self, T, **kwargs):
         # initializes method parameters
         self.T = T
-        self.plan_cache = []
-        self.plan_pointer = 0
         raise NotImplementedError
 
     def plan(self, x, horizon, **kwargs):
@@ -20,13 +18,15 @@ class Controller(object):
         raise NotImplementedError
 
     def get_action(self, x, replan=False, horizon=None):
-        if replan or self.plan_pointer == len(self.plan_cache):
-            if horizon == None: horizon = self.T
+        if horizon == None: horizon = self.T
+        if hasattr(self, "plan_cache") and not replan:
+            u = self.plan_cache.pop(0)
+            if len(self.plan_cache) == 0:
+                self.plan_cache = self.plan(x, horizon)
+        else:
             self.plan_cache = self.plan(x, horizon)
-            self.plan_pointer = 0
-        action = self.plan_cache[self.plan_pointer]
-        self.plan_pointer += 1
-        return action
+            u = self.plan_cache.pop(0)
+        return u
 
     def update(self, **kwargs):
         # update parameters according to given loss and update rule
