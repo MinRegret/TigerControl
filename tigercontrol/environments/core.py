@@ -22,7 +22,12 @@ class Environment(object):
         raise NotImplementedError
 
     def rollout(self, baby_controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
-        """ Description: Roll out trajectory of given baby_controller. """
+        """ Description: Roll out and return trajectory of given baby_controller. """
+        raise NotImplementedError
+
+""" # OLD CODE
+    def rollout(self, baby_controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
+        # Description: Roll out trajectory of given baby_controller.
         request_grad = dynamics_grad or loss_grad or loss_hessian
         if not hasattr(self, "compiled") and request_grad: # on first call, compile gradients
             if '_dynamics' not in vars(self):
@@ -60,6 +65,7 @@ class Environment(object):
             x = self.step(u)[0] # move to next state
         self._state = x_origin # return to original state
         return transcript
+"""
 
     def get_loss(self):
         return self._loss

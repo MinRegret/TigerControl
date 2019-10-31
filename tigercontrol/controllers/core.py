@@ -18,6 +18,11 @@ class Controller(object):
         raise NotImplementedError
 
     def get_action(self, x, replan=False, horizon=None):
+        """ Description: returns action based on input state x """
+        raise NotImplementedError
+
+""" # OLD CODE
+    def get_action(self, x, replan=False, horizon=None):
         if horizon == None: horizon = self.T
         if hasattr(self, "plan_cache") and not replan:
             u = self.plan_cache.pop(0)
@@ -27,6 +32,7 @@ class Controller(object):
             self.plan_cache = self.plan(x, horizon)
             u = self.plan_cache.pop(0)
         return u
+"""
 
     def update(self, **kwargs):
         # update parameters according to given loss and update rule
