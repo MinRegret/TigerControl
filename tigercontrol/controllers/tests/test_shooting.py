@@ -4,11 +4,12 @@ import tigercontrol
 import jax.numpy as np
 import math
 import matplotlib.pyplot as plt
+import time
 
 def test_shooting(steps=1000, show=False):
     env = tigercontrol.environment("CartPole-v0")
     obs = env.initialize()
-    n, m, T = 4, 1, 10 # dimensions of obs, actions
+    n, m, T = 4, 1, 25 # dimensions of obs, actions
 
     shooting = tigercontrol.controller("Shooting")
     shooting.initialize(n, m, T, env, optimizer=None, update_steps=25, learning_rate=0.01)
@@ -20,7 +21,7 @@ def test_shooting(steps=1000, show=False):
         obs, r, done = env.step(u)
         if show: 
             env.render()
-            time.sleep(1. / 50.)
+            time.sleep(2. / 50.)
         if done:
             if show:
                 print("lasted {} time steps".format(count))

@@ -46,15 +46,25 @@ class Shooting(Controller):
         self.optimizer = optimizer
         self.lr = learning_rate # TEMPORARY, fix optimizers
         self.initialized = True
+        self.plan_cache = []
+
+    def get_action(self, x, replan=False, horizon=None):
+        if len(self.plan_cache) == 0 or replan:
+            if horizon == None: horizon = self.T
+            self.plan_cache = self.plan(x, horizon)
+            u = self.plan_cache.pop(0)
+        else:
+            u = self.plan_cache.pop(0)
+        return u
 
     def plan(self, x, T):
-        u = np.zeros((T, self.m)) # T copies of m-dimensional zero action vector
-        for _ in range(self.update_steps):
+        u = [np.zeros(self.m,) for i in range(T)] # T copies of m-dimensional zero action vector
+        for i in range(self.update_steps):
             trajectory = self.env.rollout(BabyController(u), T, dynamics_grad=True, loss_grad=True, loss_hessian=False)
             for t, dyn_t, grad_t in zip(range(T), trajectory['dynamics_grad'], trajectory['loss_grad']):
                 dl_dx, dl_du, dx_du = grad_t[:self.n], grad_t[self.n:], dyn_t[:,self.n:]
                 u_grad = dl_du + dl_dx @ dx_du
-                u = jax.opt.index_add(u, t, -self.lr * u_grad)
+                u[t] = u[t] - self.lr * u_grad
         return u
 
     def __str__(self):
