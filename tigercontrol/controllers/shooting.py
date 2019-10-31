@@ -18,25 +18,33 @@ class Shooting(Controller):
 
     def __init__(self):
         self.initialized = False
+        class BabyController(Controller): # used to get trajectories from env.rollout
+            def __init__(self):
+                pass
+            def get_action(self, x):
+                return x
 
-    def initialize(self, env, optimizer):
+    def initialize(self, n, m, env, optimizer, update_steps=25):
         """
         Description: Initialize the dynamics of the controller.
         Args:
-            f (function): describes dy/dt = f(y,t)
-            a (float): value of y(0)
-            b (float): value of y(L)
-            z1 (float): first initial estimate of y'(0)
-            z2 (float): second initial estimate of y'(0)
-            t (float): time value to determine y at
+            n (int): observation dimension
+            m (int): action dimension
+            env (Environment): task on which to act on
+            optimizer (Optimizer): optimizer that performs gradient descent
+            update_steps (int): number of times to perform a gradient update step
         """
+        self.n, self.m = n, m
         self.env = env
-
+        self._store_optimizer(optimizer, pred) # what is PRED????
         self.initialized = True
 
     def plan(self, x, T):
-        pass
+        u = np.zeros((T, self.m)) # T copies of m-dimensional zero action vector
+        trajectory = 
 
 
     def __str__(self):
         return "<Shooting Controller>"
+
+

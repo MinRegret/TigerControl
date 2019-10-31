@@ -22,8 +22,8 @@ class Environment(object):
         ''' Description: run one timestep of the environment's dynamics. '''
         raise NotImplementedError
 
-    def rollout(self, controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
-        """ Description: Roll out trajectory of given controller. """
+    def rollout(self, baby_controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
+        """ Description: Roll out trajectory of given baby_controller. """
         request_grad = dynamics_grad or loss_grad or loss_hessian
         if not self.compiled and request_grad: # on first call, compile gradients
             if '_dynamics' not in vars(self):
@@ -50,7 +50,7 @@ class Environment(object):
 
         x_origin, x = self.state, self.state
         for t in range(T):
-            u = controller.get_action(x)
+            u = baby_controller.get_action(x)
             transcript['x'].append(x)
             transcript['u'].append(u)
             if dynamics_grad: transcript['dynamics_grad'].append(self._dynamics_jacobian(x, u))
@@ -60,6 +60,8 @@ class Environment(object):
         self.state = x_origin # return to original state
         return transcript
 
+    def get_loss(self):
+        return self._loss
 
     def close(self):
         ''' Description: closes the environment and returns used memory '''
