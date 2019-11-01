@@ -148,10 +148,10 @@
             
   <h1>Source code for tigercontrol.controllers.cartpole_nn</h1><div class="highlight"><pre>
 <span></span><span class="c1"># neural network policy class trained specifically for the cartpole environment</span>
-<span class="kn">from</span> <span class="nn">tigercontrol.controllers.control_controller</span> <span class="k">import</span> <span class="n">ControlController</span>
+<span class="kn">from</span> <span class="nn">tigercontrol.controllers.control_controller</span> <span class="k">import</span> <span class="n">Controller</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.controllers.cartpole_weights</span> <span class="k">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="CartPoleNN"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.controllers.CartPoleNN.html#tigercontrol.controllers.CartPoleNN">[docs]</a><span class="k">class</span> <span class="nc">CartPoleNN</span><span class="p">(</span><span class="n">ControlController</span><span class="p">):</span>
+<div class="viewcode-block" id="CartPoleNN"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.controllers.CartPoleNN.html#tigercontrol.controllers.CartPoleNN">[docs]</a><span class="k">class</span> <span class="nc">CartPoleNN</span><span class="p">(</span><span class="n">Controller</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Description: Simple multi-layer perceptron policy, no internal state &#39;&#39;&#39;</span>
 
     <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;CartPole-v0&#39;</span><span class="p">,</span> <span class="s1">&#39;CartPoleSwingup-v0&#39;</span><span class="p">])</span>

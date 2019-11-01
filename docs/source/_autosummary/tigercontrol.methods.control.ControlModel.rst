@@ -1,9 +1,9 @@
-tigercontrol.controllers.ControlController
+tigercontrol.controllers.Controller
 ========================================
 
 .. currentmodule:: tigercontrol.controllers.control
 
-.. autoclass:: ControlController
+.. autoclass:: Controller
 
    
    .. autocontroller:: __init__
@@ -13,11 +13,11 @@ tigercontrol.controllers.ControlController
 
    .. autosummary::
    
-      ~ControlController.__init__
-      ~ControlController.help
-      ~ControlController.initialize
-      ~ControlController.predict
-      ~ControlController.update
+      ~Controller.__init__
+      ~Controller.help
+      ~Controller.initialize
+      ~Controller.predict
+      ~Controller.update
    
    
 
@@ -27,6 +27,6 @@ tigercontrol.controllers.ControlController
 
    .. autosummary::
    
-      ~ControlController.spec
+      ~Controller.spec
    
    

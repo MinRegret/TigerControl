@@ -16,7 +16,7 @@ control
 .. autosummary::
   :toctree: _autosummary
 
-   tigercontrol.controllers.ControlController
+   tigercontrol.controllers.Controller
    tigercontrol.controllers.KalmanFilter
    tigercontrol.controllers.ODEShootingController
    tigercontrol.controllers.LQR
