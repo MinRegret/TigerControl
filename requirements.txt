@@ -11,3 +11,4 @@ tqdm
 PrettyTable
 gym
 cvxopt
+mpl_toolkits

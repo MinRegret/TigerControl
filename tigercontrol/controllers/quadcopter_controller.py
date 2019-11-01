@@ -1,31 +1,29 @@
-# neural network policy class trained specifically for the cartpole environment
-from tigercontrol.controllers_controller import ControlController
-from tigercontrol.controllers.cartpole_weights import *
-import math
+# Perceptron for the quadcopter environment
+from tigercontrol.controllers import Controller
 import numpy as np
+
 
 class QuadcopterModel(Controller):
     ''' Description: Simple multi-layer perceptron policy, no internal state '''
 
-    compatibles = set(['CartPole-v0', 'CartPoleSwingup-v0'])
-
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, params, quad_identifier):
-        self.quad_identifier = quad_identifier
-        self.MOTOR_LIMITS = params['Motor_limits']
-        self.TILT_LIMITS = [(params['Tilt_limits'][0]/180.0)*3.14,(params['Tilt_limits'][1]/180.0)*3.14]
-        self.YAW_CONTROL_LIMITS = params['Yaw_Control_Limits']
-        self.Z_LIMITS = [self.MOTOR_LIMITS[0]+params['Z_XY_offset'],self.MOTOR_LIMITS[1]-params['Z_XY_offset']]
+    def initialize(self, params, goal, yaw):
+        self.MOTOR_LIMITS = [4000, 9000]
+        self.TILT_LIMITS = [(-10/180.0)*3.14,(10/180.0)*3.14]
+        self.YAW_CONTROL_LIMITS = [-900,900]
+        self.LINEAR_TO_ANGULAR_SCALER = [1,1,0]
+        self.YAW_RATE_SCALER = 0.18
+        self.Z_LIMITS = [self.MOTOR_LIMITS[0]+500,self.MOTOR_LIMITS[1]-500]
+
         self.LINEAR_P = params['Linear_PID']['P']
         self.LINEAR_I = params['Linear_PID']['I']
         self.LINEAR_D = params['Linear_PID']['D']
-        self.LINEAR_TO_ANGULAR_SCALER = params['Linear_To_Angular_Scaler']
-        self.YAW_RATE_SCALER = params['Yaw_Rate_Scaler']
         self.ANGULAR_P = params['Angular_PID']['P']
         self.ANGULAR_I = params['Angular_PID']['I']
         self.ANGULAR_D = params['Angular_PID']['D']
+
         self.xi_term = 0
         self.yi_term = 0
         self.zi_term = 0
@@ -37,19 +35,15 @@ class QuadcopterModel(Controller):
         self.yaw_target = 0.0
         self.run = True
         self.initialized = True
+        self.target = goal
+        self.yaw_target = self._wrap_angle(yaw)
+        
+    def _wrap_angle(self,val):
+        return (val + np.pi) % (2 * np.pi) - np.pi
 
-    def wrap_angle(self,val):
-        return( ( val + np.pi) % (2 * np.pi ) - np.pi )
-
-    def update_target(self,target):
-        self.target = target
-
-    def update_yaw_target(self,target):
-        self.yaw_target = self.wrap_angle(target)
-
-    def predict(self, ob): # weights can be fount at the end of the file
+    def get_action(self, obs): # weights can be fount at the end of the file
         [dest_x,dest_y,dest_z] = self.target
-        [x,y,z,x_dot,y_dot,z_dot,theta,phi,gamma,theta_dot,phi_dot,gamma_dot] = ob
+        [x,y,z,x_dot,y_dot,z_dot,theta,phi,gamma,theta_dot,phi_dot,gamma_dot] = obs
         x_error = dest_x-x
         y_error = dest_y-y
         z_error = dest_z-z
@@ -60,13 +54,13 @@ class QuadcopterModel(Controller):
         dest_y_dot = self.LINEAR_P[1]*(y_error) + self.LINEAR_D[1]*(-y_dot) + self.yi_term
         dest_z_dot = self.LINEAR_P[2]*(z_error) + self.LINEAR_D[2]*(-z_dot) + self.zi_term
         throttle = np.clip(dest_z_dot,self.Z_LIMITS[0],self.Z_LIMITS[1])
-        dest_theta = self.LINEAR_TO_ANGULAR_SCALER[0]*(dest_x_dot*math.sin(gamma)-dest_y_dot*math.cos(gamma))
-        dest_phi = self.LINEAR_TO_ANGULAR_SCALER[1]*(dest_x_dot*math.cos(gamma)+dest_y_dot*math.sin(gamma))
+        dest_theta = self.LINEAR_TO_ANGULAR_SCALER[0]*(dest_x_dot*np.sin(gamma)-dest_y_dot*np.cos(gamma))
+        dest_phi = self.LINEAR_TO_ANGULAR_SCALER[1]*(dest_x_dot*np.cos(gamma)+dest_y_dot*np.sin(gamma))
         dest_gamma = self.yaw_target
         dest_theta,dest_phi = np.clip(dest_theta,self.TILT_LIMITS[0],self.TILT_LIMITS[1]),np.clip(dest_phi,self.TILT_LIMITS[0],self.TILT_LIMITS[1])
         theta_error = dest_theta-theta
         phi_error = dest_phi-phi
-        gamma_dot_error = (self.YAW_RATE_SCALER*self.wrap_angle(dest_gamma-gamma)) - gamma_dot
+        gamma_dot_error = (self.YAW_RATE_SCALER*self._wrap_angle(dest_gamma-gamma)) - gamma_dot
         self.thetai_term += self.ANGULAR_I[0]*theta_error
         self.phii_term += self.ANGULAR_I[1]*phi_error
         self.gammai_term += self.ANGULAR_I[2]*gamma_dot_error
@@ -80,3 +74,5 @@ class QuadcopterModel(Controller):
         m4 = throttle - y_val - z_val
         M = np.clip([m1,m2,m3,m4],self.MOTOR_LIMITS[0],self.MOTOR_LIMITS[1])
         return M
+
+

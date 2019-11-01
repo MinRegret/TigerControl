@@ -47,6 +47,10 @@ environment_register(
     entry_point='tigercontrol.environments.control:PlanarQuadrotor',
 )
 
+environment_register(
+    id='Quadcopter-v0',
+    entry_point='tigercontrol.environments.control:Quadcopter',
+)
 
 # ---------- PyBullet ----------
 

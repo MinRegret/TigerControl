@@ -41,10 +41,11 @@ class LQRInfiniteHorizon(Controller):
             R = np.identity(m)
 
         # solve the ricatti equation 
-        X = scipy.linalg.solve_continuous_are(A, B, Q, R)
+        X = scipy.linalg.solve_discrete_are(A, B, Q, R)
 
         #compute LQR gain
         self.K = np.linalg.inv(B.T @ X @ B + R) @ (B.T @ X @ A)
+        #self.K = np.linalg.inv(R) @ B.T @ X
 
     def get_action(self, x):
         """
@@ -56,7 +57,7 @@ class LQRInfiniteHorizon(Controller):
         Returns:
             u(float/numpy.ndarray): action to take
         """
-        return self.K @ x
+        return -self.K @ x
 
     def update(self):
         raise NotImplementedError

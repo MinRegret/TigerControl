@@ -31,7 +31,7 @@ def test_planar_quadrotor(steps=10, show_plot=True):
     c = np.zeros((n+m, 1)) # linear cost
     x = environment.initialize() # np.ones((n,1)) # initial state
 
-    controller = tigercontrol.controllers("LQR")
+    controller = tigercontrol.controller("LQR")
     controller.initialize(A, B, C, T, x)
 
     u = controller.plan(x, T)

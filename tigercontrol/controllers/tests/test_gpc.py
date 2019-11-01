@@ -34,16 +34,9 @@ def get_trajectory(environment, controller, T = 100):
         cur_avg = (i / (i + 1)) * cur_avg + (np.linalg.norm(x) + np.linalg.norm(u)) / (i + 1)
         avg_regret.append(cur_avg)
 
-    x = environment.initialize(**environment_params)
-    u = controller.plan(x, T)
+    return trajectory1, norms, avg_regret
 
-    for i in range(T):
-        x = environment.step(u[i])
-        trajectory2.append(x)
-
-    return trajectory1, trajectory2, norms, avg_regret
-
-def test_gpc(steps=10, show_plot=True):
+def test_gpc(steps=500, show_plot=True):
 
     T = steps
 
@@ -58,12 +51,19 @@ def test_gpc(steps=10, show_plot=True):
     H, HH = 5, 30
     GPC_params = {'H' : H, 'HH' : HH}
 
-    GPC_results, GPC_results_plan, _, _ = get_trajectory((environment_id, environment_params), \
+    _, _, GPC_results = get_trajectory((environment_id, environment_params), \
                                                             ('GPC', GPC_params), T = T)
+    _, _, LQR_results = get_trajectory((environment_id, environment_params), \
+                                                            ('LQRInfiniteHorizon', {}), T = T)
+
     if(show_plot):
         plt.plot(GPC_results, label = "online GPC")
-        plt.plot(GPC_results_plan, label = "plan GPC")
-        plt.title("GPC on LDS")
+        plt.plot(LQR_results, label = "online LQR")
+        plt.title("GPC and LQR on LDS")
+        plt.legend()
+        plt.show(block=False)
+        plt.pause(30)
+        plt.close()
 
     print("test_gpc passed")
     return

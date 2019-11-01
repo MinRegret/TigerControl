@@ -10,7 +10,6 @@ from tigercontrol.controllers.shooting import Shooting
 from tigercontrol.controllers.lqr import LQR
 from tigercontrol.controllers.lqr_infinite_horizon import LQRInfiniteHorizon
 from tigercontrol.controllers.ilqr import ILQR
-from tigercontrol.controllers.cartpole_nn import CartPoleNN
 from tigercontrol.controllers.gpc import GPC
 
 # boosting
@@ -51,11 +50,6 @@ controller_register(
 controller_register(
     id='ILQR',
     entry_point='tigercontrol.controllers:ILQR',
-)
-
-controller_register(
-    id='CartPoleNN',
-    entry_point='tigercontrol.controllers:CartPoleNN',
 )
 
 controller_register(
