@@ -12,7 +12,7 @@ class ILQR(Controller):
     algorithm.
     """
     
-    class Baby_controller(Controller):
+    class OpenLoopController(Controller):
         def __init__(self, u_old, x_old, K, k):
             self.u_old = u_old
             self.x_old = x_old
@@ -21,21 +21,6 @@ class ILQR(Controller):
             self.t = 0
         def get_action(self, x):
             assert(self.t < len(self.x_old))
-            '''
-            print("self.u_old: " + str(self.u_old))
-            print("self.x_old: " + str(self.x_old))
-            print("self.K: " + str(self.K))
-            print("self.k: " + str(self.k))
-            print("self.t " + str(self.t))'''
-            '''
-            print("*********************************************************")
-            print("self.t: " + str(self.t))
-            print("self.K[self.t].shape: " + str(self.K[self.t].shape))
-            print("type(x) : " + str(type(x)))
-            print("type(self.x_old[self.t]) : " + str(type(self.x_old[self.t])))
-            print("x: " + str(x))
-            print("self.x_old[self.t] : " + str(self.x_old[self.t]))
-            print("(x - self.x_old[self.t]).shape: " + str((x - self.x_old[self.t]).shape))'''
             u_next = self.u_old[self.t] + self.K[self.t] @ (x - self.x_old[self.t]) + self.k[self.t]
             self.t += 1
             return u_next
@@ -56,22 +41,9 @@ class ILQR(Controller):
             dim_u (int): action_space dimension
         """
         self.initialized = True
-
-        # self.env = env.
-        # initialize dynamics, loss, and derivatives
-        '''
-        if callable(problem_dynamics):
-            dyn = problem_dynamics
-        else:
-            dyn = problem_dynamics.dynamics
-        self.dyn = dyn'''
-        # self.L = env.loss
         self.dim_x = dim_x
         self.dim_u = dim_u
         self.env = env
-        # dyn_jacobian = jax.jit(jax.jacrev(dyn, argnums=(0,1)))
-        # L_grad = jax.jit(jax.grad(self.L, argnums=(0,1)))
-        # L_hessian = jax.jit(jax.hessian(self.L, argnums=(0,1)))
         self.L = self.env.get_loss()
         self.total_cost = jax.jit(lambda x, u: np.sum([self.L(x_t, u_t) for x_t, u_t in zip(x, u)])) # computes total cost over trajectory
         
@@ -101,28 +73,6 @@ class ILQR(Controller):
             V = Q_xx + Q_ux.T @ K_t + K_t.T @ Q_ux + K_t.T @ Q_uu @ K_t
             v = q_x + Q_ux.T @ k_t + K_t.T @ q_u + K_t.T @ Q_uu @ k_t
             return K_t, k_t, V, v
-
-        def lqr(T, x, u, F, C, c, lamb):
-            dim_x, dim_u = self.dim_x, self.dim_u
-            V, v = np.zeros((dim_x, dim_x)), np.zeros((dim_x,))
-            K, k = T * [None], T * [None]
-
-            ## Backward Recursion ##
-            for t in reversed(range(T)):
-                K_t, k_t, V, v = lqr_iteration(F[t], C[t], c[t], V, v, lamb)
-                K[t] = K_t
-                k[t] = k_t
-
-            ## Forward Recursion ##
-            x_stack, u_stack = [], []
-            x_t = x[0]
-            for t in range(T):
-                u_t = u[t] + K[t] @ (x_t - x[t]) + k[t]
-                x_stack.append(x_t)
-                u_stack.append(u_t)
-                x_t = dyn(x_t, u_t)
-            return x_stack, u_stack
-        self._lqr = lqr
         self._lqr_iteration = lqr_iteration
 
         """ 
@@ -147,8 +97,6 @@ class ILQR(Controller):
         self._linearization = linearization
 
     def _form_next_controller(self, transcript):
-        print("+++++++++++++++++++++++++++++++++++")
-        print("transcript: " + str(transcript.keys()))
         T = len(transcript['x'])
         x_old = transcript['x']
         u_old = transcript['u']
@@ -166,25 +114,14 @@ class ILQR(Controller):
             K_t, k_t, V, v = self._lqr_iteration(F[t], C[t], c[t], V, v, lamb)
             K[t] = K_t
             k[t] = k_t
-        return self.Baby_controller(u_old, x_old, K, k)
+        return self.OpenLoopController(u_old, x_old, K, k)
 
     def plan(self, x_0, T):
         dim_x, dim_u = self.dim_x, self.dim_u
         u_old = [np.zeros((dim_u,)) for t in range(T)]
-        # x_0 = np.array([x_0[t] for t in range(len(x_0))])
         x_old = [x_0 for t in range(T)]
-        # K, k = T * [np.zeros((dim_u, dim_x))], T * [np.zeros((dim_u,))]
         K, k = T * [np.zeros((dim_u, dim_x))], T * [np.zeros((dim_u,))]
-        controller = self.Baby_controller(u_old, x_old, K, k)
-        '''
-        print("=====================================")
-        print("dim_x = " + str(dim_x))
-        print("dim_u = " + str(dim_u))
-        print("type(x_0) = " + str(type(x_0)))
-        print("x_0.shape = " + str(x_0.shape))
-        print("x_0.T.shape = " + str(x_0.T.shape))
-        print("x_old[0].shape = " + str(x_old[0].shape))
-        print("u_old[0].shape = " + str(u_old[0].shape))'''
+        controller = self.OpenLoopController(u_old, x_old, K, k)
         old_cost = self.total_cost(x_old, u_old)
         count = 0
         transcript_old = {'x' : x_old, 'u' : u_old}
@@ -195,9 +132,6 @@ class ILQR(Controller):
             x_new, u_new = transcript['x'], transcript['u']
             
             new_cost = self.total_cost(x_new, u_new)
-            print("=================================")
-            print("old_cost = " + str(old_cost))
-            print("new_cost = " + str(new_cost))
             if new_cost < old_cost or count == 1:
                 transcript_old = transcript
                 if self.threshold and count > 1 and (old_cost - new_cost) / old_cost < self.threshold:

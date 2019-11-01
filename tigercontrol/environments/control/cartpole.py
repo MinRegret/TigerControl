@@ -29,6 +29,7 @@ class CartPole(Environment):
     def __init__(self):
         self.initialized = False
         self.compiled = False
+        self.rollout_controller = None
         self.gravity = 9.8
         self.masscart = 1.0
         self.masspole = 0.1
@@ -44,6 +45,7 @@ class CartPole(Environment):
 
         self.action_space = (1,)
         self.observation_space = (4,)
+        self.n, self.m = 4, 1
         self.viewer = None
         self._state = None
         self.steps_beyond_done = None
@@ -79,6 +81,15 @@ class CartPole(Environment):
         hessian = jax.hessian(self._loss, argnums=(0,1))
         self._loss_hessian = jax.jit(lambda x, u: block_hessian(hessian(x,u)))
 
+        def _rollout(act, dyn, x_0, T):
+            def f(x, i):
+                u = act(x)
+                x_next = dyn(x, u)
+                return x_next, np.hstack((x, u))
+            _, trajectory = jax.lax.scan(f, x_0, np.arange(T))
+            return trajectory
+        self._rollout = jax.jit(_rollout, static_argnums=(0,1,3))
+
     def initialize(self):
         """ Initialize or reset the CartPole environment """
         self.initialized = True
@@ -103,23 +114,21 @@ class CartPole(Environment):
         self._state = np.array([0.0, 0.03, 0.03, 0.03]) # reproducible results
         return self._state
 
-    def rollout(self, baby_controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
+    def rollout(self, controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
         # Description: Roll out trajectory of given baby_controller.
-        transcript = {'x': [], 'u': []} # return transcript
-        if dynamics_grad: transcript['dynamics_grad'] = [] # optional derivatives
+        if self.rollout_controller != controller: self.rollout_controller = controller
+        x = self._state
+        trajectory = self._rollout(controller.get_action, self._dynamics, x, T)
+        transcript = {'x': trajectory[:,:self.n], 'u': trajectory[:,self.n:]}
+
+        # optional derivatives
+        if dynamics_grad: transcript['dynamics_grad'] = []
         if loss_grad: transcript['loss_grad'] = []
         if loss_hessian: transcript['loss_hessian'] = []
-
-        x_origin, x = self._state, self._state
-        for t in range(T):
-            u = baby_controller.get_action(x)
-            transcript['x'].append(x)
-            transcript['u'].append(u)
+        for x, u in zip(transcript['x'], transcript['u']):
             if dynamics_grad: transcript['dynamics_grad'].append(self._dynamics_jacobian(x, u))
             if loss_grad: transcript['loss_grad'].append(self._loss_grad(x, u))
             if loss_hessian: transcript['loss_hessian'].append(self._loss_hessian(x, u))
-            x = self.step(u)[0] # move to next state
-        self._state = x_origin # return to original state
         return transcript
 
     def render(self, mode='human'):

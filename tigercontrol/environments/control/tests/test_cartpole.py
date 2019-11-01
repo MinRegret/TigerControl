@@ -25,21 +25,13 @@ def test_cartpole(verbose=False):
 
     if verbose:
         print("Running iLQR...")
-    # u = controller.plan(obs, T, max_iterations, lamb, threshold)
-    # u = controller.plan_trajectory(obs, T, max_iterations, lamb, threshold)
     u = controller.plan(obs, T)
-    # print("u : " + str(u))
 
     index = 0
     for t in range(10 * T):
         if verbose: 
             environment.render()
             time.sleep(1. / 50.)
-        # u = controller.plan(obs)
-        # obs, r, done, _ = environment.step(u[index])
-        print("index = " + str(index))
-        print("len(u) : " + str(len(u)))
-
         obs, r, done = environment.step(u[index])
         index += 1
         
