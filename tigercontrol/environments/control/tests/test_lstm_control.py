@@ -30,11 +30,11 @@ def test_lstm_control(steps=1000, show_plot=False, verbose=False):
         plt.plot(test_output)
         plt.title("lstm")
         plt.show(block=False)
-        plt.pause(1)
+        plt.pause(100)
         plt.close()
     print("test_lstm_control passed")
     return
 
 
 if __name__=="__main__":
-    test_lstm_control()
+    test_lstm_control(show_plot=True)
