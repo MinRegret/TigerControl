@@ -53,6 +53,7 @@ class LSTM_Control(Environment):
         # self.hid = np.zeros(self.hid_dim) # short-term memory
         self.hid_cell = np.hstack((np.zeros(self.hid_dim), np.zeros(self.hid_dim)))
 
+        '''
         def _step(x, hid, cell):
             sigmoid = lambda x: 1. / (1. + np.exp(-x)) # no JAX implementation of sigmoid it seems?
             gate = np.dot(self.W_hh, hid) + np.dot(self.W_uh, x) + self.b_h 
@@ -60,7 +61,7 @@ class LSTM_Control(Environment):
             next_cell =  sigmoid(f) * cell + sigmoid(i) * np.tanh(g)
             next_hid = sigmoid(o) * np.tanh(next_cell)
             y = np.dot(self.W_out, next_hid)
-            return (next_hid, next_cell, y)
+            return (next_hid, next_cell, y)'''
 
         def _dynamics(hid_cell_state, u):
             hid = hid_cell_state[:self.hid_dim]
