@@ -29,6 +29,9 @@ class Pendulum(Environment):
         self.viewer = None
         self.action_space = (1,)
         self.observation_space = (2,)
+        self.n, self.m = 2, 1
+        self.rollout_controller = None
+
 
         @jax.jit
         def angle_normalize(x):
@@ -49,7 +52,55 @@ class Pendulum(Environment):
             newth = self.angle_normalize(th + newthdot*dt)
             newthdot = np.clip(newthdot, -self.max_speed, self.max_speed)
             return np.array([newth, newthdot])
-        self._dynamics = dynamics
+        self._dynamics = _dynamics
+
+        # C_x, C_u = (np.diag(np.array([0.2, 0.05, 1.0, 0.05])), np.diag(np.array([0.05])))
+        # self._loss = jax.jit(lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u) # MUST store as self._loss
+
+        # C_x, C_u = np.diag(np.array([0.1, 0.0, 0.0, 0.0])), np.diag(np.array([0.1]))
+        # self._loss = jax.jit(lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u)
+
+        self._loss = jax.jit(lambda x,u : self.angle_normalize(x[0])**2 + .1*x[1]**2 + .001*(u[0]**2))
+
+        # stack the jacobians of environment dynamics gradient
+        jacobian = jax.jacrev(self._dynamics, argnums=(0,1))
+        self._dynamics_jacobian = jax.jit(lambda x, u: np.hstack(jacobian(x, u)))
+
+        # stack the gradients of environment loss
+        loss_grad = jax.grad(self._loss, argnums=(0,1))
+        self._loss_grad = jax.jit(lambda x, u: np.hstack(loss_grad(x, u)))
+
+        # block the hessian of environment loss
+        block_hessian = lambda A: np.vstack([np.hstack([A[0][0], A[0][1]]), np.hstack([A[1][0], A[1][1]])])
+        hessian = jax.hessian(self._loss, argnums=(0,1))
+        self._loss_hessian = jax.jit(lambda x, u: block_hessian(hessian(x,u)))
+
+        def _rollout(act, dyn, x_0, T):
+            def f(x, i):
+                u = act(x)
+                x_next = dyn(x, u)
+                return x_next, np.hstack((x, u))
+            _, trajectory = jax.lax.scan(f, x_0, np.arange(T))
+            return trajectory
+        self._rollout = jax.jit(_rollout, static_argnums=(0,1,3))
+
+    def rollout(self, controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
+        # Description: Roll out trajectory of given baby_controller.
+        if self.rollout_controller != controller: self.rollout_controller = controller
+        x = self._state
+        trajectory = self._rollout(controller.get_action, self._dynamics, x, T)
+        transcript = {'x': trajectory[:,:self.n], 'u': trajectory[:,self.n:]}
+
+        # optional derivatives
+        if dynamics_grad: transcript['dynamics_grad'] = []
+        if loss_grad: transcript['loss_grad'] = []
+        if loss_hessian: transcript['loss_hessian'] = []
+        for x, u in zip(transcript['x'], transcript['u']):
+            if dynamics_grad: transcript['dynamics_grad'].append(self._dynamics_jacobian(x, u))
+            if loss_grad: transcript['loss_grad'].append(self._loss_grad(x, u))
+            if loss_hessian: transcript['loss_hessian'].append(self._loss_hessian(x, u))
+        return transcript
+
 
     def initialize(self):
         self.initialized = True
@@ -57,21 +108,20 @@ class Pendulum(Environment):
 
     def step(self,u):
         self.last_u = np.clip(u, -self.max_torque, self.max_torque)[0] # for rendering
-        state = self._dynamics(self.state, u)
-        costs = self.angle_normalize(state[0])**2 + .1*state[1]**2 + .001*(u**2)
-        self.state = state
-        return self.state, -costs, False, {}
+        state = self._dynamics(self._state, u)
+        # costs = self.angle_normalize(state[0])**2 + .1*state[1]**2 + .001*(u**2)
+        self._state = state
+        return self._state, self._loss(state, u), False
 
     def reset(self):
         theta = random.uniform(generate_key(), minval=-np.pi, maxval=np.pi)
         thdot = random.uniform(generate_key(), minval=-1., maxval=1.)
-        self.state = np.array([theta, thdot])
+        self._state = np.array([theta, thdot])
         self.last_u = 0.0
-        return self.state
+        return self._state
 
 
     def render(self, mode='human'):
-
         if self.viewer is None:
             self.viewer = rendering.Viewer(500,500)
             self.viewer.set_bounds(-2.2,2.2,-2.2,2.2)
@@ -83,13 +133,13 @@ class Pendulum(Environment):
             axle = rendering.make_circle(.05)
             axle.set_color(0,0,0)
             self.viewer.add_geom(axle)
-            fname = os.path.join(get_tigercontrol_dir(), "environments/controller/assets/clockwise.png")
+            fname = os.path.join(get_tigercontrol_dir(), "environments/control/assets/clockwise.png")
             self.img = rendering.Image(fname, 1., 1.)
             self.imgtrans = rendering.Transform()
             self.img.add_attr(self.imgtrans)
 
         self.viewer.add_onetime(self.img)
-        self.pole_transform.set_rotation(self.state[0] + np.pi/2)
+        self.pole_transform.set_rotation(self._state[0] + np.pi/2)
         if self.last_u:
             self.imgtrans.scale = (-self.last_u/2, np.abs(self.last_u)/2)
         return self.viewer.render(return_rgb_array = mode=='rgb_array')

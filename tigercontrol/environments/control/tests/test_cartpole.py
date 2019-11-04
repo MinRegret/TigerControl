@@ -32,7 +32,7 @@ def test_cartpole(verbose=False):
         if verbose: 
             environment.render()
             time.sleep(1. / 50.)
-        obs, r, done = environment.step(u[index])
+        obs, cost, done = environment.step(u[index])
         index += 1
         
         if done:
