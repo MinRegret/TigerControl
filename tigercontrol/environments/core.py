@@ -28,6 +28,9 @@ class Environment(object):
     def get_loss(self):
         return self._loss
 
+    def get_terminal_loss(self):
+        return self._terminal_loss
+
     def close(self):
         ''' Description: closes the environment and returns used memory '''
         pass

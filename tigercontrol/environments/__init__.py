@@ -18,6 +18,11 @@ environment_register(
 )
 
 environment_register(
+    id='Pendulum3State-v0',
+    entry_point='tigercontrol.environments.control:Pendulum_3_State',
+)
+
+environment_register(
     id='DoublePendulum-v0',
     entry_point='tigercontrol.environments.control:DoublePendulum',
 )

@@ -40,7 +40,6 @@ class LSTM_Control(Environment):
         # self.m = self.y_dim # state dimension
         # self.n = self.u_dim # input dimension
         self.rollout_controller = None
-
         self.target = jax.random.uniform(generate_key(), shape=(self.y_dim,), minval=-1, maxval=1)
 
         glorot_init = stax.glorot() # returns a function that initializes weights

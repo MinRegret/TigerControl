@@ -34,25 +34,28 @@ def test_pendulum(verbose=False):
     total_cost = 0
     #print("u: " + str([float(u_t) for u_t in u]))
     index = 0
-    for t in range(25 * T):
+    for t in range(10*T):
         # print("t:" + str(t))
         if verbose: 
             environment.render()
             time.sleep(1. / 30.)
         obs, cost, done = environment.step(u[index])
-        total_cost += cost
+        # total_cost += cost
         index += 1
-
+        '''
         if done:
             if verbose:
                 print("lasted {} time steps".format(t+1))
             obs = environment.initialize()
-        
+        '''
         if done or index == T:
             if verbose:
                 print("recomputing u...")
+
+                # print(total_cost)
+            obs = environment.initialize()
+            controller.initialize(environment, dim_x, dim_u, max_iterations, lamb, threshold)
             u = controller.plan(obs, T)
-            print(total_cost)
             total_cost = 0
             index = 0
 

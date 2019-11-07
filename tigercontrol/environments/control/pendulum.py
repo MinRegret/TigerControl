@@ -22,8 +22,8 @@ class Pendulum(Environment):
 
     def __init__(self, g=10.0):
         self.initialized = False
-        self.max_speed=8
-        self.max_torque=2.
+        self.max_speed=20.
+        self.max_torque=1.
         self.dt=.05
         self.g = g
         self.viewer = None
@@ -42,16 +42,24 @@ class Pendulum(Environment):
 
         @jax.jit
         def _dynamics(x, u):
-            th, thdot = x
+            th, th_dot = x
             g = self.g
             m = 1.
             l = 1.
             dt = self.dt
             u = np.clip(u, -self.max_torque, self.max_torque)[0]
-            newthdot = thdot + (-3*g/(2*l) * np.sin(th + np.pi) + 3./(m*l**2)*u) * dt
+            # newthdot = thdot + (-3*g/(2*l) * np.sin(th + np.pi) + 3./(m*l**2)*u) * dt
+            th_dot_dot = (-3.*g)/(2.*l) * np.sin(th + np.pi) + 3./(m*l**2) * u
+            new_th = self.angle_normalize(th + th_dot*dt)
+            new_th_dot = th_dot + th_dot_dot*dt 
+            new_th_dot = np.clip(new_th_dot, -self.max_speed, self.max_speed)
+
+
+            '''
+            newthdot = thdot + (-3*g/(2*l) * np.sin(th + np.pi) + 3./(m*l**2) * u
             newth = self.angle_normalize(th + newthdot*dt)
-            newthdot = np.clip(newthdot, -self.max_speed, self.max_speed)
-            return np.array([newth, newthdot])
+            newthdot = np.clip(newthdot, -self.max_speed, self.max_speed)'''
+            return np.array([new_th, new_th_dot])
         self._dynamics = _dynamics
 
         # C_x, C_u = (np.diag(np.array([0.2, 0.05, 1.0, 0.05])), np.diag(np.array([0.05])))
@@ -60,7 +68,7 @@ class Pendulum(Environment):
         # C_x, C_u = np.diag(np.array([0.1, 0.0, 0.0, 0.0])), np.diag(np.array([0.1]))
         # self._loss = jax.jit(lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u)
 
-        self._loss = jax.jit(lambda x,u : self.angle_normalize(x[0])**2 + .1*x[1]**2 + .001*(u[0]**2))
+        self._loss = jax.jit(lambda x,u : self.angle_normalize(x[0])**2 + .1*(u[0]**2))
 
         # stack the jacobians of environment dynamics gradient
         jacobian = jax.jacrev(self._dynamics, argnums=(0,1))
