@@ -11,7 +11,7 @@ from tigercontrol.utils import generate_key
 
 
 class BanditMemory:
-    def __init__(self, x_init, d, H, f=None, delta=0.1, initial_lr=0.1):
+    def __init__(self, x_init, d, H, f=None, delta=0.1, initial_lr=0.1, magnitude=None):
         """
         Description: implementation of the algorithm Online Bandit Optimization 
             with Memory.
@@ -23,6 +23,7 @@ class BanditMemory:
             f: optional loss function fixed for all iterations
             delta: perturbation constant
             initial_lr: the initial learning rate (diminishes by T^(-3/4))
+            magnitude: optional bound on norm (projected down if not None)
         """
         assert x_init.shape == (H, d), "x_init has invalid shape {}".format(x_init.shape)
         assert 0 < delta and delta < 1, "invalid delta"
@@ -33,9 +34,10 @@ class BanditMemory:
         self.f = f
         self.delta = delta
         self.initial_lr = initial_lr
+        self.magnitude = magnitude
         self.t = 0 # time
 
-        #@jax.jit
+        @jax.jit
         def _update(v, v_new):
             v = np.roll(v, -self.d)
             v = jax.ops.index_update(v, -1, v_new)
@@ -61,7 +63,6 @@ class BanditMemory:
         self.t += 1
 
         # update u
-        weird_norm = np.linalg.norm(self.u[:-1])
         new_u_norm = np.sqrt(1 - np.linalg.norm(self.u[1:])**2)
         self.u = self._update(self.u, self._generate_uniform(self.d, new_u_norm))
 
@@ -75,7 +76,10 @@ class BanditMemory:
         # estimate gradient and perform update step
         g_t = (self.d * self.H / delta_t) * loss_t * np.sum(self.u, axis=0)
         lr = self.initial_lr / self.t**0.75 # eta_t = O(t^(-3/4))
-        x_t = self.x[-1] - self.initial_lr * g_t
+        x_t = self.x[-1] - lr * g_t
+        #x_t = self.x[-1] - self.initial_lr * g_t # fixed lr works better?
+        if self.magnitude and np.linalg.norm(x_t) > self.magnitude:
+            x_t = self.magnitude * x_t / np.linalg.norm(x_t)
         self.x = self._update(self.x, x_t)
 
         return x_t, y_t, loss_t

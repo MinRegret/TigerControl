@@ -20,16 +20,16 @@ if __name__ == "__main__":
     T = 10000
     d, H = 3, 3
     delta = 0.1
-    initial_lr = 0.001
-    x_init = 10 * np.ones((d, H))
-    loss_magnitude = np.sum(np.sum(x_init, axis=0)**2)
-    loss = lambda x: np.sum(np.sum(x, axis=0)**2) / loss_magnitude # loss(x_t-H+1, ..., x_t) = C*||sum_i x_t-i||^2 
+    initial_lr = 0.005
+    mag = 10
+    x_init = mag * np.ones((d, H))
+    loss = lambda x: np.sum(np.sum(x, axis=0)**2) / (mag*H*np.sqrt(d)) # loss(x_t-H+1, ..., x_t) = C*||sum_i x_t-i||^2 
 
     print("\nStarting bandit sanity check with T = {}!".format(T))
     print("x_H initialized with norm {}\n".format(np.linalg.norm(x_init[-1])))
-    bandit = BanditMemory(x_init=x_init, d=d, H=H, f=loss, delta=delta, initial_lr=initial_lr)
+    bandit = BanditMemory(x_init=x_init, d=d, H=H, f=loss, delta=delta, initial_lr=initial_lr, magnitude=(mag*np.sqrt(d)))
 
-    print_num_times = 20
+    print_num_times = 50
 
     losses = []
     xs = []
