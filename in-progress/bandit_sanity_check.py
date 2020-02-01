@@ -7,7 +7,7 @@ import time
 import jax 
 import jax.numpy as np
 import jax.random as random
-from tigercontrol.utils import generate_key
+from tigercontrol.utils import generate_key, set_key
 
 import matplotlib.pyplot as plt
 
@@ -16,11 +16,14 @@ from controllers.bandit_memory import BanditMemory
 
 if __name__ == "__main__":
 
+    # fix key for reproducibility
+    set_key(0)
+
     # hyperparameters
     T = 10000
     d, H = 3, 3
-    delta = 0.1
-    initial_lr = 0.005
+    delta = 0.05
+    initial_lr = 0.002
     mag = 10
     x_init = mag * np.ones((d, H))
     loss = lambda x: np.sum(np.sum(x, axis=0)**2) / (mag*H*np.sqrt(d)) # loss(x_t-H+1, ..., x_t) = C*||sum_i x_t-i||^2 
