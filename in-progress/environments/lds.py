@@ -9,10 +9,10 @@ from tigercontrol.environments import Environment
 from tigercontrol.controllers import Controller
 from jax import grad,jit
 
+
 """
 Linear dynamical system
 """
-
 
 class LDS(Environment):
     """
@@ -99,5 +99,4 @@ class LDS(Environment):
         self.prev_noise = self.noise(self.n, self.x, u, self.prev_noise, self.T)
         self.x, y = self._step(self.x, u, self.prev_noise)
         return y # even in fully observable case, y = self.x
-
         

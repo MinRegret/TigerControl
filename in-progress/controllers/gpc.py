@@ -81,10 +81,38 @@ class GPC(Controller):
 
         self._get_action = jit(_get_action)
 
-    def get_action(self, x):
-        self.T += 1
+    def get_action(self):
         lr = self.learning_rate / np.sqrt(self.T)
         self.x, self.u, self.w_past, self.M = self._get_action(x, self.x, self.u, self.w_past, self.M, lr)
+        return self.u
+
+    def update(self, c_t, x):
+        """
+        Description: Updates internal parameters and then returns the estimated optimal action (only one)
+        Args:
+            None
+        Returns:
+            Estimated optimal action
+        """
+
+        self.T += 1
+        #self.learning_rate = 1 / self.T**0.75 # eta_t = O(t^(-3/4)) # bug?
+        
+        #get new noise
+        w_new = x_new - np.dot(self.A , self.x)  - np.dot(self.B , self.u)
+        
+        #update past noises
+        self.w_past = np.roll(self.w_past, self.n)
+        self.w_past = jax.ops.index_update(self.w_past , 0, w_new)
+            
+        #set current state
+        self.x = x_new
+            
+        g_t = (self.m * self.n * self.H / self.delta) * c_t * np.sum(self.eps, axis = 0)
+        lr = self.learning_rate / self.T**0.75 # eta_t = O(t^(-3/4))
+        self.M = (self.M - lr * g_t)
+        self.M *= (1-self.delta)/np.linalg.norm(self.M)
+        
         return self.u
 
     def __str__(self):

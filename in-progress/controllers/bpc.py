@@ -9,7 +9,7 @@ from tigercontrol.environments import Environment
 from tigercontrol.controllers import Controller
 from jax import grad,jit
 
-class BPC(Controller):
+class BanditGPC(Controller):
     """
     Description: Computes optimal set of actions using the Linear Quadratic Regulator
     algorithm.
@@ -18,15 +18,18 @@ class BPC(Controller):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, A, B, n, m, H, K, delta, x):
+    def initialize(self, A, B, n, m, H, K, delta, x, initial_lr=0.1):
         """
         Description: Initialize the dynamics of the model
         Args:
             A,B (float/numpy.ndarray): system dynamics
-            K  (float/numpy.ndarray): optimal controller 
             n (float/numpy.ndarray): dimension of the state
             m (float/numpy.ndarray): dimension of the controls
             H (postive int): history of the controller 
+            K (float/numpy.ndarray): optimal controller 
+            delta (float): gradient estimator parameter
+            x (numpy.ndarray): initial state
+            initial_lr (float): initial learning rate
         """
         self.initialized = True
         
@@ -37,7 +40,7 @@ class BPC(Controller):
         self._generate_uniform = _generate_uniform
         self.eps = self._generate_uniform((H, m, n))
         
-        self.K = np.zeros ((m,n)) ## compute it...
+        self.K = np.zeros((m,n)) ## compute it...
 
         self.x = x        
         self.u = np.zeros(m)
@@ -52,7 +55,7 @@ class BPC(Controller):
 
         ## internal parmeters to the class 
         self.T = 1 ## keep track of iterations, for the learning rate
-        self.learning_rate = 0.1
+        self.learning_rate = initial_lr
         self.M = self._generate_uniform((H, m, n), norm = 1-delta) ## CANNOT BE SET TO ZERO
         self.w_past = np.zeros((H,n)) ## this are the previous perturbations, from most recent [0] to latest [HH-1]
         
@@ -61,7 +64,7 @@ class BPC(Controller):
         M_tilde = self.M + self.delta * self.eps 
         
         #choose action
-        self.u = -K @ self.x
+        self.u = -self.K @ self.x
         for i in range(self.H):
             self.u += np.dot(M_tilde[i] , self.w_past[i])
             
@@ -77,21 +80,23 @@ class BPC(Controller):
         """
 
         self.T += 1
-        self.learning_rate = 1 / self.T**0.75 # eta_t = O(t^(-3/4))
+        #self.learning_rate = 1 / self.T**0.75 # eta_t = O(t^(-3/4)) # bug?
         
         #get new noise
         w_new = x_new - np.dot(self.A , self.x)  - np.dot(self.B , self.u)
         
         #update past noises
         self.w_past = np.roll(self.w_past, self.n)
-        self.w_past  = jax.ops.index_update(self.w_past , 0, w_new)
+        self.w_past = jax.ops.index_update(self.w_past , 0, w_new)
             
         #set current state
         self.x = x_new
             
         g_t = (self.m * self.n * self.H / self.delta) * c_t * np.sum(self.eps, axis = 0)
         lr = self.learning_rate / self.T**0.75 # eta_t = O(t^(-3/4))
-        self.M = (1-self.delta) * (self.M - lr * g_t)
-        self.M /= np.linalg.norm(self.M)
+        self.M = (self.M - lr * g_t)
+        self.M *= (1-self.delta)/np.linalg.norm(self.M)
+        
+        return self.u
 
         
