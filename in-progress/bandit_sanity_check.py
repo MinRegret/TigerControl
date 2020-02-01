@@ -12,7 +12,7 @@ from tigercontrol.utils import generate_key
 import matplotlib.pyplot as plt
 
 # bandit memory implementation
-from bandit_memory import BanditMemory
+from controllers.bandit_memory import BanditMemory
 
 if __name__ == "__main__":
 
