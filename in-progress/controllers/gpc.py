@@ -36,7 +36,7 @@ class GPC(Controller):
             m = 1
         return (n, m)
 
-    def initialize(self, A, B, H = 3, HH = 30, K = None, x = None, Q = None, R = None):
+    def initialize(self, A, B, H = 3, HH = 30, K = None, x = None, loss_fn = None):
         """
         Description: Initialize the dynamics of the model
         Args:
@@ -52,8 +52,7 @@ class GPC(Controller):
         self.n, self.m = self._get_dims()
         self.H, self.HH = H, HH
 
-        self.Q = np.identity(self.n) if Q is None else Q
-        self.R = np.identity(self.m) if R is None else R
+        self.loss_fn = lambda x, u: x.T @ x + u.T @ u if loss_fn is None else loss_fn
 
         def _generate_uniform(shape, norm=1.00):
             v = random.normal(generate_key(), shape=shape)
@@ -95,7 +94,7 @@ class GPC(Controller):
             for i in range(self.H):
                 u += np.dot(self.M[-i-1] , self.w_past[i])
 
-            return x.T @ self.Q @ x + u.T @ self.R @ u
+            return self.loss_fn(x, u)
 
         self.grad_fn = jit(grad(the_complicated_loss_function))  # compiled gradient evaluation function
 
