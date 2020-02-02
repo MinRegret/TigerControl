@@ -52,7 +52,7 @@ class GPC(Controller):
         self.n, self.m = self._get_dims()
         self.H, self.HH = H, HH
 
-        self.loss_fn = lambda x, u: x.T @ x + u.T @ u if loss_fn is None else loss_fn
+        self.loss_fn = lambda x, u: float(x.T @ x + u.T @ u) if loss_fn is None else loss_fn
 
         def _generate_uniform(shape, norm=1.00):
             v = random.normal(generate_key(), shape=shape)
@@ -81,7 +81,7 @@ class GPC(Controller):
         self.w_past = np.zeros((HH + H, self.n)) ## this are the previous perturbations, from most recent [0] to latest [HH-1]
 
         # This is the counterfactual loss function, we prefer not to differentiate it and use JAX 
-        def the_complicated_loss_function(M, w_past):
+        ''' def the_complicated_loss_function(M, w_past):
             x = 0.0
             for i in range(self.HH):
                 psi = 0.0
@@ -92,11 +92,24 @@ class GPC(Controller):
 
             u = - K @ x
             for i in range(self.H):
-                u += np.dot(self.M[-i-1] , self.w_past[i])
+                u += np.dot(M[-i-1] , w_past[i])
 
-            return self.loss_fn(x, u)
+            return loss_fn(x, u) '''
 
-        self.grad_fn = jit(grad(the_complicated_loss_function))  # compiled gradient evaluation function
+        #self.grad_fn = jit(grad(the_complicated_loss_function))  # compiled gradient evaluation function
+
+        # new attept at defining counterfact loss fn
+        def counterfact_loss(M, w):
+            y, cost = np.zeros(self.n), 0
+            for h in range(HH - H):
+                v = -self.K @ y + np.tensordot(M, w[h : h + H], axes = ([0, 2], [0, 1]))
+                if(h < HH - H - 1):
+                    y = A @ y + B @ v + w[h + H]
+            cost = loss_fn(y, v)
+            return cost
+
+        self.grad_fn = grad(counterfact_loss)
+        
 
     def get_action(self):
         """
