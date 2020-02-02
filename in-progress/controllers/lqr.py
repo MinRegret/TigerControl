@@ -40,7 +40,7 @@ class LQR(Controller):
     def get_action(self):
         
         #choose action
-        self.u = -K @ self.x
+        self.u = -self.K @ self.x
             
         return self.u
 
