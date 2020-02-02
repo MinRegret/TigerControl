@@ -19,7 +19,7 @@ class LQR(Controller):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, A, B, n, m, x, Q, R):
+    def initialize(self, A, B, n, m, x, Q = None, R = None):
         """
         Description: Initialize the dynamics of the model
         Args:
@@ -33,6 +33,9 @@ class LQR(Controller):
         self.initialized = True
 
         self.x = x        
+
+        Q = np.identity(n) if Q is None else Q
+        R = np.identity(m) if R is None else R
 
         X = scipy.linalg.solve_discrete_are(A, B, Q, R)
         self.K = np.linalg.inv(B.T @ X @ B + R) @ (B.T @ X @ A)

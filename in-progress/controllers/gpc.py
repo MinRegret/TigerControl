@@ -73,7 +73,7 @@ class GPC(Controller):
 
         ## internal parmeters to the class 
         self.T = 1 ## keep track of iterations, for the learning rate
-        self.learning_rate = 1
+        self.learning_rate = 0.1
         self.M = self._generate_uniform((H, self.m, self.n), norm = 0.1)
         self.S = np.repeat(B.reshape(1, self.n, self.m), HH, axis=0) # previously [B for i in range(HH)]
         for i in range(1, HH):
