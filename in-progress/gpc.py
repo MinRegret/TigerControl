@@ -73,7 +73,7 @@ class GPC(Controller):
 
         ## internal parmeters to the class 
         self.T = 1 ## keep track of iterations, for the learning rate
-        self.learning_rate = 1
+        self.learning_rate = 0.1
         self.M = self._generate_uniform((H, self.m, self.n), norm = 0.1)
         self.S = np.repeat(B.reshape(1, self.n, self.m), HH, axis=0) # previously [B for i in range(HH)]
         for i in range(1, HH):
@@ -100,13 +100,13 @@ class GPC(Controller):
 
         # new attept at defining counterfact loss fn
         def counterfact_loss(M, w):
-            y, cost = np.zeros((self.n, 1)), 0
+            y, cost = np.zeros(self.n), 0
             for h in range(HH - H):
                 v = -self.K @ y + np.tensordot(M, w[h : h + H], axes = ([0, 2], [0, 1]))
                 if(h < HH - H - 1):
                     y = A @ y + B @ v + w[h + H]
             cost = loss_fn(y, v)
-            return float(cost)
+            return cost
 
         self.grad_fn = grad(counterfact_loss)
         
