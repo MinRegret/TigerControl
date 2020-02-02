@@ -7,6 +7,7 @@ import tigercontrol
 from tigercontrol.utils.random import set_key, generate_key
 from tigercontrol.environments import Environment
 from tigercontrol.controllers import Controller
+import scipy
 from jax import grad,jit
 
 class LQR(Controller):
