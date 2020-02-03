@@ -9,7 +9,7 @@ from tigercontrol.environments import Environment
 from tigercontrol.controllers import Controller
 from jax import grad,jit
 
-class BanditGPC(Controller):
+class BPC(Controller):
     """
     Description: Computes optimal set of actions using the Linear Quadratic Regulator
     algorithm.
@@ -18,7 +18,7 @@ class BanditGPC(Controller):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, A, B, n, m, H, K, delta, x, initial_lr=0.1):
+    def initialize(self, A, B, n, m, H, K, delta, x, initial_lr=1.0):
         """
         Description: Initialize the dynamics of the model
         Args:
