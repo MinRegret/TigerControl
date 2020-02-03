@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import jax
 import jax.numpy as np
+import jax.scipy.linalg as linalg
 import numpy as onp
 import jax.random as random
 import tigercontrol
@@ -17,7 +18,7 @@ class SystemID(Controller):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, n, m, K, k=None, T_0=None):
+    def initialize(self, n, m, K, k=None, T_0=None, gamma=0.001):
         """
         Description: Initialize the dynamics of the model
         Args:
@@ -25,6 +26,7 @@ class SystemID(Controller):
             K (np.array): control matrix
             k (int): history to use when estimating A, B
             T_0 (int): number of total iterations (recommend T_0 = O(T^(2/3)))
+            gamma (float): L2 regularization
         """
         self.initialized = True
         self.n, self.m = n, m
@@ -34,6 +36,7 @@ class SystemID(Controller):
         self.T_0 = T_0 # our implementation uses T instead of T_0
         self.x_history = [] # history of x's
         self.eta = [] # perturbations
+        self.gamma = gamma
 
 
     def get_action(self, x_t):
@@ -58,7 +61,8 @@ class SystemID(Controller):
         N_j = np.array([np.dot(x_np[j+1:j+1+scan_len], eta_np[j:j+scan_len]) for j in range(k+1)]) / scan_len
         C_0, C_1 = N_j[:k], N_j[1:k+1]
         B = N_j[0]
-        A = C_1 @ C_0.T @ np.linalg.inv(C_0 @ C_0.T) + B @ self.K
+        C_inv = linalg.solve(C_0 @ C_0.T + self.gamma * np.identity(k), np.identity(k), sym_pos=True)
+        A = C_1 @ C_0.T @ C_inv + B @ self.K
         return (A, B)
 
 

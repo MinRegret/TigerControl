@@ -11,7 +11,7 @@ from jax import grad,jit
 
 from system_id import SystemID
 
-class BPC(Controller):
+class BPC_SystemID(Controller):
     """
     Description: BPC algorithm that simultaneously learns the system dynamics A, B
     """
@@ -19,7 +19,7 @@ class BPC(Controller):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, n, m, H, K, T_0, delta, x, initial_lr=1.0):
+    def initialize(self, n, m, H, K, T_0, delta, x, sys_id=None, initial_lr=1.0):
         """
         Description: Initialize the dynamics of the model
         Args:
@@ -30,6 +30,7 @@ class BPC(Controller):
             T_0 (postive int): number of steps to do system identification before BPC
             delta (float): gradient estimator parameter
             x (numpy.ndarray): initial state
+            sys_id (sys id obj): instance of system id class
             initial_lr (float): initial learning rate
         """
         self.initialized = True
@@ -53,7 +54,7 @@ class BPC(Controller):
     
         self.delta = delta
 
-        self.sys_id = SystemID()
+        self.sys_id = SystemID() if sys_id is None else sys_id
         self.sys_id.initialize(n, m, K, k=0.1*T_0, T_0=T_0) 
 
         ## internal parmeters to the class 
