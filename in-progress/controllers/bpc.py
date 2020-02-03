@@ -60,14 +60,10 @@ class BPC(Controller):
         self.w_past = np.zeros((H,n)) ## this are the previous perturbations, from most recent [0] to latest [HH-1]
         
     def get_action(self):
-        
         M_tilde = self.M + self.delta * self.eps 
         
         #choose action
-        self.u = -self.K @ self.x
-        for i in range(self.H):
-            self.u += np.dot(M_tilde[i] , self.w_past[i])
-            
+        self.u = -self.K @ self.x + np.tensordot(M_tilde, self.w_past, axes=([0, 2], [0, 1]))
         return self.u
 
     def update(self, c_t, x_new):
@@ -92,11 +88,14 @@ class BPC(Controller):
         #set current state
         self.x = x_new
             
+        # gradient estimate and update
         g_t = (self.m * self.n * self.H / self.delta) * c_t * np.sum(self.eps, axis = 0)
         lr = self.learning_rate / self.T**0.75 # eta_t = O(t^(-3/4))
         self.M = (self.M - lr * g_t)
-        self.M *= (1-self.delta)/np.linalg.norm(self.M)
-        
+        curr_norm = np.linalg.norm(self.M)
+        if curr_norm > (1 - self.delta):
+            self.M *= (1-self.delta) / curr_norm
+            
         return self.u
 
         
