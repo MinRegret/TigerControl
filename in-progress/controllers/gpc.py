@@ -79,7 +79,7 @@ class GPC(Controller):
 
         # new attept at defining counterfact loss fn
         def counterfact_loss(M, w):
-            y, cost = np.zeros(self.n), 0
+            y = np.zeros(self.n)
             for h in range(HH - H - 1):
                 v = -self.K @ y + np.tensordot(M, w[h : (h+self.H)], axes = ([0, 2], [0, 1]))
                 y = A @ y + B @ v + w[(h + H)]
