@@ -61,8 +61,6 @@ class BPC(Controller):
         
     def get_action(self):
         M_tilde = self.M + self.delta * self.eps[-1]
-        print("M_tilde ", M_tilde)
-        print("w_past ", self.w_past)
         #choose action
         self.u = -self.K @ self.x + np.tensordot(M_tilde, self.w_past, axes=([0, 2], [0, 1]))
         return self.u
@@ -81,7 +79,7 @@ class BPC(Controller):
         #self.learning_rate = 1 / self.T**0.75 # eta_t = O(t^(-3/4)) # bug?
 
         # update noise
-        next_norm = np.sqrt(1 - np.sum(self.eps[:-1] **2))
+        next_norm = np.sqrt(1 - np.sum(self.eps[1:] **2))
         next_eps = self._generate_uniform((self.H, self.m, self.n), norm=next_norm)
         self.eps = np.roll(self.eps, -(self.H * self.m * self.n))
         self.eps = jax.ops.index_update(self.eps, -1, next_eps)
@@ -101,7 +99,7 @@ class BPC(Controller):
         lr = self.learning_rate / self.T**0.75 # eta_t = O(t^(-3/4))
         self.M = (self.M - lr * g_t)
         curr_norm = np.linalg.norm(self.M)
-        if curr_norm > (1 - self.delta):
+        if curr_norm > (1-self.delta):
             self.M *= (1-self.delta) / curr_norm
             
         return self.u

@@ -50,8 +50,8 @@ class LDS(Environment):
         self.A = gaussian((n, n))
         self.B = gaussian((n, m))
         
-        self.A /= np.linalg.norm(self.A)
-        self.B /= np.linalg.norm(self.B)
+        self.A *= 0.99 / np.linalg.norm(self.A, ord='nuc')
+        self.B *= 0.99 / np.linalg.norm(self.B, ord='nuc')
 
         # determine the noise function to use, allowing for conditioning on x, u, previous noise, and current t
         if (noise_distribution == None):           # case no noise
@@ -99,4 +99,4 @@ class LDS(Environment):
         self.prev_noise = self.noise(self.n, self.x, u, self.prev_noise, self.T)
         self.x, y = self._step(self.x, u, self.prev_noise)
         return y # even in fully observable case, y = self.x
-        
+
