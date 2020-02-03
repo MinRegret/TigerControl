@@ -52,7 +52,7 @@ class GPC(Controller):
         self.n, self.m = self._get_dims()
         self.H, self.HH = H, HH
 
-        self.loss_fn = lambda x, u: float(x.T @ x + u.T @ u) if loss_fn is None else loss_fn
+        self.loss_fn = lambda x, u: np.sum(x**2 + u**2) if loss_fn is None else loss_fn
 
         def _generate_uniform(shape, norm=1.00):
             v = random.normal(generate_key(), shape=shape)
@@ -101,10 +101,10 @@ class GPC(Controller):
         # new attept at defining counterfact loss fn
         def counterfact_loss(M, w):
             y, cost = np.zeros(self.n), 0
-            for h in range(HH - H):
+            for h in range(HH - H - 1):
                 v = -self.K @ y + np.tensordot(M, w[h : h + H], axes = ([0, 2], [0, 1]))
-                if(h < HH - H - 1):
-                    y = A @ y + B @ v + w[h + H]
+                y = A @ y + B @ v + w[h + H]
+            v = -self.K @ y + np.tensordot(M, w[h : h + H], axes = ([0, 2], [0, 1])) 
             cost = loss_fn(y, v)
             return cost
 
