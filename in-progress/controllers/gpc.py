@@ -8,7 +8,7 @@ written by Paula Gradu, Elad Hazan and Anirudha Majumdar
 import jax.numpy as np
 import tigercontrol
 from tigercontrol.controllers import Controller
-from jax import grad,jit
+from jax import grad, jit
 import jax.random as random
 from tigercontrol.utils import generate_key
 import jax
@@ -36,7 +36,7 @@ class GPC(Controller):
             m = 1
         return (n, m)
 
-    def initialize(self, A, B, H = 3, HH = 30, K = None, x = None, loss_fn = None):
+    def initialize(self, A, B, H = 3, HH = 30, K = None, x = None, loss_fn = None, M_norm=0.1):
         """
         Description: Initialize the dynamics of the model
         Args:
@@ -51,8 +51,9 @@ class GPC(Controller):
         self.A, self.B = A, B
         self.n, self.m = self._get_dims()
         self.H, self.HH = H, HH
+        self.M_norm = M_norm
 
-        self.loss_fn = lambda x, u: float(x.T @ x + u.T @ u) if loss_fn is None else loss_fn
+        self.loss_fn = lambda x, u: np.sum(x**2 + u**2) if loss_fn is None else loss_fn
 
         def _generate_uniform(shape, norm=1.00):
             v = random.normal(generate_key(), shape=shape)
@@ -74,7 +75,7 @@ class GPC(Controller):
         ## internal parmeters to the class 
         self.T = 1 ## keep track of iterations, for the learning rate
         self.learning_rate = 1
-        self.M = self._generate_uniform((H, self.m, self.n), norm = 0.1)
+        self.M = self._generate_uniform((H, self.m, self.n), norm = M_norm)
         self.w_past = np.zeros((HH, self.n)) ## this are the previous perturbations, from most recent [0] to latest [HH-1]
 
         # new attept at defining counterfact loss fn
@@ -86,8 +87,11 @@ class GPC(Controller):
             v = -self.K @ y + np.tensordot(M, w[h : (h+self.H)], axes = ([0, 2], [0, 1]))
             cost = loss_fn(y, v)
             return cost
+        self.grad_fn = jit(grad(counterfact_loss))
 
-        self.grad_fn = grad(counterfact_loss)
+        def _get_action(x, K, M, w_past):
+            return -K @ x + np.tensordot(M, w_past[-self.H:], axes = ([0, 2], [0, 1]))
+        self._get_action = jit(_get_action)
         
 
     def get_action(self):
@@ -100,10 +104,7 @@ class GPC(Controller):
         Returns:
             u(float/numpy.ndarray): action to take
         """
-
-        
-        self.u = -self.K @ self.x + np.tensordot(self.M, self.w_past[-self.H:], axes = ([0, 2], [0, 1]))
-
+        self.u = self._get_action(self.x, self.K, self.M, self.w_past)
         return self.u
 
 
@@ -130,7 +131,9 @@ class GPC(Controller):
         self.x = x_new
 
         self.M = self.M - lr * self.grad_fn(self.M, self.w_past)
-        #self.M /= np.linalg.norm(self.M)
+        curr_norm = np.linalg.norm(self.M)
+        if curr_norm > self.M_norm:
+            self.M *= self.M_norm / curr_norm
 
     def __str__(self):
         return "<GPC Model>"
