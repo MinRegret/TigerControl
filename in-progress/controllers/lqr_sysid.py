@@ -19,30 +19,37 @@ class LQR_SystemID(Controller):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, n, m, x, Q = None, R = None):
+    def initialize(self, n, m, x, T_0, K=None, Q = None, R = None):
         """
         Description: Initialize the dynamics of the model
         Args:
-            A,B (float/numpy.ndarray): system dynamics
-            K  (float/numpy.ndarray): optimal controller 
             n (float/numpy.ndarray): dimension of the state
             m (float/numpy.ndarray): dimension of the controls
-            H (postive int): history of the controller 
+            x (postive int): initial state
+            T_0 (int): system identification time
+            K  (float/numpy.ndarray): initial controller (optional)
             Q, R (float/numpy.ndarray): cost matrices (c(x, u) = x^T Q x + u^T R u)
         """
         self.initialized = True
 
-        self.x = x        
+        self.n, self.m = n, m
+        self.x = x
+        self.T_0 = T_0
+        self.T = 0
 
         Q = np.identity(n) if Q is None else Q
         R = np.identity(m) if R is None else R
 
-        X = scipy.linalg.solve_discrete_are(A, B, Q, R)
-        self.K = np.linalg.inv(B.T @ X @ B + R) @ (B.T @ X @ A)
+        if K:
+            self.K = K
+        else:
+            X = scipy.linalg.solve_discrete_are(A, B, Q, R)
+            self.K = np.linalg.inv(B.T @ X @ B + R) @ (B.T @ X @ A)
 
     def get_action(self):
-        
         #choose action
+        if self.T < self.T_0:
+            return
         self.u = -self.K @ self.x
             
         return self.u
@@ -55,7 +62,7 @@ class LQR_SystemID(Controller):
         Returns:
             Estimated optimal action
         """
-
+        self.T += 1
         self.x = x_new
 
         return
