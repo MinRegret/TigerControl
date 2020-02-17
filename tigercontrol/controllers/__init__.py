@@ -74,4 +74,3 @@ controller_register(
     id='GPC-v2',
     entry_point='tigercontrol.controllers:GPC_v2',
 )
-

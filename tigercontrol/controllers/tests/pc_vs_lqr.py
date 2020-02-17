@@ -18,17 +18,17 @@ alg_name = ['LQR', 'GPC-v1', 'GPC-v2', 'BPC']
 color_code = {'LQR': 'blue', 'GPC-v1': 'red', 'GPC-v2': 'orange', 'BPC': 'purple'}
 quad = lambda x, u: np.sum(x.T @ x + u.T @ u)
 
-def evaluate(controller, Wgen, cost_fn):
+def evaluate(controller, A, B, Wgen, cost_fn):
     global T
-    x, loss = np.zeros((n, 1)), [0. for _ in range(T)]
+    x, loss = np.zeros(Wgen.w[0].shape), [0. for _ in range(T)]
     for t in range(T):
         u = controller.get_action(x)
         loss[t] = cost_fn(x, u)
         controller.update(loss[t])
         x = A @ x + B @ u + Wgen.next()
 
-    return np.array(loss, dtype=np.float32), \
-        np.array(np.cumsum(loss)/np.arange(T), dtype=np.float32)
+    loss = np.array(loss, dtype=np.float32)
+    return loss, np.cumsum(loss)/np.arange(1, T+1)
 
 
 def to_dataframe(alg, loss):
@@ -36,19 +36,19 @@ def to_dataframe(alg, loss):
     return pd.DataFrame(data = {'Algorithm': alg, 'Time': np.arange(T, dtype=np.float32),
                                 'Instantaneous Cost': loss, 'Average Cost': avg_loss})
 
-def benchmark(Wgen, cost_fn = quad):
+def benchmark(A, B, Wgen, cost_fn = quad):
 
-    loss_bpc = evaluate(LQR(A, B), Wgen, cost_fn)
-    loss_gpc_1 = evaluate(GPC_v1(A, B, cost_fn), Wgen, cost_fn)
-    loss_gpc_2 = evaluate(GPC_v2(A, B, cost_fn), Wgen, cost_fn)
-    loss_bpc = evaluate(BPC(A, B), Wgen, cost_fn)
+    loss_lqr = evaluate(LQR(A, B), A, B, Wgen, cost_fn)
+    loss_gpc_1 = evaluate(GPC_v1(A, B, cost_fn=cost_fn), A, B, Wgen, cost_fn)
+    loss_gpc_2 = evaluate(GPC_v2(A, B, cost_fn=cost_fn), A, B, Wgen, cost_fn)
+    loss_bpc = evaluate(BPC(A, B), A, B, Wgen, cost_fn)
 
     return loss_lqr, loss_gpc_1, loss_gpc_2, loss_bpc
 
-def repeat_benchmark(M, Wgen, rep = rep, cost_fn = quad):
+def repeat_benchmark(A, B, Wgen, rep = 3, cost_fn = quad):
     all_data = []
     for r in range(rep):
-        loss = benchmark(Wgen, cost_fn)
+        loss = benchmark(A, B, Wgen, cost_fn)
         data = pd.concat(list(map(lambda x: to_dataframe(*x), list(zip(alg_name, loss)))))
         all_data.append(data)
     all_data = pd.concat(all_data)
@@ -77,19 +77,16 @@ def test_pc_vs_lqr(T=500, rep = 3, show_plot=True):
 
     T = T
 
-    n, m, A, B = 2, 1, np.array([[1., 1.], [0., 1.]]), np.array([[0.], [1.]])
-    Q, R = np.eye(N = n), np.eye(N = m)
-
-    A = 0.9 * A / np.linalg.norm(A, ord='nuc')
-    B = 0.9 * B / np.linalg.norm(B, ord='nuc')
+    n, m, A, B = 2, 1, onp.array([[1., 1.], [0., 1.]]), onp.array([[0.], [1.]])
+    Q, R = onp.array([[1., 0.], [0., 1.]]), onp.array([[1.]])
 
     quad_cost = lambda x, u: (x.T @ Q @ x + u.T @ R @ u)[0][0]
 
-    data = repeat_benchmark(Wgen(T, n, m), rep = 1)
+    data = repeat_benchmark(A, B, Wgen(n, m), rep = 1)
     plot('Sinusoidal Perturbations', data)
 
     print("test_gpc passed")
     return
 
 if __name__=="__main__":
-    test_gpc()
+    test_pc_vs_lqr()

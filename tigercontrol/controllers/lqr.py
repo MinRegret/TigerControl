@@ -1,11 +1,12 @@
 import jax.numpy as np
+import numpy as onp
 import tigercontrol
 from tigercontrol.controllers import Controller
 from jax import grad,jit
 import jax.random as random
 from tigercontrol.utils import generate_key
 import jax
-import scipy
+from scipy.linalg import solve_discrete_are as dare
 
 class LQR(Controller):
 
@@ -16,18 +17,16 @@ class LQR(Controller):
             A, B (float/numpy.ndarray): system dynamics
             Q, R (float/numpy.ndarray): cost matrices (i.e. cost = x^TQx + u^TRu)
         """
-        self.initialized = True
 
-        self.A, self.B = A, B
-         n, m = B.shape # State & Action Dimensions
+        n, m = B.shape # State & Action Dimensions
 
-        if(Q is None):
-            Q = np.identity(n)
+        if(Q is None or type(Q)):
+            Q = onp.identity(n, dtype=np.float32)
         if(R is None):
-            R = np.identity(m)
+            R = onp.identity(m, dtype=np.float32)
 
         # solve the ricatti equation 
-        X = scipy.linalg.solve_discrete_are(A, B, Q, R)
+        X = dare(A, B, Q, R)
 
         #compute LQR gain
         self.K = np.linalg.inv(B.T @ X @ B + R) @ (B.T @ X @ A)
@@ -44,8 +43,8 @@ class LQR(Controller):
         """
         return -self.K @ x
 
-    def update(self):
-        raise NotImplementedError
+    def update(self, cost = None):
+        return
 
     def plan(self, x, T):
         """
