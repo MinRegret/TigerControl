@@ -71,19 +71,38 @@ class SystemID(Controller):
 if __name__ == "__main__":
 
     T = 1000
-    T_0 = 5000 # system identification
-    n, m = 3, 3
+    T_0 = 10000 # system identification
+    n, m = 5, 3
     #n, m = 4, 4
     x0 = np.zeros((n, 1))
 
     # LDS specification
     #A, B = np.array([[0., 1., 0.], [1., 0., 0.], [0., 0., 1.]]), np.array([[0., 1., 1.], [1., 0., 1.], [1., 1., 0.]])
-    A, B = np.identity(n), np.identity(m)
+    #A, B = np.identity(n), np.identity(m)
     #A = random.normal(generate_key(), shape=(n,n))
     #A = A / np.linalg.norm(A, ord='nuc')
-    A, B = 0.9 * A, 0.9 * B
+    #A, B = 0.9 * A, 0.9 * B
 
-    W = np.zeros(T_0 + T)
+    A = np.array([[9., 1., 0., 0., 0.],
+              [0., 9., 0., 0., 0.],
+              [0., 0., 5., 1., 0.],
+              [0., 0., 0., 5., 0.],
+              [0., 0., 0., 0., 1.]])
+
+    #A = np.identity(5)
+
+    B = np.array([[1., 0., 0.],
+              [0.5, 0.5, 0.],
+              [0.5, 0.0, 0.5],
+              [0., 1., 0.],
+              [0., 0.5, 0.5]])
+
+    A = 0.9 * A / np.linalg.norm(A, ord='nuc')
+    B = 0.9 * B / np.linalg.norm(B, ord='nuc')
+
+
+    #W = np.zeros(T_0 + T)
+    W = (np.sin(np.arange((T_0+T)*m)/(20*np.pi)).reshape((T_0+T),m) @ np.ones((m, n))).reshape((T_0+T), n, 1)
 
     sysid = SystemID()
     sysid.initialize(n, m)
@@ -92,7 +111,12 @@ if __name__ == "__main__":
         u = sysid.get_action(x)
         x = A @ x + B @ u + W[t]
     A_id, B_id = sysid.system_id()
-    print("A, B: ", A_id, B_id)
+    print("A versus A_id")
+    print(A)
+    print(A_id)
+    print("B versus B_id")
+    print(B)
+    print(B_id)
     print("max diff for A, B: ", np.max(np.abs(A - A_id)), np.max(np.abs(B - B_id)))
     print("norm diff for A, B: ", np.linalg.norm(A - A_id), np.linalg.norm(B - B_id))
 

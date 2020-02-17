@@ -1,5 +1,4 @@
 import jax.numpy as np
-import numpy as onp
 import tigercontrol
 from tigercontrol.controllers import Controller
 from jax import grad,jit
@@ -11,25 +10,25 @@ from tigercontrol.controllers import LQR
 
 # BPC definition
 class BPC(Controller):
-    def __init__(self, A, B, H = 3, HH = 3, lr = 0.001, delta = 0.1, include_bias = True, project = True):
+    def __init__(self, A, B, H = 3, HH = 3, lr = 0.001, delta = 0.1, include_bias = True):
         self.n, self.m = B.shape
         self.A, self.B = A, B
 
         self.lr, self.delta, self.H, self.HH = lr, delta, H, HH
-        self.include_bias, self.project = include_bias, project
+        self.include_bias = include_bias
 
         self.t = 1 
 
         self.K, self.M, self.bias = LQR(A, B).K, np.zeros((H, self.m, self.n)), np.zeros((self.m, 1))
 
         # Past H + HH noises 
-        self.w = np.zeros((H + HH, self.n, 1))
+        self.w = np.zeros((H + HH, n, 1))
 
         # past state and past action
-        self.x, self.u = np.zeros((self.n, 1)), np.zeros((self.m, 1))
+        self.x, self.u = np.zeros((n, 1)), np.zeros((m, 1))
 
         def _generate_uniform(shape, norm=1.00):
-            v = random.normal(generate_key(), shape=shape)
+            v = random.normal(size=shape)
             v = norm * v / np.linalg.norm(v)
             return v
 
@@ -49,7 +48,7 @@ class BPC(Controller):
 
         # 3. Ensure norm is of correct size
         norm = np.linalg.norm(self.M)
-        if(self.project and norm > (1-self.delta)):
+        if(project and norm > (1-self.delta)):
             self.M *= (1-self.delta) / norm
             
         # 4. Get new epsilon for M
@@ -62,7 +61,7 @@ class BPC(Controller):
                     shape = (self.n, 1), norm = np.sqrt(1 - np.linalg.norm(self.eps_bias[1:])**2)))
         self.eps_bias = np.roll(self.eps_bias, -1, axis = 0)
 
-    def get_action(self, x):
+    def act(self, x):
         # 1. Get new noise
         self.w = jax.ops.index_update(self.w, 0, x - self.A @ self.x - self.B @ self.u)
         self.w = np.roll(self.w, -1, axis = 0)
@@ -75,6 +74,6 @@ class BPC(Controller):
 
         # 3. Compute and return new action
         self.u = -self.K @ x + np.tensordot(self.M + self.delta * self.eps[-1], \
-            self.w[-self.H:], axes = ([0, 2], [0, 1])) + self.bias * self.include_bias
+                    self.W[-self.M:], axes = ([0, 2], [0, 1])) + self.bias * self.include_bias
               
         return self.u
