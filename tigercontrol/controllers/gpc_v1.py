@@ -6,6 +6,7 @@ written by Paula Gradu, Elad Hazan and Anirudha Majumdar
 """
 
 import jax.numpy as np
+import numpy as onp
 import tigercontrol
 from tigercontrol.controllers import Controller
 from jax import grad,jit
@@ -33,6 +34,7 @@ class GPC_v1(Controller):
 
         #### PERSONAL NOTE: if these are None, automatically do sys id!!!!
         self.A, self.B = A, B # System Dynamics
+
         self.t = 1 # Time Counter (for decaying learning rate)
         #### PERSONAL NOTE: introduce lr schedule??
         self.lr, self.H= lr, H # Model Hyperparameters
@@ -52,10 +54,10 @@ class GPC_v1(Controller):
         def policy_loss(M, bias, w, cost_t = cost_fn):
             y = np.zeros((n, 1))
             for h in range(HH - 1):
-                v = -self.K @ y + np.tensordot(M, w[h : h + H], axes = ([0, 2], [0, 1])) + off
+                v = -self.K @ y + np.tensordot(M, w[h : h + H], axes = ([0, 2], [0, 1])) + bias
                 y = A @ y + B @ v + w[h + H]
             # Don't update state at the end    
-            v = -self.K @ y + np.tensordot(M, w[h : h + H], axes = ([0, 2], [0, 1])) + off
+            v = -self.K @ y + np.tensordot(M, w[h : h + H], axes = ([0, 2], [0, 1])) + bias
             return cost_fn(y, v) 
 
         self.grad = grad(policy_loss, (0, 1))
@@ -66,11 +68,11 @@ class GPC_v1(Controller):
 
     def update(self, cost = None):
         # 1. Get gradients
-        delta_M, delta_off = self.grad(self.M, self.off, self.w, cost)
+        delta_M, delta_off = self.grad(self.M, self.bias, self.w, cost)
 
         # 2. Execute updates
         self.M -= self.lr * delta_M
-        self.off -= self.lr * delta_off
+        self.bias -= self.lr * delta_off
 
     def get_action(self, x):
         # 1. Get new noise (will be located at w[-1])
@@ -84,7 +86,7 @@ class GPC_v1(Controller):
         self.t = self.t + 1 ## SHOULD THIS BE IN UPDATE INSTEAD ?
 
         # 3. Compute and return new action
-        self.u = -self.K @ x + np.tensordot(self.M, self.w, \
-            axes = ([0, 2], [0, 1])) + self.off * self.include_bias
+        self.u = -self.K @ x + np.tensordot(self.M, self.w[-self.H:], \
+            axes = ([0, 2], [0, 1])) + self.bias * self.include_bias
 
         return self.u

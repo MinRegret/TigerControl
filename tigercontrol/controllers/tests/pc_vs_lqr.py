@@ -34,7 +34,7 @@ def evaluate(controller, A, B, Wgen, cost_fn):
 def to_dataframe(alg, loss):
     inst_loss, avg_loss = loss
     return pd.DataFrame(data = {'Algorithm': alg, 'Time': np.arange(T, dtype=np.float32),
-                                'Instantaneous Cost': loss, 'Average Cost': avg_loss})
+                                'Instantaneous Cost': inst_loss, 'Average Cost': avg_loss})
 
 def benchmark(A, B, Wgen, cost_fn = quad):
 

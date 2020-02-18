@@ -6,6 +6,7 @@ written by Paula Gradu, Elad Hazan and Anirudha Majumdar
 """
 
 import jax.numpy as np
+import numpy as onp
 import tigercontrol
 from tigercontrol.controllers import Controller
 from jax import grad,jit
@@ -34,6 +35,7 @@ class GPC_v2(Controller):
 
         #### PERSONAL NOTE: if these are None, automatically do sys id!!!!
         self.A, self.B = A, B # System Dynamics
+
         self.t = 1 # Time Counter (for decaying learning rate)
         #### PERSONAL NOTE: introduce lr schedule??
         self.lr, self.H = lr, H # Model Hyperparameters
@@ -48,7 +50,7 @@ class GPC_v2(Controller):
         self.x = np.zeros((H+HH+1, n, 1))
 
         # past action
-        self.u = zeros((m, 1))
+        self.u = np.zeros((m, 1))
 
         # The Policy Cost Function
         def policy_loss(M, bias, w, x0, cost_t = cost_fn):
@@ -87,7 +89,7 @@ class GPC_v2(Controller):
         self.t = self.t + 1 ## SHOULD THIS BE IN UPDATE INSTEAD ?
 
         # 4. Compute and return new action
-        self.u = -self.K @ x + np.tensordot(self.M, self.w, \
+        self.u = -self.K @ x + np.tensordot(self.M, self.w[-self.H:], \
             axes = ([0, 2], [0, 1])) + self.bias * self.include_bias
 
         return self.u
