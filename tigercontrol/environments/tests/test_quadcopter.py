@@ -10,16 +10,16 @@ def test_quadcopter():
         'Linear_PID':{'P':[300,300,7000],'I':[0.04,0.04,4.5],'D':[450,450,5000]},
         'Angular_PID':{'P':[22000,22000,1500],'I':[0,0,1.2],'D':[12000,12000,0]},
     }
-    GOALS = [(1,1,2),(1,-1,4),(-1,-1,2),(-1,1,4)]
-    YAWS = [0,3.14,-1.54,1.54]
+    GOAL = (0,0,2)
+    YAW = 0
 
     # initialize quadcopter and GUI
     quad_environment = tigercontrol.environment("Quadcopter-v0")
-    state = quad_environment.initialize(GOALS, YAWS)
+    state = quad_environment.initialize()
 
     # initialize model and targets
     quad_controller = QuadcopterModel()
-    quad_controller.initialize(CONTROLLER_PARAMETERS, GOALS[0], YAWS[0])
+    quad_controller.initialize(CONTROLLER_PARAMETERS, GOAL, YAW)
 
     # start control loop
     motor_action = None
