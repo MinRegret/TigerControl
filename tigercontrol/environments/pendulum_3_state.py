@@ -204,7 +204,7 @@ class Pendulum_3_State(Environment):
             axle = rendering.make_circle(.05)
             axle.set_color(0,0,0)
             self.viewer.add_geom(axle)
-            fname = os.path.join(get_tigercontrol_dir(), "environments/control/assets/clockwise.png")
+            fname = os.path.join(get_tigercontrol_dir(), "environments/control/images/clockwise.png")
             self.img = rendering.Image(fname, 1., 1.)
             self.imgtrans = rendering.Transform()
             self.img.add_attr(self.imgtrans)

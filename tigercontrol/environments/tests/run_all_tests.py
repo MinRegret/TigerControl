@@ -1,20 +1,26 @@
-""" all environment tests """
+from tigercontrol.environments.tests.test_lds import test_lds
+from tigercontrol.environments.tests.test_lstm_control import test_lstm_control
+from tigercontrol.environments.tests.test_rnn_control import test_rnn_control
+from tigercontrol.environments.tests.test_cartpole import test_cartpole
+from tigercontrol.environments.tests.test_pendulum import test_pendulum
+from tigercontrol.environments.tests.test_double_pendulum import test_double_pendulum
+from tigercontrol.environments.tests.test_obstacles_improved import test_obstacles_improved
+from tigercontrol.environments.tests.test_planar_quadrotor import test_planar_quadrotor
+from tigercontrol.environments.tests.test_double_pendulum import test_double_pendulum
 
-from tigercontrol.environments.control.tests.run_all_tests import run_all_tests as control_environments_tests
-from tigercontrol.environments.pybullet.tests.run_all_tests import run_all_tests as pybullet_environments_tests
-from tigercontrol.environments.tests.test_custom_environment import test_custom_environment
 
-# run all unit tests for environments
 def run_all_tests(steps=1000, show=False):
-    print("\nrunning all environments tests...\n")
-    test_custom_environment(show=show)
-    control_environments_tests(show=show)
-    try:
-        pybullet_environments_tests(show=show)
-    except e:
-        print(e)
-        print("pybullet environment tests failed")
-    print("\nall environments tests passed\n")
+    print("\nrunning all control environments tests...\n")
+    test_lstm_control(steps=steps, show_plot=show)
+    test_rnn_control(steps=steps, show_plot=show)
+    test_cartpole(verbose=show)
+    test_pendulum(verbose=show)
+    test_double_pendulum(verbose=show)
+    test_double_pendulum(verbose=show)
+    test_obstacles_improved(verbose=show)
+    test_planar_quadrotor(steps=steps, show_plot=show)
+    test_lds(steps=steps, show_plot=show)
+    print("\nall control environments tests passed\n")
   
 if __name__ == "__main__":
     run_all_tests(show=False)

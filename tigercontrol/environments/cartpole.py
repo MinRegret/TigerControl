@@ -27,7 +27,6 @@ class CartPole(Environment):
     }
 
     def __init__(self):
-        self.initialized = False
         self.compiled = False
         self.rollout_controller = None
         self.gravity = 9.8
@@ -48,21 +47,21 @@ class CartPole(Environment):
         self.n, self.m = 4, 1
         self.viewer = None
         self._state = None
-        self.steps_beyond_done = None
 
         def _dynamics(x_0, u): # dynamics
+            x_0, u = np.squeeze(x_0, axis=1), np.squeeze(u, axis=1)
             x, x_dot, theta, theta_dot = np.split(x_0, 4)
-            force = self.force_mag * np.clip(u, -1.0, 1.0)[0] # iLQR may struggle with clipping due to lack of gradient
+            force = self.force_mag * np.clip(u, -1.0, 1.0) # iLQR may struggle with clipping due to lack of gradient
             costh = np.cos(theta)
             sinth = np.sin(theta)
             temp = (force + self.polemass_length * theta_dot * theta_dot * sinth) / self.total_mass
             thetaacc = (self.gravity*sinth - costh*temp) / (self.length * (4.0/3.0 - self.masspole*costh*costh / self.total_mass))
-            xacc  = temp - self.polemass_length * thetaacc * costh / self.total_mass
+            xacc = temp - self.polemass_length * thetaacc * costh / self.total_mass
             x  = x + self.tau * x_dot # use euler integration by default
             x_dot = x_dot + self.tau * xacc
             theta = theta + self.tau * theta_dot
             theta_dot = theta_dot + self.tau * thetaacc
-            state = np.concatenate((x, x_dot, theta, theta_dot))
+            state = np.vstack((x, x_dot, theta, theta_dot))
             return state
         self._dynamics = jax.jit(_dynamics) # MUST store as self._dynamics for default rollout implementation to work
         C_x, C_u = (np.diag(np.array([0.2, 0.05, 1.0, 0.05])), np.diag(np.array([0.05])))
@@ -91,10 +90,9 @@ class CartPole(Environment):
         self._rollout = jax.jit(_rollout, static_argnums=(0,1,3))
 
     def initialize(self):
-        """ Initialize or reset the CartPole environment """
-        self.initialized = True
-        return self._reset()
+        return self._reset() # returns first state
 
+        
     def step(self, action):
         """ Description: updates internal state <- dynamcics(state, action) and returns state, cost, and done boolean """
         assert self.initialized
@@ -110,8 +108,7 @@ class CartPole(Environment):
     def _reset(self):
         """ Description: Reset the environment and return the start state """
         self._state = random.uniform(generate_key(),shape=(4,), minval=-0.05, maxval=0.05)
-        self.steps_beyond_done = None
-        self._state = np.array([0.0, 0.03, 0.03, 0.03]) # reproducible results
+        #self._state = np.array([0.0, 0.03, 0.03, 0.03]) # reproducible results
         return self._state
 
     def rollout(self, controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
