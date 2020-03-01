@@ -59,8 +59,7 @@ class Spec(object):
             tags = {}
         self.tags = tags
         
-        # We may make some of these other parameters public if they're
-        # useful.
+        # We may make some of these other parameters public if they're useful.
         match = self.regexp.search(id)
         if not match:
             raise error.Error('Attempted to register malformed {} ID: {}. (Currently all IDs must be of the form {}.)'.format(self, id, self.regexp.pattern))
@@ -95,10 +94,11 @@ class Spec(object):
         return obj
 
     def __repr__(self):
-        return "{} Spec({})".format(str(self), self.id)
+        return self.__str__()
 
     def __str__(self):
         return "<TigerControl Spec>"
+
 
 class Registry(object):
     """Register object by ID. IDs remain stable over time and are
@@ -220,5 +220,9 @@ class Registry(object):
     def register_custom(self, id, custom_class):
         self.custom[id] = custom_class
 
+    def __repr__(self):
+        return self.__str__()
 
+    def __str__(self):
+        return "<TigerControl Registry>"
 

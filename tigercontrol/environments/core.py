@@ -13,10 +13,6 @@ class Environment(object):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self, **kwargs):
-        ''' Description: resets environment to time 0 '''
-        raise NotImplementedError
-
     def step(self, **kwargs):
         ''' Description: run one timestep of the environment's dynamics. '''
         raise NotImplementedError
