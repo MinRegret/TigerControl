@@ -18,20 +18,10 @@ class Adagrad(Optimizer):
     Returns:
         None
     """
-    def __init__(self, pred=None, loss=mse, learning_rate=1.0, hyperparameters={}):
-        self.initialized = False
+    def __init__(self, learning_rate=1.0, max_norm=True):
         self.lr = learning_rate
-        self.hyperparameters = {'max_norm':True, 'reg': 0.0}
-        self.hyperparameters.update(hyperparameters)
-        for key, value in self.hyperparameters.items():
-            if hasattr(self, key):
-                raise error.InvalidInput("key {} is already an attribute in {}".format(key, self))
-            setattr(self, key, value) # store all hyperparameters
+        self.max_norm = max_norm
         self.G = None
-        self.pred = pred
-        self.loss = loss
-        if self._is_valid_pred(pred, raise_error=False) and self._is_valid_loss(loss, raise_error=False):
-            self.set_predict(pred, loss=loss)
 
         @jit
         def _update(params, grad, G, max_norm):
@@ -42,10 +32,7 @@ class Adagrad(Optimizer):
             return new_params, new_G, max_norm
         self._update = _update
 
-    def reset(self): # reset internal parameters (self.G)
-        self.G = None
-
-    def update(self, params, x, y, loss=None):
+    def update(self, params, grad):
         """
         Description: Updates parameters based on correct value, loss and learning rate.
         Args:
@@ -56,8 +43,6 @@ class Adagrad(Optimizer):
         Returns:
             Updated parameters in same shape as input
         """
-        assert self.initialized
-        grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
         
         # Make everything a list for generality
         is_list = True

@@ -18,16 +18,12 @@ class Adam(Optimizer):
     Returns:
         None
     """
-    def __init__(self, pred=None, loss=mse, learning_rate=1.0, hyperparameters={}):
-        self.initialized = False
+    def __init__(self, learning_rate=1.0, max_norm=True, beta_1=0.9, beta_2=0.999, eps=1e-7):
         self.lr = learning_rate
-        self.hyperparameters = {'reg':0.0, 'beta_1': 0.9, 'beta_2': 0.999, 'eps': 1e-7, 'max_norm':True}
-        self.hyperparameters.update(hyperparameters)
-        for key, value in self.hyperparameters.items():
-            if hasattr(self, key):
-                raise error.InvalidInput("key {} is already an attribute in {}".format(key, self))
-            setattr(self, key, value) # store all hyperparameters
+        self.max_norm = max_norm
+        self.beta_1, self.beta_2 = beta_1, beta_2
         self.beta_1_t, self.beta_2_t = self.beta_1, self.beta_2
+        self.eps = eps
         self.m, self.v = None, None
 
         self.pred = pred
@@ -54,7 +50,7 @@ class Adam(Optimizer):
         self.beta_1_t, self.beta_2_t = self.beta_1, self.beta_2
         self.m, self.v = None, None
 
-    def update(self, params, x, y, loss=None):
+    def update(self, params, grad):
         """
         Description: Updates parameters based on correct value, loss and learning rate.
         Args:
@@ -65,8 +61,6 @@ class Adam(Optimizer):
         Returns:
             Updated parameters in same shape as input
         """
-        assert self.initialized
-        grad = self.gradient(params, x, y, loss=loss) # defined in optimizers core class
 
         # Make everything a list for generality
         is_list = True
@@ -74,7 +68,7 @@ class Adam(Optimizer):
             params = [params]
             grad = [grad]
             is_list = False
-        if self.m == None: # first run
+        if self.m == None: # initialize momentum and square grads
             self.m = [np.zeros(dw.shape) for dw in grad]
             self.v = [np.zeros(dw.shape) for dw in grad]
 
