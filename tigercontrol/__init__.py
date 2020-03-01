@@ -2,8 +2,8 @@
 
 import tigercontrol
 from tigercontrol import error
-from tigercontrol.environments import environment, CustomEnvironment, environment_registry, register_custom_environment
-from tigercontrol.controllers import controller, CustomController, controller_registry, register_custom_controller
+from tigercontrol.environments import environment, environment_registry
+from tigercontrol.controllers import controller, controller_registry, CustomController, register_custom_controller
 from tigercontrol.help import help
 from tigercontrol.utils import set_key
 from tigercontrol.experiments import Experiment
@@ -18,11 +18,9 @@ set_key()
 __all__ = [
     "controller", 
     "environment", 
-    "CustomController", 
-    "CustomEnvironment",
-    "Experiment", 
+    "CustomController",
     "register_custom_controller", 
-    "register_custom_environment", 
+    "Experiment", 
     "help", 
-    "set_key"
+    "set_key",
 ]

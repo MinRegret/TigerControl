@@ -11,18 +11,17 @@ from tigercontrol.controllers.gpc_v1 import GPC_v1
 from tigercontrol.controllers.gpc_v2 import GPC_v2
 from tigercontrol.controllers.bpc import BPC
 from tigercontrol.controllers.kalman_filter import KalmanFilter
-from tigercontrol.controllers.shooting import Shooting
 from tigercontrol.controllers.ilqr import ILQR
 
 # boosting
-from tigercontrol.utils.boosting import SimpleBoost
+from tigercontrol.controllers.boosting import SimpleBoost
 
 # ---------- Boosting Controllers ----------
 
 
 controller_register(
     id='SimpleBoost',
-    entry_point='tigercontrol.utils.boosting:SimpleBoost',
+    entry_point='tigercontrol.controllers.boosting:SimpleBoost',
 )
 
 
@@ -32,11 +31,6 @@ controller_register(
 controller_register(
     id='KalmanFilter',
     entry_point='tigercontrol.controllers:KalmanFilter',
-)
-
-controller_register(
-    id='Shooting',
-    entry_point='tigercontrol.controllers:Shooting',
 )
 
 controller_register(

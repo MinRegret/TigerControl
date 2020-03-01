@@ -5,43 +5,31 @@ import jax.numpy as np
 import matplotlib.pyplot as plt
 
 # test a simple CustomController that returns last value by storing a single param
-def test_custom_controller(steps=1000, show_plot=True):
+def test_custom_controller(steps=1000, show_plot=False):
     # initial preparation
     T = steps 
-    p, q = 3, 3
     loss = lambda y_true, y_pred: (y_true - y_pred)**2
-    environment = tigercontrol.environment("ARMA-v0")
-    cur_x = environment.initialize(p, q)
+    environment = tigercontrol.environment("LDS-v0") # return class
+    n, m = 2, 2 # state and action dimension
+    env = environment()
+    cur_x = env.initialize(n, m)
 
-    # simple LastValue custom controller implementation
+    # simple zero custom controller implementation
     class Custom(tigercontrol.CustomController):
-        def initialize(self):
-            self.x = 0.0
-        def predict(self, x):
-            self.x = x
-            return self.x
+        def get_action(self, x):
+            return np.zeros((m,1))
         def update(self, y):
             pass
 
     # try registering and calling the custom controller
     tigercontrol.register_custom_controller(Custom, "TestCustomController")
-    custom_controller = tigercontrol.controllers("TestCustomController")
-    custom_controller.initialize()
-
-    # regular LastValue controller as sanity check
-    reg_controller = tigercontrol.controllers("LastValue")
-    reg_controller.initialize()
+    custom_controller = tigercontrol.controller("TestCustomController")
+    controller = custom_controller()
  
     results = []
     for i in range(T):
-        cur_y_pred = custom_controller.predict(cur_x)
-        reg_y_pred = reg_controller.predict(cur_x)
-        assert cur_y_pred == reg_y_pred # check that CustomController outputs the correct thing
-        cur_y_true = environment.step()
-        custom_controller.update(cur_y_true)
-        reg_controller.update(cur_y_true)
-        results.append(loss(cur_y_true, cur_y_pred))
-        cur_x = cur_y_true
+        a = controller.get_action(cur_x)
+        cur_x = env.step(a)
 
     if show_plot:
         plt.plot(results)

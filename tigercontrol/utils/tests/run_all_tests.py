@@ -3,7 +3,7 @@ import re
 from tigercontrol.utils.tests.test_random import test_random
 from tigercontrol.utils.tests.test_registration_tools import test_registration_tools
 from tigercontrol.utils.optimizers.tests.run_all_tests import run_all_tests as optimizers_tests
-from tigercontrol.utils.boosting.tests.run_all_tests import run_all_tests as boosting_tests
+from tigercontrol.controllers.boosting.tests.run_all_tests import run_all_tests as boosting_tests
 
 # add all unit tests in utils
 def run_all_tests(steps=1000, show=False):

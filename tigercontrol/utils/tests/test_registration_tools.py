@@ -21,9 +21,9 @@ def test_registry():
     regexp = re.compile(r'^([\w:.-]+)-v(\d+)$') # regular expression accepts "string"-v#
     test_registry = Registry(regexp)
 
-    test_registry.register(id='GoodID-v0', entry_point='tigercontrol.environments.control:LDS')
+    test_registry.register(id='GoodID-v0', entry_point='tigercontrol.environments:LDS')
     try:
-        test_registry.register(id='BadID', entry_point='tigercontrol.environments.control:LDS')
+        test_registry.register(id='BadID', entry_point='tigercontrol.environments:LDS')
         raise Exception("Registry successfully registered bad ID")
     except error.Error:
         pass
