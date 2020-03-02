@@ -47,5 +47,6 @@ def test_cartpole_swingup(verbose=False):
 
 
 if __name__ == "__main__":
-    test_cartpole_swingup(verbose=True)
+    #test_cartpole_swingup(verbose=True)
+    pass
 

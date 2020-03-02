@@ -2,9 +2,9 @@ import gym
 import pybullet as pybullet
 import numpy as np
 import gym.spaces as spaces
-# from tigercontrol.environments.pybullet.obstacle_utils import *
+# from tigercontrol.environments.deprecated.pybullet.obstacle_utils import *
 from tigercontrol.utils import get_tigercontrol_dir
-from tigercontrol.environments.pybullet.pybullet_environment import PyBulletEnvironment
+from tigercontrol.environments.deprecated.pybullet.pybullet_environment import PyBulletEnvironment
 import os
 
 class ObstaclesEnv(gym.Env):

@@ -2,7 +2,7 @@
 
 from tigercontrol import error
 from tigercontrol.environments import Environment
-from tigercontrol.environments.pybullet.simulator import Simulator
+from tigercontrol.environments.deprecated.pybullet.simulator import Simulator
 
 
 class PyBulletEnvironment(Simulator):

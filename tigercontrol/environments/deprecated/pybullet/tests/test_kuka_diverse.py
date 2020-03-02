@@ -51,5 +51,6 @@ def test_kuka_diverse(verbose=False):
 
 
 if __name__ == '__main__':
-    test_kuka_diverse(verbose=True)
-
+    #test_kuka_diverse(verbose=True)
+    pass
+    

@@ -3,7 +3,7 @@ PyBullet Pendulum enviornment
 """
 
 from pybullet_envs.bullet.kuka_diverse_object_gym_env import KukaDiverseObjectEnv
-from tigercontrol.environments.pybullet.pybullet_environment import PyBulletEnvironment
+from tigercontrol.environments.deprecated.pybullet.pybullet_environment import PyBulletEnvironment
 
 
 class KukaDiverse(PyBulletEnvironment):

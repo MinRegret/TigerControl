@@ -47,4 +47,5 @@ def test_cartpole(verbose=False):
 
 
 if __name__ == "__main__":
-    test_cartpole(verbose=True)
+    #test_cartpole(verbose=True)
+    pass

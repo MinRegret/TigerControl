@@ -3,7 +3,7 @@ PyBullet HalfCheetah enviornment
 """
 
 from pybullet_envs.gym_locomotion_envs import HalfCheetahBulletEnv
-from tigercontrol.environments.pybullet.pybullet_environment import PyBulletEnvironment
+from tigercontrol.environments.deprecated.pybullet.pybullet_environment import PyBulletEnvironment
 
 
 class HalfCheetah(PyBulletEnvironment):

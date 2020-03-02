@@ -3,7 +3,7 @@ PyBullet Swingup Pendulum enviornment
 """
 
 from pybullet_envs.gym_pendulum_envs import InvertedPendulumSwingupBulletEnv
-from tigercontrol.environments.pybullet.pybullet_environment import PyBulletEnvironment
+from tigercontrol.environments.deprecated.pybullet.pybullet_environment import PyBulletEnvironment
 
 
 class CartPoleSwingup(PyBulletEnvironment):
