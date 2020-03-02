@@ -3,7 +3,7 @@ Test for PyBullet pendulum environment
 """
 import time
 import tigercontrol
-from tigercontrol.controllers.ilqr_pendulum_3_state import ILQR as ilqr_3_state
+#from tigercontrol.controllers.ilqr_pendulum_3_state import ILQR as ilqr_3_state
 import jax.numpy as np
 
 
@@ -99,4 +99,6 @@ def test_pendulum(verbose=False):
 
 
 if __name__ == "__main__":
-    test_pendulum(verbose=True)
+    #test_pendulum(verbose=True)
+    pass
+    

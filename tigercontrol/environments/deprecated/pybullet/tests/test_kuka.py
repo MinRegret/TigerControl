@@ -50,5 +50,6 @@ def test_kuka(verbose=False):
     print("test_kuka passed")
 
 if __name__ == '__main__':
-    test_kuka(verbose=True)
+    #test_kuka(verbose=True)
+    pass
 

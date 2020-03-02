@@ -31,6 +31,6 @@ def test_humanoid(steps=1000, verbose=False):
 
 
 if __name__ == '__main__':
-    test_humanoid(verbose=True)
-
+    #test_humanoid(verbose=True)
+    pass
 

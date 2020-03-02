@@ -206,5 +206,6 @@ def test_obstacles(verbose=False):
 
 
 if __name__ == "__main__":
-    test_obstacles(verbose=True)
-
+    #test_obstacles(verbose=True)
+    pass
+    

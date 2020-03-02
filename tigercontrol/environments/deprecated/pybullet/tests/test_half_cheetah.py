@@ -33,6 +33,7 @@ def test_half_cheetah(steps=1000, verbose=False):
 
 
 if __name__ == '__main__':
-    test_half_cheetah(verbose=True)
+    #test_half_cheetah(verbose=True)
+    pass
 
 

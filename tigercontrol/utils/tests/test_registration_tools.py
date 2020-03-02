@@ -6,7 +6,6 @@ import re
 import tigercontrol
 from tigercontrol import error, environments
 from tigercontrol.utils.registration_tools import *
-from tigercontrol.environments.registration import EnvironmentRegistry
 
 # run all registry tests
 def test_registration_tools(show=False):
@@ -41,7 +40,7 @@ def test_tigercontrol_environment():
 
 def test_missing_lookup():
     environment_id_re = re.compile(r'^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$')
-    registry = EnvironmentRegistry(environment_id_re)
+    registry = Registry(environment_id_re)
     registry.register(id='Test-v0', entry_point=None)
     registry.register(id='Test-v15', entry_point=None)
     registry.register(id='Test-v9', entry_point=None)

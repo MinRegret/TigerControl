@@ -29,6 +29,7 @@ def test_ant(steps=1000, verbose=False):
 
 
 if __name__ == '__main__':
-    test_ant(verbose=True)
+    #test_ant(verbose=True)
+    pass
 
 

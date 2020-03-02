@@ -4,7 +4,6 @@ Test for PyBullet cartpole environment
 import time
 import tigercontrol
 import jax.numpy as np
-from tigercontrol.environments.pybullet.simulator import Simulator
 
 # cartpole test
 def test_simulator(verbose=False):
@@ -67,5 +66,5 @@ def test_simulator(verbose=False):
 
 
 if __name__ == "__main__":
-    test_simulator(verbose=True)
-
+    #test_simulator(verbose=True)
+    pass

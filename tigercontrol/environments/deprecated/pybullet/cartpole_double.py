@@ -3,7 +3,7 @@ PyBullet Double Pendulum enviornment
 """
 
 from pybullet_envs.gym_pendulum_envs import InvertedDoublePendulumBulletEnv
-from tigercontrol.environments.pybullet.pybullet_environment import PyBulletEnvironment
+from tigercontrol.environments.deprecated.pybullet.pybullet_environment import PyBulletEnvironment
 
 
 class CartPoleDouble(PyBulletEnvironment):

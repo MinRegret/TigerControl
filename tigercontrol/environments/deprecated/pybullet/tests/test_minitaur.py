@@ -35,6 +35,6 @@ def test_minitaur(steps=1000, verbose=False):
 
 
 if __name__ == '__main__':
-    test_minitaur(verbose=True)
-
+    #test_minitaur(verbose=True)
+    pass
 

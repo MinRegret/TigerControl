@@ -71,5 +71,6 @@ def test_cartpole_double(verbose=False):
 
 
 if __name__ == "__main__":
-    test_cartpole_double(verbose=True)
+    #test_cartpole_double(verbose=True)
+    pass
 
