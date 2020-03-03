@@ -53,31 +53,33 @@ class LDS(Environment):
         # determine the noise function to use, allowing for conditioning on x, u, previous noise, and current t
         if (noise_distribution == None):           # case no noise
             if partially_observable:
-                self.noise = lambda n, x, u, w, t: (0.0, 0.0)
+                self.noise = lambda x, u: (0.0, 0.0)
             else:
-                self.noise = lambda n, x, u, w, t: 0.0
+                self.noise = lambda x, u: 0.0
         elif (noise_distribution == 'normal'):   # case normal distribution
             if partially_observable:
-                self.noise = lambda n, x, u, w, t: (gaussian((n,)), gaussian((d,)))
+                self.noise = lambda x, u: (gaussian((n,)), gaussian((d,)))
             else:
-                self.noise = lambda n, x, u, w, t: gaussian((n,))
+                self.noise = lambda x, u: gaussian((n,))
         elif (noise_distribution == 'uniform'): # case uniform distribution
             if partially_observable:
-                self.noise = lambda n, x, u, w, t: (random.uniform(generate_key(), shape=(n,), minval=-1, maxval=1), \
+                self.noise = lambda x, u: (random.uniform(generate_key(), shape=(n,), minval=-1, maxval=1), \
                     random.uniform(generate_key(), shape=(d,), minval=-1, maxval=1))
             else:
-                self.noise = lambda n, x, u, w, t: random.uniform(generate_key(), shape=(n,), minval=-1, maxval=1)
-        else:                                      # case custom function
+                self.noise = lambda x, u: random.uniform(generate_key(), shape=(n,), minval=-1, maxval=1)
+        else: # case custom function
             assert callable(noise_distribution), "noise_distribution not valid input" # assert input is callable
             from inspect import getargspec
             arg_sub = getargspec(noise_distribution).args # retrieve all parameters taken by provided function
-            for arg in arg_sub:
-                assert arg in ['n', 'x', 'u', 'w', 't'], "noise_distribution takes invalid input"
-            def noise(n, x, u, w, t):
-                noise_args = {'n': n, 'x': x, 'u': u, 'w': w, 't': t}
-                arg_dict = {k:v for k,v in noise_args.items() if k in arg_sub}
-                return noise_distribution(**arg_dict)
-            self.noise = noise
+            # for arg in arg_sub:
+            #    assert arg in ['n', 'x', 'u', 'w', 't'], "noise_distribution takes invalid input"
+            assert len(arg_sub) == 0 or len(arg_sub) == 2
+            # noise_args = {'x': x, 'u': u}
+            # arg_dict = {k:v for k,v in noise_args.items() if k in arg_sub}
+            if len(arg_sub) == 0:
+                self.noise = lambda x, u: noise_distribution()
+            else:
+                self.noise = lambda x, u: noise_distribution(x,u)
 
         # helper function that generates a random matrix with given dimensions
         for matrix, shape in {'A':(n, n), 'B':(n, m), 'C':(d, n), 'D':(d, m)}.items():
@@ -113,7 +115,8 @@ class LDS(Environment):
 
         if partially_observable: # return partially observable state
             u, w = np.zeros(m), np.zeros(d)
-            self.prev_noise = self.noise(n, self.x, u, w, self.T)
+            # self.prev_noise = self.noise(n, self.x, u, w, self.T)
+            self.prev_noise = self.noise(self.x, u)
             y = np.dot(self.C, self.x) + np.dot(self.D, u) + self.noise_magnitude * self.prev_noise[1] # (state_noise, obs_noise)
             return y
         self.prev_noise = np.zeros(n)
@@ -130,7 +133,8 @@ class LDS(Environment):
         """
         assert self.initialized
         self.T += 1
-        self.prev_noise = self.noise(self.n, self.x, u, self.prev_noise, self.T)
+        # self.prev_noise = self.noise(self.n, self.x, u, self.prev_noise, self.T) # change to x,u only
+        self.prev_noise = self.noise(self.x, u)
         self.x, y = self._step(self.x, u, self.prev_noise)
         return y # even in fully observable case, y = self.x
 
