@@ -5,6 +5,7 @@ import jax.numpy as np
 import jax.random as random
 from tigercontrol.utils import generate_key
 import matplotlib.pyplot as plt
+from tigercontrol.controllers.kalman_filter import KalmanFilter
 
 # Test Kalman Filter for constant signal x = 0.5 with measurement noise 0.1
 def test_kalman_filter(steps=100, show_plot=True):
@@ -14,7 +15,7 @@ def test_kalman_filter(steps=100, show_plot=True):
     env_noise = 0.3
     x0 = 0
 
-    controller = tigercontrol.controllers("KalmanFilter")
+    controller = KalmanFilter()
     controller.initialize(x0, 1, 0, 1, 1, 0, env_noise)
 
     loss = lambda x_true, x_pred: (x_true - x_pred)**2
