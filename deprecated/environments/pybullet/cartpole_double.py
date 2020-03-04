@@ -11,7 +11,7 @@ class CartPoleDouble(PyBulletEnvironment):
     Descrtion: Simulates a pendulum balanced on a cartpole.
     """
 
-    compatibles = set(['CartPoleDouble-v0', 'PyBullet'])
+    compatibles = set(['CartPoleDouble', 'PyBullet'])
     
     def __init__(self):
         self.initialized = False

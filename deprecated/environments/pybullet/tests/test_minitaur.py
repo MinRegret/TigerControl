@@ -7,7 +7,7 @@ import numpy as np
 import time
 
 def test_minitaur(steps=1000, verbose=False):
-    environment = tigercontrol.environment("PyBullet-Minitaur-v0")
+    environment = tigercontrol.environment("PyBullet-Minitaur")
     environment.initialize(render=verbose)
 
     sum_reward = 0

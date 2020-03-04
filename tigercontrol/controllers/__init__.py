@@ -7,8 +7,6 @@ from tigercontrol.controllers.core import Controller
 # controllers
 from tigercontrol.controllers.lqr import LQR
 from tigercontrol.controllers.gpc import GPC
-from tigercontrol.controllers.gpc_v1 import GPC_v1
-from tigercontrol.controllers.gpc_v2 import GPC_v2
 from tigercontrol.controllers.bpc import BPC
 from tigercontrol.controllers.kalman_filter import KalmanFilter
 from tigercontrol.controllers.ilqr import ILQR
@@ -56,15 +54,4 @@ controller_register(
 controller_register(
     id='BPC',
     entry_point='tigercontrol.controllers:BPC',
-)
-
-controller_register(
-    id='GPC-v1',
-    entry_point='tigercontrol.controllers:GPC_v1',
-)
-
-
-controller_register(
-    id='GPC-v2',
-    entry_point='tigercontrol.controllers:GPC_v2',
 )

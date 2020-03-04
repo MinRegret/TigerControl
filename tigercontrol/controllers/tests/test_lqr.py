@@ -43,7 +43,7 @@ def test_lqr(steps=10, show_plot=True):
     noise_magnitude = 0.2
     noise_distribution = 'normal'
 
-    environment_id = "LDS-v0"
+    environment_id = "LDS"
     environment_params = {'n': n, 'm' : m, 'noise_magnitude' : noise_magnitude, 'noise_distribution' : noise_distribution}
 
     C = np.identity(n + m) # quadratic cost

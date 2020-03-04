@@ -8,7 +8,7 @@ import jax.numpy as np
 
 # double pendulum test #TODO: finish
 def test_double_pendulum(verbose=False):
-    environment = tigercontrol.environment("DoublePendulum-v0")
+    environment = tigercontrol.environment("DoublePendulum")
     # observe [cos(theta1) sin(theta1) cos(theta2) sin(theta2) thetaDot1 thetaDot2]
     L = lambda x, u: (x[0] - x[2])**2
     dim_x, dim_u = 4, 1

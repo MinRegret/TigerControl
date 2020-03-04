@@ -9,7 +9,7 @@ def test_sgd(show=False):
     print("test_sgd passed")
 
 def test_sgd_lstm(show=False):
-    environment = tigercontrol.environment('ARMA-v0')
+    environment = tigercontrol.environment('ARMA')
     x = environment.initialize(p=2,q=0)
 
     controller = tigercontrol.controllers('LSTM')
@@ -37,7 +37,7 @@ def test_sgd_lstm(show=False):
         plt.close()
 
 def test_sgd_autoregressor(show=False):
-    environment = tigercontrol.environment('ARMA-v0')
+    environment = tigercontrol.environment('ARMA')
     x = environment.initialize(p=2,q=0)
 
     optimizer = SGD(learning_rate=0.0003)

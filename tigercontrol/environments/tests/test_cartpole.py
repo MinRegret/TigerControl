@@ -8,7 +8,7 @@ import jax.numpy as np
 
 # cartpole test
 def test_cartpole(verbose=False):
-    environment = tigercontrol.environment("CartPole-v0")
+    environment = tigercontrol.environment("CartPole")
     C_x, C_u = np.diag(np.array([0.1, 0.0, 1.0, 0.0])), np.diag(np.array([0.1]))
     L = lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u
     dim_x, dim_u = 4, 1

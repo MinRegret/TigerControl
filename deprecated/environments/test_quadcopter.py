@@ -14,7 +14,7 @@ def test_quadcopter():
     YAW = 0
 
     # initialize quadcopter and GUI
-    quad_environment = tigercontrol.environment("Quadcopter-v0")
+    quad_environment = tigercontrol.environment("Quadcopter")
     state = quad_environment.initialize()
 
     # initialize model and targets

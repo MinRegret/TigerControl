@@ -9,7 +9,7 @@ def test_custom_controller(steps=1000, show_plot=False):
     # initial preparation
     T = steps 
     loss = lambda y_true, y_pred: (y_true - y_pred)**2
-    environment = tigercontrol.environment("LDS-v0") # return class
+    environment = tigercontrol.environment("LDS") # return class
     n, m = 2, 2 # state and action dimension
     env = environment()
     cur_x = env.initialize(n, m)

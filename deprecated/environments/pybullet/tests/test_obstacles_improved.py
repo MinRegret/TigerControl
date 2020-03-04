@@ -167,7 +167,7 @@ def precompute_environment_costs(numEnvs, K, L, params, husky, sphere, GUI, seed
 
 # cartpole test
 def test_obstacles(verbose=False):
-    environment = tigercontrol.environment("PyBullet-Obstacles-v0")
+    environment = tigercontrol.environment("PyBullet-Obstacles")
     # obs = environment.initialize(render=verbose)
 
     # controller = tigercontrol.controllers("CartPoleNN")

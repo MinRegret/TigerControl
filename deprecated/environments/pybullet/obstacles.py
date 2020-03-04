@@ -326,7 +326,7 @@ class Obstacles(PyBulletEnvironment):
     """
     Description: Simulates a obstacles avoidance environment
     """
-    compatibles = set(['Obstacles-v0', 'PyBullet'])
+    compatibles = set(['Obstacles', 'PyBullet'])
 
     def __init__(self):
         self.initialized = False

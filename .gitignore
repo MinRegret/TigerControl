@@ -1,3 +1,4 @@
+# python related files
 *.swp
 *.pyc
 *.py~
@@ -6,6 +7,7 @@
 .pytest_cache/
 *.zip
 __pycache__
+
 # ignore all csv files except for the ENSO dataset (ctrl_indices) and precomputed results
 *.csv
 !tigercontrol/data/enso.csv
@@ -21,10 +23,15 @@ __pycache__
 # Python egg metadata, regenerated from source files by setuptools.
 /*.egg-info
 
+# sublime text files
 *.sublime-project
 *.sublime-workspace
-
 logs/
 
+# jupyter notebook related files
 .ipynb_checkpoints
 ghostdriver.log
+
+# no images in the github repository
+*.pdf
+*.png

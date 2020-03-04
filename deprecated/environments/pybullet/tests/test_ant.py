@@ -7,7 +7,7 @@ import numpy as np
 import time
 
 def test_ant(steps=1000, verbose=False):
-    environment = tigercontrol.environment("PyBullet-Ant-v0")
+    environment = tigercontrol.environment("PyBullet-Ant")
     environment.initialize(render=verbose)
 
     sum_reward = 0

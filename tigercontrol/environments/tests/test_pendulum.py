@@ -8,7 +8,7 @@ import jax.numpy as np
 
 # cartpole test
 def test_pendulum(verbose=False):
-    environment = tigercontrol.environment("Pendulum-v0")
+    environment = tigercontrol.environment("Pendulum")
     #L = lambda x, u: 1. - x[1] # 1 - cos(theta), where theta=0 is the goal (pendulum pointing up)
     # L = lambda x, u: x[0]**2
 

@@ -20,7 +20,7 @@ def test_registry():
     regexp = re.compile(r'^([\w:.-]+)-v(\d+)$') # regular expression accepts "string"-v#
     test_registry = Registry(regexp)
 
-    test_registry.register(id='GoodID-v0', entry_point='tigercontrol.environments:LDS')
+    test_registry.register(id='GoodID', entry_point='tigercontrol.environments:LDS')
     try:
         test_registry.register(id='BadID', entry_point='tigercontrol.environments:LDS')
         raise Exception("Registry successfully registered bad ID")
@@ -28,20 +28,20 @@ def test_registry():
         pass
     keys = test_registry.list_ids()
     vals = test_registry.all()
-    obj_class = test_registry.get_class('GoodID-v0')
+    obj_class = test_registry.get_class('GoodID')
     obj_instance = obj_class()
     return
 
 
 def test_tigercontrol_environment():
-    environment = tigercontrol.environment('LDS-v0')
+    environment = tigercontrol.environment('LDS')
     return
 
 
 def test_missing_lookup():
     environment_id_re = re.compile(r'^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$')
     registry = Registry(environment_id_re)
-    registry.register(id='Test-v0', entry_point=None)
+    registry.register(id='Test', entry_point=None)
     registry.register(id='Test-v15', entry_point=None)
     registry.register(id='Test-v9', entry_point=None)
     registry.register(id='Other-v100', entry_point=None)

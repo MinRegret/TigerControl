@@ -18,7 +18,7 @@ def test_ons(show=False):
 
     #tigercontrol.set_key(0) # consistent randomness
 
-    environment = tigercontrol.environment('ARMA-v0')
+    environment = tigercontrol.environment('ARMA')
     x, y_true = environment.initialize()
 
     controllers = []

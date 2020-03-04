@@ -15,7 +15,7 @@ def test_grid_search(show=False):
 
 
 def test_grid_search_arma(show=False):
-    environment_id = "LDS-v0"
+    environment_id = "LDS"
     controller_id = "GPC"
     environment_params = {'n':3, 'm':2}
     controller_params = {}

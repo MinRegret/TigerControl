@@ -14,7 +14,7 @@ x0 = np.zeros((n, 1))
 Wproc = lambda n, x, u, w, t: random.normal(size = (n, 1))
 Wproc = lambda n, x, u, w, t: np.sin(t/(2*np.pi))*np.ones((2, 1))
 
-env = tc.environment('LDS-v0')
+env = tc.environment('LDS')
 
 class LQR(Controller):
     def __init__(self, A, B, Q, R):

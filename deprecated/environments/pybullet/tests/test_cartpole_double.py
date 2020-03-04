@@ -27,11 +27,11 @@ class SmallReactivePolicy(Controller):
 # cartpole test
 def test_cartpole_double(verbose=False):
     # try to break this test
-    environment = tigercontrol.environment("PyBullet-CartPoleSwingup-v0")
+    environment = tigercontrol.environment("PyBullet-CartPoleSwingup")
     obs = environment.initialize(render=False)
     #environment.close()
 
-    environment = tigercontrol.environment("PyBullet-CartPoleDouble-v0")
+    environment = tigercontrol.environment("PyBullet-CartPoleDouble")
     obs = environment.initialize(render=verbose)
 
     controller = SmallReactivePolicy()

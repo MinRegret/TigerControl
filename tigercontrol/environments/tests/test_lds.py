@@ -10,7 +10,7 @@ from tigercontrol.utils.random import generate_key
 def test_lds(steps=1000, show_plot=False, verbose=False):
     T = steps
     n, m, d = 10, 10, 2 # state, input, and observation dimension
-    environment = tigercontrol.environment("LDS-v0")
+    environment = tigercontrol.environment("LDS")
 
     system_params = {}
     gaussian = lambda dims: random.normal(generate_key(), shape=dims)
@@ -24,9 +24,9 @@ def test_lds(steps=1000, show_plot=False, verbose=False):
     # Test custom noise
     custom_nd_vector = lambda x, u: (0.1 * x + np.cos(u), 0)
     custom_nd_scalar = lambda x, u: 0.1 * x + np.cos(u)
-    environment = tigercontrol.environment("LDS-v0")
+    environment = tigercontrol.environment("LDS")
     environment.initialize(n, m, d, partially_observable=True, noise_distribution=custom_nd_vector)
-    environment = tigercontrol.environment("LDS-v0")
+    environment = tigercontrol.environment("LDS")
     environment.initialize(n, m, d=None, partially_observable=False, noise_distribution=custom_nd_scalar) #, system_params={})
 
 
