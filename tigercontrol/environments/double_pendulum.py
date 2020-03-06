@@ -75,6 +75,7 @@ class DoublePendulum(Environment):
             return x
 
         def _dynamics(x, u):
+            x, u = np.squeeze(x, axis=1), np.squeeze(u, axis=1)
             torque = np.clip(u, -1.0, 1.0)[0]
             s_augmented = np.append(x, torque)
             ns = self._rk4(self._dsdt, s_augmented, [0, self.dt])
@@ -82,11 +83,13 @@ class DoublePendulum(Environment):
             ns_1 = wrap(ns[1])
             ns_2 = np.clip(ns[2], -self.MAX_VEL_1, self.MAX_VEL_1)
             ns_3 = np.clip(ns[3], -self.MAX_VEL_1, self.MAX_VEL_1)
-            return np.array([ns_0, ns_1, ns_2, ns_3])
+            return np.expand_dims(np.array([ns_0, ns_1, ns_2, ns_3]), axis=1)
         self._dynamics = jax.jit(dynamics)
 
     def reset(self):
-        return self.reset()
+        self.state = random.uniform(generate_key(), minval=-0.1, maxval=0.1, shape=(4,))
+        return self.state
+
 
     def _rk4(self, derivs, y0, t):
         """(self._dsdt, s_augmented, [0, self.dt])
@@ -130,10 +133,6 @@ class DoublePendulum(Environment):
             / (m2 * lc2 ** 2 + I2 - d2 ** 2 / d1)
         ddtheta1 = -(d2 * ddtheta2 + phi1) / d1
         return np.array([dtheta1, dtheta2, ddtheta1, ddtheta2, 0.])
-
-    def reset(self):
-        self.state = random.uniform(generate_key(), minval=-0.1, maxval=0.1, shape=(4,))
-        return self.state
 
     def step(self, a):
         self.state = self._dynamics(self.state, a)

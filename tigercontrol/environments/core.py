@@ -8,8 +8,6 @@ import jax.numpy as np
 
 # class for online control tests
 class Environment(object):
-    spec = None
-
     def __init__(self):
         self.initialized = False
 
@@ -19,6 +17,15 @@ class Environment(object):
 
     def step(self, **kwargs):
         ''' Description: run one timestep of the environment's dynamics. '''
+        raise NotImplementedError
+
+
+    def get_state_dim(self):
+        ''' Description: return dimension of the state. '''
+        raise NotImplementedError
+
+    def get_action_dim(self):
+        ''' Description: return dimension of action inputs. '''
         raise NotImplementedError
 
     def rollout(self, baby_controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):

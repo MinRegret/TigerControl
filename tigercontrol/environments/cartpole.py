@@ -27,7 +27,6 @@ class CartPole(Environment):
     }
 
     def __init__(self):
-        self.compiled = False
         self.rollout_controller = None
         self.gravity = 9.8
         self.masscart = 1.0
@@ -89,9 +88,17 @@ class CartPole(Environment):
             return trajectory
         self._rollout = jax.jit(_rollout, static_argnums=(0,1,3))
 
-    def reset(self):
-        return self._reset() # returns first state
+    def get_state_dim(self):
+        return self.n
 
+    def get_action_dim(self):
+        return self.m
+
+    def reset(self):
+        """ Description: Reset the environment and return the start state """
+        self._state = random.uniform(generate_key(),shape=(4,), minval=-0.05, maxval=0.05)
+        #self._state = np.array([0.0, 0.03, 0.03, 0.03]) # reproducible results
+        return self._state
         
     def step(self, action):
         """ Description: updates internal state <- dynamcics(state, action) and returns state, cost, and done boolean """
@@ -103,13 +110,8 @@ class CartPole(Environment):
         x_lim, th_lim = self.x_threshold, self.theta_threshold_radians
         done = bool(x < -x_lim or x > x_lim or theta < -th_lim or theta > th_lim)
         cost = self._loss(old_state, action)
-        return self._state, cost, done
-
-    def _reset(self):
-        """ Description: Reset the environment and return the start state """
-        self._state = random.uniform(generate_key(),shape=(4,), minval=-0.05, maxval=0.05)
-        #self._state = np.array([0.0, 0.03, 0.03, 0.03]) # reproducible results
         return self._state
+
 
     def rollout(self, controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
         # Description: Roll out trajectory of given baby_controller.

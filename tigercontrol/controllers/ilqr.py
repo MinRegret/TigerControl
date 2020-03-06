@@ -27,18 +27,15 @@ class ILQR(Controller):
 
     compatibles = set([])
 
-    def __init__(self, env, dim_x, dim_u, max_iterations, lamb, threshold, loss=None):
+    def __init__(self, env, max_iterations, lamb, threshold, loss=None):
         """
         Description: Initialize the dynamics of the method
         Args:
             problem (instance/function): problem instance *OR* dynamics of problem
             L (function): loss function
-            dim_x (int): state_space dimension
-            dim_u (int): action_space dimension
         """
-        self.dim_x = dim_x
-        self.dim_u = dim_u
         self.env = env
+        self.dim_x, self.dim_u = env.get_state_dim(), env.get_action_dim()
         self.L = self.env.get_loss()
         self.total_cost = jax.jit(lambda x, u: np.sum([self.L(x_t, u_t) for x_t, u_t in zip(x, u)])) # computes total cost over trajectory
         
