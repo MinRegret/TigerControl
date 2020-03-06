@@ -19,16 +19,7 @@ control_params = {
         'B': np.identity(3)
     }
     'ILQR': {
-        'A': np.identity(3)
-        'B': np.identity(3)
-    }
-    'LQRFiniteHorizon': {
-        'A': np.identity(3)
-        'B': np.identity(3)
-    }
-    'KalmanFilter': {
-        'A': np.identity(3)
-        'B': np.identity(3)
+        'env': tigercontrol.controller("Cartpole")() # cartpole instance
     }
     'SimpleBoost': {
         'A': np.identity(3)

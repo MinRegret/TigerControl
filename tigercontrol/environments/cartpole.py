@@ -102,7 +102,6 @@ class CartPole(Environment):
         
     def step(self, action):
         """ Description: updates internal state <- dynamcics(state, action) and returns state, cost, and done boolean """
-        assert self.initialized
         if type(action) == np.ndarray: action = action[0]
         old_state = self._state
         self._state = self._dynamics(self._state, action)
