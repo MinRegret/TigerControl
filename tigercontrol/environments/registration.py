@@ -7,7 +7,7 @@ from tigercontrol.utils import Spec, Registry
 
 # This format is true today, but it's *not* an official spec.
 # [username/](environment-name)-v(version)    environment-name is group 1, version is group 2
-environment_id_re = re.compile(r'^(?:[\w:-]+\/)?([\w:.-]+)-v(\d+)$')
+environment_id_re = re.compile(r'^(?:[\w:-]+\/)?([\w:.-]+)$')
 
 
 # Have a global environment_registry
