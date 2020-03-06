@@ -11,7 +11,7 @@ def get_trajectory(environment, controller, T = 100):
     (controller_id, controller_params) = controller
     
     environment = tigercontrol.environment(environment_id)
-    x = environment.initialize(**environment_params)
+    x = environment.reset(**environment_params)
     
     controller_params['A'], controller_params['B'] = environment.A, environment.B
     

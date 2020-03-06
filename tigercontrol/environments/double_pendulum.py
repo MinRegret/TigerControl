@@ -69,10 +69,6 @@ class DoublePendulum(Environment):
         self.observation_space = (6,)
         self.action_space = (1,)
         self.state = None
-
-    def initialize(self):
-        self.initialized = True
-
         def wrap(x):
             x = np.where(x > np.pi, x - 2*np.pi, x)
             x = np.where(x < -np.pi, x + 2*np.pi, x)
@@ -88,6 +84,8 @@ class DoublePendulum(Environment):
             ns_3 = np.clip(ns[3], -self.MAX_VEL_1, self.MAX_VEL_1)
             return np.array([ns_0, ns_1, ns_2, ns_3])
         self._dynamics = jax.jit(dynamics)
+
+    def reset(self):
         return self.reset()
 
     def _rk4(self, derivs, y0, t):

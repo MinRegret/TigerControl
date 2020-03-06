@@ -8,7 +8,7 @@ import time
 
 def test_half_cheetah(steps=1000, verbose=False):
     environment = tigercontrol.environment("PyBullet-HalfCheetah")
-    environment.initialize(render=verbose)
+    environment.reset(render=verbose)
 
     sum_reward = 0
     amplitude1 = 0.5

@@ -32,7 +32,7 @@ class ContinuousDownwardBiasPolicy(object):
 def test_kuka(verbose=False):
 
     environment = tigercontrol.environment("PyBullet-Kuka")
-    obs = environment.initialize(render=verbose)
+    obs = environment.reset(render=verbose)
     policy = ContinuousDownwardBiasPolicy()
 
     t_start = time.time()

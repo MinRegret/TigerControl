@@ -51,7 +51,7 @@ def test_simple_boost_lstm(steps=500, show=True):
     # environment initialize
     p, q = 4, 0
     environment = tigercontrol.environment("ARMA")
-    y_true = environment.initialize(p, q, noise_magnitude=0.1)
+    y_true = environment.reset(p, q, noise_magnitude=0.1)
  
     # run all boosting controller
     result_list = [[] for n in Ns]
@@ -116,7 +116,7 @@ def test_simple_boost_arma(steps=500, show=True):
 
         # environment initialize
         environment = tigercontrol.environment("ENSO")
-        x, y_true = environment.initialize(input_signals = ['oni'], timeline = timeline)
+        x, y_true = environment.reset(input_signals = ['oni'], timeline = timeline)
         controllers = []
 
         for n in Ns: # number of weak learners

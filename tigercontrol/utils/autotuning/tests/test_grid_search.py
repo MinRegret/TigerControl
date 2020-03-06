@@ -40,7 +40,7 @@ def test_grid_search_arma(show=False):
     controller = tigercontrol.controllers(controller_id)
     controller.initialize(**optimal_params)
     environment = tigercontrol.environment(environment_id)
-    x = environment.initialize(**environment_params)
+    x = environment.reset(**environment_params)
     loss = []
     if show:
         print("run final test with optimal parameters")

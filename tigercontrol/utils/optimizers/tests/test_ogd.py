@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 def test_ogd(show=False):
     
     environment = tigercontrol.environment('ARMA')
-    x = environment.initialize(p=2,q=0)
+    x = environment.reset(p=2,q=0)
 
     controller = tigercontrol.controllers('LSTM')
     controller.initialize(n=1, m=1, l=5, h=10, optimizer=OGD) # initialize with class

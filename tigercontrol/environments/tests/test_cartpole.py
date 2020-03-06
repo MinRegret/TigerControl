@@ -13,7 +13,7 @@ def test_cartpole(verbose=False):
     L = lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u
     dim_x, dim_u = 4, 1
     update_period = 75
-    obs = environment.initialize()
+    obs = environment.reset()
 
     T = 75 # horizon
     threshold = 0.01
@@ -38,7 +38,7 @@ def test_cartpole(verbose=False):
         if done:
             if verbose:
                 print("lasted {} time steps".format(t+1))
-            obs = environment.initialize()
+            obs = environment.reset()
 
         if done or index == T:
             if verbose:

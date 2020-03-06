@@ -17,7 +17,7 @@ def test_pendulum(verbose=False):
     # L = lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u
 
     dim_x, dim_u = 3, 1
-    obs = environment.initialize()
+    obs = environment.reset()
 
 
     
@@ -64,7 +64,7 @@ def test_pendulum(verbose=False):
         if done:
             if verbose:
                 print("lasted {} time steps".format(t+1))
-            obs = environment.initialize()
+            obs = environment.reset()
         '''
         if done or index == T:
             if verbose:
@@ -72,7 +72,7 @@ def test_pendulum(verbose=False):
 
                 # print(total_cost)
             environment.close()
-            obs = environment.initialize()
+            obs = environment.reset()
             print("initial obs:" + str(controller.reduce_state(obs)))
 
             controller.initialize(environment, dim_x, dim_u, max_iterations, lamb, threshold)

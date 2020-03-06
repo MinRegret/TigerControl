@@ -49,7 +49,7 @@ class Quadcopter(Environment):
         self.state = np.concatenate((init_pos, np.zeros(9))) # initial state
         self.render_init = False
 
-    def initialize(self):
+    def reset(self):
         self.QUAD_DYNAMICS_UPDATE = 0.010 # seconds
         self.render()
         return self.state

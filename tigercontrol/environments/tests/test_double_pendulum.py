@@ -12,7 +12,7 @@ def test_double_pendulum(verbose=False):
     # observe [cos(theta1) sin(theta1) cos(theta2) sin(theta2) thetaDot1 thetaDot2]
     L = lambda x, u: (x[0] - x[2])**2
     dim_x, dim_u = 4, 1
-    obs = environment.initialize()
+    obs = environment.reset()
 
     update_period = 75
     T = 75 # horizon
@@ -39,7 +39,7 @@ def test_double_pendulum(verbose=False):
         if done:
             if verbose:
                 print("solved double pendulum in {} time steps!".format(t+1))
-            obs = environment.initialize()
+            obs = environment.reset()
         '''
         if done or index == T:
             if verbose:

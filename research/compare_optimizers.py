@@ -19,7 +19,7 @@ def test_ons(show=False):
     #tigercontrol.set_key(0) # consistent randomness
 
     environment = tigercontrol.environment('ARMA')
-    x, y_true = environment.initialize()
+    x, y_true = environment.reset()
 
     controllers = []
     labels = ['OGD', 'ONS', 'Adam'] # don't run deprecated ONS

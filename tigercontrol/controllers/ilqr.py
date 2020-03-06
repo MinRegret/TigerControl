@@ -27,11 +27,7 @@ class ILQR(Controller):
 
     compatibles = set([])
 
-    def __init__(self):
-        self.initialized = False
-
-
-    def initialize(self, env, dim_x, dim_u, max_iterations, lamb, threshold, loss=None):
+    def __init__(self, env, dim_x, dim_u, max_iterations, lamb, threshold, loss=None):
         """
         Description: Initialize the dynamics of the method
         Args:
@@ -40,7 +36,6 @@ class ILQR(Controller):
             dim_x (int): state_space dimension
             dim_u (int): action_space dimension
         """
-        self.initialized = True
         self.dim_x = dim_x
         self.dim_u = dim_u
         self.env = env

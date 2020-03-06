@@ -89,7 +89,7 @@ class CartPole(Environment):
             return trajectory
         self._rollout = jax.jit(_rollout, static_argnums=(0,1,3))
 
-    def initialize(self):
+    def reset(self):
         return self._reset() # returns first state
 
         

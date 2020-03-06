@@ -8,7 +8,7 @@ import jax.numpy as np
 # cartpole test
 def test_cartpole_swingup(verbose=False):
     environment = tigercontrol.environment("PyBullet-CartPoleSwingup")
-    obs = environment.initialize(render=verbose)
+    obs = environment.reset(render=verbose)
 
     controller = tigercontrol.controllers("CartPoleNN")
     controller.initialize(environment.get_observation_space(), environment.get_action_space())

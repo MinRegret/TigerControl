@@ -21,7 +21,6 @@ class Pendulum(Environment):
     }
 
     def __init__(self, g=10.0):
-        self.initialized = False
         self.max_speed=20.
         self.max_torque=1.
         self.dt=.05
@@ -92,6 +91,9 @@ class Pendulum(Environment):
             return trajectory
         self._rollout = jax.jit(_rollout, static_argnums=(0,1,3))
 
+    def reset(self):
+        return self.reset()
+
     def rollout(self, controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
         # Description: Roll out trajectory of given baby_controller.
         if self.rollout_controller != controller: self.rollout_controller = controller
@@ -108,11 +110,6 @@ class Pendulum(Environment):
             if loss_grad: transcript['loss_grad'].append(self._loss_grad(x, u))
             if loss_hessian: transcript['loss_hessian'].append(self._loss_hessian(x, u))
         return transcript
-
-
-    def initialize(self):
-        self.initialized = True
-        return self.reset()
 
     def step(self,u):
         self.last_u = np.clip(u, -self.max_torque, self.max_torque)[0] # for rendering

@@ -36,26 +36,7 @@ class KalmanFilter(Controller):
     estimates for x(0) and P(0).
     """
 
-    compatibles = set([])
-
-    def __init__(self):
-        self.initialized = False
-
-    def to_ndarray(self, x):
-        """
-        Description: If x is a scalar, transform it to a (1, 1) numpy.ndarray;
-        otherwise, leave it unchanged.
-        Args:
-            x (float/numpy.ndarray)
-        Returns:
-            A numpy.ndarray representation of x
-        """
-        x = np.asarray(x)
-        if np.ndim(x) == 0:
-            x_2D = x[None, None]
-        return x_2D
-
-    def initialize(self, x, A, B, H, P, Q, R):
+    def __init__(self, x, A, B, H, P, Q, R):
         """
         Description:
             Initialize the dynamics of the controller.
@@ -70,14 +51,26 @@ class KalmanFilter(Controller):
         Returns:
             None
         """
-
-        self.initialized = True
-
         x, A, B, H, P, Q, R = self.to_ndarray(x), self.to_ndarray(A), self.to_ndarray(B), self.to_ndarray(H), self.to_ndarray(P), self.to_ndarray(Q), self.to_ndarray(R)
 
         self.x, self.A, self.B, self.H, self.P, self.Q, self.R  = x, A, B, H, P, Q, R
         self.K = np.array(A.shape) # jax.numpy.ndarray(A.shape) throws an error
 
+
+    def to_ndarray(self, x):
+        """
+        Description: If x is a scalar, transform it to a (1, 1) numpy.ndarray;
+        otherwise, leave it unchanged.
+        Args:
+            x (float/numpy.ndarray)
+        Returns:
+            A numpy.ndarray representation of x
+        """
+        x = np.asarray(x)
+        if np.ndim(x) == 0:
+            x_2D = x[None, None]
+        return x_2D
+        
     def step(self, u, z, n = 1):
         """
         Description:

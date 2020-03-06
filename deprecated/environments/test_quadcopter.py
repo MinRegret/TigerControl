@@ -15,7 +15,7 @@ def test_quadcopter():
 
     # initialize quadcopter and GUI
     quad_environment = tigercontrol.environment("Quadcopter")
-    state = quad_environment.initialize()
+    state = quad_environment.reset()
 
     # initialize model and targets
     quad_controller = QuadcopterModel()

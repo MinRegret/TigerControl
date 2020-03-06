@@ -16,11 +16,7 @@ class LDS(Environment):
         Simulates a linear dynamical system with a lot of flexibility and variety in
         terms of hyperparameter choices.
     """
-
-    def __init__(self):
-        self.initialized = False
-
-    def initialize(self, n, m, d = None, partially_observable = False, noise_distribution=None, \
+    def __init__(self, n, m, d = None, partially_observable = False, noise_distribution=None, \
         noise_magnitude=1.0, system_params = {}, initial_state = None):
         """
         Description: Randomly initialize the hidden dynamics of the system.
@@ -120,8 +116,9 @@ class LDS(Environment):
             y = np.dot(self.C, self.x) + np.dot(self.D, u) + self.noise_magnitude * self.prev_noise[1] # (state_noise, obs_noise)
             return y
         self.prev_noise = np.zeros(n)
-        return self.x # return true current state
 
+    def reset(self):
+        return self.x # return true current state
 
     def step(self, u):
         """

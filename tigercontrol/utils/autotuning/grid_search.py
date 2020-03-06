@@ -77,9 +77,9 @@ class GridSearch:
         controller.initialize(**controller_params)
         environment = tigercontrol.environment(self.environment_id)
         if environment.has_regressors:
-            x, y_true = environment.initialize(**self.environment_params)
+            x, y_true = environment.reset(**self.environment_params)
         else:
-            x = environment.initialize(**self.environment_params)
+            x = environment.reset(**self.environment_params)
 
         t = 0
         losses = [] # sorted losses, used to get median
