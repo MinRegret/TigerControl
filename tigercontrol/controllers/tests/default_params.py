@@ -22,7 +22,5 @@ control_params = {
         'env': tigercontrol.controller("Cartpole")() # cartpole instance
     }
     'SimpleBoost': {
-        'A': np.identity(3)
-        'B': np.identity(3)
     }
 }
