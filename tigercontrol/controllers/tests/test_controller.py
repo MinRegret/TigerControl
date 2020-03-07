@@ -7,6 +7,9 @@ import jax.numpy as np
 import sys
 import argparse
 
+# default parameters for every controller
+from .default_params import control_params
+
 
 def test_controllers(stress=True):
     """ Description: test all controllers """
@@ -30,7 +33,7 @@ def test_api(ctrl_id):
     """ Description: verify that all default methods work for this controller """
     controller_class = tigercontrol.controller(ctrl_id)
     n, m = 3, 2 # arbitrary state/action dimensions
-    ctrl = controller_class()
+    ctrl = controller_class(**control_params[ctrl_id])
     n, m = ctrl.get_state_dim(), ctrl.get_action_dim() # get dimensions of system
     x_0 = ctrl.reset() # first state
     x_1 = ctrl.step(np.zeros(m)) # try step with 0 action
@@ -40,7 +43,7 @@ def test_api(ctrl_id):
 def test_stress(ctrl_id):
     """ Description: run controller in a few high pressure situations """
     controller_class = tigercontrol.controller(ctrl_id)
-    ctrl = controller_class()
+    ctrl = controller_class(**control_params[ctrl_id])
     n, m = ctrl.get_state_dim(), ctrl.get_action_dim() # get dimensions of system
     x_0 = ctrl.reset()
     for t in range(10000):

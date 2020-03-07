@@ -8,11 +8,11 @@ from tigercontrol.controllers.core import Controller
 from tigercontrol.controllers.lqr import LQR
 from tigercontrol.controllers.gpc import GPC
 from tigercontrol.controllers.bpc import BPC
-from tigercontrol.controllers.kalman_filter import KalmanFilter
 from tigercontrol.controllers.ilqr import ILQR
 
 # boosting
 from tigercontrol.controllers.boosting import SimpleBoost
+
 
 # ---------- Boosting Controllers ----------
 
@@ -27,18 +27,8 @@ controller_register(
 
 
 controller_register(
-    id='KalmanFilter',
-    entry_point='tigercontrol.controllers:KalmanFilter',
-)
-
-controller_register(
     id='LQR',
     entry_point='tigercontrol.controllers:LQR',
-)
-
-controller_register(
-    id='LQRFiniteHorizon',
-    entry_point='tigercontrol.controllers:LQRFiniteHorizon',
 )
 
 controller_register(

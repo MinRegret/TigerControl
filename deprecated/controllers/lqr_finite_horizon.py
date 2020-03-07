@@ -23,11 +23,10 @@ class LQRFiniteHorizon(Controller):
             T (postive int): number of timesteps
             x (float/numpy.ndarray): initial state
         """
-        self.initialized = True
         
         F = np.hstack((A, B))
 
-         n, m = B.shape # State & Action Dimensions
+        n, m = B.shape # State & Action Dimensions
         
         self.F, C, self.T = self._extend(F, T), self._extend(C, T), T
         self.K = self._extend(np.zeros((self.m, n)), T)
@@ -38,7 +37,6 @@ class LQRFiniteHorizon(Controller):
 
         ## Backward Recursion ##
         for t in range(self.T - 1, -1, -1):
-
             Q = C[t] + self.F[t].T @ V @ self.F[t]
             self.K[t] = -np.linalg.inv(Q[n :, n :]) @ Q[n :, : n]
             V = Q[: n, : n] + Q[: n, n :] @ self.K[t] + self.K[t].T @ Q[n :, : n] + self.K[t].T @ Q[n :, n :] @ self.K[t]
