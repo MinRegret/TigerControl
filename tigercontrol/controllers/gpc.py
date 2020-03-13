@@ -14,9 +14,12 @@ import jax
 import scipy
 from tigercontrol.controllers import LQR
 
+
+quad = lambda x, u: np.sum(x.T @ x + u.T @ u)
+
 # GPC definition
 class GPC(Controller):
-    def __init__(self, A, B, Q = None, R = None, cost_fn = None, \
+    def __init__(self, A, B, Q = None, R = None, cost_fn = quad, \
         H = 3, HH = 3, lr = 0.001, include_bias = True):
         """
         Description: Initialize the dynamics of the model
@@ -56,7 +59,7 @@ class GPC(Controller):
                 y = A @ y + B @ v + w[h + H]
             # Don't update state at the end    
             v = -self.K @ y + np.tensordot(M, w[h : h + H], axes = ([0, 2], [0, 1])) + bias
-            return cost_fn(y, v) 
+            return cost_t(y, v) 
 
         self.grad = grad(policy_loss, (0, 1))
 
@@ -64,9 +67,12 @@ class GPC(Controller):
         if(cost_fn is not None):  
             self.grad = jit(self.grad)
 
-    def update(self, cost = None):
-        # 1. Get gradients
-        delta_M, delta_off = self.grad(self.M, self.bias, self.w, cost)
+    def update(self, grad = None, cost = None):
+        # 1. Get gradients if not provided
+        if(grad = None):
+            delta_M, delta_off = self.grad(self.M, self.bias, self.w, cost)
+        else:
+            delta_M, delta_off = grad, np.zeros(self.w[0].shape)
 
         # 2. Execute updates
         self.M -= self.lr * delta_M
