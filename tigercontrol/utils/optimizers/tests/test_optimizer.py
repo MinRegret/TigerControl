@@ -52,7 +52,7 @@ def test_api(opt_id):
 
 
 def test_stress(opt_id):
-    optironment = tigercontrol.optironment('ARMA')
+    optironment = tigercontrol.optironment('LQR')
     x = optironment.reset(p=2,q=0)
 
     controller = tigercontrol.controllers('LSTM')

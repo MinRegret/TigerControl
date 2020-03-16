@@ -3,7 +3,6 @@
 import tigercontrol
 import jax
 import jax.numpy as np
-from tigercontrol.controllers import Controller
 from tigercontrol import error
 
 # class for implementing algorithms with enforced modularity

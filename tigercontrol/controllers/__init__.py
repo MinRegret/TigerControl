@@ -11,15 +11,15 @@ from tigercontrol.controllers.bpc import BPC
 from tigercontrol.controllers.ilqr import ILQR
 
 # boosting
-from tigercontrol.controllers.boosting import SimpleBoost
+from tigercontrol.controllers.boosting import DynaBoost
 
 
 # ---------- Boosting Controllers ----------
 
 
 controller_register(
-    id='SimpleBoost',
-    entry_point='tigercontrol.controllers.boosting:SimpleBoost',
+    id='DynaBoost',
+    entry_point='tigercontrol.controllers.boosting:DynaBoost',
 )
 
 

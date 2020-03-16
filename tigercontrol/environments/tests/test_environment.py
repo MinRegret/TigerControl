@@ -14,16 +14,17 @@ def test_environments(stress=True):
 
     for env_id in env_ids:
         print("\n------ {} tests -----\n".format(env_id))
-        test_environment(env_id, stress=stress)
+        try:
+            test_environment(env_id, stress=stress)
+        except Exception as e:
+            print("environment {} raised error {}".format(env_id, e))
 
 
 def test_environment(env_id, stress=True):
     """ Description: run test for a single environment """
-    try:
-        test_api(env_id)
-        if stress: test_stress(env_id)
-    except Exception as e:
-        print("environment {} raised error {}".format(env_id, e))
+    test_api(env_id)
+    if stress: 
+        test_stress(env_id)
 
 
 def test_api(env_id):

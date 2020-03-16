@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 def test_adam(show=False):
 
-    environment = tigercontrol.environment('ARMA')
+    environment = tigercontrol.environment('LDS')
     x = environment.reset(p=2,q=0)
 
     controller = tigercontrol.controllers('LSTM')

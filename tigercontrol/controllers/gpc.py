@@ -69,7 +69,7 @@ class GPC(Controller):
 
     def update(self, grad = None, cost = None):
         # 1. Get gradients if not provided
-        if(grad = None):
+        if(grad == None):
             delta_M, delta_off = self.grad(self.M, self.bias, self.w, cost)
         else:
             delta_M, delta_off = grad, np.zeros(self.w[0].shape)
