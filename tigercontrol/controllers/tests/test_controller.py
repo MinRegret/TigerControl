@@ -8,7 +8,26 @@ import sys
 import argparse
 
 # default parameters for every controller
-from .default_params import control_params
+control_params = {
+    'GPC': {
+        'A': np.identity(3),
+        'B': np.identity(3),
+    },
+    'BPC': {
+        'A': np.identity(3),
+        'B': np.identity(3),
+    },
+    'LQR': {
+        'A': np.identity(3),
+        'B': np.identity(3),
+    },
+    'ILQR': {
+        'env': tigercontrol.environment("CartPole")(), # cartpole instance
+    },
+    'DynaBoost': {
+    },
+}
+
 
 
 def test_controllers(stress=True):

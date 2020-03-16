@@ -1,5 +1,5 @@
 """ 
-test SimpleBoost controller
+test DynaBoost controller
 note: n=3 seems to do consistently better than other n's...
 """
 import jax.numpy as np
@@ -18,10 +18,10 @@ def avg_regret(loss):
             avg_regret.append(cur_avg)
         return avg_regret
 
-def test_simple_boost(steps=5000, show=False):
-    test_simple_boost_arma(steps=steps, show=show)
-    #test_simple_boost_lstm(steps=steps, show=show)
-    print("test_simple_boost passed")
+def test_dynaboost(steps=5000, show=False):
+    test_dynaboost_arma(steps=steps, show=show)
+    #test_dynaboost_lstm(steps=steps, show=show)
+    print("test_dynaboost passed")
 
 def avg_regret(loss):
     avg_regret = []
@@ -31,7 +31,7 @@ def avg_regret(loss):
         avg_regret.append(cur_avg)
     return avg_regret
 
-def test_simple_boost_lstm(steps=500, show=True):
+def test_dynaboost_lstm(steps=500, show=True):
     # controller initialize
     T = steps
     controller_id = "LSTM"
@@ -40,17 +40,17 @@ def test_simple_boost_lstm(steps=500, show=True):
     controllers = []
     Ns = [1, 3, 6]
     for n in Ns: # number of weak learners
-        controller = tigercontrol.controllers("SimpleBoost")
+        controller = tigercontrol.controller("DynaBoost")
         controller.initialize(controller_id, controller_params, n, reg=1.0) # regularization
         controllers.append(controller)
 
     # regular AutoRegressor for comparison
-    autoreg = tigercontrol.controllers("AutoRegressor")
+    autoreg = tigercontrol.controller("AutoRegressor")
     autoreg.initialize(p=4) # regularization
 
     # environment initialize
     p, q = 4, 0
-    environment = tigercontrol.environment("ARMA")
+    environment = tigercontrol.environment("LDS")
     y_true = environment.initialize(p, q, noise_magnitude=0.1)
  
     # run all boosting controller
@@ -81,7 +81,7 @@ def test_simple_boost_lstm(steps=500, show=True):
         # plot every boosting controller loss
         for n, results in zip(Ns, result_list):
             print("Mean loss for n={}: {}".format(n, np.mean(np.array(results[start:]))))
-            plt.plot(x, avg_regret(results[start:]), label="SimpleBoost, n={}".format(n))
+            plt.plot(x, avg_regret(results[start:]), label="DynaBoost, n={}".format(n))
 
         # plot loss for last value and autoregressor controllers
         print("Mean loss for LastValue: {}".format(np.mean(np.array(last_value[start:]))))
@@ -89,14 +89,14 @@ def test_simple_boost_lstm(steps=500, show=True):
         print("Mean loss for AutoRegressor: {}".format(np.mean(np.array(autoreg_loss[start:]))))
         plt.plot(x, avg_regret(autoreg_loss[start:]), label="AutoRegressor controller")
 
-        plt.title("SimpleBoost controller on ARMA environment")
+        plt.title("DynaBoost controller on LQR environment")
         plt.legend()
         plt.show(block=False)
         plt.pause(10)
         plt.close()
 
 
-def test_simple_boost_arma(steps=500, show=True):
+def test_dynaboost_arma(steps=500, show=True):
     # controller initialize
     T = steps
     controller_id = "AutoRegressor"
@@ -105,7 +105,7 @@ def test_simple_boost_arma(steps=500, show=True):
     timelines = [6, 9, 12]
 
     # regular AutoRegressor for comparison
-    autoreg = tigercontrol.controllers("AutoRegressor")
+    autoreg = tigercontrol.controller("AutoRegressor")
     autoreg.initialize(p=18, optimizer = OGD) 
 
     fig, ax = plt.subplots(nrows=1, ncols=3)
@@ -120,7 +120,7 @@ def test_simple_boost_arma(steps=500, show=True):
         controllers = []
 
         for n in Ns: # number of weak learners
-            controller = tigercontrol.controllers("SimpleBoost")
+            controller = tigercontrol.controller("DynaBoost")
             controller.initialize(controller_id, controller_params, n, reg=0.0) # regularization
             controllers.append(controller)
 
@@ -148,7 +148,7 @@ def test_simple_boost_arma(steps=500, show=True):
             # plot every boosting controller loss
             for n, results in zip(Ns, result_list):
                 print("Mean loss for n={}: {}".format(n, np.mean(np.array(results))))
-                ax[cur].plot(avg_regret(results[-start:]), label="SimpleBoost, n={}".format(n))
+                ax[cur].plot(avg_regret(results[-start:]), label="DynaBoost, n={}".format(n))
 
             # plot loss for last value and autoregressor controllers
             print("Mean loss for AutoRegressor: {}".format(np.mean(np.array(autoreg_loss))))
@@ -162,4 +162,4 @@ def test_simple_boost_arma(steps=500, show=True):
 
 
 if __name__ == "__main__":
-    test_simple_boost(show=True)
+    test_dynaboost(show=True)

@@ -15,7 +15,7 @@ def set_key(key=None):
         key (int): key that determines reproducible output
     '''
     if key == None:
-        key = int(np.random.random_integers(sys.maxsize))
+        key = int(np.random.randint(sys.maxsize))
     assert type(key) == int
     tigercontrol.GLOBAL_RANDOM_KEY = random.PRNGKey(key)
 

@@ -9,7 +9,7 @@ def test_sgd(show=False):
     print("test_sgd passed")
 
 def test_sgd_lstm(show=False):
-    environment = tigercontrol.environment('ARMA')
+    environment = tigercontrol.environment('LDS')
     x = environment.reset(p=2,q=0)
 
     controller = tigercontrol.controllers('LSTM')
@@ -30,14 +30,14 @@ def test_sgd_lstm(show=False):
         x = y_true
 
     if show:
-        plt.title("Test SGD on ARMA(3) with LSTM controller")
+        plt.title("Test SGD on LQR(3) with LSTM controller")
         plt.plot(loss)
         plt.show(block=False)
         plt.pause(3)
         plt.close()
 
 def test_sgd_autoregressor(show=False):
-    environment = tigercontrol.environment('ARMA')
+    environment = tigercontrol.environment('LDS')
     x = environment.reset(p=2,q=0)
 
     optimizer = SGD(learning_rate=0.0003)
@@ -53,7 +53,7 @@ def test_sgd_autoregressor(show=False):
         x = y_true
 
     if show:
-        plt.title("Test SGD on ARMA(3) with AutoRegressor controller")
+        plt.title("Test SGD on LQR(3) with AutoRegressor controller")
         plt.plot(loss)
         plt.show(block=False)
         plt.pause(3)
