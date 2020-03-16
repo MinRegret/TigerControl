@@ -1,9 +1,9 @@
-tigercontrol.utils.boosting.SimpleBoost
+tigercontrol.utils.boosting.DynaBoost
 ========================================
 
 .. currentmodule:: tigercontrol.utils.boosting
 
-.. autoclass:: SimpleBoost
+.. autoclass:: DynaBoost
 
    
    .. autocontroller:: __init__
@@ -13,12 +13,12 @@ tigercontrol.utils.boosting.SimpleBoost
 
    .. autosummary::
    
-      ~SimpleBoost.__init__
-      ~SimpleBoost.help
-      ~SimpleBoost.initialize
-      ~SimpleBoost.predict
-      ~SimpleBoost.to_ndarray
-      ~SimpleBoost.update
+      ~DynaBoost.__init__
+      ~DynaBoost.help
+      ~DynaBoost.initialize
+      ~DynaBoost.predict
+      ~DynaBoost.to_ndarray
+      ~DynaBoost.update
    
    
 
@@ -28,6 +28,6 @@ tigercontrol.utils.boosting.SimpleBoost
 
    .. autosummary::
    
-      ~SimpleBoost.compatibles
+      ~DynaBoost.compatibles
    
    

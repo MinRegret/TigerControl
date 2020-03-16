@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>tigercontrol.utils.boosting.simple_boost &mdash; tigercontrol 0.0.1 documentation</title>
+  <title>tigercontrol.utils.boosting.dynaboost &mdash; tigercontrol 0.0.1 documentation</title>
   
 
   
@@ -131,7 +131,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>tigercontrol.utils.boosting.simple_boost</li>
+      <li>tigercontrol.utils.boosting.dynaboost</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,7 +146,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for tigercontrol.utils.boosting.simple_boost</h1><div class="highlight"><pre>
+  <h1>Source code for tigercontrol.utils.boosting.dynaboost</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">AR(p): Linear combination of previous values</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -156,7 +156,7 @@
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">tigercontrol.utils.optimizers.losses</span> <span class="k">import</span> <span class="n">mse</span>
 
-<div class="viewcode-block" id="SimpleBoost"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.utils.boosting.SimpleBoost.html#tigercontrol.utils.boosting.SimpleBoost">[docs]</a><span class="k">class</span> <span class="nc">SimpleBoost</span><span class="p">:</span>
+<div class="viewcode-block" id="DynaBoost"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.utils.boosting.DynaBoost.html#tigercontrol.utils.boosting.DynaBoost">[docs]</a><span class="k">class</span> <span class="nc">DynaBoost</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Implements the equivalent of an AR(p) controller - predicts a linear</span>
 <span class="sd">    combination of the previous p observed values in a time-series</span>
@@ -164,7 +164,7 @@
 
     <span class="n">compatibles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;TimeSeries&#39;</span><span class="p">])</span>
 
-<div class="viewcode-block" id="SimpleBoost.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.utils.boosting.SimpleBoost.html#tigercontrol.utils.boosting.SimpleBoost.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DynaBoost.__init__"><a class="viewcode-back" href="../../../../_autosummary/tigercontrol.utils.boosting.DynaBoost.html#tigercontrol.utils.boosting.DynaBoost.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="kc">False</span></div>
 
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controller_id</span><span class="p">,</span> <span class="n">controller_params</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">mse</span><span class="p">,</span> <span class="n">reg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>

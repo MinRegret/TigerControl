@@ -33,7 +33,7 @@ def test_custom_controller(steps=1000, show_plot=False):
 
     if show_plot:
         plt.plot(results)
-        plt.title("Custom (last value) controller on ARMA environment")
+        plt.title("Custom (last value) controller on LQR environment")
         plt.show(block=False)
         plt.pause(1)
         plt.close()

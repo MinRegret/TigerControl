@@ -1,9 +1,9 @@
-tigercontrol.environments.time\_series.ARMA
+tigercontrol.environments.time\_series.LQR
 =======================================
 
 .. currentmodule:: tigercontrol.environments.time_series
 
-.. autoclass:: ARMA
+.. autoclass:: LQR
 
    
    .. autocontroller:: __init__
@@ -13,12 +13,12 @@ tigercontrol.environments.time\_series.ARMA
 
    .. autosummary::
    
-      ~ARMA.__init__
-      ~ARMA.close
-      ~ARMA.help
-      ~ARMA.hidden
-      ~ARMA.initialize
-      ~ARMA.step
+      ~LQR.__init__
+      ~LQR.close
+      ~LQR.help
+      ~LQR.hidden
+      ~LQR.initialize
+      ~LQR.step
    
    
 
@@ -28,7 +28,7 @@ tigercontrol.environments.time\_series.ARMA
 
    .. autosummary::
    
-      ~ARMA.compatibles
-      ~ARMA.spec
+      ~LQR.compatibles
+      ~LQR.spec
    
    

@@ -60,4 +60,4 @@ boosting
 .. autosummary::
   :toctree: _autosummary
 
-  tigercontrol.utils.boosting.SimpleBoost
+  tigercontrol.utils.boosting.DynaBoost

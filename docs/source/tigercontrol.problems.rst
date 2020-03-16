@@ -53,7 +53,7 @@ time_series
    tigercontrol.environments.time_series.ENSO
    tigercontrol.environments.time_series.Crypto
    tigercontrol.environments.time_series.Random
-   tigercontrol.environments.time_series.ARMA
+   tigercontrol.environments.time_series.LQR
    tigercontrol.environments.time_series.Unemployment
    tigercontrol.environments.time_series.LDS_TimeSeries
    tigercontrol.environments.time_series.LSTM_TimeSeries
