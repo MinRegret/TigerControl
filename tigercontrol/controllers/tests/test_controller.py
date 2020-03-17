@@ -21,9 +21,6 @@ control_params = {
         'A': np.identity(3),
         'B': np.identity(3),
     },
-    'ILQR': {
-        'env': tigercontrol.environment("CartPole")(), # cartpole instance
-    },
     'DynaBoost': {
     },
 }
@@ -45,7 +42,7 @@ def test_controller(ctrl_id, stress=True):
         test_api(ctrl_id)
         if stress: test_stress(ctrl_id)
     except Exception as e:
-        print("controller {} raised error {}".format(ctrl_id, e))
+        print("ERROR: controller {} raised error {}".format(ctrl_id, e))
 
 
 def test_api(ctrl_id):

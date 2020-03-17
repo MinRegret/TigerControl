@@ -8,7 +8,6 @@ from tigercontrol.controllers.core import Controller
 from tigercontrol.controllers.lqr import LQR
 from tigercontrol.controllers.gpc import GPC
 from tigercontrol.controllers.bpc import BPC
-from tigercontrol.controllers.ilqr import ILQR
 
 # boosting
 from tigercontrol.controllers.boosting import DynaBoost
@@ -29,11 +28,6 @@ controller_register(
 controller_register(
     id='LQR',
     entry_point='tigercontrol.controllers:LQR',
-)
-
-controller_register(
-    id='ILQR',
-    entry_point='tigercontrol.controllers:ILQR',
 )
 
 controller_register(
