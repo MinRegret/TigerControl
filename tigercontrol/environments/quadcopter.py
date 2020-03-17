@@ -34,7 +34,7 @@ class Quadcopter(Environment):
         self.prop_pitch = 4.5 # propeller pitch
         self.map_width = 2.0
         self.map_height = 6.0
-        self.ode = scipy.integrate.ode(self._state_dot).set_integrator('vode', nsteps=500, method='bdf')
+        self.ode = scipy.integrate.ode(self._state_dot).set_integrator('vode', nsteps=5, method='bdf')
         self.prop1 = self.Propeller(self.prop_dia, self.prop_pitch)
         self.prop2 = self.Propeller(self.prop_dia, self.prop_pitch)
         self.prop3 = self.Propeller(self.prop_dia, self.prop_pitch)
