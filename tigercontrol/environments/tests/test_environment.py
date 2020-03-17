@@ -17,7 +17,7 @@ def test_environments(stress=True):
         try:
             test_environment(env_id, stress=stress)
         except Exception as e:
-            print("environment {} raised error {}".format(env_id, e))
+            print("ERROR: environment {} raised error {}".format(env_id, e))
 
 
 def test_environment(env_id, stress=True):

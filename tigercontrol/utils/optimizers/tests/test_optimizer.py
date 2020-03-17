@@ -38,7 +38,7 @@ def test_optimizer(opt_id, stress=True):
         test_api(opt_id)
         if stress: test_stress(opt_id)
     except Exception as e:
-        print("optimizer {} raised error {}".format(opt_id, e))
+        print("ERROR: optimizer {} raised error {}".format(opt_id, e))
 
 
 def test_api(opt_id):
