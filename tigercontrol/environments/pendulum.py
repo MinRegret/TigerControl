@@ -13,6 +13,13 @@ from tigercontrol.environments import Environment
 # necessary for rendering
 from gym.envs.classic_control import rendering
 
+@jax.jit
+def angle_normalize(x):
+    x = np.where(x > np.pi, x - 2*np.pi, x)
+    x = np.where(x < -np.pi, x + 2*np.pi, x)
+    return x
+
+pendulum_squared_loss = jax.jit(lambda x,u : angle_normalize(x[0])**2 + .1*(u[0]**2))
 
 class Pendulum(Environment):
     metadata = {
@@ -20,7 +27,7 @@ class Pendulum(Environment):
         'video.frames_per_second' : 30
     }
 
-    def __init__(self, g=10.0):
+    def __init__(self, g=10.0, **kwargs):
         self.max_speed=20.
         self.max_torque=1.
         self.dt=.05
@@ -30,13 +37,6 @@ class Pendulum(Environment):
         self.observation_space = (2,)
         self.n, self.m = 2, 1
         self.rollout_controller = None
-
-
-        @jax.jit
-        def angle_normalize(x):
-            x = np.where(x > np.pi, x - 2*np.pi, x)
-            x = np.where(x < -np.pi, x + 2*np.pi, x)
-            return x
         self.angle_normalize = angle_normalize
 
         @jax.jit
@@ -67,8 +67,8 @@ class Pendulum(Environment):
         # C_x, C_u = np.diag(np.array([0.1, 0.0, 0.0, 0.0])), np.diag(np.array([0.1]))
         # self._loss = jax.jit(lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u)
 
-        self._loss = jax.jit(lambda x,u : self.angle_normalize(x[0])**2 + .1*(u[0]**2))
-
+        # self._loss = jax.jit(lambda x,u : self.angle_normalize(x[0])**2 + .1*(u[0]**2))
+        self._loss = kwargs.get('loss')
         # stack the jacobians of environment dynamics gradient
         jacobian = jax.jacrev(self._dynamics, argnums=(0,1))
         self._dynamics_jacobian = jax.jit(lambda x, u: np.hstack(jacobian(x, u)))
@@ -138,7 +138,7 @@ class Pendulum(Environment):
             axle = rendering.make_circle(.05)
             axle.set_color(0,0,0)
             self.viewer.add_geom(axle)
-            fname = os.path.join(get_tigercontrol_dir(), "environments/control/images/clockwise.png")
+            fname = os.path.join(get_tigercontrol_dir(), "environments/images/clockwise.png")
             self.img = rendering.Image(fname, 1., 1.)
             self.imgtrans = rendering.Transform()
             self.img.add_attr(self.imgtrans)

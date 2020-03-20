@@ -17,9 +17,8 @@ def test_pendulum(verbose=False):
 
     dim_x, dim_u = 2, 1
     obs = environment.reset()
-
-    
     T = 50 # horizon
+    '''
     threshold = 0.01
     lamb = 0.1
     max_iterations = 50
@@ -29,7 +28,7 @@ def test_pendulum(verbose=False):
 
     if verbose:
         print("Running iLQR...")
-    u = controller.plan(obs, T)
+    u = controller.plan(obs, T)'''
 
     total_cost = 0
     #print("u: " + str([float(u_t) for u_t in u]))
@@ -39,7 +38,8 @@ def test_pendulum(verbose=False):
         if verbose: 
             environment.render()
             time.sleep(1. / 30.)
-        obs, cost, done = environment.step(u[index])
+        # obs, cost, done = environment.step(u[index])
+        obs, cost, done = environment.step(np.zeros((1,)))
         # total_cost += cost
         index += 1
         '''
@@ -54,8 +54,8 @@ def test_pendulum(verbose=False):
 
                 # print(total_cost)
             obs = environment.reset()
-            controller.initialize(environment, dim_x, dim_u, max_iterations, lamb, threshold)
-            u = controller.plan(obs, T)
+            # controller.initialize(environment, dim_x, dim_u, max_iterations, lamb, threshold)
+            # u = controller.plan(obs, T)
             total_cost = 0
             index = 0
 
