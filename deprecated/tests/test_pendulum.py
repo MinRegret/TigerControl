@@ -24,7 +24,7 @@ def test_pendulum(verbose=False):
     lamb = 0.1
     max_iterations = 50
 
-    controller = tigercontrol.controller("ILQR")
+    controller = tigercontrol.controller("ILQR_3state")
     controller.initialize(environment, dim_x, dim_u, max_iterations, lamb, threshold)
 
     if verbose:

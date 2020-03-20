@@ -20,8 +20,8 @@ def environment_spec(id):
     return environment_registry.spec(id)
 
 def environment(id, **kwargs):
-    #return environment_registry.make(id, **kwargs)
-    return environment_registry.get_class(id) # return env class instead of single instance
+    return environment_registry.make(id, **kwargs)
+    # return environment_registry.get_class(id) # return env class instead of single instance
 
 
 

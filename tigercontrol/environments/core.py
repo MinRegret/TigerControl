@@ -10,7 +10,14 @@ import jax.numpy as np
 class Environment(object):
     def __init__(self):
         self.initialized = False
-
+        self.n = None
+        self.m = None
+        self._dynamics = None
+        self._state = None
+        self._dynamics_jacobian = None
+        self._loss = None
+        self._loss_grad = None
+        self._loss_hessian = None
     def reset(self):
         ''' Description: reset environment to state at time 0, return state. '''
         raise NotImplementedError
@@ -22,11 +29,37 @@ class Environment(object):
 
     def get_state_dim(self):
         ''' Description: return dimension of the state. '''
-        raise NotImplementedError
+        return self.n
+        # raise NotImplementedError
 
     def get_action_dim(self):
         ''' Description: return dimension of action inputs. '''
-        raise NotImplementedError
+        return self.m
+        # raise NotImplementedError
+
+    def get_state_dim(self):
+        return self.n
+
+    def get_action_dim(self):
+        return self.m
+
+    def get_dynamics(self):
+        return self._dynamics
+
+    def get_state(self):
+        return self._state
+
+    def get_dynamics_jacobian(self):
+        return self._dynamics_jacobian
+
+    def get_loss(self):
+        return self._loss
+
+    def get_loss_grad(self):
+        return self._loss_grad
+
+    def get_loss_hessian(self):
+        return self._loss_hessian
 
     def rollout(self, baby_controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
         """ Description: Roll out and return trajectory of given baby_controller. """

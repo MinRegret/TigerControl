@@ -12,6 +12,9 @@ from tigercontrol.environments import Environment
 # necessary for rendering
 from gym.envs.classic_control import rendering
 
+# Losses
+C_x, C_u = (np.diag(np.array([0.2, 0.05, 1.0, 0.05])), np.diag(np.array([0.05])))
+cartpole_basic_loss = jax.jit(lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u)
 
 class CartPole(Environment):
     """
@@ -26,7 +29,7 @@ class CartPole(Environment):
         'video.frames_per_second' : 50
     }
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.rollout_controller = None
         self.gravity = 9.8
         self.masscart = 1.0
@@ -48,7 +51,7 @@ class CartPole(Environment):
         self._state = None
 
         def _dynamics(x_0, u): # dynamics
-            x_0, u = np.squeeze(x_0, axis=1), np.squeeze(u, axis=1)
+            # x_0, u = np.squeeze(x_0, axis=1), np.squeeze(u, axis=1)
             x, x_dot, theta, theta_dot = np.split(x_0, 4)
             force = self.force_mag * np.clip(u, -1.0, 1.0) # iLQR may struggle with clipping due to lack of gradient
             costh = np.cos(theta)
@@ -60,15 +63,22 @@ class CartPole(Environment):
             x_dot = x_dot + self.tau * xacc
             theta = theta + self.tau * theta_dot
             theta_dot = theta_dot + self.tau * thetaacc
-            state = np.vstack((x, x_dot, theta, theta_dot))
+            state = np.hstack((x, x_dot, theta, theta_dot))
             return state
         self._dynamics = jax.jit(_dynamics) # MUST store as self._dynamics for default rollout implementation to work
-        C_x, C_u = (np.diag(np.array([0.2, 0.05, 1.0, 0.05])), np.diag(np.array([0.05])))
-        self._loss = jax.jit(lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u) # MUST store as self._loss
+        # C_x, C_u = (np.diag(np.array([0.2, 0.05, 1.0, 0.05])), np.diag(np.array([0.05])))
+        # self._loss = jax.jit(lambda x, u: x.T @ C_x @ x + u.T @ C_u @ u) # MUST store as self._loss
+        self._loss = kwargs.get('loss')
 
         # stack the jacobians of environment dynamics gradient
         jacobian = jax.jacrev(self._dynamics, argnums=(0,1))
+        # jacobian[0], jacobian[1] = np.squeeze(jacobian[0], axis=(1,3)), np.squeeze(jacobian[1], axis=(1,3))
         self._dynamics_jacobian = jax.jit(lambda x, u: np.hstack(jacobian(x, u)))
+        '''
+        def dyn_jac_aux(x,u):
+            j = jacobian(x,u)
+            return np.hstack((np.squeeze(j[0], axis=(1,3)), np.squeeze(j[1], axis=(1,3))))
+        self._dynamics_jacobian = jax.jit(dyn_jac_aux)'''
 
         # stack the gradients of environment loss
         loss_grad = jax.grad(self._loss, argnums=(0,1))
@@ -78,7 +88,7 @@ class CartPole(Environment):
         block_hessian = lambda A: np.vstack([np.hstack([A[0][0], A[0][1]]), np.hstack([A[1][0], A[1][1]])])
         hessian = jax.hessian(self._loss, argnums=(0,1))
         self._loss_hessian = jax.jit(lambda x, u: block_hessian(hessian(x,u)))
-
+        '''
         def _rollout(act, dyn, x_0, T):
             def f(x, i):
                 u = act(x)
@@ -86,13 +96,31 @@ class CartPole(Environment):
                 return x_next, np.hstack((x, u))
             _, trajectory = jax.lax.scan(f, x_0, np.arange(T))
             return trajectory
-        self._rollout = jax.jit(_rollout, static_argnums=(0,1,3))
-
+        self._rollout = jax.jit(_rollout, static_argnums=(0,1,3))'''
+    '''
     def get_state_dim(self):
         return self.n
 
     def get_action_dim(self):
         return self.m
+
+    def get_dynamics(self):
+        return self._dynamics
+
+    def get_state(self):
+        return self._state
+
+    def get_dynamics_jacobian(self):
+        return self._dynamics_jacobian
+
+    def get_loss(self):
+        return self._loss
+
+    def get_loss_grad(self):
+        return self._loss_grad
+
+    def get_loss_hessian(self):
+        return self._loss_hessian'''
 
     def reset(self):
         """ Description: Reset the environment and return the start state """
@@ -102,16 +130,16 @@ class CartPole(Environment):
         
     def step(self, action):
         """ Description: updates internal state <- dynamcics(state, action) and returns state, cost, and done boolean """
-        if type(action) == np.ndarray: action = action[0]
+        # if type(action) == np.ndarray: action = action[0]
         old_state = self._state
         self._state = self._dynamics(self._state, action)
         x, theta = self._state[0], self._state[2]
         x_lim, th_lim = self.x_threshold, self.theta_threshold_radians
-        done = bool(x < -x_lim or x > x_lim or theta < -th_lim or theta > th_lim)
-        cost = self._loss(old_state, action)
+        # done = bool(x < -x_lim or x > x_lim or theta < -th_lim or theta > th_lim)
+        # cost = self._loss(old_state, action)
         return self._state
 
-
+    '''
     def rollout(self, controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
         # Description: Roll out trajectory of given baby_controller.
         if self.rollout_controller != controller: self.rollout_controller = controller
@@ -127,7 +155,7 @@ class CartPole(Environment):
             if dynamics_grad: transcript['dynamics_grad'].append(self._dynamics_jacobian(x, u))
             if loss_grad: transcript['loss_grad'].append(self._loss_grad(x, u))
             if loss_hessian: transcript['loss_hessian'].append(self._loss_hessian(x, u))
-        return transcript
+        return transcript'''
 
     def render(self, mode='human'):
         """ Description: Renders on screen an image of the current cartpole state """

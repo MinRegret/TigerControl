@@ -23,6 +23,8 @@ class ILQR(Controller):
             assert(self.t < len(self.x_old))
             u_next = self.u_old[self.t] + self.K[self.t] @ (x - self.x_old[self.t]) + self.k[self.t]
             self.t += 1
+            y = self.K[self.t] @ (x - self.x_old[self.t])
+            z = (x - self.x_old[self.t])
             return u_next
 
     compatibles = set([])
@@ -88,6 +90,17 @@ class ILQR(Controller):
             return F, C, c
         self._linearization = linearization
 
+        def _rollout(act, dyn, x_0, T):
+            def f(x, i):
+                u = act(x)
+                x_next = dyn(x, u)
+                return x_next, np.hstack((x,u))
+                # return np.squeeze(x_next, axis=1), np.hstack((x, u))
+                # return x_next, np.vstack((x, u))
+            _, trajectory = jax.lax.scan(f, x_0, np.arange(T))
+            return trajectory
+        self._rollout = jax.jit(_rollout, static_argnums=(0,1,3))
+
     def _form_next_controller(self, transcript):
         T = len(transcript['x'])
         x_old = transcript['x']
@@ -111,7 +124,7 @@ class ILQR(Controller):
     def plan(self, x_0, T):
         dim_x, dim_u = self.dim_x, self.dim_u
         u_old = [np.zeros((dim_u,)) for t in range(T)]
-        x_old = [x_0 for t in range(T)]
+        x_old = [np.reshape(x_0, (dim_x,)) for t in range(T)]
         K, k = T * [np.zeros((dim_u, dim_x))], T * [np.zeros((dim_u,))]
         controller = self.OpenLoopController(u_old, x_old, K, k)
         old_cost = self.total_cost(x_old, u_old)
@@ -120,7 +133,7 @@ class ILQR(Controller):
 
         while count < self.max_iterations:
             count += 1
-            transcript = self.env.rollout(controller, T, dynamics_grad=True, loss_grad=True, loss_hessian=True)
+            transcript = self.rollout(controller, T, dynamics_grad=True, loss_grad=True, loss_hessian=True)
             x_new, u_new = transcript['x'], transcript['u']
             
             new_cost = self.total_cost(x_new, u_new)
@@ -136,6 +149,27 @@ class ILQR(Controller):
 
             controller = self._form_next_controller(transcript)
         return transcript['u']
+
+    def rollout(self, controller, T, dynamics_grad=False, loss_grad=False, loss_hessian=False):
+        # Description: Roll out trajectory of given baby_controller.
+        # if self.rollout_controller != controller: self.rollout_controller = controller
+        x = self.env.get_state()
+        x = np.squeeze(x, axis=1)
+        trajectory = self._rollout(controller.get_action, self.env.get_dynamics(), x, T)
+        transcript = {'x': trajectory[:,:self.dim_x], 'u': trajectory[:,self.dim_x:]}
+        # transcript = {'x': trajectory[:,:self.dim_x,], 'u': trajectory[:,self.dim_x:,]}
+
+        # optional derivatives
+        if dynamics_grad: transcript['dynamics_grad'] = []
+        if loss_grad: transcript['loss_grad'] = []
+        if loss_hessian: transcript['loss_hessian'] = []
+        for x, u in zip(transcript['x'], transcript['u']):
+            if dynamics_grad: transcript['dynamics_grad'].append(self.env.get_dynamics_jacobian()(x, u))
+            if loss_grad: transcript['loss_grad'].append(self.env.get_loss_grad()(x, u))
+            if loss_hessian: transcript['loss_hessian'].append(self.env.get_loss_hessian()(x, u))
+        # transcript['x'] = [np.reshape(x, (x.shape[0], 1)) for x in transcript['x']]
+        # transcript['u'] = [np.reshape(u, (u.shape[0], 1)) for u in transcript['u']]
+        return transcript
 
     def update(self):
         pass
