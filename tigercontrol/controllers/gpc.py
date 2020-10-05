@@ -87,7 +87,7 @@ class GPC(Controller):
         self.x = x
 
         # 3. Update t
-        self.t = self.t + 1 ## SHOULD THIS BE IN UPDATE INSTEAD ?
+        self.t = self.t + 1
 
         # 3. Compute and return new action
         self.u = -self.K @ x + np.tensordot(self.M, self.w[-self.H:], \
