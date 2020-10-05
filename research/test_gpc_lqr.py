@@ -41,7 +41,7 @@ class Wgen:
         self.t += 1
         return self.w[self.t]
 
-def test_bpc_gpc_lqr():
+def test_gpc_lqr():
 
     global T, rep
     T = 500 if len(sys.argv) < 2 else int(sys.argv[1])
@@ -60,4 +60,4 @@ def test_bpc_gpc_lqr():
     return
 
 if __name__=="__main__":
-    test_bpc_gpc_lqr()
+    test_gpc_lqr()
