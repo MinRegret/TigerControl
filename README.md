@@ -41,12 +41,6 @@ Next, clone the GitHub repository and install the full package.
     pip install -e 'tigercontrol[all]'
 ```
 
-Finally, run a demo to verify that the installation was successful!
-
-```
-    python tigercontrol/environments/controller/tests/test_minitaur.py
-```
-
 
 For more information
 ====================
