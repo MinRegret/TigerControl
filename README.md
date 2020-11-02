@@ -1,6 +1,9 @@
 # TigerControl
 **********
 
+## NOTE
+This library is deprecated. Please refer to our new control library, [deluca](https://github.com/MinRegret/deluca).
+
 **TigerControl** is an open-source framework for benchmarking control algorithms in simulated and real settings, and is available for anyone to download and use. By reducing algorithms to a set of standard APIs, TigerControl allows the user to quickly switch between controllers and tasks while running experiments and plotting results on the go, and for quick and simple comparison between controller performances. TigerControl also comes with built-in standard control algorithms for comparison or other use.
 
 
